@@ -1,11 +1,13 @@
 import { schema, normalize } from 'normalizr';
 import { camelizeKeys } from 'humps';
 import qs from 'query-string';
-// import { logException } from '../actions/apiUIHelperActions';
-
+import { logException } from '../actions/apiUIHelperActions';
 import { LOCAL_STORAGE_ACCESS_TOKEN_KEY, logout } from '../actions/oauthActions';
+import getEnvVars from '../environment';
 
-export const API_HOST = process.env.REACT_APP_API_URL;
+const { apiUrl } = getEnvVars();
+
+export const API_HOST = apiUrl;
 
 export const API_ROOT = API_HOST + 'v1/';
 
@@ -56,13 +58,8 @@ const callApi = (httpAction: string, endpoint: string, schema, accessToken,
     return fetch(fullUrl, fetchInit).then(response =>
         response.json().then(json => {
             if (!response.ok) {
-                // return Promise.reject(json) // <-- promise
                 throw json;
             }
-
-            // return Promise.resolve(Object.assign({},
-            //     normalize(camelizeKeys(json), schema)) // <-- NOW a promise :D
-            // )
             return Object.assign({},
                 normalize(camelizeKeys(json), schema))
         })
@@ -433,7 +430,7 @@ export default store => next => action => {
 
     if (!accessToken || typeof accessToken !== 'string') {
         store.dispatch(logout());
-        history.push("/login");
+        // history.push("/login");
     }
 
     const actionWith = data => {
@@ -459,7 +456,7 @@ export default store => next => action => {
             });
             if (error.status === 401 || error.error === 'invalid_token') {
                 store.dispatch(logout());
-                history.push("/login");
+                // history.push("/login");
             }
             else {
                 return next(actionWith({

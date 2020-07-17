@@ -5,7 +5,14 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import ScreenNavigator from './navigation/ScreenNavigator';
-import rootReducer from './store/reducers/rootReducer';
+import rootReducer from './reducers/rootReducer';
+import * as Sentry from 'sentry-expo';
+
+Sentry.init({
+  dsn: 'YOUR DSN HERE',
+  enableInExpoDevelopment: true,
+  debug: true,
+});
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 

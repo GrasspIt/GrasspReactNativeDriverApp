@@ -1,9 +1,8 @@
 import base64 from 'Base64';
 import qs from 'query-string';
 import { updateLoggedInUserInfo } from './userActions';
-// import { logException } from './apiUIHelperActions';
+import { logException } from './apiUIHelperActions';
 
-// import {clearSavedState} from '../localStorage';
 import { API_HOST } from '../middleware/api';
 
 export const LOCAL_STORAGE_ACCESS_TOKEN_KEY = 'accessToken';
@@ -38,7 +37,7 @@ export const setAccessToken = (type, accessToken, accessTokenType) => {
         localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_TYPE, accessTokenType);
     }
     catch (err) {
-        // logException(err, { type, accessToken, accessTokenType });
+        logException(err, { type, accessToken, accessTokenType });
     }
     return {
         type,
@@ -59,15 +58,13 @@ export const LOGOUT = 'LOGOUT';
 export const logout = () => {
     localStorage.removeItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
     localStorage.removeItem(LOCAL_STORAGE_ACCESS_TOKEN_TYPE);
-    // clearSavedState();
-
     return {
         type: LOGOUT
     }
 };
 
 const apiError = (type, error, context) => {
-    // logException(error, context);
+    logException(error, context);
     return {
         type,
         error

@@ -7,13 +7,13 @@ import { State, User } from "../store/reduxStoreState";
 
 import Login from "../components/Login";
 
-const LoginScreen: React.FC<{}> = () => {
+const LoginScreen: React.FC<{ errorMessage?: string}> = () => {
     const dispatch = useDispatch();
     const loggedInUser = useSelector<State, User>(getLoggedInUser);
     const errorMessage = useSelector<State, string>(state => state.api.errorMessage);
 
     useEffect(() => {
-        // if (loggedInUser) history.push('/');
+        //if (loggedInUser) go to dashboard;
     });
 
     const handleSubmit = (username: string, password: string) => {
