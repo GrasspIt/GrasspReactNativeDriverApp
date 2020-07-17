@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import ScreenNavigator from './navigation/ScreenNavigator';
-import rootReducer from './store/rootReducer';
+import rootReducer from './store/reducers/rootReducer';
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 
