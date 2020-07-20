@@ -12,6 +12,8 @@ export const ACCESS_TOKEN_TYPES = {
     app: 'APP'
 };
 
+import * as SecureStore from 'expo-secure-store';
+
 const AUTH_API_ENDPOINT = `${API_HOST}oauth/token`;
 
 export const GET_APP_ACCESS_TOKEN_SUCCESS = 'GET_APP_ACCESS_TOKEN_SUCCESS';
@@ -33,8 +35,8 @@ const fetchAccessToken = (body) => {
 
 export const setAccessToken = (type, accessToken, accessTokenType) => {
     try {
-        localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, accessToken);
-        localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_TYPE, accessTokenType);
+        SecureStore.setItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY, accessToken);
+        SecureStore.setItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_TYPE, accessTokenType);
     }
     catch (err) {
         logException(err, { type, accessToken, accessTokenType });
@@ -46,18 +48,19 @@ export const setAccessToken = (type, accessToken, accessTokenType) => {
 };
 
 export const getAccessTokenType = () => {
-    return localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_TYPE);
+    return SecureStore.getItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_TYPE);
 };
 
 export const getAccessToken = () => {
-    return localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY)
+    return SecureStore.getItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
+
 }
 
 export const LOGOUT = 'LOGOUT';
 
 export const logout = () => {
-    localStorage.removeItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
-    localStorage.removeItem(LOCAL_STORAGE_ACCESS_TOKEN_TYPE);
+    SecureStore.deleteItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
+    SecureStore.deleteItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_TYPE);
     return {
         type: LOGOUT
     }

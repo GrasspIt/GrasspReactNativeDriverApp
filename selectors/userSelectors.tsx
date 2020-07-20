@@ -17,19 +17,16 @@ export const getUsersByName = createSelector(
     }
 );
 
-
 export const getUserFromProps = (state: State, props: any) => {
-    return state.api.entities.users && props && props.userId ?
-        state.api.entities.users[props.userId] :
-        null;
+    const users = state.api.entities.users
+    return users && props && props.userId ?
+        users[props.userId] : null;
 };
 
 export const getUserNotesFromProps = (state: State, props: any) => {
-    return state.api.entities.userNotes && state.api.entities.users && props.userId ?
-        state.api.entities.users[props.userId] ?
-            state.api.entities.users[props.userId].userNotes ?
-                state.api.entities.users[props.userId].userNotes.map((key: any) => state.api.entities.userNotes[key])
-                : null
-            : null
-        : null;
+    const userNotes = state.api.entities.userNotes;
+    const users = state.api.entities.users
+    const user = users[props.userId]
+    return userNotes && users && props.userId && user && user.userNotes ?
+                user.userNotes.map((key: any) => userNotes[key]) : null
 };

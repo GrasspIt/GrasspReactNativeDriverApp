@@ -17,6 +17,7 @@
     "dotenv": "^8.2.0",
     "expo": "^38.0.0",
     "expo-constants": "~9.1.1",
+    "expo-secure-store": "~9.0.1",
     "expo-status-bar": "^1.0.0",
     "humps": "^2.0.1",
     "normalizr": "^3.6.0",

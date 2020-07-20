@@ -1,6 +1,7 @@
 import { schema, normalize } from 'normalizr';
 import { camelizeKeys } from 'humps';
 import qs from 'query-string';
+import * as SecureStore from 'expo-secure-store';
 import { logException } from '../actions/apiUIHelperActions';
 import { LOCAL_STORAGE_ACCESS_TOKEN_KEY, logout } from '../actions/oauthActions';
 
@@ -8,17 +9,19 @@ export const API_HOST = process.env.REACT_APP_API_URL;
 
 export const API_ROOT = API_HOST + 'v1/';
 
+const accessTokenKey = SecureStore.getItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
+
 export const getUserDocumentUrl = (document, userId) =>
-    API_ROOT + `user/${document}/document/${userId}?access_token=${localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY)}`;
+    API_ROOT + `user/${document}/document/${userId}?access_token=${accessTokenKey}`;
 
 export const getDocumentImage = (document, filename :string) => 
-    API_ROOT + `user/${document}/documentfile/${btoa(filename)}?access_token=${localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY)}`;
+    API_ROOT + `user/${document}/documentfile/${btoa(filename)}?access_token=${accessTokenKey}`;
 
 export const getImage = (filename: string) => 
-    API_HOST + `${filename}?access_token=${localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY)}`
+    API_HOST + `${filename}?access_token=${accessTokenKey}`
 
 
-export const getTripTicketUrl = (orderId) => API_ROOT + `order/trip-ticket-${orderId}.html?access_token=${localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY)}`;
+export const getTripTicketUrl = (orderId) => API_ROOT + `order/trip-ticket-${orderId}.html?access_token=${accessTokenKey}`;
 
 // Fetches an API response and normalizes the result JSON according to schema.
 // This makes every API response have the same shape, regardless of how nested it was.
