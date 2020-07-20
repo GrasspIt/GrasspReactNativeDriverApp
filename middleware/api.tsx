@@ -4,8 +4,10 @@ import qs from 'query-string';
 import * as SecureStore from 'expo-secure-store';
 import { logException } from '../actions/apiUIHelperActions';
 import { LOCAL_STORAGE_ACCESS_TOKEN_KEY, logout } from '../actions/oauthActions';
+import { getEnvVars } from '../environment';
+const { apiUrl } = getEnvVars();
 
-export const API_HOST = process.env.REACT_APP_API_URL;
+export const API_HOST = apiUrl;
 
 export const API_ROOT = API_HOST + 'v1/';
 

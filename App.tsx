@@ -7,7 +7,6 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import ScreenNavigator from './navigation/ScreenNavigator';
 import rootReducer from './reducers/rootReducer';
 import * as Sentry from 'sentry-expo';
-import 'dotenv/config';
 
 Sentry.init({
   dsn: 'YOUR DSN HERE',
