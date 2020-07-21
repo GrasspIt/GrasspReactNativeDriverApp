@@ -1,37 +1,32 @@
 import base64 from 'Base64';
 import qs from 'query-string';
+import * as SecureStore from 'expo-secure-store';
 import { updateLoggedInUserInfo } from './userActions';
 // import { logException } from './apiUIHelperActions';
 
 import { API_HOST } from '../middleware/api';
 
+const AUTH_API_ENDPOINT = `${API_HOST}oauth/token`;
+
 export const LOCAL_STORAGE_ACCESS_TOKEN_KEY = 'accessToken';
 export const LOCAL_STORAGE_ACCESS_TOKEN_TYPE = 'accessTokenType';
-export const ACCESS_TOKEN_TYPES = {
-    user: 'USER',
-    app: 'APP'
-};
-
-import * as SecureStore from 'expo-secure-store';
-
-const AUTH_API_ENDPOINT = `${API_HOST}oauth/token`;
+export const ACCESS_TOKEN_TYPES = { user: 'USER', app: 'APP' };
 
 export const GET_APP_ACCESS_TOKEN_SUCCESS = 'GET_APP_ACCESS_TOKEN_SUCCESS';
 export const GET_APP_ACCESS_TOKEN_FAILURE = 'GET_APP_ACCESS_TOKEN_FAILURE';
 export const PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE = 'PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE';
 
-const fetchAccessToken = (body) => {
-
-    return fetch(AUTH_API_ENDPOINT, {
-        mode: 'cors',
-        method: 'POST',
-        headers: {
-            'Authorization': `Basic ${base64.btoa('grassp:grassp')}`,
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body
-    })
-};
+// const fetchAccessToken = (body) => {
+//     return fetch(AUTH_API_ENDPOINT, {
+//         mode: 'cors',
+//         method: 'POST',
+//         headers: {
+//             'Authorization': `Basic ${base64.btoa('grassp:grassp')}`,
+//             'Content-Type': 'application/x-www-form-urlencoded'
+//         },
+//         body
+//     })
+// };
 
 export const setAccessToken = (type, accessToken, accessTokenType) => {
     try {
@@ -39,12 +34,12 @@ export const setAccessToken = (type, accessToken, accessTokenType) => {
         SecureStore.setItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_TYPE, accessTokenType);
     }
     catch (err) {
-        console.log(err)
+        console.log('Failed to set access token:', err)
         // logException(err, { type, accessToken, accessTokenType });
     }
     return {
         type,
-        accessToken
+        payload: accessToken
     }
 };
 
@@ -54,8 +49,7 @@ export const getAccessTokenType = () => {
 
 export const getAccessToken = () => {
     return SecureStore.getItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
-
-}
+};
 
 export const LOGOUT = 'LOGOUT';
 
@@ -69,7 +63,7 @@ export const logout = () => {
 
 const apiError = (type, error, context) => {
     // logException(error, context);
-    console.log(context)
+    console.log('Context:', context)
     return {
         type,
         error
@@ -77,24 +71,43 @@ const apiError = (type, error, context) => {
 };
 
 const callOnFetchAccessToken = (body, successType, failureType, accessTokenType) => {
-    return (dispatch) => {
-        return fetchAccessToken(body).then(
-            response => response.json().then(json => {
-                if (!response.ok) {
-                    return dispatch(apiError(failureType, "Fetch Access Token Fail", { body }))
-                }
-                else {
-                    return dispatch(setAccessToken(successType, json.access_token, accessTokenType));
-                }
-            },
-                error => { return dispatch(apiError(failureType, error, { body })) }
-            )).catch(error => { return dispatch(apiError(failureType, error, { body })) });
+    return async (dispatch) => {
+        try {
+            const response = await fetch(AUTH_API_ENDPOINT, {
+                mode: 'cors',
+                method: 'POST',
+                headers: {
+                    'Authorization': `Basic ${base64.btoa('grassp:grassp')}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body
+            })
+            if (!response.ok) {
+                dispatch(apiError(failureType, "Fetch Access Token Fail", { body }))
+            }
+            const resData = await response.json();
+            dispatch(setAccessToken(successType, resData.access_token, accessTokenType));
+        } catch (error) {
+            dispatch(apiError(failureType, error, { body }));
+        }
     }
+    
+    // return (dispatch) => {
+    //     return fetchAccessToken(body).then(response => response.json().then(json => {
+    //             if (!response.ok) {
+    //                 return dispatch(apiError(failureType, "Fetch Access Token Fail", { body }))
+    //             }
+    //             else {
+    //                 return dispatch(setAccessToken(successType, json.access_token, accessTokenType));
+    //             }
+    //         },
+    //             error => { return dispatch(apiError(failureType, error, { body })) }
+    //         )).catch(error => { return dispatch(apiError(failureType, error, { body })) });
+    // }
 };
 
 export const getAppAccessToken = () => (dispatch, getState) => {
     dispatch(logout());
-
     if (getState().api.accessToken === '')
         return dispatch(callOnFetchAccessToken('grant_type=client_credentials',
             GET_APP_ACCESS_TOKEN_SUCCESS,

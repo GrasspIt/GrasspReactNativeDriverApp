@@ -87,7 +87,7 @@ export default (state = initialState, action: {type: string, payload: any}) => {
             return _.merge({}, state,
                 { loggedInUserId, entities: entitiesReducer(state.entities, action) });
         case LOGIN_FAILURE:
-            return { ...state, errorMessage: 'Incorrect email/password combination' };
+            return { ...state, errorMessage: 'Login failed.' };
     //     case CREATE_DSP_PRODUCT_FAILURE:
     //         return { ...state, errorMessage: action.error };
     //     case GET_USERS_BY_SEARCH_SUCCESS:

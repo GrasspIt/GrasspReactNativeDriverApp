@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import {
-    KeyboardAvoidingView, StyleSheet, Alert
-} from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Alert } from 'react-native';
 import { Input, Button, Card } from 'react-native-elements';
 import Colors from '../constants/Colors';
 
+import { useSelector, useDispatch } from "react-redux";
+import { attemptLogin } from "../actions/oauthActions";
+
 const Login = () => {
+  
+  const dispatch = useDispatch();
 
   const [ passwordInvalid, setPasswordInvalid ] = useState(false);
   const [ emailInvalid, setEmailInvalid ] = useState(false);
@@ -37,8 +40,8 @@ const Login = () => {
           setPasswordInvalid(true);
           return;
       }
-      // login({ email, password });
-  }
+      dispatch(attemptLogin(email, password));
+    }
 
   return (
     <KeyboardAvoidingView
