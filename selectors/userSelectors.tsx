@@ -4,7 +4,6 @@ import { State } from '../store/reduxStoreState';
 export const getLoggedInUser = (state: State) => state.api.loggedInUserId ? state.api.entities.users[state.api.loggedInUserId] : undefined;
 export const getUsers = (state: State) => state.api.entities.users;
 
-
 export const getUnverifiedUsers = (state: State) => state.api.entities.unverifiedUsers;
 export const getSearchUsers = (state: State) => state.api.entities.searchUsers;
 

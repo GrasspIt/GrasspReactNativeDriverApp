@@ -17,7 +17,7 @@ type Props = {
 const LoginScreen = ({ navigation }: Props) => {
     const dispatch = useDispatch();
     const loggedInUser = useSelector<State, User>(getLoggedInUser);
-    const errorMessage = useSelector<State, string>(state => state.api.errorMessage);
+    // const errorMessage = useSelector<State, string>(state => state.api.errorMessage);
 
     useEffect(() => {
         if (loggedInUser) navigation.navigate('Dashboard');
@@ -27,7 +27,8 @@ const LoginScreen = ({ navigation }: Props) => {
         dispatch(attemptLogin(username, password));
     }
 
-    return <Login errorMessage={errorMessage} handleSubmit={handleSubmit} />
+    // return <Login errorMessage={errorMessage} handleSubmit={handleSubmit} />
+    return <Login />
 }
 
 export default LoginScreen;

@@ -6,13 +6,13 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import ScreenNavigator from './navigation/ScreenNavigator';
 import rootReducer from './reducers/rootReducer';
-import * as Sentry from 'sentry-expo';
+// import * as Sentry from 'sentry-expo';
 
-Sentry.init({
-  dsn: 'YOUR DSN HERE',
-  enableInExpoDevelopment: false,
-  debug: true,
-});
+// Sentry.init({
+//   dsn: 'YOUR DSN HERE',
+//   enableInExpoDevelopment: false,
+//   debug: true,
+// });
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 

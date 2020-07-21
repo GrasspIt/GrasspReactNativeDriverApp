@@ -1,7 +1,7 @@
 import base64 from 'Base64';
 import qs from 'query-string';
 import { updateLoggedInUserInfo } from './userActions';
-import { logException } from './apiUIHelperActions';
+// import { logException } from './apiUIHelperActions';
 
 import { API_HOST } from '../middleware/api';
 
@@ -39,7 +39,8 @@ export const setAccessToken = (type, accessToken, accessTokenType) => {
         SecureStore.setItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_TYPE, accessTokenType);
     }
     catch (err) {
-        logException(err, { type, accessToken, accessTokenType });
+        console.log(err)
+        // logException(err, { type, accessToken, accessTokenType });
     }
     return {
         type,
@@ -67,7 +68,8 @@ export const logout = () => {
 };
 
 const apiError = (type, error, context) => {
-    logException(error, context);
+    // logException(error, context);
+    console.log(context)
     return {
         type,
         error

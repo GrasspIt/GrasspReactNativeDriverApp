@@ -2,7 +2,7 @@ import { schema, normalize } from 'normalizr';
 import { camelizeKeys } from 'humps';
 import qs from 'query-string';
 import * as SecureStore from 'expo-secure-store';
-import { logException } from '../actions/apiUIHelperActions';
+// import { logException } from '../actions/apiUIHelperActions';
 import { LOCAL_STORAGE_ACCESS_TOKEN_KEY, logout } from '../actions/oauthActions';
 import { getEnvVars } from '../environment';
 const { apiUrl } = getEnvVars();
@@ -450,12 +450,12 @@ export default store => next => action => {
             type: successType
         })),
         error => {
-            const errorMessage = error.message ? error.message : error.error;
-            logException(errorMessage, {
-                action: requestType,
-                callApi: callAPI,
-                state: store.getState()
-            });
+            // const errorMessage = error.message ? error.message : error.error;
+            // logException(errorMessage, {
+            //     action: requestType,
+            //     callApi: callAPI,
+            //     state: store.getState()
+            // });
             if (error.status === 401 || error.error === 'invalid_token') {
                 store.dispatch(logout());
                 // history.push("/login");
