@@ -118,12 +118,11 @@ const login = (email, password) => {
         LOGIN_SUCCESS, LOGIN_FAILURE, ACCESS_TOKEN_TYPES.user);
 };
 
-export const attemptLogin = (email, password, redirectLocation = undefined) => (dispatch, getState) => {
+export const attemptLogin = (email, password) => (dispatch) => {
     return dispatch(login(email, password))
         .then((response) => {
             if (!response.error) {
                 dispatch(updateLoggedInUserInfo())
-                    // .then(() => redirectLocation && history.push(redirectLocation));
             }
         })
 };

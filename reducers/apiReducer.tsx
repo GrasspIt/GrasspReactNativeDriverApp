@@ -1,19 +1,21 @@
-// import {
-//     PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE, GET_APP_ACCESS_TOKEN_SUCCESS, LOGIN_SUCCESS,
-//     LOGIN_FAILURE, LOGOUT, UPDATE_ACCESS_TOKEN
-// } from '../actions/oauthActions';
-// import {
-//     LOGGED_IN_USER_INFO_SUCCESS, GET_ALL_USERS_SUCCESS, GET_SPECIFIC_USER_SUCCESS,
-//     GET_USERS_WITH_UNVERIFIED_DOCUMENTS_SUCCESS, GET_USER_ID_DOCUMENT_SUCCESS,
-//     GET_USER_MEDICAL_RECOMMENDATION_SUCCESS, VERIFY_USER_DOCUMENT_SUCCESS, UPLOAD_USER_DOCUMENT_SUCCESS,
-//     GET_USERS_BY_SEARCH_SUCCESS, GET_ORDER_HISTORY_FOR_USER_SUCCESS, CREATE_USER_NOTE_SUCCESS, GET_ALL_USER_ID_DOCUMENTS_SUCCESS,
-//     SET_CURRENT_USER_ID_SUCCESS, GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS, SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS,
-//     HIDE_USER_NOTE_SUCCESS,
-//     UNHIDE_USER_NOTE_SUCCESS,
-//     ADMIN_CHANGES_USER_DETAILS_SUCCESS,
-//     HIDE_USER_DOCUMENT_SUCCESS,
-//     UNHIDE_USER_DOCUMENT_SUCCESS
-// } from '../actions/userActions';
+import * as _ from "lodash";
+
+import {
+    PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE, GET_APP_ACCESS_TOKEN_SUCCESS, LOGIN_SUCCESS,
+    LOGIN_FAILURE, LOGOUT, UPDATE_ACCESS_TOKEN
+} from '../actions/oauthActions';
+import {
+    LOGGED_IN_USER_INFO_SUCCESS, GET_ALL_USERS_SUCCESS, GET_SPECIFIC_USER_SUCCESS,
+    GET_USERS_WITH_UNVERIFIED_DOCUMENTS_SUCCESS, GET_USER_ID_DOCUMENT_SUCCESS,
+    GET_USER_MEDICAL_RECOMMENDATION_SUCCESS, VERIFY_USER_DOCUMENT_SUCCESS, UPLOAD_USER_DOCUMENT_SUCCESS,
+    GET_USERS_BY_SEARCH_SUCCESS, GET_ORDER_HISTORY_FOR_USER_SUCCESS, CREATE_USER_NOTE_SUCCESS, GET_ALL_USER_ID_DOCUMENTS_SUCCESS,
+    SET_CURRENT_USER_ID_SUCCESS, GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS, SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS,
+    HIDE_USER_NOTE_SUCCESS,
+    UNHIDE_USER_NOTE_SUCCESS,
+    ADMIN_CHANGES_USER_DETAILS_SUCCESS,
+    HIDE_USER_DOCUMENT_SUCCESS,
+    UNHIDE_USER_DOCUMENT_SUCCESS
+} from '../actions/userActions';
 // import {
 //     CREATE_DSP_SUCCESS, ASSIGN_DSP_MANAGER_SUCCESS, TOGGLE_DSP_MANAGER_ACTIVE_STATUS_SUCCESS,
 //     GET_ALL_DSPS_SUCCESS, GET_DSP_SUCCESS
@@ -60,32 +62,32 @@
 // import { GET_METRICS_FOR_USERS_SUCCESS } from '../actions/metricsActions'
 
 // import merge from 'lodash/merge';
-// import entitiesReducer, { initialState as entitiesInitialState } from './entitiesReducer';
+import entitiesReducer, { initialState as entitiesInitialState } from './entitiesReducer';
 
-// const initialState = {
-//     accessToken: '',
-//     loggedInUserId: '',
-//     errorMessage: '',
-//     entities: entitiesInitialState
-// };
+const initialState = {
+    accessToken: '',
+    loggedInUserId: '',
+    errorMessage: '',
+    entities: entitiesInitialState
+};
 
-export default (state = {}, action: {type: string, payload: any}) => {
+export default (state = initialState, action: {type: string, payload: any}) => {
     switch (action.type) {
-    //     case GET_APP_ACCESS_TOKEN_SUCCESS:
-    //     case UPDATE_ACCESS_TOKEN:
-    //     case LOGIN_SUCCESS:
-    //     case PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE:
-    //         return { ...state, accessToken: action.accessToken };
-    //     case LOGOUT:
-    //         return { ...state, accessToken: '', loggedInUserId: '' };
-    //     case LOGGED_IN_USER_INFO_SUCCESS:
-    //         let entities = action.response.entities;
-    //         let usersFromResponse = entities.users;
-    //         let loggedInUserId = Object.keys(usersFromResponse)[0];
-    //         return merge({}, state,
-    //             { loggedInUserId, entities: entitiesReducer(state.entities, action) });
-    //     case LOGIN_FAILURE:
-    //         return { ...state, errorMessage: 'Incorrect email/password combination' };
+        case GET_APP_ACCESS_TOKEN_SUCCESS:
+        case UPDATE_ACCESS_TOKEN:
+        case LOGIN_SUCCESS:
+        case PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE:
+            return { ...state, accessToken: action.payload.accessToken };
+        case LOGOUT:
+            return { ...state, accessToken: '', loggedInUserId: '' };
+        case LOGGED_IN_USER_INFO_SUCCESS:
+            let entities = action.payload.response.entities;
+            let usersFromResponse = entities.users;
+            let loggedInUserId = Object.keys(usersFromResponse)[0];
+            return _.merge({}, state,
+                { loggedInUserId, entities: entitiesReducer(state.entities, action) });
+        case LOGIN_FAILURE:
+            return { ...state, errorMessage: 'Incorrect email/password combination' };
     //     case CREATE_DSP_PRODUCT_FAILURE:
     //         return { ...state, errorMessage: action.error };
     //     case GET_USERS_BY_SEARCH_SUCCESS:
