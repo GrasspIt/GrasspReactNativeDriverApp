@@ -3,12 +3,12 @@ import { KeyboardAvoidingView, StyleSheet, Alert } from 'react-native';
 import { Input, Button, Card } from 'react-native-elements';
 import Colors from '../constants/Colors';
 
-import { useSelector, useDispatch } from "react-redux";
-import { attemptLogin } from "../actions/oauthActions";
+interface LoginProps {
+  handleLogin: (username: string, password: string) => any;
+}
 
-const Login = () => {
-  
-  const dispatch = useDispatch();
+const Login: React.FC<LoginProps> = (props) => {
+  const { handleLogin } = props;
 
   const [ passwordInvalid, setPasswordInvalid ] = useState(false);
   const [ emailInvalid, setEmailInvalid ] = useState(false);
@@ -25,13 +25,7 @@ const Login = () => {
       setPassword(text);
   }
 
-  // useEffect(() => {
-  //     if ( error ) Alert.alert(error);
-  //     // if a token is in state, navigate to home screen
-  //     if ( token ) navigation.navigate('Home');
-  // }, [error, token])
-
-  const handleLogin = () => {
+  const handleSubmit = () => {
       if (email.trim().length === 0) {
           setEmailInvalid(true);
           return;
@@ -40,7 +34,7 @@ const Login = () => {
           setPasswordInvalid(true);
           return;
       }
-      dispatch(attemptLogin(email, password));
+      handleLogin(email, password);
     }
 
   return (
@@ -58,7 +52,7 @@ const Login = () => {
           autoCapitalize='none'
           leftIcon={{ type: 'font-awesome', color: Colors.black, name: 'envelope' }}
           errorStyle={{ color: 'red' }}
-          // errorMessage={emailInvalid ? 'ENTER EMAIL' : null}
+          errorMessage={emailInvalid ? 'ENTER EMAIL' : undefined}
           onChangeText={text => handleEmailChange(text)}
           value={email}
         />
@@ -71,16 +65,16 @@ const Login = () => {
           leftIcon={{ type: 'font-awesome', color: Colors.black, name: 'lock' }}
           secureTextEntry={true}
           errorStyle={{ color: 'red' }}
-          // errorMessage={passwordInvalid ? 'ENTER PASSWORD' : null}
+          errorMessage={passwordInvalid ? 'ENTER PASSWORD' : undefined}
           onChangeText={text => handlePasswordChange(text)}
           value={password}
         />
         {/* {isLoading ? (
           <Button loading />
         ) : (
-          <Button title='Login' onPress={handleLogin} />
+          <Button title='Login' onPress={handleSubmit} />
         )} */}
-        <Button title='Login' onPress={handleLogin} />
+        <Button title='Login' onPress={handleSubmit} />
       </Card>
     </KeyboardAvoidingView>
   );

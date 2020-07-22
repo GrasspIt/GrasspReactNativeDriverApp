@@ -16,18 +16,6 @@ export const GET_APP_ACCESS_TOKEN_SUCCESS = 'GET_APP_ACCESS_TOKEN_SUCCESS';
 export const GET_APP_ACCESS_TOKEN_FAILURE = 'GET_APP_ACCESS_TOKEN_FAILURE';
 export const PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE = 'PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE';
 
-// const fetchAccessToken = (body) => {
-//     return fetch(AUTH_API_ENDPOINT, {
-//         mode: 'cors',
-//         method: 'POST',
-//         headers: {
-//             'Authorization': `Basic ${base64.btoa('grassp:grassp')}`,
-//             'Content-Type': 'application/x-www-form-urlencoded'
-//         },
-//         body
-//     })
-// };
-
 export const setAccessToken = (type, accessToken, accessTokenType) => {
     try {
         SecureStore.setItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY, accessToken);
@@ -39,7 +27,7 @@ export const setAccessToken = (type, accessToken, accessTokenType) => {
     }
     return {
         type,
-        payload: accessToken
+        accessToken
     }
 };
 
@@ -56,54 +44,41 @@ export const LOGOUT = 'LOGOUT';
 export const logout = () => {
     SecureStore.deleteItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
     SecureStore.deleteItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_TYPE);
-    return {
-        type: LOGOUT
-    }
+    return { type: LOGOUT }
 };
 
 const apiError = (type, error, context) => {
     // logException(error, context);
     console.log('Context:', context)
-    return {
-        type,
-        error
-    }
+    return { type, error }
+};
+
+const fetchAccessToken = (body) => {
+    return fetch(AUTH_API_ENDPOINT, {
+        mode: 'cors',
+        method: 'POST',
+        headers: {
+            'Authorization': `Basic ${base64.btoa('grassp:grassp')}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body
+    })
 };
 
 const callOnFetchAccessToken = (body, successType, failureType, accessTokenType) => {
-    return async (dispatch) => {
-        try {
-            const response = await fetch(AUTH_API_ENDPOINT, {
-                mode: 'cors',
-                method: 'POST',
-                headers: {
-                    'Authorization': `Basic ${base64.btoa('grassp:grassp')}`,
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body
-            })
-            if (!response.ok) {
-                dispatch(apiError(failureType, "Fetch Access Token Fail", { body }))
-            }
-            const resData = await response.json();
-            dispatch(setAccessToken(successType, resData.access_token, accessTokenType));
-        } catch (error) {
-            dispatch(apiError(failureType, error, { body }));
-        }
+    return (dispatch) => {
+        return fetchAccessToken(body).then(
+            response => response.json().then(json => {
+                if (!response.ok) {
+                    return dispatch(apiError(failureType, "Fetch Access Token Fail", { body }))
+                }
+                else {
+                    return dispatch(setAccessToken(successType, json.access_token, accessTokenType));
+                }
+            },
+                error => { return dispatch(apiError(failureType, error, { body })) }
+            )).catch(error => { return dispatch(apiError(failureType, error, { body })) });
     }
-    
-    // return (dispatch) => {
-    //     return fetchAccessToken(body).then(response => response.json().then(json => {
-    //             if (!response.ok) {
-    //                 return dispatch(apiError(failureType, "Fetch Access Token Fail", { body }))
-    //             }
-    //             else {
-    //                 return dispatch(setAccessToken(successType, json.access_token, accessTokenType));
-    //             }
-    //         },
-    //             error => { return dispatch(apiError(failureType, error, { body })) }
-    //         )).catch(error => { return dispatch(apiError(failureType, error, { body })) });
-    // }
 };
 
 export const getAppAccessToken = () => (dispatch, getState) => {
@@ -132,7 +107,7 @@ const login = (email, password) => {
 };
 
 export const attemptLogin = (email, password) => (dispatch) => {
-    return dispatch(login(email, password))
+    dispatch(login(email, password))
         .then((response) => {
             if (!response.error) {
                 dispatch(updateLoggedInUserInfo())

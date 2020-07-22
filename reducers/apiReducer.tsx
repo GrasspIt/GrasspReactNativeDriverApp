@@ -71,17 +71,18 @@ const initialState = {
     entities: entitiesInitialState
 };
 
-export default (state = initialState, action: {type: string, payload: any}) => {
+export default (state = initialState, action) => {
+    console.log('action.type:', action.type)
     switch (action.type) {
         case GET_APP_ACCESS_TOKEN_SUCCESS:
         case UPDATE_ACCESS_TOKEN:
         case LOGIN_SUCCESS:
         case PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE:
-            return { ...state, accessToken: action.payload.accessToken };
+            return { ...state, accessToken: action.accessToken };
         case LOGOUT:
             return { ...state, accessToken: '', loggedInUserId: '' };
         case LOGGED_IN_USER_INFO_SUCCESS:
-            let entities = action.payload.response.entities;
+            let entities = action.response.entities;
             let usersFromResponse = entities.users;
             let loggedInUserId = Object.keys(usersFromResponse)[0];
             return _.merge({}, state,

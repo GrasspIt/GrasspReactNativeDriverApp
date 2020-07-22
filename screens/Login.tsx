@@ -8,6 +8,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
 
 import Login from "../components/Login";
+import { Alert } from "react-native";
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Login'>;
 type Props = {
@@ -17,18 +18,18 @@ type Props = {
 const LoginScreen = ({ navigation }: Props) => {
     const dispatch = useDispatch();
     const loggedInUser = useSelector<State, User>(getLoggedInUser);
-    // const errorMessage = useSelector<State, string>(state => state.api.errorMessage);
+    const errorMessage = useSelector<State, string>(state => state.api.errorMessage);
 
     useEffect(() => {
+        if (errorMessage) Alert.alert(errorMessage);
         if (loggedInUser) navigation.navigate('Dashboard');
     });
 
-    const handleSubmit = (username: string, password: string) => {
+    const handleLogin = (username: string, password: string) => {
         dispatch(attemptLogin(username, password));
     }
 
-    // return <Login errorMessage={errorMessage} handleSubmit={handleSubmit} />
-    return <Login />
+    return <Login handleLogin={handleLogin} />
 }
 
 export default LoginScreen;

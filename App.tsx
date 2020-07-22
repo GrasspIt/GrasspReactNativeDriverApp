@@ -2,10 +2,11 @@ import React from 'react';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension';
 
 import ScreenNavigator from './navigation/ScreenNavigator';
 import rootReducer from './reducers/rootReducer';
+import api from './middleware/api';
+import { createLogger } from 'redux-logger';
 // import * as Sentry from 'sentry-expo';
 
 // Sentry.init({
@@ -14,7 +15,9 @@ import rootReducer from './reducers/rootReducer';
 //   debug: true,
 // });
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+const store = createStore(
+  rootReducer, applyMiddleware(thunk, api, createLogger())
+);
 
 export default function App() {
   return (
