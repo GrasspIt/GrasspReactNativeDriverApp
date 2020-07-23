@@ -20,7 +20,6 @@ const getLoggedInUser = () => ({
 });
 
 export const updateLoggedInUserInfo = () => (dispatch) => {
-    console.log('dispatch getLoggedInUser')
     return dispatch(getLoggedInUser());
 };
 

@@ -21,14 +21,23 @@ const ScreenNavigator = () => {
           <RootStack.Screen
               name="Startup"
               component={Startup}
+              options={{
+                headerShown: false
+              }}
           />
           <RootStack.Screen
               name="Login"
               component={Login}
+              options={{
+                headerShown: false
+              }}
           />
           <RootStack.Screen
             name="Dashboard"
             component={Dashboard}
+            options={{
+              headerShown: false
+            }}
           />
         </RootStack.Navigator>
       </NavigationContainer>

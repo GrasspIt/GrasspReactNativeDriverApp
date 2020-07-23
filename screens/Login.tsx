@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 
+import { useSelector, useDispatch } from "react-redux";
 import { getLoggedInUser } from "../selectors/userSelectors";
 import { attemptLogin } from "../actions/oauthActions";
 import { State, User } from "../store/reduxStoreState";
+
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
 
