@@ -13,34 +13,34 @@ type Props = {
 
 const Startup = ({ navigation }: Props) => {
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   // if a valid token is stored, login automatically
-//   useEffect(() => {
-//     const tryLogin = async () => {
-//         // check if there is a token stored
-//         const loginData = await SecureStore.getItemAsync('accessToken');
-//         console.log('loginData:', loginData);
-//         // if there is no token, navigate to login page
-//         if (!loginData) {
-//             navigation.navigate('Login');
-//             return;
-//         }
-//         // get login data
-//         const parsedData = JSON.parse(loginData);
-//         const { token, expiration } = parsedData;
-//         const expirationDate = new Date(expiration);
-//         // if the token has expired, nagivate to login page
-//         if (expirationDate <= new Date() || !token ) {
-//             navigation.navigate('Login');
-//             return;
-//         }
-//         // if the token hasn't expired, login and navigate to home page
-//         autoLogin(token);
-//         navigation.navigate('Dashboard');
-//     };
-//     tryLogin();
-// }, []);
+  useEffect(() => {
+    const tryLogin = async () => {
+        // check if there is a token stored
+        const loginData = await SecureStore.getItemAsync('accessToken');
+        console.log('loginData:', loginData);
+        // if there is no token, navigate to login page
+        if (!loginData) {
+            navigation.navigate('Login');
+            return;
+        }
+        // get login data
+        const parsedData = JSON.parse(loginData);
+        const { token, expiration } = parsedData;
+        const expirationDate = new Date(expiration);
+        // if the token has expired, nagivate to login page
+        if (expirationDate <= new Date() || !token ) {
+            navigation.navigate('Login');
+            return;
+        }
+        // if the token hasn't expired, login and navigate to home page
+        // autoLogin(token);
+        navigation.navigate('Dashboard');
+    };
+    tryLogin();
+}, []);
 
   return (
     <View style={styles.container}>

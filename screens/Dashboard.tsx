@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Switch, Alert } from 'react-native';
 import { Header } from 'react-native-elements';
 import Colors from '../constants/Colors';
 
@@ -18,6 +18,10 @@ type Props = {
 
 const Dashboard = ({ navigation }: Props) => {
 
+  // refactor to manage switch state based on redux store
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
   const dispatch = useDispatch();
 
   const loggedInUser = useSelector<State, User>(getLoggedInUser);
@@ -31,15 +35,25 @@ const Dashboard = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <Header
-        leftComponent={{ icon: 'menu', color: Colors.light}}
-        rightComponent={{ icon: 'logout', type: 'antdesign', color: Colors.light, onPress: handleLogout }}
+        leftComponent={{ icon: 'menu', color: Colors.black, onPress: () => Alert.alert('This button does nothing yet.')}}
+        rightComponent={{ icon: 'logout', type: 'antdesign', color: Colors.black, onPress: handleLogout }}
+        centerComponent={<Text style={{fontSize: 20}}>Grassp Health</Text>}
         containerStyle={{
-            backgroundColor: Colors.primary,
-            borderBottomWidth: 0
+            backgroundColor: Colors.light,
+            borderBottomWidth: 2,
+            borderBottomColor: Colors.medium
         }}
       />
       <View style={styles.body}>
-        <Text>Welcome {loggedInUser.firstName} {loggedInUser.lastName}!</Text>
+        <Text style={styles.title}>Welcome {loggedInUser.firstName} {loggedInUser.lastName}!</Text>
+        <Switch
+          trackColor={{ false: Colors.red, true: Colors.green }}
+          thumbColor={isEnabled ? "#ffffff" : "#ffffff"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+        />
+        <Text>{isEnabled? 'On Call' : 'Not on Call'}</Text>
       </View>
     </View>
   );
@@ -51,6 +65,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  title: {
+    fontSize: 24,
+    textAlign: 'center',
+    paddingVertical: 20
   },
   body: {
     flex: 1,

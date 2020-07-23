@@ -74,7 +74,7 @@ const Login: React.FC<LoginProps> = (props) => {
         ) : (
           <Button title='Login' onPress={handleSubmit} />
         )} */}
-        <Button title='Login' onPress={handleSubmit} />
+        <Button buttonStyle={styles.button} title='Login' onPress={handleSubmit} />
       </Card>
     </KeyboardAvoidingView>
   );
