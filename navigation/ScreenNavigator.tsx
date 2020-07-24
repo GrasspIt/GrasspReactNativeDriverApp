@@ -6,26 +6,40 @@ import Startup from '../screens/Startup';
 import Login from '../screens/Login';
 import Dashboard from '../screens/Dashboard';
 
-const Stack = createStackNavigator();
+export type RootStackParamsList = {
+  Startup: undefined,
+  Login: undefined,
+  Dashboard: undefined
+}
+
+const RootStack = createStackNavigator<RootStackParamsList>();
 
 const ScreenNavigator = () => {
-
     return (
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
+        <RootStack.Navigator initialRouteName="Login">
+          <RootStack.Screen
               name="Startup"
               component={Startup}
+              options={{
+                headerShown: false
+              }}
           />
-          <Stack.Screen
+          <RootStack.Screen
               name="Login"
               component={Login}
+              options={{
+                headerShown: false
+              }}
           />
-          <Stack.Screen
+          <RootStack.Screen
             name="Dashboard"
             component={Dashboard}
+            options={{
+              headerShown: false
+            }}
           />
-        </Stack.Navigator>
+        </RootStack.Navigator>
       </NavigationContainer>
     );
   }
