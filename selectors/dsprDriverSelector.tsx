@@ -1,14 +1,14 @@
 import { createSelector } from 'reselect';
 import { getDSPRFromProps } from './dsprSelectors';
 import { getUsers, getLoggedInUser } from './userSelectors'
-import { getLocations } from './dsprDriverLocationSelectors';
+// import { getLocations } from './dsprDriverLocationSelectors';
 // import { getDSPProducts } from './dspProductSelector';
 // import { getOrders } from './orderSelectors';
 // import { getAddresses } from './addressSelectors';
 // import { getUserMedicalRecommendations, getUserIdDocuments } from './userDocumentsSelector';
 import { State } from '../store/reduxStoreState';
 
-const getDSPRDrivers = (state: State, props) => state.api.entities.dsprDrivers;
+export const getDSPRDrivers = (state: State, props) => state.api.entities.dsprDrivers;
 export const getDSPRDriverFromProps = (state: State, props) => state.api.entities.dsprDrivers[props.dsprDriverId];
 
 // const mapAddressIntoOrder = (orderId, orders, addresses, users, medRecs, idDocs) => {
@@ -60,20 +60,20 @@ export const getDriversForDSPR = createSelector(
     }
 );
 
-export const getOnCallDriversForDSPR = createSelector(
-    [getDSPRFromProps, getDSPRDrivers, getUsers, getLocations], (dspr, dsprDrivers, users, locations) => {
-        return dspr ?
-            dspr.drivers ?
-                dsprDrivers ?
-                    dspr.drivers.map(driverId => dsprDrivers[driverId]).filter(driver => driver.onCall)
-                        .map(driver => {
-                            return { ...driver, user: users[driver.user], location: locations[driver.currentLocation] }
-                        })
-                    : []
-                : []
-            : undefined;
-    }
-);
+// export const getOnCallDriversForDSPR = createSelector(
+//     [getDSPRFromProps, getDSPRDrivers, getUsers, getLocations], (dspr, dsprDrivers, users, locations) => {
+//         return dspr ?
+//             dspr.drivers ?
+//                 dsprDrivers ?
+//                     dspr.drivers.map(driverId => dsprDrivers[driverId]).filter(driver => driver.onCall)
+//                         .map(driver => {
+//                             return { ...driver, user: users[driver.user], location: locations[driver.currentLocation] }
+//                         })
+//                     : []
+//                 : []
+//             : undefined;
+//     }
+// );
 
 export const getDrivers = (state: State) => { return state.api.entities.dsprDrivers };
 
@@ -86,10 +86,8 @@ export const getOnCallDrivers = createSelector(
 export const getDriverForLoggedInUserGivenDSPR = createSelector(
     [getDSPRFromProps, getDrivers, getLoggedInUser], (dspr, drivers, loggedInUser) => {
         try {
-            return dspr ?
-                dspr.drivers ?
-                    dspr.drivers.map(driverId => drivers[driverId]).filter(driver => driver.user === loggedInUser.id)[0]
-                    : undefined
+            return dspr && dspr.drivers ?
+                dspr.drivers.map(driverId => drivers[driverId]).filter(driver => driver.user === loggedInUser.id)[0]
                 : undefined;
         } catch (e) {
             return undefined;

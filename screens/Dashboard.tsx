@@ -25,6 +25,7 @@ const Dashboard = ({ navigation }: Props) => {
 
   const loggedInUser = useSelector<State, User>(getLoggedInUser);
   console.log('loggedInUser:', loggedInUser)
+  //get dsprDriver instead
 
   const handleLogout = () => {
     dispatch(logout);

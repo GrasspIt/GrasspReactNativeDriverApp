@@ -2,13 +2,15 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Startup from '../screens/Startup';
-import Login from '../screens/Login';
+import DSPRScreen from '../screens/DSPRScreen';
+import StartupScreen from '../screens/StartupScreen';
+import LoginScreen from '../screens/LoginScreen';
 import Dashboard from '../screens/Dashboard';
 
 export type RootStackParamsList = {
   Startup: undefined,
   Login: undefined,
+  DSPRs: undefined,
   Dashboard: undefined
 }
 
@@ -20,14 +22,21 @@ const ScreenNavigator = () => {
         <RootStack.Navigator initialRouteName="Login">
           <RootStack.Screen
               name="Startup"
-              component={Startup}
+              component={StartupScreen}
               options={{
                 headerShown: false
               }}
           />
           <RootStack.Screen
               name="Login"
-              component={Login}
+              component={LoginScreen}
+              options={{
+                headerShown: false
+              }}
+          />
+          <RootStack.Screen
+              name="DSPRs"
+              component={DSPRScreen}
               options={{
                 headerShown: false
               }}

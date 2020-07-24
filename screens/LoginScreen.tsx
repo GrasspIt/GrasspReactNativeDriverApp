@@ -23,7 +23,11 @@ const LoginScreen = ({ navigation }: Props) => {
 
     useEffect(() => {
         if (errorMessage) Alert.alert(errorMessage);
-        if (loggedInUser) navigation.navigate('Dashboard');
+        if (loggedInUser) {
+            loggedInUser.dsprDrivers.length === 1 ?
+            navigation.navigate('DSPRs')
+            : navigation.navigate('Dashboard');
+        }
     });
 
     const handleLogin = (username: string, password: string) => {
