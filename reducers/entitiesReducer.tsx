@@ -28,13 +28,13 @@ import {
 //     CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS,
 //     UPDATE_DSPR_MENU_MECHANISM_SUCCESS
 // } from '../actions/dsprActions';
-// import {
-//     ASSIGN_DSPR_DRIVER_SUCCESS, TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS,
-//     SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS, SET_DRIVER_LOCATION_SUCCESS,
-//     GET_DSPR_DRIVER_SUCCESS,
-//     SET_DRIVER_INFORMATION_SUCCESS,
-//     GET_ALL_DRIVERS_FOR_DSPR_SUCCESS
-// } from '../actions/driverActions';
+import {
+    ASSIGN_DSPR_DRIVER_SUCCESS, TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS,
+    SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS, SET_DRIVER_LOCATION_SUCCESS,
+    GET_DSPR_DRIVER_SUCCESS,
+    SET_DRIVER_INFORMATION_SUCCESS,
+    GET_ALL_DRIVERS_FOR_DSPR_SUCCESS
+} from '../actions/driverActions';
 // import { 
 //     CREATE_DSP_PRODUCT_SUCCESS, GET_PRODUCT_SUCCESS, GET_ALL_PRODUCTS_FOR_DSP_SUCCESS, POST_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS,
 //     CREATE_NEW_CATEGORY_SUCCESS, GET_PRODUCT_BY_SEARCH_SUCCESS, GET_PRODUCT_CATEGORIES_FOR_DSP_SUCCESS, GET_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS 
@@ -100,7 +100,7 @@ export default (state = initialState, action) => {
     let responseEntities = action.response.entities;
     switch (action.type) {
         case LOGGED_IN_USER_INFO_SUCCESS:
-        case GET_ALL_USERS_SUCCESS:
+        // case GET_ALL_USERS_SUCCESS:
         // case CREATE_DSP_SUCCESS:
         // case CREATE_DSPR_SUCCESS:
         // case TOGGLE_DSP_MANAGER_ACTIVE_STATUS_SUCCESS:
@@ -116,8 +116,8 @@ export default (state = initialState, action) => {
         case GET_SPECIFIC_USER_SUCCESS:
         // case GET_PRODUCT_SUCCESS:
         // case CREATE_DSP_PRODUCT_SUCCESS:
-        // case SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS:
-        // case SET_DRIVER_LOCATION_SUCCESS:
+        case SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS:
+        case SET_DRIVER_LOCATION_SUCCESS:
         // case CREATE_INVENTORY_PERIOD_SUCCESS:
         // case GET_ALL_ZIP_CODES_FOR_DSPR_SUCCESS:
         // case ADD_DSPR_ZIP_CODE_SUCCESS:
@@ -126,11 +126,11 @@ export default (state = initialState, action) => {
         // case CREATE_NEW_INVENTORY_TRANSACTION_SUCCESS:
         // case GET_DSPR_CURRENT_INVENTORY_SUCCESS:
         // case GET_DRIVER_INVENTORY_PERIOD_SUCCESS:
-        case GET_USERS_WITH_UNVERIFIED_DOCUMENTS_SUCCESS:
+        // case GET_USERS_WITH_UNVERIFIED_DOCUMENTS_SUCCESS:
         // case ADD_INVENTORY_ITEM_TO_PERIOD_SUCCESS:
-        case GET_USER_ID_DOCUMENT_SUCCESS:
-        case GET_USER_MEDICAL_RECOMMENDATION_SUCCESS:
-        case VERIFY_USER_DOCUMENT_SUCCESS:
+        // case GET_USER_ID_DOCUMENT_SUCCESS:
+        // case GET_USER_MEDICAL_RECOMMENDATION_SUCCESS:
+        // case VERIFY_USER_DOCUMENT_SUCCESS:
         // case SET_DSPR_PRODUCT_PRICE_SUCCESS:
         // case CREATE_NEW_CATEGORY_SUCCESS:
         // case CREATE_NEW_COUPON_SUCCESS:
@@ -139,18 +139,18 @@ export default (state = initialState, action) => {
         // case COMPLETE_ORDER_SUCCESS:
         // case CANCEL_ORDER_SUCCESS:
         // case TOGGLE_DSPR_MANAGER_ORDER_NOTIFICATION_STATUS_SUCCESS:
-        case UPLOAD_USER_DOCUMENT_SUCCESS:
+        // case UPLOAD_USER_DOCUMENT_SUCCESS:
         // case SEND_TEXT_BLAST_SUCCESS:
         // case TRANSFER_INVENTORY_PERIOD_SUCCESS:
         // case GET_ANALYTICS_FOR_DSPR_SUCCESS:
         // case CREATE_USER_NOTE_SUCCESS:
         // case SET_DRIVER_INFORMATION_SUCCESS:
         // case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
-        case HIDE_USER_NOTE_SUCCESS:
-        case UNHIDE_USER_NOTE_SUCCESS:
-        case HIDE_USER_DOCUMENT_SUCCESS:
-        case UNHIDE_USER_DOCUMENT_SUCCESS:
-        case ADMIN_CHANGES_USER_DETAILS_SUCCESS:
+        // case HIDE_USER_NOTE_SUCCESS:
+        // case UNHIDE_USER_NOTE_SUCCESS:
+        // case HIDE_USER_DOCUMENT_SUCCESS:
+        // case UNHIDE_USER_DOCUMENT_SUCCESS:
+        // case ADMIN_CHANGES_USER_DETAILS_SUCCESS:
         // case GET_PRODUCT_CATEGORIES_FOR_DSP_SUCCESS:
         // case CREATE_DSPR_PROMOTION_FOR_PRODUCT_CATEGORY_SUCCESS:
         // case GET_DSPR_PROMOTION_FOR_PRODUCT_CATEGORIES_SUCCESS:
@@ -162,13 +162,13 @@ export default (state = initialState, action) => {
         // case GET_DSPR_SUCCESS:
         // case REMOVE_INVENTORY_ITEM_FROM_PERIOD_SUCCESS:
         // case GET_ORDER_HISTORY_FOR_DSPR_SUCCESS:
-        case GET_ORDER_HISTORY_FOR_USER_SUCCESS:
-        case GET_ALL_USER_ID_DOCUMENTS_SUCCESS:
-        case GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS:
+        // case GET_ORDER_HISTORY_FOR_USER_SUCCESS:
+        // case GET_ALL_USER_ID_DOCUMENTS_SUCCESS:
+        // case GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS:
         // case GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS:
         // case UPDATE_DSPR_MENU_MECHANISM_SUCCESS:
         // case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
-            return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
+            // return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
         
         // case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
         //     const dsprServiceAreaFromResponse:any = responseEntities && responseEntities.dsprDriverServiceAreas ? Object.values(responseEntities.dsprDriverServiceAreas)[0]: undefined;
@@ -203,20 +203,20 @@ export default (state = initialState, action) => {
         //     oldZipCodes[zipCodeId] = {};
         //     state = { ...state, dsprZipCodes: oldZipCodes };
         //     return appendAndUpdateEntitiesFromResponse(state, responseEntities);
-        // case GET_DSPR_DRIVER_SUCCESS:
-        //     const dsprDriverId = Object.keys(responseEntities.dsprDrivers)[0];
-        //     let oldDsprDrivers = state.dsprDrivers;
-        //     oldDsprDrivers[dsprDriverId] = {};
-        //     state = { ...state, dsprDrivers: oldDsprDrivers };
-        //     return appendAndUpdateEntitiesFromResponse(state, responseEntities);
+        case GET_DSPR_DRIVER_SUCCESS:
+            const dsprDriverId = Object.keys(responseEntities.dsprDrivers)[0];
+            let oldDsprDrivers = state.dsprDrivers;
+            oldDsprDrivers[dsprDriverId] = {};
+            state = { ...state, dsprDrivers: oldDsprDrivers };
+            return appendAndUpdateEntitiesFromResponse(state, responseEntities);
         case SET_CURRENT_USER_ID_SUCCESS:
             const idUserKey = Object.keys(responseEntities.users)[0];
             responseEntities.users[idUserKey].identificationDocument = action.response.result;
             return appendAndUpdateEntitiesFromResponse(state, responseEntities);
-        case SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS:
-            const recommendationUserKey = Object.keys(responseEntities.users)[0];
-            responseEntities.users[recommendationUserKey].medicalRecommendation = action.response.result;
-            return appendAndUpdateEntitiesFromResponse(state, responseEntities);
+        // case SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS:
+        //     const recommendationUserKey = Object.keys(responseEntities.users)[0];
+        //     responseEntities.users[recommendationUserKey].medicalRecommendation = action.response.result;
+        //     return appendAndUpdateEntitiesFromResponse(state, responseEntities);
         // case MODIFY_ORDER_SUCCESS:
         //     const modifiedState = merge({},state);
         //     const oldOrderId = responseEntities.orders[action.response.result].modifiedOrder.id;
@@ -240,8 +240,8 @@ export default (state = initialState, action) => {
         //         ordersHistoryForDspr.orders.push(action.response.result)
         //     }
         //     return appendAndUpdateEntitiesFromResponse(modifiedState, responseEntities)
-        case GET_USERS_BY_SEARCH_SUCCESS:
-            return { ...state, searchUsers: responseEntities.searchUsers };
+        // case GET_USERS_BY_SEARCH_SUCCESS:
+        //     return { ...state, searchUsers: responseEntities.searchUsers };
         // case GET_PRODUCT_BY_SEARCH_SUCCESS:
         //     return { ...state, searchProducts: responseEntities.searchProducts };
         // case SEARCH_DSPR_COUPONS_SUCCESS:

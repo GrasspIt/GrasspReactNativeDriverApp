@@ -17,7 +17,6 @@ type Props = {
 }
 
 const Dashboard = ({ navigation }: Props) => {
-
   // refactor to manage switch state based on redux store
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);

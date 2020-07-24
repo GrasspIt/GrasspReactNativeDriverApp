@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
@@ -15,8 +15,13 @@ import { createLogger } from 'redux-logger';
 //   debug: true,
 // });
 
+const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 const store = createStore(
-  rootReducer, applyMiddleware(thunk, api, createLogger())
+  rootReducer,
+  composeEnhancers(
+    applyMiddleware(thunk, api, createLogger())
+  )
 );
 
 export default function App() {

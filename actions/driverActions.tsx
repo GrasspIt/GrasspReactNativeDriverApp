@@ -46,7 +46,6 @@ const dsprDriverGetter = (dsprDriverId) => {
             endPoint: `dspr/driver/${dsprDriverId}`,
             schema: Schemas.DSPR_DRIVER,
         }
-
     }
 };
 
