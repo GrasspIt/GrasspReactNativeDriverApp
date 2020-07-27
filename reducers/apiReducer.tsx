@@ -32,10 +32,10 @@ import {
 //     CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS,
 //     UPDATE_DSPR_MENU_MECHANISM_SUCCESS
 // } from '../actions/dsprActions';
-// import {
-//     ASSIGN_DSPR_DRIVER_SUCCESS, TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS, SET_DRIVER_LOCATION_SUCCESS,
-//     SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS, GET_DSPR_DRIVER_SUCCESS, SET_DRIVER_INFORMATION_SUCCESS, GET_ALL_DRIVERS_FOR_DSPR_SUCCESS
-// } from '../actions/driverActions';
+import {
+    ASSIGN_DSPR_DRIVER_SUCCESS, TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS, SET_DRIVER_LOCATION_SUCCESS,
+    SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS, GET_DSPR_DRIVER_SUCCESS, SET_DRIVER_INFORMATION_SUCCESS, GET_ALL_DRIVERS_FOR_DSPR_SUCCESS
+} from '../actions/driverActions';
 // import { 
 //     CREATE_DSP_PRODUCT_SUCCESS, GET_PRODUCT_SUCCESS, GET_ALL_PRODUCTS_FOR_DSP_SUCCESS, CREATE_NEW_CATEGORY_SUCCESS, 
 //     GET_PRODUCT_BY_SEARCH_SUCCESS, CREATE_DSP_PRODUCT_FAILURE, GET_PRODUCT_CATEGORIES_FOR_DSP_SUCCESS, GET_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS,
@@ -61,13 +61,13 @@ import {
 // import { SEND_TEXT_BLAST_SUCCESS } from '../actions/marketingActions';
 // import { GET_METRICS_FOR_USERS_SUCCESS } from '../actions/metricsActions'
 
-// import merge from 'lodash/merge';
+import merge from 'lodash/merge';
 import entitiesReducer, { initialState as entitiesInitialState } from './entitiesReducer';
 
 const initialState = {
     accessToken: '',
     loggedInUserId: '',
-    drspDriverId: '',
+    dDriverId: '',
     errorMessage: '',
     entities: entitiesInitialState
 };
@@ -113,7 +113,7 @@ export default (state = initialState, action) => {
     //     case SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS:
     //     case GET_PRODUCT_SUCCESS:
     //     case CREATE_DSP_PRODUCT_SUCCESS:
-    //     case GET_DSPR_DRIVER_SUCCESS:
+        case GET_DSPR_DRIVER_SUCCESS:
     //     case CREATE_INVENTORY_PERIOD_SUCCESS:
     //     case GET_ALL_ZIP_CODES_FOR_DSPR_SUCCESS:
     //     case ADD_DSPR_ZIP_CODE_SUCCESS:
@@ -167,8 +167,8 @@ export default (state = initialState, action) => {
     //     case GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS:
     //     case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
     //     case UPDATE_DSPR_MENU_MECHANISM_SUCCESS:
-    //         const newState = { ...state, entities: entitiesInitialState };
-    //         return merge({}, newState, { entities: entitiesReducer(state.entities, action) });
+            const newState = { ...state, entities: entitiesInitialState };
+            return merge({}, newState, { entities: entitiesReducer(state.entities, action) });
     //     case GET_ALL_USER_ID_DOCUMENTS_SUCCESS:
     //         const newEntitiesState = { ...state, entities: {...state.entities, usersIdDocuments: {}}};
     //         return merge({}, newEntitiesState, {entities: entitiesReducer(newEntitiesState.entities, action)})

@@ -5,6 +5,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
 import { useSelector, useDispatch } from "react-redux";
 import * as SecureStore from 'expo-secure-store';
+import { updateLoggedInUserInfo } from '../actions/userActions';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Startup'>;
 type Props = {
@@ -31,13 +32,13 @@ const Startup = ({ navigation }: Props) => {
         const { token, expiration } = parsedData;
         const expirationDate = new Date(expiration);
         // if the token has expired, nagivate to login page
-        if (expirationDate <= new Date() || !token ) {
-            navigation.navigate('Login');
-            return;
-        }
+        // if (expirationDate <= new Date() || !token ) {
+        //     navigation.navigate('Login');
+        //     return;
+        // }
         // if the token hasn't expired, login and navigate to home page
-        // autoLogin(token);
-        navigation.navigate('Dashboard');
+        dispatch(updateLoggedInUserInfo());
+        // navigation.navigate('Dashboard');
     };
     tryLogin();
 }, []);

@@ -10,6 +10,7 @@ import { RootStackParamsList } from '../navigation/ScreenNavigator';
 
 import Login from "../components/Login";
 import { Alert } from "react-native";
+import { getDSPRDriver } from "../actions/driverActions";
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Login'>;
 type Props = {
@@ -32,11 +33,14 @@ const LoginScreen = ({ navigation }: Props) => {
         };
         if (loggedInUser) {
             setIsLoading(false);
-            loggedInUser.dsprDrivers.length > 1 ?
-            navigation.navigate('DSPRs', { driverIds: loggedInUser.dsprDrivers })
-            : navigation.navigate('Dashboard');
+            if (loggedInUser.dsprDrivers.length === 1) {
+                navigation.navigate('DSPRs', { driverIds: loggedInUser.dsprDrivers })
+            } else {
+                // dispatch(getDSPRDriver(loggedInUser.dsprDrivers[0]));
+                navigation.navigate('Dashboard', { driverId: loggedInUser.dsprDrivers[0] });
+            }
         }
-    });
+    }, [loggedInUser, errorMessage]);
 
     const handleLogin = (username: string, password: string) => {
         dispatch(attemptLogin(username, password));
