@@ -5,10 +5,11 @@ import Colors from '../constants/Colors';
 
 interface LoginProps {
   handleLogin: (username: string, password: string) => any;
+  isLoading: boolean;
 }
 
 const Login: React.FC<LoginProps> = (props) => {
-  const { handleLogin } = props;
+  const { handleLogin, isLoading } = props;
 
   const [ passwordInvalid, setPasswordInvalid ] = useState(false);
   const [ emailInvalid, setEmailInvalid ] = useState(false);
@@ -35,6 +36,8 @@ const Login: React.FC<LoginProps> = (props) => {
           return;
       }
       handleLogin(email, password);
+      setEmail('');
+      setPassword('');
     }
 
   return (
@@ -69,12 +72,12 @@ const Login: React.FC<LoginProps> = (props) => {
           onChangeText={text => handlePasswordChange(text)}
           value={password}
         />
-        {/* {isLoading ? (
-          <Button loading />
+        {isLoading ? (
+          <Button buttonStyle={styles.button} loading />
         ) : (
-          <Button title='Login' onPress={handleSubmit} />
-        )} */}
-        <Button buttonStyle={styles.button} title='Login' onPress={handleSubmit} />
+          <Button buttonStyle={styles.button} title='Login' onPress={handleSubmit} />
+        )}
+        {/* <Button buttonStyle={styles.button} title='Login' onPress={handleSubmit} /> */}
       </Card>
     </KeyboardAvoidingView>
   );

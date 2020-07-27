@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-elements';
 import Colors from '../constants/Colors';
 
 type CardProps = {
     dspr: any;
+    handleSelect: (dsprId: string) => void;
 }
 
-const DsprCard = ({dspr}: CardProps) => {
-
-    console.log(dspr)
-    //get DSPR based api.entities.DSPRs
+const DsprCard = ({dspr, handleSelect}: CardProps) => {
 
   return (
-    <Card
-        // image={DSPR.imageLocation}
-    >
-      <View>
-        {/* <Text style={styles.title}>Welcome</Text> */}
-        <Text style={styles.title}>{dspr.name}</Text>
-      </View>
-    </Card>
+    <TouchableOpacity onPress={() => handleSelect(dspr.id)}>
+      <Card
+          // image={dspr.imageLocation}
+      >
+        <View>
+          {/* <Text style={styles.title}>Welcome</Text> */}
+          <Text style={styles.title}>{dspr.name}</Text>
+        </View>
+      </Card>
+    </TouchableOpacity>
   );
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 import { getLoggedInUser } from "../selectors/userSelectors";
@@ -17,24 +17,33 @@ type Props = {
 }
 
 const LoginScreen = ({ navigation }: Props) => {
+
+    const [ isLoading, setIsLoading ] = useState(false);
+
     const dispatch = useDispatch();
     const loggedInUser = useSelector<State, User>(getLoggedInUser);
     const errorMessage = useSelector<State, string>(state => state.api.errorMessage);
+    console.log(loggedInUser);
 
     useEffect(() => {
-        if (errorMessage) Alert.alert(errorMessage);
+        if (!loggedInUser && errorMessage) {
+            setIsLoading(false);
+            Alert.alert(errorMessage);
+        };
         if (loggedInUser) {
-            loggedInUser.dsprDrivers.length === 1 ?
-            navigation.navigate('DSPRs')
+            setIsLoading(false);
+            loggedInUser.dsprDrivers.length > 1 ?
+            navigation.navigate('DSPRs', { driverIds: loggedInUser.dsprDrivers })
             : navigation.navigate('Dashboard');
         }
     });
 
     const handleLogin = (username: string, password: string) => {
         dispatch(attemptLogin(username, password));
+        setIsLoading(true);
     }
 
-    return <Login handleLogin={handleLogin} />
+    return <Login handleLogin={handleLogin} isLoading={isLoading} />
 }
 
 export default LoginScreen;

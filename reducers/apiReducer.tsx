@@ -67,6 +67,7 @@ import entitiesReducer, { initialState as entitiesInitialState } from './entitie
 const initialState = {
     accessToken: '',
     loggedInUserId: '',
+    drspDriverId: '',
     errorMessage: '',
     entities: entitiesInitialState
 };
@@ -86,7 +87,7 @@ export default (state = initialState, action) => {
             let usersFromResponse = entities.users;
             let loggedInUserId = Object.keys(usersFromResponse)[0];
             return _.merge({}, state,
-                { loggedInUserId, entities: entitiesReducer(state.entities, action) });
+                { loggedInUserId, errorMessage: '', entities: entitiesReducer(state.entities, action) });
         case LOGIN_FAILURE:
             return { ...state, errorMessage: 'Login failed.' };
     //     case CREATE_DSP_PRODUCT_FAILURE:

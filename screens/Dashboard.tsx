@@ -27,8 +27,8 @@ const Dashboard = ({ navigation }: Props) => {
   console.log('loggedInUser:', loggedInUser)
   //get dsprDriver instead
 
-  const handleLogout = () => {
-    dispatch(logout);
+  const handleLogout = async () => {
+    await dispatch(logout());
     navigation.navigate('Login');
 }
 

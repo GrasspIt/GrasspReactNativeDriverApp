@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { getLoggedInUser } from "../selectors/userSelectors";
+import { getDSPR } from "../actions/dsprActions";
 
 import { State } from "../store/reduxStoreState";
 
@@ -15,30 +15,30 @@ import DsprCard from "../components/DsprCard";
 type DSPRScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'DSPRs'>;
 type Props = {
     navigation: DSPRScreenNavigationProp;
+    route;
 }
 
-const DSPRScreen = ({ navigation }: Props) => {
+const DSPRScreen = ({ route, navigation }: Props) => {
 
-    // const dispatch = useDispatch();
-    // const loggedInUser = useSelector<State, User>(getLoggedInUser);
-    // const errorMessage = useSelector<State, string>(state => state.api.errorMessage);
+    const { driverIds } = route.params;
     const dsprs = useSelector<State, any>(state => state.api.entities.DSPRs);
+    // need entities.DSPRs to include imageLocation
 
-    var dsprData = Object.values(dsprs)
+    const dsprData = Object.values(dsprs);
 
-    // useEffect(() => {
-    //     if (loggedInUser) {
-    //         dsprDrivers.length > 1 ? navigation.navigate('DSPRScreen')
-    //         : navigation.navigate('Dashboard');
-    //     }
-    // });
+
+    const handleSelectDspr = (dsprId: string) => {
+        console.log(dsprId)
+        // find which driverId is attached to the selected dsprId and store in state
+        // const selectedDriverId = driverIds.filter(driverId => driverId === dsprId)
+    }
 
     return (
         <View style={styles.container}>
             <FlatList
                 data={dsprData}
-                renderItem={item => <DsprCard dspr={item.item}/>}
-                keyExtractor={item => item.id}
+                renderItem={item => <DsprCard handleSelect={handleSelectDspr} dspr={item.item}/>}
+                keyExtractor={(item: any) => item.id.toString()}
             />
         </View>
     )
