@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Switch, Alert } from 'react-native';
 import { Header } from 'react-native-elements';
 import Colors from '../constants/Colors';
@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { State, User } from "../store/reduxStoreState";
 import { getLoggedInUser } from "../selectors/userSelectors";
 import { logout } from "../actions/oauthActions";
+import { getDSPRDriver } from "../actions/driverActions";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
@@ -14,10 +15,12 @@ import { RootStackParamsList } from '../navigation/ScreenNavigator';
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Dashboard'>;
 type Props = {
     navigation: LoginScreenNavigationProp;
+    route;
 }
 
-const Dashboard = ({ navigation }: Props) => {
+const Dashboard = ({ route, navigation }: Props) => {
   // refactor to manage switch state based on redux store
+  const { driverId } = route.params;
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
@@ -26,6 +29,10 @@ const Dashboard = ({ navigation }: Props) => {
   const loggedInUser = useSelector<State, User>(getLoggedInUser);
   console.log('loggedInUser:', loggedInUser)
   //get dsprDriver instead
+
+  useEffect(() => {
+    dispatch(getDSPRDriver(driverId));
+  }, [driverId])
 
   const handleLogout = async () => {
     await dispatch(logout());

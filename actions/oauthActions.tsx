@@ -4,8 +4,10 @@ import * as SecureStore from 'expo-secure-store';
 import { updateLoggedInUserInfo } from './userActions';
 // import { logException } from './apiUIHelperActions';
 
-import { API_HOST } from '../middleware/api';
+import { getEnvVars } from '../environment';
+const { apiUrl } = getEnvVars();
 
+export const API_HOST = apiUrl;
 const AUTH_API_ENDPOINT = `${API_HOST}oauth/token`;
 
 export const LOCAL_STORAGE_ACCESS_TOKEN_KEY = 'accessToken';
@@ -54,6 +56,9 @@ const apiError = (type, error, context) => {
 };
 
 const fetchAccessToken = (body) => {
+    console.log("AUTH_API_ENDPOINT ", AUTH_API_ENDPOINT)
+    console.log("API_HOST ", API_HOST) 
+    console.log("${API_HOST}oauth/token }", `${API_HOST}oauth/token}`) 
     return fetch(AUTH_API_ENDPOINT, {
         mode: 'cors',
         method: 'POST',

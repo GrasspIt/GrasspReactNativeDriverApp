@@ -10,7 +10,6 @@ import { RootStackParamsList } from '../navigation/ScreenNavigator';
 
 import Login from "../components/Login";
 import { Alert } from "react-native";
-import { getDSPRDriver } from "../actions/driverActions";
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Login'>;
 type Props = {
@@ -24,7 +23,6 @@ const LoginScreen = ({ navigation }: Props) => {
     const dispatch = useDispatch();
     const loggedInUser = useSelector<State, User>(getLoggedInUser);
     const errorMessage = useSelector<State, string>(state => state.api.errorMessage);
-    console.log(loggedInUser);
 
     useEffect(() => {
         if (!loggedInUser && errorMessage) {
@@ -33,10 +31,9 @@ const LoginScreen = ({ navigation }: Props) => {
         };
         if (loggedInUser) {
             setIsLoading(false);
-            if (loggedInUser.dsprDrivers.length === 1) {
+            if (loggedInUser.dsprDrivers.length > 1) {
                 navigation.navigate('DSPRs', { driverIds: loggedInUser.dsprDrivers })
             } else {
-                // dispatch(getDSPRDriver(loggedInUser.dsprDrivers[0]));
                 navigation.navigate('Dashboard', { driverId: loggedInUser.dsprDrivers[0] });
             }
         }
