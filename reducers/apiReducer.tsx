@@ -67,7 +67,6 @@ import entitiesReducer, { initialState as entitiesInitialState } from './entitie
 const initialState = {
     accessToken: '',
     loggedInUserId: '',
-    dDriverId: '',
     errorMessage: '',
     entities: entitiesInitialState
 };
@@ -109,8 +108,8 @@ export default (state = initialState, action) => {
     //     case GET_ALL_DSPRS_FOR_DSP_SUCCESS:
     //     case GET_DSPR_SUCCESS:
     //     case GET_SPECIFIC_USER_SUCCESS:
-    //     case SET_DRIVER_LOCATION_SUCCESS:
-    //     case SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS:
+        case SET_DRIVER_LOCATION_SUCCESS:
+        case SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS:
     //     case GET_PRODUCT_SUCCESS:
     //     case CREATE_DSP_PRODUCT_SUCCESS:
         case GET_DSPR_DRIVER_SUCCESS:

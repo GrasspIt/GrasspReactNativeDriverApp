@@ -1,5 +1,4 @@
 import { API_ROOT, CALL_API, Schemas } from '../middleware/api';
-import { LOCAL_STORAGE_ACCESS_TOKEN_KEY } from "./oauthActions";
 
 export const LOGGED_IN_USER_INFO = 'LOGGED_IN_USER_INFO';
 export const LOGGED_IN_USER_INFO_SUCCESS = 'LOGGED_IN_USER_INFO_SUCCESS';
@@ -7,7 +6,7 @@ export const LOGGED_IN_USER_INFO_FAILURE = 'LOGGED_IN_USER_INFO_FAILURE';
 
 import * as SecureStore from 'expo-secure-store';
 
-const accessTokenKey = SecureStore.getItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
+const accessTokenKey = SecureStore.getItemAsync('accessToken');
 
 // Get the info about the logged in user
 const getLoggedInUser = () => ({

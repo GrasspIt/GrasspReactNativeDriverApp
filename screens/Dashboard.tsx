@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { State, User, DsprDriver } from "../store/reduxStoreState";
 import { getLoggedInUser } from "../selectors/userSelectors";
 import { logout } from "../actions/oauthActions";
-import { getDSPRDriver } from "../actions/driverActions";
+import { getDSPRDriver, setDriverOnCallState } from "../actions/driverActions";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
@@ -19,14 +19,24 @@ type Props = {
 }
 
 const Dashboard = ({ route, navigation }: Props) => {
-  // refactor to manage switch state based on redux store
   const { driverId } = route.params;
+
   const dsprDriver = useSelector<State, DsprDriver>(state => state.api.entities.dsprDrivers[driverId]);
   const loggedInUser = useSelector<State, User>(getLoggedInUser);
   
+  const [ isOnCall, setIsOnCall ] = useState(dsprDriver.onCall);
+  
   const dispatch = useDispatch();
-  const [isEnabled, setIsEnabled] = useState(dsprDriver.onCall);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  const setOnCallState = () => {
+    let onCallString = isOnCall ? 'on' : null;
+    dispatch(setDriverOnCallState(driverId, onCallString));
+  }
+  
+  const toggleSwitch = () => {
+    setIsOnCall(!isOnCall);
+    setOnCallState();
+  }
 
   useEffect(() => {
     dispatch(getDSPRDriver(driverId));
@@ -43,7 +53,7 @@ const Dashboard = ({ route, navigation }: Props) => {
         leftComponent={{
           icon: 'menu',
           color: Colors.black,
-          onPress: () => Alert.alert('This button does nothing yet.')
+          onPress: () => Alert.alert('This button does nothing.')
         }}
         rightComponent={{
           icon: 'logout',
@@ -64,12 +74,12 @@ const Dashboard = ({ route, navigation }: Props) => {
         </Text>
         <Switch
           trackColor={{ false: Colors.red, true: Colors.green }}
-          thumbColor={isEnabled ? "#ffffff" : "#ffffff"}
+          thumbColor={dsprDriver.onCall ? "#ffffff" : "#ffffff"}
           ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch}
-          value={isEnabled}
+          value={dsprDriver.onCall}
         />
-        <Text>{isEnabled? 'On Call' : 'Not on Call'}</Text>
+        <Text>{dsprDriver.onCall ? 'On Call' : 'Not on Call'}</Text>
       </View>
     </View>
   );

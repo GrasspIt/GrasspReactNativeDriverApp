@@ -3,7 +3,7 @@ import { camelizeKeys } from 'humps';
 import qs from 'query-string';
 import * as SecureStore from 'expo-secure-store';
 // import { logException } from '../actions/apiUIHelperActions';
-import { LOCAL_STORAGE_ACCESS_TOKEN_KEY, logout } from '../actions/oauthActions';
+import { logout } from '../actions/oauthActions';
 import { getEnvVars } from '../environment';
 const { apiUrl } = getEnvVars();
 
@@ -11,7 +11,7 @@ export const API_HOST = apiUrl;
 
 export const API_ROOT = API_HOST + 'v1/';
 
-const accessTokenKey = SecureStore.getItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
+const accessTokenKey = SecureStore.getItemAsync('accessToken');
 
 export const getUserDocumentUrl = (document, userId) =>
     API_ROOT + `user/${document}/document/${userId}?access_token=${accessTokenKey}`;
