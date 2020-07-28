@@ -56,9 +56,6 @@ const apiError = (type, error, context) => {
 };
 
 const fetchAccessToken = (body) => {
-    console.log("AUTH_API_ENDPOINT ", AUTH_API_ENDPOINT)
-    console.log("API_HOST ", API_HOST) 
-    console.log("${API_HOST}oauth/token }", `${API_HOST}oauth/token}`) 
     return fetch(AUTH_API_ENDPOINT, {
         mode: 'cors',
         method: 'POST',

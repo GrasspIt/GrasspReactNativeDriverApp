@@ -190,7 +190,7 @@ interface DsprManager {
     shouldNotifyOnOrderStatusChanges?: boolean;
 }
 
-interface DsprDriver {
+export interface DsprDriver {
     id: number;
     user: number;
     dspr: number;
