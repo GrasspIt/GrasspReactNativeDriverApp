@@ -1,26 +1,24 @@
 import { API_ROOT, CALL_API, Schemas } from '../middleware/api';
 
-export const LOGGED_IN_USER_INFO = 'LOGGED_IN_USER_INFO';
-export const LOGGED_IN_USER_INFO_SUCCESS = 'LOGGED_IN_USER_INFO_SUCCESS';
-export const LOGGED_IN_USER_INFO_FAILURE = 'LOGGED_IN_USER_INFO_FAILURE';
+// export const LOGGED_IN_USER_INFO = 'LOGGED_IN_USER_INFO';
+// export const LOGGED_IN_USER_INFO_SUCCESS = 'LOGGED_IN_USER_INFO_SUCCESS';
+// export const LOGGED_IN_USER_INFO_FAILURE = 'LOGGED_IN_USER_INFO_FAILURE';
 
+// const getLoggedInUser = () => ({
+//     [CALL_API]: {
+//         httpAction: 'GET',
+//         types: [LOGGED_IN_USER_INFO, LOGGED_IN_USER_INFO_SUCCESS, LOGGED_IN_USER_INFO_FAILURE],
+//         endPoint: 'user',
+//         schema: Schemas.USER
+//     }
+// });
+
+// export const updateLoggedInUserInfo = () => (dispatch) => {
+//     return dispatch(getLoggedInUser());
+// };
 import * as SecureStore from 'expo-secure-store';
 
 const accessTokenKey = SecureStore.getItemAsync('accessToken');
-
-// Get the info about the logged in user
-const getLoggedInUser = () => ({
-    [CALL_API]: {
-        httpAction: 'GET',
-        types: [LOGGED_IN_USER_INFO, LOGGED_IN_USER_INFO_SUCCESS, LOGGED_IN_USER_INFO_FAILURE],
-        endPoint: 'user',
-        schema: Schemas.USER
-    }
-});
-
-export const updateLoggedInUserInfo = () => (dispatch) => {
-    return dispatch(getLoggedInUser());
-};
 
 export const GET_ALL_USERS = 'GET_ALL_USERS';
 export const GET_ALL_USERS_SUCCESS = 'GET_ALL_USERS_SUCCESS';

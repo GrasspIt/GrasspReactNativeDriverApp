@@ -1,7 +1,9 @@
 import base64 from 'Base64';
 import qs from 'query-string';
 import * as SecureStore from 'expo-secure-store';
-import { updateLoggedInUserInfo } from './userActions';
+import { CALL_API, Schemas } from '../middleware/api';
+
+// import { updateLoggedInUserInfo } from './userActions';
 // import { logException } from './apiUIHelperActions';
 
 import { getEnvVars } from '../environment';
@@ -92,6 +94,22 @@ export const getAppAccessToken = () => (dispatch, getState) => {
             ACCESS_TOKEN_TYPES.app
         ));
     return {};
+};
+export const LOGGED_IN_USER_INFO = 'LOGGED_IN_USER_INFO';
+export const LOGGED_IN_USER_INFO_SUCCESS = 'LOGGED_IN_USER_INFO_SUCCESS';
+export const LOGGED_IN_USER_INFO_FAILURE = 'LOGGED_IN_USER_INFO_FAILURE';
+
+const getLoggedInUser = () => ({
+    [CALL_API]: {
+        httpAction: 'GET',
+        types: [LOGGED_IN_USER_INFO, LOGGED_IN_USER_INFO_SUCCESS, LOGGED_IN_USER_INFO_FAILURE],
+        endPoint: 'user',
+        schema: Schemas.USER
+    }
+});
+
+export const updateLoggedInUserInfo = () => (dispatch) => {
+    return dispatch(getLoggedInUser());
 };
 
 export const LOGIN = 'LOGIN';
