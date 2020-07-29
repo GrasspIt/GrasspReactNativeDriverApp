@@ -10,8 +10,8 @@ import Dashboard from '../screens/Dashboard';
 export type RootStackParamsList = {
   Startup: undefined,
   Login: undefined,
-  DSPRs: undefined,
-  Dashboard: undefined
+  DSPRs: { driverIds: number[] },
+  Dashboard: { driverId: number }
 }
 
 const RootStack = createStackNavigator<RootStackParamsList>();

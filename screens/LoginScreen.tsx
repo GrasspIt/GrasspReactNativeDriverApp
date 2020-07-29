@@ -31,7 +31,7 @@ const LoginScreen = ({ navigation }: Props) => {
             setIsLoading(false);
             Alert.alert(errorMessage);
         };
-        if (loggedInUser && !dsprDriver) {
+        if (loggedInUser.dsprDrivers && !dsprDriver) {
             setIsLoading(false);
             if (loggedInUser.dsprDrivers.length > 1) {
                 navigation.navigate('DSPRs', { driverIds: loggedInUser.dsprDrivers })

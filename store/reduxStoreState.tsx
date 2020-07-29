@@ -135,7 +135,7 @@ interface DspManager {
 }
 
 type MenuMechanism = "closest_driver" | "service_area"
-interface DSPR {
+export interface DSPR {
     id: number;
     name: string;
     deliveryServiceProvider: number;

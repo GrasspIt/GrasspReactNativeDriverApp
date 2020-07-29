@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { getDSPR } from "../actions/dsprActions";
 
 import { State } from "../store/reduxStoreState";
 
@@ -21,8 +20,8 @@ type Props = {
 const DSPRScreen = ({ route, navigation }: Props) => {
 
     const { driverIds } = route.params;
-    const dsprs = useSelector<State, any>(state => state.api.entities.DSPRs);
-    const dsprDrivers = useSelector<State, any>(state => state.api.entities.dsprDrivers);
+    const dsprs = useSelector<State, Object>(state => state.api.entities.DSPRs);
+    const dsprDrivers = useSelector<State, Object>(state => state.api.entities.dsprDrivers);
 
     // need entities.DSPRs to include imageLocation
 
