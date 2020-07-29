@@ -34,7 +34,7 @@ import {
 // } from '../actions/dsprActions';
 import {
     ASSIGN_DSPR_DRIVER_SUCCESS, TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS, SET_DRIVER_LOCATION_SUCCESS,
-    SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS, GET_DSPR_DRIVER_SUCCESS, SET_DRIVER_INFORMATION_SUCCESS, GET_ALL_DRIVERS_FOR_DSPR_SUCCESS
+    SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS, GET_DSPR_DRIVER_SUCCESS, SET_DRIVER_INFORMATION_SUCCESS, GET_ALL_DRIVERS_FOR_DSPR_SUCCESS, SET_DSPR_DRIVER_ID
 } from '../actions/driverActions';
 // import { 
 //     CREATE_DSP_PRODUCT_SUCCESS, GET_PRODUCT_SUCCESS, GET_ALL_PRODUCTS_FOR_DSP_SUCCESS, CREATE_NEW_CATEGORY_SUCCESS, 
@@ -67,6 +67,7 @@ import entitiesReducer, { initialState as entitiesInitialState } from './entitie
 const initialState = {
     accessToken: '',
     loggedInUserId: '',
+    dsprDriverId: '',
     errorMessage: '',
     entities: entitiesInitialState
 };
@@ -89,6 +90,8 @@ export default (state = initialState, action) => {
                 { loggedInUserId, errorMessage: '', entities: entitiesReducer(state.entities, action) });
         case LOGIN_FAILURE:
             return { ...state, errorMessage: 'Login failed.' };
+        case SET_DSPR_DRIVER_ID:
+            return { ...state, dsprDriverId: action.payload}
     //     case CREATE_DSP_PRODUCT_FAILURE:
     //         return { ...state, errorMessage: action.error };
     //     case GET_USERS_BY_SEARCH_SUCCESS:

@@ -16,7 +16,6 @@ const DsprCard = ({dspr, handleSelect}: CardProps) => {
           // image={dspr.imageLocation}
       >
         <View>
-          {/* <Text style={styles.title}>Welcome</Text> */}
           <Text style={styles.title}>{dspr.name}</Text>
         </View>
       </Card>

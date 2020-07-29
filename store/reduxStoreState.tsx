@@ -45,6 +45,7 @@ interface DSPRMenuManagementContainer {
 interface Api {
     accessToken: string;
     loggedInUserId: string;
+    dsprDriverId: string;
     errorMessage: string;
     entities: Entities;
 }

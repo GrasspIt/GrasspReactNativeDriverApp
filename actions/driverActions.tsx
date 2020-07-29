@@ -34,6 +34,7 @@ export const assignDSPRDriver = (dsprId, driverUserId, onCall) => (dispatch, get
         .then(() => dispatch(getDSPR(dsprId))).then(() => dispatch(getSpecificUser(driverUserId)));
 };
 
+export const SET_DSPR_DRIVER_ID = 'SET_DSPR_DRIVER_ID';
 export const GET_DSPR_DRIVER = 'GET_DSPR_DRIVER';
 export const GET_DSPR_DRIVER_SUCCESS = 'GET_DSPR_DRIVER_SUCCESS';
 export const GET_DSPR_DRIVER_FAILURE = 'GET_DSPR_DRIVER_FAILURE';
@@ -49,9 +50,14 @@ const dsprDriverGetter = (dsprDriverId) => {
     }
 };
 
+export const setDsprDriverId = (dsprDriverId) => {
+    return {type: SET_DSPR_DRIVER_ID, payload: dsprDriverId}
+}
+
 export const getDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
-    return dispatch(dsprDriverGetter(dsprDriverId)).then((response) => {
-        return response
+    return dispatch(dsprDriverGetter(dsprDriverId))
+        .then((response) => {
+            return response
     });
 };
 

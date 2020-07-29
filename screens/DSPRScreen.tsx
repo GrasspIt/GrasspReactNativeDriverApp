@@ -22,21 +22,25 @@ const DSPRScreen = ({ route, navigation }: Props) => {
 
     const { driverIds } = route.params;
     const dsprs = useSelector<State, any>(state => state.api.entities.DSPRs);
+    const dsprDrivers = useSelector<State, any>(state => state.api.entities.dsprDrivers);
+
     // need entities.DSPRs to include imageLocation
 
-    const dsprData = Object.values(dsprs);
+    const dsprDataList = Object.values(dsprs);
+    const dsprDriverDataList = Object.values(dsprDrivers);
 
 
     const handleSelectDspr = (dsprId: string) => {
-        console.log(dsprId)
-        // find which driverId is attached to the selected dsprId and store in state
-        // const selectedDriverId = driverIds.filter(driverId => driverId === dsprId)
+        // find the dsprDriver that matches the dsprId
+        const selectedDriver = dsprDriverDataList.find((driver: any) => driver.dspr === dsprId);
+        // navigate to dashboard passing driverId as props
+        navigation.navigate('Dashboard', { driverId: selectedDriver.id });
     }
 
     return (
         <View style={styles.container}>
             <FlatList
-                data={dsprData}
+                data={dsprDataList}
                 renderItem={item => <DsprCard handleSelect={handleSelectDspr} dspr={item.item}/>}
                 keyExtractor={(item: any) => item.id.toString()}
             />

@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { State, User, DsprDriver } from "../store/reduxStoreState";
 import { getLoggedInUser } from "../selectors/userSelectors";
 import { logout } from "../actions/oauthActions";
-import { getDSPRDriver, setDriverOnCallState } from "../actions/driverActions";
+import { getDSPRDriver, setDriverOnCallState, setDsprDriverId } from "../actions/driverActions";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
@@ -39,6 +39,7 @@ const Dashboard = ({ route, navigation }: Props) => {
   }
 
   useEffect(() => {
+    dispatch(setDsprDriverId(driverId));
     dispatch(getDSPRDriver(driverId));
   }, [driverId])
 

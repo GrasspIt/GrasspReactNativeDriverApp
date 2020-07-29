@@ -23,13 +23,15 @@ const LoginScreen = ({ navigation }: Props) => {
     const dispatch = useDispatch();
     const loggedInUser = useSelector<State, User>(getLoggedInUser);
     const errorMessage = useSelector<State, string>(state => state.api.errorMessage);
+    const dsprDriver = useSelector<State, string>(state => state.api.dsprDriverId);
+
 
     useEffect(() => {
         if (!loggedInUser && errorMessage) {
             setIsLoading(false);
             Alert.alert(errorMessage);
         };
-        if (loggedInUser) {
+        if (loggedInUser && !dsprDriver) {
             setIsLoading(false);
             if (loggedInUser.dsprDrivers.length > 1) {
                 navigation.navigate('DSPRs', { driverIds: loggedInUser.dsprDrivers })
