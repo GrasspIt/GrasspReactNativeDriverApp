@@ -4,8 +4,7 @@ import Colors from '../constants/Colors';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
 import { useSelector, useDispatch } from "react-redux";
-import * as SecureStore from 'expo-secure-store';
-import { updateLoggedInUserInfo } from '../actions/oauthActions';
+import { updateLoggedInUserInfo, preloadAccessTokenFromLocalStorage } from '../actions/oauthActions';
 import { State, User } from "../store/reduxStoreState";
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Startup'>;
@@ -18,22 +17,14 @@ const Startup = ({ navigation }: Props) => {
 
   const userId = useSelector<State, string>(state => state.api.loggedInUserId);
   const dsprDriver = useSelector<State, string>(state => state.api.dsprDriverId);
-  const loggedInUser = useSelector<State, User>(state => state.api.entities.users[userId])
+  const loggedInUser = useSelector<State, User>(state => state.api.entities.users[userId]);
+  const token = useSelector<State, string>(state => state.api.accessToken);
 
   // if a valid token is stored, login automatically
   useEffect(() => {
-    const tryLogin = async () => {
-        // check if there is a token stored
-        const loginData = await SecureStore.getItemAsync('accessToken');
-        // if there is no token, navigate to login page
-        if (!loginData) {
-          navigation.navigate('Login');
-          return;
-        }
-        // if there is a token, get user info
-        dispatch(updateLoggedInUserInfo());
-    };
-    tryLogin();
+    dispatch(preloadAccessTokenFromLocalStorage());
+    if (!token) navigation.navigate('Login');
+    dispatch(updateLoggedInUserInfo());
   }, []);
   
   useEffect(() => {

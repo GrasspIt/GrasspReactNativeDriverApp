@@ -29,6 +29,11 @@ const Dashboard = ({ route, navigation }: Props) => {
     dsprDriverInfo = dsprDriver;
   }
 
+  let loggedInUserInfo;
+  if (loggedInUser) {
+    loggedInUserInfo = loggedInUser;
+  }
+
   const [ isOnCall, setIsOnCall ] = useState(dsprDriverInfo.onCall);
   
   const dispatch = useDispatch();
@@ -76,7 +81,7 @@ const Dashboard = ({ route, navigation }: Props) => {
       />
       <View style={styles.body}>
         <Text style={styles.title}>
-          Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
+          Welcome {loggedInUserInfo.firstName} {loggedInUserInfo.lastName}!
         </Text>
         <Switch
           trackColor={{ false: Colors.red, true: Colors.green }}

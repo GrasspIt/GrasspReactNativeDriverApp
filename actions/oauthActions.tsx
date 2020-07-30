@@ -20,6 +20,16 @@ export const GET_APP_ACCESS_TOKEN_SUCCESS = 'GET_APP_ACCESS_TOKEN_SUCCESS';
 export const GET_APP_ACCESS_TOKEN_FAILURE = 'GET_APP_ACCESS_TOKEN_FAILURE';
 export const PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE = 'PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE';
 
+export const preloadAccessTokenFromLocalStorage = () => {
+    return async(dispatch) => {
+        const accessToken = await SecureStore.getItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
+        dispatch({
+            type: PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE,
+            accessToken
+        })
+    }
+}
+
 export const setAccessToken = (type, accessToken, accessTokenType) => {
     try {
         SecureStore.setItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY, accessToken);

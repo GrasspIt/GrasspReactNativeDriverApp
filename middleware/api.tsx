@@ -400,7 +400,7 @@ export const CALL_API = Symbol('Call API');
 // Performs the call and promises when such actions are dispatched.
 export default store => next => action => {
     const callAPI = action[CALL_API];
-    // debugger;
+
     if (typeof callAPI === 'undefined') {
         return next(action);
     }
