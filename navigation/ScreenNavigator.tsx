@@ -19,7 +19,7 @@ const RootStack = createStackNavigator<RootStackParamsList>();
 const ScreenNavigator = () => {
     return (
       <NavigationContainer>
-        <RootStack.Navigator initialRouteName="Login">
+        <RootStack.Navigator initialRouteName="Startup">
           <RootStack.Screen
               name="Startup"
               component={StartupScreen}

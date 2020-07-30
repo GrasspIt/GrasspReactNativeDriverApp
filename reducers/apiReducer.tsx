@@ -81,7 +81,7 @@ export default (state = initialState, action) => {
         case PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE:
             return { ...state, accessToken: action.accessToken };
         case LOGOUT:
-            return { ...state, accessToken: '', loggedInUserId: '' };
+            return { ...state, accessToken: '', loggedInUserId: '', dsprDriverId: '' };
         case LOGGED_IN_USER_INFO_SUCCESS:
             let entities = action.response.entities;
             let usersFromResponse = entities.users;

@@ -1,18 +1,31 @@
 import { createSelector } from 'reselect';
 import { State } from '../store/reduxStoreState';
 
-export const getLoggedInUser = (state: State) => state.api.loggedInUserId ? state.api.entities.users[state.api.loggedInUserId] : undefined;
-export const getUsers = (state: State) => state.api.entities.users;
+// const NullLoggedInUserEntities = {
+//     users: {}
+// }
+
+export const getLoggedInUserId = (state: State) => state.api.loggedInUserId;
+// export const getLoggedInUserEntities = (state: State) => {
+//     return state.api.entities.users || NullLoggedInUserEntities;
+// };
+
+// export const getLoggedInUser = (state: State) => getLoggedInUserEntities(state)[getLoggedInUserId(state)];
 
 export const getUnverifiedUsers = (state: State) => state.api.entities.unverifiedUsers;
 export const getSearchUsers = (state: State) => state.api.entities.searchUsers;
+export const getUsers = (state: State) => state.api.entities.users;
 
 export const getUsersByName = createSelector(
     [getUsers], (users) => {
         if (!users) return [];
         return Object.keys(users)
             .map((key: any) => users[key])
-            .map(user => { return { value: user.id, text: user.firstName + " " + user.lastName + " (" + user.email + ")" }; });
+            .map(user => ({
+                    value: user.id,
+                    text: user.firstName + " " + user.lastName + " (" + user.email + ")" 
+                })
+            );
     }
 );
 

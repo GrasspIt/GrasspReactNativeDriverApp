@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { getLoggedInUser } from "../selectors/userSelectors";
 import { attemptLogin } from "../actions/oauthActions";
 import { State, User } from "../store/reduxStoreState";
 
@@ -21,17 +20,17 @@ const LoginScreen = ({ navigation }: Props) => {
     const [ isLoading, setIsLoading ] = useState(false);
 
     const dispatch = useDispatch();
-    const loggedInUser = useSelector<State, User>(getLoggedInUser);
     const errorMessage = useSelector<State, string>(state => state.api.errorMessage);
     const dsprDriver = useSelector<State, string>(state => state.api.dsprDriverId);
-
+    const userId = useSelector<State, string>(state => state.api.loggedInUserId);
+    const loggedInUser = useSelector<State, User>(state => state.api.entities.users[userId])
 
     useEffect(() => {
         if (!loggedInUser && errorMessage) {
             setIsLoading(false);
             Alert.alert(errorMessage);
         };
-        if (loggedInUser.dsprDrivers && !dsprDriver) {
+        if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
             setIsLoading(false);
             if (loggedInUser.dsprDrivers.length > 1) {
                 navigation.navigate('DSPRs', { driverIds: loggedInUser.dsprDrivers })
@@ -42,8 +41,8 @@ const LoginScreen = ({ navigation }: Props) => {
     }, [loggedInUser, errorMessage]);
 
     const handleLogin = (username: string, password: string) => {
-        dispatch(attemptLogin(username, password));
         setIsLoading(true);
+        dispatch(attemptLogin(username, password));
     }
 
     return <Login handleLogin={handleLogin} isLoading={isLoading} />

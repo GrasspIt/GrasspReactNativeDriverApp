@@ -26,8 +26,10 @@ const DSPRScreen = ({ route, navigation }: Props) => {
     // need entities.DSPRs to include imageLocation
 
     const dsprDataList = Object.values(dsprs);
-    const dsprDriverDataList = Object.values(dsprDrivers);
-
+    let dsprDriverDataList;
+    if (dsprDrivers) {
+        dsprDriverDataList = Object.values(dsprDrivers);
+    }
 
     const handleSelectDspr = (dsprId: string) => {
         // find the dsprDriver that matches the dsprId

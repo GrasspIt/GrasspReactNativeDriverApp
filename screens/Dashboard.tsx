@@ -5,7 +5,6 @@ import Colors from '../constants/Colors';
 
 import { useSelector, useDispatch } from "react-redux";
 import { State, User, DsprDriver } from "../store/reduxStoreState";
-import { getLoggedInUser } from "../selectors/userSelectors";
 import { logout } from "../actions/oauthActions";
 import { getDSPRDriver, setDriverOnCallState, setDsprDriverId } from "../actions/driverActions";
 
@@ -21,10 +20,16 @@ type Props = {
 const Dashboard = ({ route, navigation }: Props) => {
   const { driverId } = route.params;
 
+  const userId = useSelector<State, string>(state => state.api.loggedInUserId);
+  const loggedInUser = useSelector<State, User>(state => state.api.entities.users[userId])
   const dsprDriver = useSelector<State, DsprDriver>(state => state.api.entities.dsprDrivers[driverId]);
-  const loggedInUser = useSelector<State, User>(getLoggedInUser);
   
-  const [ isOnCall, setIsOnCall ] = useState(dsprDriver.onCall);
+  let dsprDriverInfo;
+  if (dsprDriver) {
+    dsprDriverInfo = dsprDriver;
+  }
+
+  const [ isOnCall, setIsOnCall ] = useState(dsprDriverInfo.onCall);
   
   const dispatch = useDispatch();
 
@@ -75,12 +80,12 @@ const Dashboard = ({ route, navigation }: Props) => {
         </Text>
         <Switch
           trackColor={{ false: Colors.red, true: Colors.green }}
-          thumbColor={dsprDriver.onCall ? "#ffffff" : "#ffffff"}
+          thumbColor={dsprDriverInfo.onCall ? "#ffffff" : "#ffffff"}
           ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch}
-          value={dsprDriver.onCall}
+          value={dsprDriverInfo.onCall}
         />
-        <Text>{dsprDriver.onCall ? 'On Call' : 'Not on Call'}</Text>
+        <Text>{dsprDriverInfo.onCall ? 'On Call' : 'Not on Call'}</Text>
       </View>
     </View>
   );
