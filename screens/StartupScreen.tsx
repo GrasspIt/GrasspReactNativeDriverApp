@@ -23,8 +23,6 @@ const Startup = ({ navigation }: Props) => {
   // if a valid token is stored, login automatically
   useEffect(() => {
     dispatch(preloadAccessTokenFromLocalStorage());
-    if (!token) navigation.navigate('Login');
-    dispatch(updateLoggedInUserInfo());
   }, []);
   
   useEffect(() => {

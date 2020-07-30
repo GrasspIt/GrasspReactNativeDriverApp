@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { navigationRef } from './RootNavigation';
 
 import DSPRScreen from '../screens/DSPRScreen';
 import StartupScreen from '../screens/StartupScreen';
@@ -18,7 +19,7 @@ const RootStack = createStackNavigator<RootStackParamsList>();
 
 const ScreenNavigator = () => {
     return (
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <RootStack.Navigator initialRouteName="Startup">
           <RootStack.Screen
               name="Startup"

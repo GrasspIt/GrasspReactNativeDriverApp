@@ -1,6 +1,7 @@
 import base64 from 'Base64';
 import qs from 'query-string';
 import * as SecureStore from 'expo-secure-store';
+import * as RootNavigation from '../navigation/RootNavigation';
 import { CALL_API, Schemas } from '../middleware/api';
 
 // import { updateLoggedInUserInfo } from './userActions';
@@ -23,10 +24,15 @@ export const PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE = 'PRELOAD_ACCESS_TOKEN_FRO
 export const preloadAccessTokenFromLocalStorage = () => {
     return async(dispatch) => {
         const accessToken = await SecureStore.getItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
+        if (!accessToken) {
+            RootNavigation.navigate('Login', null);
+            return;
+          }
         dispatch({
             type: PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE,
             accessToken
-        })
+        });
+        dispatch(updateLoggedInUserInfo());
     }
 }
 
