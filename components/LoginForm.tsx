@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { Input, Button, Card } from 'react-native-elements';
 import Colors from '../constants/Colors';
 
@@ -8,7 +8,7 @@ interface LoginProps {
   isLoading: boolean;
 }
 
-const Login: React.FC<LoginProps> = (props) => {
+const LoginForm: React.FC<LoginProps> = (props) => {
   const { handleLogin, isLoading } = props;
 
   const [ passwordInvalid, setPasswordInvalid ] = useState(false);
@@ -77,7 +77,6 @@ const Login: React.FC<LoginProps> = (props) => {
         ) : (
           <Button buttonStyle={styles.button} title='Login' onPress={handleSubmit} />
         )}
-        {/* <Button buttonStyle={styles.button} title='Login' onPress={handleSubmit} /> */}
       </Card>
     </KeyboardAvoidingView>
   );
@@ -97,4 +96,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Login;
+export default LoginForm;

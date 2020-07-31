@@ -1,13 +1,9 @@
-import React, { useEffect } from "react";
-
-import { useSelector, useDispatch } from "react-redux";
-
+import React from "react";
+import { useSelector } from "react-redux";
 import { State } from "../store/reduxStoreState";
-
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
-
-import { Alert, View, Text, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import Colors from '../constants/Colors';
 import DsprCard from "../components/DsprCard";
 
@@ -22,8 +18,6 @@ const DSPRScreen = ({ route, navigation }: Props) => {
     const { driverIds } = route.params;
     const dsprs = useSelector<State, Object>(state => state.api.entities.DSPRs);
     const dsprDrivers = useSelector<State, Object>(state => state.api.entities.dsprDrivers);
-
-    // need entities.DSPRs to include imageLocation
 
     const dsprDataList = Object.values(dsprs);
     let dsprDriverDataList;

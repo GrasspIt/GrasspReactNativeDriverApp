@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Switch, Alert } from 'react-native';
-import { useSelector, useDispatch } from "react-redux";
-import { getDSPRDriver, setDriverOnCallState, setDsprDriverId } from "../actions/driverActions";
+import { Text, Switch } from 'react-native';
+import { useDispatch } from "react-redux";
+import { setDriverOnCallState } from "../actions/driverActions";
+import {  DsprDriver } from "../store/reduxStoreState";
 import Colors from '../constants/Colors';
 
 type SwitchProps = {
-    dsprDriverInfo: {id: number, onCall: boolean};
+    dsprDriver: DsprDriver;
 }
 
-const OnCallSwitch = ({dsprDriverInfo}: SwitchProps) => {
+const OnCallSwitch = ({dsprDriver}: SwitchProps) => {
     
-    const [ isOnCall, setIsOnCall ] = useState(dsprDriverInfo.onCall);
+    const [ isOnCall, setIsOnCall ] = useState(dsprDriver.onCall);
   
     const dispatch = useDispatch();
   
     const setOnCallState = () => {
       let onCallString = isOnCall ? 'on' : null;
-      dispatch(setDriverOnCallState(dsprDriverInfo.id, onCallString));
+      dispatch(setDriverOnCallState(dsprDriver.id, onCallString));
     }
     
     const toggleSwitch = () => {
@@ -28,12 +29,12 @@ const OnCallSwitch = ({dsprDriverInfo}: SwitchProps) => {
         <>
             <Switch
                 trackColor={{ false: Colors.red, true: Colors.green }}
-                thumbColor={dsprDriverInfo.onCall ? "#ffffff" : "#ffffff"}
+                thumbColor={dsprDriver.onCall ? "#ffffff" : "#ffffff"}
                 ios_backgroundColor="#3e3e3e"
                 onValueChange={toggleSwitch}
-                value={dsprDriverInfo.onCall}
+                value={dsprDriver.onCall}
             />
-            <Text>{dsprDriverInfo.onCall ? 'On Call' : 'Not on Call'}</Text>
+            <Text>{dsprDriver.onCall ? 'On Call' : 'Not on Call'}</Text>
         </>
     )
 };

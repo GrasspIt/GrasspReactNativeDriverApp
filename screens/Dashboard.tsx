@@ -11,9 +11,9 @@ import { RootStackParamsList } from '../navigation/ScreenNavigator';
 import TopNavBar from '../components/TopNavBar';
 import OnCallSwitch from '../components/OnCallSwitch';
 
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Dashboard'>;
+type DashboardScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Dashboard'>;
 type Props = {
-    navigation: LoginScreenNavigationProp;
+    navigation: DashboardScreenNavigationProp;
     route;
 }
 
@@ -25,15 +25,15 @@ const Dashboard = ({ route, navigation }: Props) => {
   const loggedInUser = useSelector<State, User>(state => state.api.entities.users[userId])
   const dsprDriver = useSelector<State, DsprDriver>(state => state.api.entities.dsprDrivers[driverId]);
   
-  let dsprDriverInfo;
-  if (dsprDriver) {
-    dsprDriverInfo = dsprDriver;
-  }
+  // let dsprDriverInfo;
+  // if (dsprDriver) {
+  //   dsprDriverInfo = dsprDriver;
+  // }
 
-  let loggedInUserInfo;
-  if (loggedInUser) {
-    loggedInUserInfo = loggedInUser;
-  }
+  // let loggedInUserInfo;
+  // if (loggedInUser) {
+  //   loggedInUserInfo = loggedInUser;
+  // }
 
   useEffect(() => {
     dispatch(setDsprDriverId(driverId));
@@ -41,16 +41,18 @@ const Dashboard = ({ route, navigation }: Props) => {
   }, [driverId])
 
   return (
-    <View style={styles.container}>
-      <TopNavBar />
-      <View style={styles.body}>
-        <Text style={styles.title}>
-          Welcome {loggedInUserInfo.firstName} {loggedInUserInfo.lastName}!
-        </Text>
-        <OnCallSwitch dsprDriverInfo={dsprDriverInfo}/>
+    loggedInUser && dsprDriver ? (
+      <View style={styles.container}>
+        <TopNavBar />
+        <View style={styles.body}>
+          <Text style={styles.title}>
+            Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
+          </Text>
+          <OnCallSwitch dsprDriver={dsprDriver}/>
+        </View>
       </View>
-    </View>
-  );
+    ) : null
+  )
 }
 
 const styles = StyleSheet.create({

@@ -7,7 +7,7 @@ import { State, User } from "../store/reduxStoreState";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
 
-import Login from "../components/Login";
+import LoginForm from "../components/LoginForm";
 import { Alert } from "react-native";
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Login'>;
@@ -45,7 +45,7 @@ const LoginScreen = ({ navigation }: Props) => {
         dispatch(attemptLogin(username, password));
     }
 
-    return <Login handleLogin={handleLogin} isLoading={isLoading} />
+    return <LoginForm handleLogin={handleLogin} isLoading={isLoading} />
 }
 
 export default LoginScreen;
