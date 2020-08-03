@@ -6,6 +6,7 @@ import { RootStackParamsList } from '../navigation/ScreenNavigator';
 import { View, StyleSheet, FlatList } from "react-native";
 import Colors from '../constants/Colors';
 import DsprCard from "../components/DsprCard";
+import TopNavBar from "../components/TopNavBar";
 
 type DSPRScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'DSPRs'>;
 type Props = {
@@ -34,6 +35,7 @@ const DSPRScreen = ({ route, navigation }: Props) => {
 
     return (
         <View style={styles.container}>
+            <TopNavBar />
             <FlatList
                 data={dsprDataList}
                 renderItem={item => <DsprCard handleSelect={handleSelectDspr} dspr={item.item}/>}
@@ -47,8 +49,8 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: Colors.light,
-      alignItems: 'center',
-      justifyContent: 'center',
+    //   alignItems: 'center',
+    //   justifyContent: 'center',
     },
 })
 

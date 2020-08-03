@@ -43,7 +43,6 @@ const LoginForm: React.FC<LoginProps> = (props) => {
   return (
     <KeyboardAvoidingView
       style={styles.screen}
-      behavior='padding'
     >
       <Card title='LOGIN'>
         <Input
@@ -85,7 +84,7 @@ const LoginForm: React.FC<LoginProps> = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: Colors.medium,
+    backgroundColor: Colors.dark,
     justifyContent: 'center'
   },
   input: {
