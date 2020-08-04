@@ -5,6 +5,7 @@ import Colors from '../constants/Colors';
 import { logout } from "../actions/oauthActions";
 import { useSelector, useDispatch } from "react-redux";
 import * as RootNavigation from '../navigation/RootNavigation';
+import { DrawerActions } from '@react-navigation/native';
 
 
 const TopNavBar = () => {
@@ -20,7 +21,7 @@ const TopNavBar = () => {
             leftComponent={{
             icon: 'menu',
             color: Colors.black,
-            onPress: () => Alert.alert('This button does nothing.')
+            onPress: () => DrawerActions.toggleDrawer()
         }}
         rightComponent={{
             icon: 'logout',

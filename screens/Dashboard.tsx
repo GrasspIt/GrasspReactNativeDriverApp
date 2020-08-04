@@ -24,16 +24,6 @@ const Dashboard = ({ route, navigation }: Props) => {
   const userId = useSelector<State, string>(state => state.api.loggedInUserId);
   const loggedInUser = useSelector<State, User>(state => state.api.entities.users[userId])
   const dsprDriver = useSelector<State, DsprDriver>(state => state.api.entities.dsprDrivers[driverId]);
-  
-  // let dsprDriverInfo;
-  // if (dsprDriver) {
-  //   dsprDriverInfo = dsprDriver;
-  // }
-
-  // let loggedInUserInfo;
-  // if (loggedInUser) {
-  //   loggedInUserInfo = loggedInUser;
-  // }
 
   useEffect(() => {
     dispatch(setDsprDriverId(driverId));

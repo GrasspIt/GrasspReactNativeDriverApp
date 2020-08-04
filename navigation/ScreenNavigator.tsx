@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { navigationRef } from './RootNavigation';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import DSPRScreen from '../screens/DSPRScreen';
 import StartupScreen from '../screens/StartupScreen';
@@ -16,6 +17,7 @@ export type RootStackParamsList = {
 }
 
 const RootStack = createStackNavigator<RootStackParamsList>();
+const Drawer = createDrawerNavigator();
 
 const ScreenNavigator = () => {
     return (
@@ -50,6 +52,10 @@ const ScreenNavigator = () => {
             }}
           />
         </RootStack.Navigator>
+        {/* <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="DSPRs" component={DSPRScreen} />
+          <Drawer.Screen name="DSPRs" component={DSPRScreen} />
+        </Drawer.Navigator> */}
       </NavigationContainer>
     );
   }

@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import Colors from '../constants/Colors';
 import { getEnvVars } from '../environment';
-import { withTheme } from 'react-native-elements';
 const { apiUrl } = getEnvVars();
 
 type CardProps = {
@@ -12,7 +11,7 @@ type CardProps = {
 
 const DsprCard = ({dspr, handleSelect}: CardProps) => {
   
-  const image = dspr.imageLocation ? `https://api.grassp.it/${dspr.imageLocation}` : '';
+  const image = dspr.imageLocation ? `https://api.grassp.it/${dspr.imageLocation}` : 'https://grassp.it/wp-content/uploads/2019/11/GrasspHealthLogo-1-e1573960467788.png';
   // const image = dspr.imageLocation ? `${apiUrl}${dspr.imageLocation}` : '';
 
   console.log(image)
@@ -46,7 +45,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light,
   },
   imageContainer: {
-    padding: 30
+    paddingHorizontal: 20,
+    paddingVertical: 30,
   },
   image: {
     height: 80
