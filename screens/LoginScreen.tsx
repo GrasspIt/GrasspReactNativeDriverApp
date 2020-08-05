@@ -32,11 +32,13 @@ const LoginScreen = ({ navigation }: Props) => {
         };
         if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
             setIsLoading(false);
-            if (loggedInUser.dsprDrivers.length > 1) {
-                navigation.navigate('DSPRs', { driverIds: loggedInUser.dsprDrivers })
-            } else {
-                navigation.navigate('Dashboard', { driverId: loggedInUser.dsprDrivers[0] });
-            }
+            navigation.navigate('Home');  
+
+            // if (loggedInUser.dsprDrivers.length > 1) {
+            //     navigation.navigate('DSPRs', { driverIds: loggedInUser.dsprDrivers })
+            // } else {
+            //     navigation.navigate('Dashboard', { driverId: loggedInUser.dsprDrivers[0] });
+            // }
         }
     }, [loggedInUser, errorMessage]);
 

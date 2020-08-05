@@ -2,13 +2,12 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { State } from "../store/reduxStoreState";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamsList } from '../navigation/ScreenNavigator';
+import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import { View, StyleSheet, FlatList } from "react-native";
 import Colors from '../constants/Colors';
 import DsprCard from "../components/DsprCard";
-import TopNavBar from "../components/TopNavBar";
 
-type DSPRScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'DSPRs'>;
+type DSPRScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'DSPRs'>;
 type Props = {
     navigation: DSPRScreenNavigationProp;
     route;
@@ -16,7 +15,6 @@ type Props = {
 
 const DSPRScreen = ({ route, navigation }: Props) => {
 
-    const { driverIds } = route.params;
     const dsprs = useSelector<State, Object>(state => state.api.entities.DSPRs);
     const dsprDrivers = useSelector<State, Object>(state => state.api.entities.dsprDrivers);
 
@@ -35,7 +33,6 @@ const DSPRScreen = ({ route, navigation }: Props) => {
 
     return (
         <View style={styles.container}>
-            <TopNavBar />
             <FlatList
                 data={dsprDataList}
                 renderItem={item => <DsprCard handleSelect={handleSelectDspr} dspr={item.item}/>}
@@ -49,8 +46,6 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: Colors.light,
-    //   alignItems: 'center',
-    //   justifyContent: 'center',
     },
 })
 

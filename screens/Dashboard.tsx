@@ -7,11 +7,10 @@ import { State, User, DsprDriver } from "../store/reduxStoreState";
 import { getDSPRDriver, setDsprDriverId } from "../actions/driverActions";
 
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamsList } from '../navigation/ScreenNavigator';
-import TopNavBar from '../components/TopNavBar';
+import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import OnCallSwitch from '../components/OnCallSwitch';
 
-type DashboardScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Dashboard'>;
+type DashboardScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
     navigation: DashboardScreenNavigationProp;
     route;
@@ -33,7 +32,6 @@ const Dashboard = ({ route, navigation }: Props) => {
   return (
     loggedInUser && dsprDriver ? (
       <View style={styles.container}>
-        <TopNavBar />
         <View style={styles.body}>
           <Text style={styles.title}>
             Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
