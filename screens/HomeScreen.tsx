@@ -1,13 +1,9 @@
 import React from 'react';
 import DrawerNavigator from '../navigation/DrawerNavigator';
-import TopNavBar from '../components/TopNavBar';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
     return (
-        <>
-        <TopNavBar />
-        <DrawerNavigator />
-        </>
+        <DrawerNavigator navigation={navigation}/>
     );
   }
   

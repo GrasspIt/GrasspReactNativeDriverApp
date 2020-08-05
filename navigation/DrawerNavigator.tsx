@@ -1,8 +1,15 @@
 import React from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {
+    createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem
+} from '@react-navigation/drawer';
 
 import DSPRScreen from '../screens/DSPRScreen';
 import Dashboard from '../screens/Dashboard';
+import { logout } from "../actions/oauthActions";
+import { useDispatch } from "react-redux";
+import { DrawerActions, CommonActions } from '@react-navigation/native'
+import * as RootNavigation from '../navigation/RootNavigation';
+import Colors from '../constants/Colors';
 
 export type DrawerStackParamsList = {
   DSPRs: { driverIds: number[] },
@@ -11,9 +18,36 @@ export type DrawerStackParamsList = {
 
 const Drawer = createDrawerNavigator<DrawerStackParamsList>();
 
-const DrawerNavigator = () => {
+const DrawerNavigator = ({ navigation }) => {
+    const dispatch = useDispatch();
+
+    const handleLogout = () => {
+        navigation.dispatch(DrawerActions.closeDrawer());
+        navigation.navigate('DSPRs');
+        dispatch(logout());
+        RootNavigation.navigate('Login', null);
+    }
+    
     return (
-        <Drawer.Navigator initialRouteName="DSPRs">
+        <Drawer.Navigator
+            initialRouteName="DSPRs"
+            drawerContentOptions={{
+                labelStyle: {fontSize: 16},
+                activeTintColor: Colors.light,
+                activeBackgroundColor: Colors.primary
+            }}
+            drawerContent={props => {
+            return (
+              <DrawerContentScrollView {...props}>
+                <DrawerItemList {...props} />
+                <DrawerItem
+                    label="Logout"
+                    labelStyle={{fontSize: 16}}
+                    onPress={() => handleLogout()}
+                />
+              </DrawerContentScrollView>
+            )
+          }}>
             <Drawer.Screen name="DSPRs" component={DSPRScreen} />
             <Drawer.Screen name="Dashboard" component={Dashboard} />
         </Drawer.Navigator>

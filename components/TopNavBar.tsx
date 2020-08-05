@@ -1,14 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, Switch, Alert } from 'react-native';
-import { Header } from 'react-native-elements';
+import { Header, Image } from 'react-native-elements';
 import Colors from '../constants/Colors';
 import { logout } from "../actions/oauthActions";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import * as RootNavigation from '../navigation/RootNavigation';
-import { DrawerActions } from '@react-navigation/native';
 
-
-const TopNavBar = () => {
+const TopNavBar = ({navigation}) => {
     const dispatch = useDispatch();
 
     const handleLogout = () => {
@@ -19,23 +16,28 @@ const TopNavBar = () => {
     return (
         <Header
             leftComponent={{
-            icon: 'menu',
-            color: Colors.black,
-            onPress: () => DrawerActions.toggleDrawer()
-        }}
-        rightComponent={{
-            icon: 'logout',
-            type: 'antdesign',
-            color: Colors.black,
-            onPress: () => handleLogout()
-        }}
-        centerComponent={<Text style={{fontSize: 20}}>Grassp Health</Text>}
-        containerStyle={{
-            backgroundColor: Colors.light,
-            borderBottomWidth: 2,
-            borderBottomColor: Colors.medium
-        }}
-    />
+                icon: 'menu',
+                color: Colors.black,
+                onPress: () => navigation.toggleDrawer()
+            }}
+            rightComponent={{
+                icon: 'logout',
+                type: 'antdesign',
+                color: Colors.black,
+                onPress: () => handleLogout()
+            }}
+            centerComponent={
+                <Image
+                    source={{uri: 'https://grassp.it/wp-content/uploads/2019/11/GrasspHealthLogo-1-e1573960467788.png'}}
+                    style={{height: 40, width: 200}}
+                />
+            }
+            containerStyle={{
+                backgroundColor: Colors.light,
+                borderBottomWidth: 2,
+                borderBottomColor: Colors.medium
+            }}
+        />
 )}
 
 export default TopNavBar;

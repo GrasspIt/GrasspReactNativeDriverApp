@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { State } from "../store/reduxStoreState";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, Text } from "react-native";
 import Colors from '../constants/Colors';
 import DsprCard from "../components/DsprCard";
 
@@ -33,6 +33,9 @@ const DSPRScreen = ({ route, navigation }: Props) => {
 
     return (
         <View style={styles.container}>
+            <View style={styles.titleContainer}>
+                <Text style={styles.title}>Choose a Dispensary</Text>
+            </View>
             <FlatList
                 data={dsprDataList}
                 renderItem={item => <DsprCard handleSelect={handleSelectDspr} dspr={item.item}/>}
@@ -43,9 +46,18 @@ const DSPRScreen = ({ route, navigation }: Props) => {
 }
 
 const styles = StyleSheet.create({
+    titleContainer: {
+        paddingTop: 40,
+        alignItems: 'center'
+    },
+    title: {
+        fontSize: 20,
+        padding: 10
+    },
     container: {
       flex: 1,
       backgroundColor: Colors.light,
+      justifyContent: 'center'
     },
 })
 

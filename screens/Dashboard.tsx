@@ -9,6 +9,7 @@ import { getDSPRDriver, setDsprDriverId } from "../actions/driverActions";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import OnCallSwitch from '../components/OnCallSwitch';
+import TopNavBar from '../components/TopNavBar';
 
 type DashboardScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
@@ -32,6 +33,7 @@ const Dashboard = ({ route, navigation }: Props) => {
   return (
     loggedInUser && dsprDriver ? (
       <View style={styles.container}>
+        <TopNavBar navigation={navigation}/>
         <View style={styles.body}>
           <Text style={styles.title}>
             Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
