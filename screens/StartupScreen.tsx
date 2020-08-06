@@ -26,12 +26,7 @@ const Startup = ({ navigation }: Props) => {
   
   useEffect(() => {
     if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
-      navigation.navigate('Home');  
-      // if (loggedInUser.dsprDrivers.length > 1) {
-      //       navigation.navigate('DSPRs', { driverIds: loggedInUser.dsprDrivers })
-      //   } else {
-      //       navigation.navigate('Dashboard', { driverId: loggedInUser.dsprDrivers[0] });
-      //   }
+      navigation.navigate('Home');
     }
   }, [loggedInUser]);
 

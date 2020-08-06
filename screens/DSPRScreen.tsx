@@ -8,12 +8,9 @@ import Colors from '../constants/Colors';
 import DsprCard from "../components/DsprCard";
 
 type DSPRScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'DSPRs'>;
-type Props = {
-    navigation: DSPRScreenNavigationProp;
-    route;
-}
+type Props = { navigation: DSPRScreenNavigationProp }
 
-const DSPRScreen = ({ route, navigation }: Props) => {
+const DSPRScreen = ({ navigation }: Props) => {
 
     const dsprs = useSelector<State, Object>(state => state.api.entities.DSPRs);
     const dsprDrivers = useSelector<State, Object>(state => state.api.entities.dsprDrivers);

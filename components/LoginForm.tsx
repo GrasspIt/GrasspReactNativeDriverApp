@@ -84,14 +84,14 @@ const LoginForm: React.FC<LoginProps> = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: Colors.dark,
+    backgroundColor: Colors.medium,
     justifyContent: 'center'
   },
   input: {
       marginVertical: 10,
   },
   button: {
-      backgroundColor: Colors.green
+      backgroundColor: Colors.primary
   }
 });
 
