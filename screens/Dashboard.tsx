@@ -10,6 +10,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import OnCallSwitch from '../components/OnCallSwitch';
 import TopNavBar from '../components/TopNavBar';
+import { useInterval } from '../hooks/useInterval';
 
 type DashboardScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
@@ -24,6 +25,12 @@ const Dashboard = ({ route, navigation }: Props) => {
   const userId = useSelector<State, string>(state => state.api.loggedInUserId);
   const loggedInUser = useSelector<State, User>(state => state.api.entities.users[userId])
   const dsprDriver = useSelector<State, DsprDriver>(state => state.api.entities.dsprDrivers[driverId]);
+
+  const refreshData = () => {
+    console.log('update driver info')
+    dispatch(getDSPRDriver(driverId));
+  }
+  useInterval(refreshData, 60000);
 
   useEffect(() => {
     dispatch(setDsprDriverId(driverId));
