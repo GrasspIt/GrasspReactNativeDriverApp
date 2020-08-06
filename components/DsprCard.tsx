@@ -38,18 +38,23 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   cardContainer: {
+    display: 'flex',
     marginHorizontal: 10,
     marginTop: 10,
     borderRadius: 5,
     overflow: 'hidden',
     backgroundColor: Colors.light,
+    maxWidth: 500,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   imageContainer: {
     paddingHorizontal: 20,
     paddingVertical: 30,
   },
   image: {
-    height: 80
+    height: 80,
+    width: 300
   },
   titleContainer: {
     flex: 1,
@@ -57,6 +62,7 @@ const styles = StyleSheet.create({
     padding: 0,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%'
   },
   title: {
     fontSize: 16,

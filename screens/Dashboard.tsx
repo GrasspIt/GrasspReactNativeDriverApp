@@ -27,10 +27,11 @@ const Dashboard = ({ route, navigation }: Props) => {
   const dsprDriver = useSelector<State, DsprDriver>(state => state.api.entities.dsprDrivers[driverId]);
 
   const refreshData = () => {
-    console.log('update driver info')
     dispatch(getDSPRDriver(driverId));
   }
   useInterval(refreshData, 60000);
+
+  //if (dsprDriver.onCall) useInterval(locationTracking, 30000);
 
   useEffect(() => {
     dispatch(setDsprDriverId(driverId));

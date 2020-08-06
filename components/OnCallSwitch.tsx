@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, Switch } from 'react-native';
 import { useDispatch } from "react-redux";
 import { setDriverOnCallState } from "../actions/driverActions";
@@ -8,24 +8,30 @@ import Colors from '../constants/Colors';
 type SwitchProps = { dsprDriver: DsprDriver; }
 
 const OnCallSwitch = ({dsprDriver}: SwitchProps) => {
-      
     const dispatch = useDispatch();
+
+    const [isOnCall, setIsOnCall] = useState(dsprDriver.onCall);
     
     const toggleSwitch = () => {
         let onCallString = !dsprDriver.onCall ? 'on' : null;
-        dispatch(setDriverOnCallState(dsprDriver.id, onCallString));  
+        dispatch(setDriverOnCallState(dsprDriver.id, onCallString));
+        setIsOnCall(!isOnCall);
     }
+
+    useEffect(() => {
+        setIsOnCall(dsprDriver.onCall);
+    }, [dsprDriver])
 
     return (
         <>
         <Switch
             trackColor={{ false: Colors.red, true: Colors.green }}
-            thumbColor={dsprDriver.onCall ? "#ffffff" : "#ffffff"}
+            thumbColor={isOnCall ? "#ffffff" : "#ffffff"}
             ios_backgroundColor="#3e3e3e"
             onValueChange={toggleSwitch}
-            value={dsprDriver.onCall}
+            value={isOnCall}
         />
-        <Text>{dsprDriver.onCall ? 'On Call' : 'Not on Call'}</Text>
+        <Text>{isOnCall ? 'On Call' : 'Not on Call'}</Text>
         </>
     )
 };
