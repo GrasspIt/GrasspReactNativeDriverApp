@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View, Alert } from 'react-native';
 import Colors from '../constants/Colors';
 import * as Location from 'expo-location';
+import * as TaskManager from 'expo-task-manager';
 
 import { useSelector, useDispatch } from "react-redux";
 import { State, User, DsprDriver } from "../store/reduxStoreState";
-import { getDSPRDriver, setDsprDriverId } from "../actions/driverActions";
+import { getDSPRDriver, setDsprDriverId, setDriverLocation } from "../actions/driverActions";
+import { store } from '../store/store';
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
@@ -19,16 +21,15 @@ type Props = {
     route;
 }
 
+let dsprDriver;
+
 const Dashboard = ({ route, navigation }: Props) => {
   const { driverId } = route.params;
   const dispatch = useDispatch();
 
   const userId = useSelector<State, string>(state => state.api.loggedInUserId);
   const loggedInUser = useSelector<State, User>(state => state.api.entities.users[userId])
-  const dsprDriver = useSelector<State, DsprDriver>(state => state.api.entities.dsprDrivers[driverId]);
-
-  const [location, setLocation] = useState();
-  const [errorMsg, setErrorMsg] = useState('')
+  dsprDriver = useSelector<State, DsprDriver>(state => state.api.entities.dsprDrivers[driverId]);
 
   // polling data from API while logged in
   const refreshData = () => {
@@ -45,27 +46,21 @@ const Dashboard = ({ route, navigation }: Props) => {
     (async () => {
       let { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied.');
+        Alert.alert('Permission to access location was denied.');
       }
-      //if (dsprDriver.onCall)
-      let location = await Location.startLocationUpdatesAsync('task', {
-          timeInterval: 5000,
-          foregroundService: {
-            notificationTitle: 'Location Tracking',
-            notificationBody: 'Grassp Health Driver App is tracking your current location.'
-          },
-          pausesUpdatesAutomatically: false
-        });
-      console.log('location', location);
+      if (status === 'granted' && dsprDriver.onCall) {
+        console.log('start location updates');
+        await Location.startLocationUpdatesAsync('location-tracking', {
+            timeInterval: 5000,
+            foregroundService: {
+              notificationTitle: 'Location Updates',
+              notificationBody: 'Grassp Health Driver App is tracking your current location.'
+            },
+            pausesUpdatesAutomatically: false
+          });
+      }
     })();
-  }, []);
-
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
+  }, [dsprDriver]);
 
   return (
     loggedInUser && dsprDriver ? (
@@ -81,6 +76,20 @@ const Dashboard = ({ route, navigation }: Props) => {
     ) : null
   )
 }
+
+TaskManager.defineTask('location-tracking', ({ data, error }) => {
+  if (error) {
+    console.log('Error: ', error.message);
+    return;
+  }
+  if (data) {
+    const { locations } = data;
+    console.log('Locations: ', locations)
+    //dispatch location to api
+    store.dispatch(setDriverLocation(dsprDriver.dspr, locations[0].coords.latitude, locations[0].coords.longitude));
+    console.log('dsprId: ', dsprDriver.dspr);
+  }
+});
 
 const styles = StyleSheet.create({
   container: {

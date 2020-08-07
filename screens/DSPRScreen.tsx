@@ -21,7 +21,7 @@ const DSPRScreen = ({ navigation }: Props) => {
         dsprDriverDataList = Object.values(dsprDrivers);
     }
 
-    const handleSelectDspr = (dsprId: string) => {
+    const handleSelectDspr = (dsprId: number) => {
         // find the dsprDriver that matches the dsprId
         const selectedDriver = dsprDriverDataList.find((driver: any) => driver.dspr === dsprId);
         // navigate to dashboard passing driverId as props

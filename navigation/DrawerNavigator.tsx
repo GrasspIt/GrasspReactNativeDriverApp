@@ -7,7 +7,7 @@ import DSPRScreen from '../screens/DSPRScreen';
 import Dashboard from '../screens/Dashboard';
 import { logout } from "../actions/oauthActions";
 import { useDispatch } from "react-redux";
-import { DrawerActions, CommonActions } from '@react-navigation/native'
+import { DrawerActions } from '@react-navigation/native'
 import * as RootNavigation from '../navigation/RootNavigation';
 import Colors from '../constants/Colors';
 

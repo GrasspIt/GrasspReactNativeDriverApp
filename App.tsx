@@ -1,12 +1,8 @@
 import React from 'react';
-import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-
+import { store } from './store/store';
 import ScreenNavigator from './navigation/ScreenNavigator';
-import rootReducer from './reducers/rootReducer';
-import api from './middleware/api';
-import { createLogger } from 'redux-logger';
+
 // import * as Sentry from 'sentry-expo';
 
 // Sentry.init({
@@ -14,15 +10,6 @@ import { createLogger } from 'redux-logger';
 //   enableInExpoDevelopment: false,
 //   debug: true,
 // });
-
-const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-const store = createStore(
-  rootReducer,
-  composeEnhancers(
-    applyMiddleware(thunk, api, createLogger())
-  )
-);
 
 export default function App() {
   return (

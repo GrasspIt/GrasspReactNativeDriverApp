@@ -6,7 +6,7 @@ const { apiUrl } = getEnvVars();
 
 type CardProps = {
     dspr: any;
-    handleSelect: (dsprId: string) => void;
+    handleSelect: (dsprId: number) => void;
 }
 
 const DsprCard = ({dspr, handleSelect}: CardProps) => {
@@ -14,7 +14,6 @@ const DsprCard = ({dspr, handleSelect}: CardProps) => {
   const image = dspr.imageLocation ? `https://api.grassp.it/${dspr.imageLocation}` : 'https://grassp.it/wp-content/uploads/2019/11/GrasspHealthLogo-1-e1573960467788.png';
   // const image = dspr.imageLocation ? `${apiUrl}${dspr.imageLocation}` : '';
 
-  console.log(image)
   return (
     <TouchableOpacity style={styles.container} onPress={() => handleSelect(dspr.id)}>
       <View style={styles.cardContainer}>
