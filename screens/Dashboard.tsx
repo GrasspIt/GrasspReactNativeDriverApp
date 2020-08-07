@@ -21,6 +21,7 @@ type Props = {
     route;
 }
 
+//initialize variable outside of component to be used in TaskManager below
 let dsprDriver;
 
 const Dashboard = ({ route, navigation }: Props) => {
@@ -51,7 +52,8 @@ const Dashboard = ({ route, navigation }: Props) => {
       if (status === 'granted' && dsprDriver.onCall) {
         console.log('start location updates');
         await Location.startLocationUpdatesAsync('location-tracking', {
-            timeInterval: 5000,
+            timeInterval: 30000,
+            distanceInterval: 0,
             foregroundService: {
               notificationTitle: 'Location Updates',
               notificationBody: 'Grassp Health Driver App is tracking your current location.'
@@ -84,10 +86,10 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
   }
   if (data) {
     const { locations } = data;
-    console.log('Locations: ', locations)
+    let lat = locations[0].coords.latitude;
+    let long = locations[0].coords.longitude;
     //dispatch location to api
-    store.dispatch(setDriverLocation(dsprDriver.dspr, locations[0].coords.latitude, locations[0].coords.longitude));
-    console.log('dsprId: ', dsprDriver.dspr);
+    store.dispatch(setDriverLocation(dsprDriver.dspr, lat, long));
   }
 });
 
