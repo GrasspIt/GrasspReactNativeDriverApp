@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1},
     shadowOpacity: 0.4,
     shadowRadius: 2,
-    elevation: 4,
+    elevation: 5,
   },
   cardContainer: {
     display: 'flex',
@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light,
     maxWidth: 500,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    elevation: 5
   },
   imageContainer: {
     paddingHorizontal: 20,

@@ -25,7 +25,7 @@ const OnCallSwitch = ({dsprDriver}: SwitchProps) => {
     return (
         <>
         <Switch
-            trackColor={{ false: Colors.red, true: Colors.green }}
+            trackColor={{ false: Colors.medium, true: Colors.green }}
             thumbColor={isOnCall ? "#ffffff" : "#ffffff"}
             ios_backgroundColor="#3e3e3e"
             onValueChange={toggleSwitch}
