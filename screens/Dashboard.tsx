@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Alert } from 'react-native';
 import Colors from '../constants/Colors';
 import * as Location from 'expo-location';
@@ -27,14 +27,16 @@ let dsprDriver;
 const Dashboard = ({ route, navigation }: Props) => {
   const { driverId } = route.params;
   const dispatch = useDispatch();
-
+  
   const userId = useSelector<State, string>(state => state.api.loggedInUserId);
   const loggedInUser = useSelector<State, User>(state => state.api.entities.users[userId])
   dsprDriver = useSelector<State, DsprDriver>(state => state.api.entities.dsprDrivers[driverId]);
+  
+  const [isTracking, setIsTracking] = useState(false);
 
   // polling data from API while logged in
   const refreshData = () => {
-    dispatch(getDSPRDriver(driverId));
+    if (userId) dispatch(getDSPRDriver(driverId));
   }
   useInterval(refreshData, 60000);
 
@@ -49,8 +51,9 @@ const Dashboard = ({ route, navigation }: Props) => {
       if (status !== 'granted') {
         Alert.alert('Permission to access location was denied.');
       }
-      if (status === 'granted' && dsprDriver.onCall) {
-        console.log('start location updates');
+      if (status === 'granted' && dsprDriver && dsprDriver.onCall) {
+        console.log('location update');
+        setIsTracking(true);
         await Location.startLocationUpdatesAsync('location-tracking', {
             timeInterval: 30000,
             distanceInterval: 0,
@@ -61,8 +64,13 @@ const Dashboard = ({ route, navigation }: Props) => {
             pausesUpdatesAutomatically: false
           });
       }
+      if (isTracking && !dsprDriver.onCall) {
+        console.log('stop location updates');
+        setIsTracking(false);
+        await Location.stopLocationUpdatesAsync('location-tracking');
+      }
     })();
-  }, [dsprDriver]);
+  }, [dsprDriver, isTracking]);
 
   return (
     loggedInUser && dsprDriver ? (
