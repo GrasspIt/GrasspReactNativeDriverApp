@@ -28,7 +28,7 @@ const TopNavBar = ({navigation}) => {
             }}
             centerComponent={
                 <Image
-                    source={{uri: 'https://grassp.it/wp-content/uploads/2019/11/GrasspHealthLogo-1-e1573960467788.png'}}
+                    source={require('../assets/grassp_health.png')}
                     style={{height: 40, width: 200}}
                 />
             }

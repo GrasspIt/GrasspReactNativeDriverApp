@@ -11,14 +11,14 @@ type CardProps = {
 
 const DsprCard = ({dspr, handleSelect}: CardProps) => {
   
-  const image = dspr.imageLocation ? `https://api.grassp.it/${dspr.imageLocation}` : 'https://grassp.it/wp-content/uploads/2019/11/GrasspHealthLogo-1-e1573960467788.png';
+  const image = dspr.imageLocation ? {uri: `https://api.grassp.it/${dspr.imageLocation}`} : require('../assets/grassp_health.png');
   // const image = dspr.imageLocation ? `${apiUrl}${dspr.imageLocation}` : '';
 
   return (
     <TouchableOpacity style={styles.container} onPress={() => handleSelect(dspr.id)}>
       <View style={styles.cardContainer}>
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={{ uri: image }}/>
+          <Image style={styles.image} source={image}/>
         </View>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{dspr.name}</Text>

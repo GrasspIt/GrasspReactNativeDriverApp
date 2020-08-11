@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/grasspLogo1024.png",
     "splash": {
-      "image": "./assets/icon-256x256.png",
+      "image": "./assets/iphoneplus_splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
