@@ -14,6 +14,7 @@ import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import OnCallSwitch from '../components/OnCallSwitch';
 import TopNavBar from '../components/TopNavBar';
 import { useInterval } from '../hooks/useInterval';
+import OrderQueue from '../components/OrderQueue';
 
 type DashboardScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
@@ -81,6 +82,7 @@ const Dashboard = ({ route, navigation }: Props) => {
             Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
           </Text>
           <OnCallSwitch dsprDriver={dsprDriver}/>
+          <OrderQueue dsprDriver={dsprDriver}/>
         </View>
       </View>
     ) : null

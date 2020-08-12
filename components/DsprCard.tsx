@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions } from 'react-native';
 import Colors from '../constants/Colors';
 import { getEnvVars } from '../environment';
 const { apiUrl } = getEnvVars();
@@ -11,14 +11,28 @@ type CardProps = {
 
 const DsprCard = ({dspr, handleSelect}: CardProps) => {
   
-  const image = dspr.imageLocation ? {uri: `https://api.grassp.it/${dspr.imageLocation}`} : require('../assets/grassp_health.png');
+  const [imageWidth, setImageWidth] = useState<number>();
+  const [imageHeight, setImageHeight] = useState<number>();
+
+  const image = dspr.imageLocation ? { uri: `https://api.grassp.it/${dspr.imageLocation}` } : require('../assets/grassp_health.png');
   // const image = dspr.imageLocation ? `${apiUrl}${dspr.imageLocation}` : '';
+
+  useEffect(() => {
+    Image.getSize(`https://api.grassp.it/${dspr.imageLocation}`, (width, height) => {
+      // calculate image width and height 
+      const screenWidth = Dimensions.get('window').width - 60;
+      const scaleFactor = screenWidth / width;
+      const imageHeight = height * scaleFactor;
+      setImageWidth(screenWidth);
+      setImageHeight(imageHeight);
+    }, (error) => console.log(error))
+  }, [image])
 
   return (
     <TouchableOpacity style={styles.container} onPress={() => handleSelect(dspr.id)}>
       <View style={styles.cardContainer}>
-        <View style={styles.imageContainer}>
-          <Image style={styles.image} source={image}/>
+        <View style={{ paddingVertical: 0 }}>
+          <Image style={{ width: imageWidth, height: imageHeight, minHeight: 120 }} source={image}/>
         </View>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{dspr.name}</Text>
@@ -48,21 +62,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 5
   },
-  imageContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-  },
-  image: {
-    height: 80,
-    width: 300
-  },
   titleContainer: {
     flex: 1,
-    backgroundColor: Colors.dark,
-    padding: 0,
+    position: 'absolute',
+    bottom: 0,
+    backgroundColor: Colors.black,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%'
+    width: '100%',
+    opacity: 0.9
   },
   title: {
     fontSize: 16,
