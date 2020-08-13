@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions } from 'react-native';
 import Colors from '../constants/Colors';
 import { getEnvVars } from '../environment';
@@ -10,29 +10,15 @@ type CardProps = {
 }
 
 const DsprCard = ({dspr, handleSelect}: CardProps) => {
-  
-  const [imageWidth, setImageWidth] = useState<number>();
-  const [imageHeight, setImageHeight] = useState<number>();
 
   const image = dspr.imageLocation ? { uri: `https://api.grassp.it/${dspr.imageLocation}` } : require('../assets/grassp_health.png');
   // const image = dspr.imageLocation ? `${apiUrl}${dspr.imageLocation}` : '';
 
-  useEffect(() => {
-    Image.getSize(`https://api.grassp.it/${dspr.imageLocation}`, (width, height) => {
-      // calculate image width and height 
-      const screenWidth = Dimensions.get('window').width - 60;
-      const scaleFactor = screenWidth / width;
-      const imageHeight = height * scaleFactor;
-      setImageWidth(screenWidth);
-      setImageHeight(imageHeight);
-    }, (error) => console.log(error))
-  }, [image])
-
   return (
     <TouchableOpacity style={styles.container} onPress={() => handleSelect(dspr.id)}>
       <View style={styles.cardContainer}>
-        <View style={{ paddingVertical: 0 }}>
-          <Image style={{ width: imageWidth, height: imageHeight, minHeight: 120 }} source={image}/>
+        <View style={styles.imageContainer}>
+          <Image resizeMode='contain' style={styles.image} source={image}/>
         </View>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{dspr.name}</Text>
@@ -62,6 +48,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 5
   },
+  imageContainer: {
+    width: '100%',
+    minHeight: 180,
+    padding: 10
+  },
+  image: {
+    flex: 1,
+    width: undefined,
+    height: undefined
+  },
   titleContainer: {
     flex: 1,
     position: 'absolute',
@@ -73,7 +69,7 @@ const styles = StyleSheet.create({
     opacity: 0.9
   },
   title: {
-    fontSize: 16,
+    fontSize: 20,
     textAlign: 'center',
     paddingVertical: 20,
     color: '#fff'
