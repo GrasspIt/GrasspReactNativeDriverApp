@@ -1,17 +1,11 @@
 import { getAddresses } from './addressSelectors';
 import { State } from '../store/reduxStoreState';
 
-export const getOrders = (state: State) => state.api ?
-    state.api.entities ?
-        state.api.entities.orders :
-        undefined
-    : undefined;
+export const getOrders = (state: State) => state.api && state.api.entities ?
+        state.api.entities.orders : undefined;
 
-export const getOrderFromProps = (state: State, props) => state.api ?
-    state.api.entities ?
-        state.api.entities.orders[props.orderId]
-        : undefined
-    : undefined;
+export const getOrderFromProps = (state: State, props) => state.api && state.api.entities ?
+        state.api.entities.orders[props.orderId] : undefined;
 
 export const getOrdersForUser = (state: State, props) => {
     const orders = state.api.entities.orders;

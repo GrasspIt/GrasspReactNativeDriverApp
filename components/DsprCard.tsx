@@ -13,7 +13,6 @@ const DsprCard = ({dspr, handleSelect}: CardProps) => {
 
   const image = dspr.imageLocation ? { uri: `https://api.grassp.it/${dspr.imageLocation}` } : require('../assets/grassp_health.png');
   // const image = dspr.imageLocation ? `${apiUrl}${dspr.imageLocation}` : '';
-
   return (
     <TouchableOpacity style={styles.container} onPress={() => handleSelect(dspr.id)}>
       <View style={styles.cardContainer}>
@@ -38,8 +37,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     display: 'flex',
-    marginHorizontal: 10,
-    marginTop: 10,
+    margin: 10,
     borderRadius: 5,
     overflow: 'hidden',
     backgroundColor: Colors.light,
@@ -50,7 +48,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    minHeight: 180,
+    minHeight: 200,
     padding: 10
   },
   image: {

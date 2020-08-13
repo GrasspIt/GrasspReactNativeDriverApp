@@ -6,6 +6,8 @@ import { State } from '../store/reduxStoreState';
 // }
 
 export const getLoggedInUserId = (state: State) => state.api.loggedInUserId;
+export const getLoggedInUser = (state: State) => state.api.loggedInUserId ? state.api.entities.users[state.api.loggedInUserId] : undefined;
+
 // export const getLoggedInUserEntities = (state: State) => {
 //     return state.api.entities.users || NullLoggedInUserEntities;
 // };

@@ -207,7 +207,7 @@ export interface DsprDriver {
     employeeIDExpirationDate?: number;
 }
 
-interface DsprDriverLocation {
+export interface DsprDriverLocation {
     id: number;
     longitude: number;
     latitude: number;
@@ -330,7 +330,7 @@ interface Coupon {
     dailyDealDays: any[];
 }
 
-interface Order {
+export interface Order {
     id: number;
     dsprDriver: number;
     user: number;

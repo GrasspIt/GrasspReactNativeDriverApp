@@ -48,10 +48,12 @@ const Dashboard = ({ route, navigation }: Props) => {
 
   useEffect(() => {
     (async () => {
+      //permissions for location tracking
       let { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert('Permission to access location was denied.');
       }
+      //start location updates if driver is on call
       if (status === 'granted' && dsprDriver && dsprDriver.onCall) {
         console.log('location update');
         setIsTracking(true);
@@ -65,6 +67,7 @@ const Dashboard = ({ route, navigation }: Props) => {
             pausesUpdatesAutomatically: false
           });
       }
+      //stop location updates if driver is not on call
       if (isTracking && !dsprDriver.onCall) {
         console.log('stop location updates');
         setIsTracking(false);
