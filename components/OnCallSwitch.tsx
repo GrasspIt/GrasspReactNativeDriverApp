@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Switch } from 'react-native';
+import { Text, Switch, View } from 'react-native';
 import { useDispatch } from "react-redux";
 import { setDriverOnCallState } from "../actions/driverActions";
 import {  DsprDriver } from "../store/reduxStoreState";
@@ -23,16 +23,16 @@ const OnCallSwitch = ({dsprDriver}: SwitchProps) => {
     }, [dsprDriver])
 
     return (
-        <>
-        <Switch
-            trackColor={{ false: Colors.medium, true: Colors.green }}
-            thumbColor={isOnCall ? "#ffffff" : "#ffffff"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={isOnCall}
-        />
-        <Text>{isOnCall ? 'On Call' : 'Not on Call'}</Text>
-        </>
+        <View style={{alignItems: 'center'}}>
+            <Switch
+                trackColor={{ false: Colors.medium, true: Colors.green }}
+                thumbColor={isOnCall ? "#ffffff" : "#ffffff"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isOnCall}
+            />
+            <Text>{isOnCall ? 'On Call' : 'Not on Call'}</Text>
+        </View>
     )
 };
 

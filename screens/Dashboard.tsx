@@ -121,8 +121,7 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: Colors.light,
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   }
 });
 
