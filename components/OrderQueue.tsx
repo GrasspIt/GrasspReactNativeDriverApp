@@ -13,10 +13,6 @@ const OrderQueue = ({ dsprDriver }: OrderProps) => {
     const orders = useSelector<State, Order>(getOrders);
     const orderList = Object.values(orders);
 
-    useEffect(() => {
-      console.log({orderList})
-    }, [orderList])
-
     return (
         <FlatList
           data={orderList}

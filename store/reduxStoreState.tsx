@@ -364,7 +364,7 @@ interface OrderDetail {
     discount: number;
 }
 
-interface Address {
+export interface Address {
     id: number;
     street: string;
     zipCode: string;

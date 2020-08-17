@@ -49,15 +49,16 @@ const Dashboard = ({ route, navigation }: Props) => {
   useEffect(() => {
     (async () => {
       //permissions for location tracking
-      let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission to access location was denied.');
-      }
-      //start location updates if driver is on call
-      if (status === 'granted' && dsprDriver && dsprDriver.onCall) {
-        console.log('location update');
-        setIsTracking(true);
-        await Location.startLocationUpdatesAsync('location-tracking', {
+      if (dsprDriver) {
+        let { status } = await Location.requestPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert('Permission to access location was denied.');
+        }
+        //start location updates if driver is on call
+        if (status === 'granted' && dsprDriver && dsprDriver.onCall) {
+          console.log('location update');
+          setIsTracking(true);
+          await Location.startLocationUpdatesAsync('location-tracking', {
             timeInterval: 30000,
             distanceInterval: 0,
             foregroundService: {
@@ -66,6 +67,7 @@ const Dashboard = ({ route, navigation }: Props) => {
             },
             pausesUpdatesAutomatically: false
           });
+        }
       }
       //stop location updates if driver is not on call
       if (isTracking && !dsprDriver.onCall) {
@@ -92,6 +94,7 @@ const Dashboard = ({ route, navigation }: Props) => {
   )
 }
 
+// define the task that will be called with startLocationTrackingUpdates
 TaskManager.defineTask('location-tracking', ({ data, error }) => {
   if (error) {
     console.log('Error: ', error.message);
@@ -114,9 +117,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     textAlign: 'center',
-    paddingVertical: 20
+    paddingVertical: 14
   },
   body: {
     flex: 1,
