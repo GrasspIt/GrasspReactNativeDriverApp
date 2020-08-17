@@ -6,11 +6,13 @@ import Colors from '../constants/Colors';
 import { FontAwesome, Entypo } from '@expo/vector-icons';
 import { getAddresses } from '../selectors/addressSelectors';
 import { getUsers } from '../selectors/userSelectors';
+import { markOrderInProcess } from '../actions/orderActions';
 
 
 type OrderProps = { orderInfo: Order; }
 
 const OrderItem = ({ orderInfo } : OrderProps) => {
+    const dispatch = useDispatch();
 
     const addresses = useSelector<State, Address>(getAddresses);
     const addressList = Object.values(addresses);
@@ -19,7 +21,6 @@ const OrderItem = ({ orderInfo } : OrderProps) => {
     const users = useSelector<State, Address>(getUsers);
     const userList = Object.values(users);
     const user = userList.find(user => user.id === orderInfo.user);
-    console.log({address})
 
     return (
         <View style={styles.orderContainer}>
@@ -43,18 +44,14 @@ const OrderItem = ({ orderInfo } : OrderProps) => {
                 >
                     <Entypo name="info-with-circle" size={24} color={Colors.primary} />   
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => Alert.alert('hello')}>
-                    <FontAwesome name="gear" size={26} color={Colors.primary} />
-                </TouchableOpacity>
-
-                {/* <FontAwesome.Button
-                    name="gear"
-                    size={20}
-                    backgroundColor={Colors.primary}
-                    onPress={() => Alert.alert('hello')}
+                <TouchableOpacity
+                    disabled={orderInfo.orderStatus === "queued" ? false : true}
+                    onPress={() => dispatch(markOrderInProcess(orderInfo.id))}
                 >
-                    Process
-                </FontAwesome.Button> */}
+                    <FontAwesome name="gear" size={26}
+                        color={orderInfo.orderStatus === "queued" ? Colors.primary : Colors.medium}
+                    />
+                </TouchableOpacity>
             </View>
         </View>
     );
