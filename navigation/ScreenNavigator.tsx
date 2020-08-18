@@ -6,11 +6,13 @@ import { navigationRef } from './RootNavigation';
 import StartupScreen from '../screens/StartupScreen';
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
+import OrderDetails from '../screens/OrderDetails';
 
 export type RootStackParamsList = {
   Startup: undefined,
   Login: undefined,
   Home: undefined,
+  Details: undefined
 }
 
 const RootStack = createStackNavigator<RootStackParamsList>();
@@ -38,6 +40,13 @@ const ScreenNavigator = () => {
               component={HomeScreen}
               options={{
                 headerShown: false
+              }}
+          />
+          <RootStack.Screen
+              name="Details"
+              component={OrderDetails}
+              options={{
+                headerShown: true
               }}
           />
         </RootStack.Navigator>

@@ -7,7 +7,7 @@ import { FontAwesome, Entypo } from '@expo/vector-icons';
 import { getAddresses } from '../selectors/addressSelectors';
 import { getUsers } from '../selectors/userSelectors';
 import { markOrderInProcess } from '../actions/orderActions';
-
+import * as RootNavigation from '../navigation/RootNavigation';
 
 type OrderProps = { orderInfo: Order; }
 
@@ -25,22 +25,16 @@ const OrderItem = ({ orderInfo } : OrderProps) => {
     return (
         <View style={styles.orderContainer}>
             <View>
-                <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
-                    <Text style={{fontSize: 14}}>
-                        {user.firstName} {user.lastName},
-                    </Text>
-                    <Text style={{color: Colors.dark, marginLeft: 4, fontSize: 12}}>
-                        ${orderInfo.cashTotal}
-                    </Text>
+                <View style={styles.topText}>
+                    <Text style={styles.name}>{user.firstName} {user.lastName},</Text>
+                    <Text style={styles.cash}>${orderInfo.cashTotal}</Text>
                 </View>
-                <Text style={{color: Colors.dark, marginTop: 2, fontSize: 12}}>
-                    {address.street} {address.zipCode}
-                </Text>
+                <Text style={styles.address}>{address.street} {address.zipCode}</Text>
             </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     style={{marginHorizontal: 30}}
-                    onPress={() => Alert.alert('hello')}
+                    onPress={() => RootNavigation.navigate('Details', null)}
                 >
                     <Entypo name="info-with-circle" size={24} color={Colors.primary} />   
                 </TouchableOpacity>
@@ -48,9 +42,7 @@ const OrderItem = ({ orderInfo } : OrderProps) => {
                     disabled={orderInfo.orderStatus === "queued" ? false : true}
                     onPress={() => dispatch(markOrderInProcess(orderInfo.id))}
                 >
-                    <FontAwesome name="gear" size={26}
-                        color={orderInfo.orderStatus === "queued" ? Colors.primary : Colors.medium}
-                    />
+                    <FontAwesome name="gear" size={26} color={orderInfo.orderStatus === "queued" ? Colors.primary : Colors.medium} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -58,6 +50,25 @@ const OrderItem = ({ orderInfo } : OrderProps) => {
 };
 
 const styles = StyleSheet.create({
+    name: { fontSize: 14 },
+    cash: {
+        color: Colors.dark,
+        marginLeft: 4,
+        fontSize: 12
+    },
+    address: {
+        color: Colors.dark,
+        marginTop: 2,
+        fontSize: 12
+    },
+    topText: {
+        flexDirection: 'row',
+        alignItems: 'flex-end'
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     orderContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',

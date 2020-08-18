@@ -29,7 +29,7 @@ const DsprCard = ({dspr, handleSelect}: CardProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    shadowColor: "#000",
+    shadowColor: "#000000",
     shadowOffset: { width: 0, height: 1},
     shadowOpacity: 0.4,
     shadowRadius: 2,
