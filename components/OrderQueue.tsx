@@ -18,6 +18,7 @@ const OrderQueue = ({ dsprDriver }: OrderProps) => {
           data={orderList}
           renderItem={item => <OrderItem orderInfo={item.item} />}
           keyExtractor={(item: any) => item.id.toString()}
+          style={{paddingHorizontal: 20, marginVertical: 20}}
         />
     )
 };

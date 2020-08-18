@@ -7,12 +7,14 @@ import StartupScreen from '../screens/StartupScreen';
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
 import OrderDetails from '../screens/OrderDetails';
+import { Order } from '../store/reduxStoreState';
+
 
 export type RootStackParamsList = {
   Startup: undefined,
   Login: undefined,
   Home: undefined,
-  Details: undefined
+  Details: { orderInfo: Order }
 }
 
 const RootStack = createStackNavigator<RootStackParamsList>();
