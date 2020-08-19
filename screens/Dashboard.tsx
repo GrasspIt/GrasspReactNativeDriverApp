@@ -4,23 +4,30 @@ import Colors from '../constants/Colors';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 
-import { useSelector, useDispatch } from "react-redux";
-import { State, User, DsprDriver } from "../store/reduxStoreState";
-import { getDSPRDriver, setDsprDriverId, setDriverLocation } from "../actions/driverActions";
+import { useSelector, useDispatch } from 'react-redux';
+import { State, User, DsprDriver } from '../store/reduxStoreState';
+import {
+  getDSPRDriver,
+  setDsprDriverId,
+  setDriverLocation,
+} from '../actions/driverActions';
 import { store } from '../store/store';
 
-import { StackNavigationProp } from "@react-navigation/stack";
+import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import OnCallSwitch from '../components/OnCallSwitch';
 import TopNavBar from '../components/TopNavBar';
 import { useInterval } from '../hooks/useInterval';
 import OrderQueue from '../components/OrderQueue';
 
-type DashboardScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
+type DashboardScreenNavigationProp = StackNavigationProp<
+  DrawerStackParamsList,
+  'Dashboard'
+>;
 type Props = {
-    navigation: DashboardScreenNavigationProp;
-    route;
-}
+  navigation: DashboardScreenNavigationProp;
+  route;
+};
 
 //initialize variable outside of component to be used in TaskManager below
 let dsprDriver;
@@ -28,23 +35,29 @@ let dsprDriver;
 const Dashboard = ({ route, navigation }: Props) => {
   const { driverId } = route.params;
   const dispatch = useDispatch();
-  
-  const userId = useSelector<State, string>(state => state.api.loggedInUserId);
-  const loggedInUser = useSelector<State, User>(state => state.api.entities.users[userId])
-  dsprDriver = useSelector<State, DsprDriver>(state => state.api.entities.dsprDrivers[driverId]);
-  
+
+  const userId = useSelector<State, string>(
+    (state) => state.api.loggedInUserId
+  );
+  const loggedInUser = useSelector<State, User>(
+    (state) => state.api.entities.users[userId]
+  );
+  dsprDriver = useSelector<State, DsprDriver>(
+    (state) => state.api.entities.dsprDrivers[driverId]
+  );
+
   const [isTracking, setIsTracking] = useState(false);
 
   // polling data from API while logged in
   const refreshData = () => {
     if (userId) dispatch(getDSPRDriver(driverId));
-  }
+  };
   useInterval(refreshData, 60000);
 
   useEffect(() => {
     dispatch(setDsprDriverId(driverId));
     dispatch(getDSPRDriver(driverId));
-  }, [driverId])
+  }, [driverId]);
 
   useEffect(() => {
     (async () => {
@@ -63,9 +76,10 @@ const Dashboard = ({ route, navigation }: Props) => {
             distanceInterval: 0,
             foregroundService: {
               notificationTitle: 'Location Updates',
-              notificationBody: 'Grassp Health Driver App is tracking your current location.'
+              notificationBody:
+                'Grassp Health Driver App is tracking your current location.',
             },
-            pausesUpdatesAutomatically: false
+            pausesUpdatesAutomatically: false,
           });
         }
       }
@@ -78,21 +92,19 @@ const Dashboard = ({ route, navigation }: Props) => {
     })();
   }, [dsprDriver, isTracking]);
 
-  return (
-    loggedInUser && dsprDriver ? (
-      <View style={styles.container}>
-        <TopNavBar navigation={navigation}/>
-        <View style={styles.body}>
-          <Text style={styles.title}>
-            Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
-          </Text>
-          <OnCallSwitch dsprDriver={dsprDriver}/>
-          <OrderQueue dsprDriver={dsprDriver}/>
-        </View>
+  return loggedInUser && dsprDriver ? (
+    <View style={styles.container}>
+      <TopNavBar navigation={navigation} />
+      <View style={styles.body}>
+        <Text style={styles.title}>
+          Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
+        </Text>
+        <OnCallSwitch dsprDriver={dsprDriver} />
+        <OrderQueue dsprDriver={dsprDriver} />
       </View>
-    ) : null
-  )
-}
+    </View>
+  ) : null;
+};
 
 // define the task that will be called with startLocationTrackingUpdates
 TaskManager.defineTask('location-tracking', ({ data, error }) => {
@@ -119,13 +131,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     textAlign: 'center',
-    paddingVertical: 14
+    paddingVertical: 14,
   },
   body: {
     flex: 1,
     backgroundColor: Colors.light,
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
 
 export default Dashboard;

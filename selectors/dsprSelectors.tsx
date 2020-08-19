@@ -10,18 +10,23 @@ const getDSPRDrivers = (state: State) => state.api.entities.dsprDrivers;
 
 export const getDSPRs = (state: State) => state.api.entities.DSPRs;
 
-export const getDSPRFromProps = (state: State, props) => state.api.entities.DSPRs[props.dsprId];
+export const getDSPRFromProps = (state: State, props) =>
+  state.api.entities.DSPRs[props.dsprId];
 
-export const getDSPRPromotionsForProductCategories = (state: State, props) => state.api.entities.dsprProductCategoryPromotions ? 
-        Object.values(state.api.entities.dsprProductCategoryPromotions).filter(promotion => promotion.dspr === parseInt(props.dsprId)) 
-        : undefined;
+export const getDSPRPromotionsForProductCategories = (state: State, props) =>
+  state.api.entities.dsprProductCategoryPromotions
+    ? Object.values(state.api.entities.dsprProductCategoryPromotions).filter(
+        (promotion) => promotion.dspr === parseInt(props.dsprId)
+      )
+    : undefined;
 
 export const getAwayMessageForDSPRWithProps = (state: State, props) => {
-    const dspr = getDSPRFromProps(state, props);
-    return dspr && dspr.dsprAwayMessage && dspr.dsprAwayMessage.message;
-}
+  const dspr = getDSPRFromProps(state, props);
+  return dspr && dspr.dsprAwayMessage && dspr.dsprAwayMessage.message;
+};
 
-const getDSPROrderHistories = (state: State) => state.api.entities.dsprOrderHistories;
+const getDSPROrderHistories = (state: State) =>
+  state.api.entities.dsprOrderHistories;
 
 // export const getDSPRsForDSP = createSelector(
 //     [getDSPRs, getDSPFromProps], (dsprs, dsp) => {
@@ -42,10 +47,10 @@ const getDSPROrderHistories = (state: State) => state.api.entities.dsprOrderHist
 //     [getProductCategoriesForDSPFromProps, getDSPRPromotionsForProductCategories], (productCategories, productCategoryPromotions) => {
 //         return productCategories ?
 //             productCategoryPromotions ?
-//                 productCategories.map(productCategory => ({...productCategory, currentPromotion: productCategoryPromotions.find(promotion=> promotion.current && promotion.productCategory === productCategory.id)})) 
+//                 productCategories.map(productCategory => ({...productCategory, currentPromotion: productCategoryPromotions.find(promotion=> promotion.current && promotion.productCategory === productCategory.id)}))
 //                 :undefined
 //             :undefined
-//     } 
+//     }
 // )
 
 // export const getOutstandingOrdersForDSPR = createSelector(

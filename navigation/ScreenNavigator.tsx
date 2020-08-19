@@ -9,51 +9,50 @@ import HomeScreen from '../screens/HomeScreen';
 import OrderDetails from '../screens/OrderDetails';
 import { Order } from '../store/reduxStoreState';
 
-
 export type RootStackParamsList = {
-  Startup: undefined,
-  Login: undefined,
-  Home: undefined,
-  Details: { orderInfo: Order }
-}
+  Startup: undefined;
+  Login: undefined;
+  Home: { dsprDrivers: number[] };
+  Details: { orderInfo: Order };
+};
 
 const RootStack = createStackNavigator<RootStackParamsList>();
 
 const ScreenNavigator = () => {
-    return (
-      <NavigationContainer ref={navigationRef}>
-        <RootStack.Navigator initialRouteName="Startup">
-          <RootStack.Screen
-              name="Startup"
-              component={StartupScreen}
-              options={{
-                headerShown: false
-              }}
-          />
-          <RootStack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{
-                headerShown: false
-              }}
-          />
-          <RootStack.Screen
-              name="Home"
-              component={HomeScreen}
-              options={{
-                headerShown: false
-              }}
-          />
-          <RootStack.Screen
-              name="Details"
-              component={OrderDetails}
-              options={{
-                headerShown: true
-              }}
-          />
-        </RootStack.Navigator>
-      </NavigationContainer>
-    );
-  }
-  
-  export default ScreenNavigator;
+  return (
+    <NavigationContainer ref={navigationRef}>
+      <RootStack.Navigator initialRouteName="Startup">
+        <RootStack.Screen
+          name="Startup"
+          component={StartupScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <RootStack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <RootStack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <RootStack.Screen
+          name="Details"
+          component={OrderDetails}
+          options={{
+            headerShown: true,
+          }}
+        />
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default ScreenNavigator;
