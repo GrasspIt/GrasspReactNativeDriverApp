@@ -15,17 +15,23 @@ import {
 } from '../store/reduxStoreState';
 
 const OrderDetails = ({ route }) => {
-  const { orderInfo } = route.params;
-
+  const { orderInfo, user } = route.params;
+  console.log('user', user);
   console.log('orderInfo', orderInfo);
+
+  //format phone number
+  //format date
+
   return (
     <ScrollView style={styles.screen}>
-      <Text style={styles.title}>Special Instructions: </Text>
-      <Text>Instructions</Text>
+      <Text style={styles.title}>Special Instructions:</Text>
+      <Text style={styles.userDetails}>{orderInfo.specialInstructions}</Text>
       <View style={styles.userContainer}>
         <Text style={styles.title}>Medical User</Text>
         <Text style={styles.userDetails}>Date</Text>
-        <Text style={styles.userDetails}>firstName lastName, phone#</Text>
+        <Text style={styles.userDetails}>
+          {user.firstName} {user.lastName}, {user.phoneNumber}
+        </Text>
         <Text style={styles.userDetails}>Identificatioon Document: id#</Text>
         <Text style={styles.userDetails}>Birth Date: Month day, Year</Text>
         <Text style={styles.userDetails}>Medical ID: id#</Text>
@@ -36,18 +42,18 @@ const OrderDetails = ({ route }) => {
       </View>
       <View style={styles.priceDetails}>
         <Text>SubTotal</Text>
-        <Text>price</Text>
+        <Text>${orderInfo.cashTotalPreTaxesAndFees}.00</Text>
       </View>
       <View style={styles.priceDetails}>
         <Text>State and Local Sales Tax: %</Text>
-        <Text>price</Text>
+        <Text>${orderInfo.taxesTotal}.00</Text>
       </View>
       <View style={styles.priceDetails}>
         <Text>Delivery Fee</Text>
-        <Text>price</Text>
+        <Text>${orderInfo.deliveryFee}.00</Text>
       </View>
       <View style={styles.priceDetails}>
-        <Text>Total: Price</Text>
+        <Text>Total: ${orderInfo.cashTotal}.00</Text>
       </View>
       <View style={styles.buttonContainer}>
         <Button title="Cancel Order" onPress={() => console.log('cancel')} />
