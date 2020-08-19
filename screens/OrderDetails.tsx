@@ -14,7 +14,19 @@ import {
   DsprDriverInventoryItem,
 } from '../store/reduxStoreState';
 
-const OrderDetails = ({ route }) => {
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamsList } from '../navigation/ScreenNavigator';
+
+type DetailsScreenNavigationProp = StackNavigationProp<
+  RootStackParamsList,
+  'Details'
+>;
+
+type Props = {
+  navigation: DetailsScreenNavigationProp;
+  route;
+};
+const OrderDetails = ({ route, navigation }: Props) => {
   const { orderInfo, user } = route.params;
   console.log('user', user);
   console.log('orderInfo', orderInfo);

@@ -53,14 +53,18 @@ const DrawerNavigator = ({ navigation, dsprDrivers }) => {
         );
       }}
     >
-      {/* {dsprDrivers.length > 1 ? (
-              <> */}
-      <Drawer.Screen name="DSPRs" component={DSPRScreen} />
-      <Drawer.Screen name="Dashboard" component={Dashboard} />
-      {/* </>
-            ) : (
-              <Drawer.Screen name="Dashboard" component={Dashboard} />
-            )} */}
+      {dsprDrivers.length > 1 ? (
+        <>
+          <Drawer.Screen name="DSPRs" component={DSPRScreen} />
+          <Drawer.Screen name="Dashboard" component={Dashboard} />
+        </>
+      ) : (
+        <Drawer.Screen
+          name="Dashboard"
+          component={Dashboard}
+          initialParams={{ driverId: dsprDrivers[0] }}
+        />
+      )}
     </Drawer.Navigator>
   );
 };
