@@ -41,7 +41,7 @@ const OrderItem = ({ orderInfo }: OrderProps) => {
         <TouchableOpacity
           style={{ marginHorizontal: 30 }}
           onPress={() =>
-            RootNavigation.navigate('Details', { orderInfo, user })
+            RootNavigation.navigate('Details', { orderInfo, user, address })
           }
         >
           <Entypo name="info-with-circle" size={24} color={Colors.primary} />

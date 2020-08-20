@@ -13,6 +13,7 @@ import {
   DspProduct,
   DsprDriverInventoryItem,
 } from '../store/reduxStoreState';
+import { parseDate, formatPhone } from '../hooks/util';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
@@ -27,12 +28,11 @@ type Props = {
   route;
 };
 const OrderDetails = ({ route, navigation }: Props) => {
-  const { orderInfo, user } = route.params;
+  const { orderInfo, user, address } = route.params;
   console.log('user', user);
   console.log('orderInfo', orderInfo);
 
-  //format phone number
-  //format date
+  const date = parseDate(orderInfo.createdTime);
 
   return (
     <ScrollView style={styles.screen}>
@@ -40,32 +40,42 @@ const OrderDetails = ({ route, navigation }: Props) => {
       <Text style={styles.userDetails}>{orderInfo.specialInstructions}</Text>
       <View style={styles.userContainer}>
         <Text style={styles.title}>Medical User</Text>
-        <Text style={styles.userDetails}>Date</Text>
         <Text style={styles.userDetails}>
-          {user.firstName} {user.lastName}, {user.phoneNumber}
+          {date.toLocaleString('en-us', { month: 'long' })} {date.getDate()},{' '}
+          {date.getFullYear()}, at{' '}
+          {date.toLocaleString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+          })}
+        </Text>
+        <Text style={styles.userDetails}>
+          {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
         </Text>
         <Text style={styles.userDetails}>Identificatioon Document: id#</Text>
         <Text style={styles.userDetails}>Birth Date: Month day, Year</Text>
         <Text style={styles.userDetails}>Medical ID: id#</Text>
-        <Text style={styles.userDetails}>address</Text>
+        <Text style={styles.userDetails}>
+          {address.street}, {address.zipCode}
+        </Text>
       </View>
       <View style={styles.product}>
         <Text>Product</Text>
       </View>
       <View style={styles.priceDetails}>
         <Text>SubTotal</Text>
-        <Text>${orderInfo.cashTotalPreTaxesAndFees}.00</Text>
+        <Text>${orderInfo.cashTotalPreTaxesAndFees.toFixed(2)}</Text>
       </View>
       <View style={styles.priceDetails}>
         <Text>State and Local Sales Tax: %</Text>
-        <Text>${orderInfo.taxesTotal}.00</Text>
+        <Text>${orderInfo.taxesTotal.toFixed(2)}</Text>
       </View>
       <View style={styles.priceDetails}>
         <Text>Delivery Fee</Text>
-        <Text>${orderInfo.deliveryFee}.00</Text>
+        <Text>${orderInfo.deliveryFee.toFixed(2)}</Text>
       </View>
       <View style={styles.priceDetails}>
-        <Text>Total: ${orderInfo.cashTotal}.00</Text>
+        <Text>Total: ${orderInfo.cashTotal.toFixed(2)}</Text>
       </View>
       <View style={styles.buttonContainer}>
         <Button title="Cancel Order" onPress={() => console.log('cancel')} />
