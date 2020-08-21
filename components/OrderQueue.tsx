@@ -12,10 +12,11 @@ const OrderQueue = ({ dsprDriver }: OrderProps) => {
 
   const orders = useSelector<State, Order>(getOrders);
   const orderList = Object.values(orders);
+  const queuedOrders = orderList.filter((order) => order.orderStatus == 'queued' || 'in_process');
 
   return (
     <FlatList
-      data={orderList}
+      data={queuedOrders}
       renderItem={(item) => <OrderItem orderInfo={item.item} />}
       keyExtractor={(item: any) => item.id.toString()}
       style={{ paddingHorizontal: 20, marginVertical: 20 }}

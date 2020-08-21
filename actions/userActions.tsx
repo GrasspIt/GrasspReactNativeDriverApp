@@ -22,14 +22,12 @@ export const getAllUsers = () => (dispatch) => {
 };
 
 export const userListCSVDownloadLink = (begin, end) =>
-  API_ROOT +
-  `user/list/csv?begin=${begin}&end=${end}&access_token=${accessTokenKey}`;
+  API_ROOT + `user/list/csv?begin=${begin}&end=${end}&access_token=${accessTokenKey}`;
 
 export const downloadUnverifiedUsersList = () =>
   API_ROOT + `user/unverified/csv?access_token=${accessTokenKey}`;
 
-export const GET_USERS_WITH_UNVERIFIED_DOCUMENTS =
-  'GET_USERS_WITH_UNVERIFIED_DOCUMENTS';
+export const GET_USERS_WITH_UNVERIFIED_DOCUMENTS = 'GET_USERS_WITH_UNVERIFIED_DOCUMENTS';
 export const GET_USERS_WITH_UNVERIFIED_DOCUMENTS_SUCCESS =
   'GET_USERS_WITH_UNVERIFIED_DOCUMENTS_SUCCESS';
 export const GET_USERS_WITH_UNVERIFIED_DOCUMENTS_FAILURE =
@@ -61,11 +59,7 @@ export const GET_USERS_BY_SEARCH_FAILURE = 'GET_USERS_BY_SEARCH_FAILURE';
 const usersBySearch = (searchQuery) => ({
   [CALL_API]: {
     httpAction: 'GET',
-    types: [
-      GET_USERS_BY_SEARCH,
-      GET_USERS_BY_SEARCH_SUCCESS,
-      GET_USERS_BY_SEARCH_FAILURE,
-    ],
+    types: [GET_USERS_BY_SEARCH, GET_USERS_BY_SEARCH_SUCCESS, GET_USERS_BY_SEARCH_FAILURE],
     endPoint: `user/search/${searchQuery}`,
     schema: Schemas.USER_SEARCH_ARRAY,
   },
@@ -82,11 +76,7 @@ export const GET_SPECIFIC_USER_FAILURE = 'GET_SPECIFIC_USER_FAILURE';
 const specificUser = (userId) => ({
   [CALL_API]: {
     httpAction: 'GET',
-    types: [
-      GET_SPECIFIC_USER,
-      GET_SPECIFIC_USER_SUCCESS,
-      GET_SPECIFIC_USER_FAILURE,
-    ],
+    types: [GET_SPECIFIC_USER, GET_SPECIFIC_USER_SUCCESS, GET_SPECIFIC_USER_FAILURE],
     endPoint: `user/${userId}`,
     schema: Schemas.USER,
   },
@@ -97,10 +87,8 @@ export const getSpecificUser = (userId) => (dispatch) => {
 };
 
 export const GET_ORDER_HISTORY_FOR_USER = 'GET_ORDER_HISTORY_FOR_USER';
-export const GET_ORDER_HISTORY_FOR_USER_SUCCESS =
-  'GET_ORDER_HISTORY_FOR_USER_SUCCESS';
-export const GET_ORDER_HISTORY_FOR_USER_FAILURE =
-  'GET_ORDER_HISTORY_FOR_USER_FAILURE';
+export const GET_ORDER_HISTORY_FOR_USER_SUCCESS = 'GET_ORDER_HISTORY_FOR_USER_SUCCESS';
+export const GET_ORDER_HISTORY_FOR_USER_FAILURE = 'GET_ORDER_HISTORY_FOR_USER_FAILURE';
 
 const orderHistoryForUser = (userId) => ({
   [CALL_API]: {
@@ -130,11 +118,7 @@ export const GET_USER_ID_DOCUMENT_FAILURE = 'GET_USER_ID_DOCUMENT_FAILURE';
 const userIdDocument = (userId) => ({
   [CALL_API]: {
     httpAction: 'GET',
-    types: [
-      GET_USER_ID_DOCUMENT,
-      GET_USER_ID_DOCUMENT_SUCCESS,
-      GET_USER_ID_DOCUMENT_FAILURE,
-    ],
+    types: [GET_USER_ID_DOCUMENT, GET_USER_ID_DOCUMENT_SUCCESS, GET_USER_ID_DOCUMENT_FAILURE],
     endPoint: `user/${USER_ID_DOCUMENT}/${userId}`,
     schema: Schemas.USER_ID_DOCUMENT,
   },
@@ -145,10 +129,8 @@ export const getUserIdDocument = (userId) => (dispatch) => {
 };
 
 export const GET_ALL_USER_ID_DOCUMENTS = 'GET_ALL_USER_ID_DOCUMENTS';
-export const GET_ALL_USER_ID_DOCUMENTS_SUCCESS =
-  'GET_ALL_USER_ID_DOCUMENTS_SUCCESS';
-export const GET_ALL_USER_ID_DOCUMENTS_FAILURE =
-  'GET_ALL_USER_ID_DOCUMENTS_FAILURE';
+export const GET_ALL_USER_ID_DOCUMENTS_SUCCESS = 'GET_ALL_USER_ID_DOCUMENTS_SUCCESS';
+export const GET_ALL_USER_ID_DOCUMENTS_FAILURE = 'GET_ALL_USER_ID_DOCUMENTS_FAILURE';
 
 const allUserIdDocuments = (userId) => ({
   [CALL_API]: {
@@ -174,11 +156,7 @@ export const SET_CURRENT_USER_ID_FAILURE = 'SET_CURRENT_USER_ID_FAILURE';
 const setIdDocument = (documentId: number) => ({
   [CALL_API]: {
     httpAction: 'POST',
-    types: [
-      SET_CURRENT_USER_ID,
-      SET_CURRENT_USER_ID_SUCCESS,
-      SET_CURRENT_USER_ID_FAILURE,
-    ],
+    types: [SET_CURRENT_USER_ID, SET_CURRENT_USER_ID_SUCCESS, SET_CURRENT_USER_ID_FAILURE],
     endPoint: `user/${USER_ID_DOCUMENT}/current/${documentId}`,
     schema: Schemas.USER_ID_DOCUMENT,
   },
@@ -188,8 +166,7 @@ export const setUserIdDocument = (documentId: number) => (dispatch) => {
   return dispatch(setIdDocument(documentId));
 };
 
-export const GET_ALL_USER_MEDICAL_RECOMMENDATIONS =
-  'GET_ALL_USER_MEDICAL_RECOMMENDATIONS';
+export const GET_ALL_USER_MEDICAL_RECOMMENDATIONS = 'GET_ALL_USER_MEDICAL_RECOMMENDATIONS';
 export const GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS =
   'GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS';
 export const GET_ALL_USER_MEDICAL_RECOMMENDATIONS_FAILURE =
@@ -212,8 +189,7 @@ export const getAllUserMedicalRecommendations = (userId) => (dispatch) => {
   return dispatch(allUserMedicalRecommendations(userId));
 };
 
-export const SET_CURRENT_USER_MEDICAL_RECOMMENDATION =
-  'SET_CURRENT_USER_MEDICAL_RECOMMENDATION';
+export const SET_CURRENT_USER_MEDICAL_RECOMMENDATION = 'SET_CURRENT_USER_MEDICAL_RECOMMENDATION';
 export const SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS =
   'SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS';
 export const SET_CURRENT_USER_MEDICAL_RECOMMENDATION_FAILURE =
@@ -232,9 +208,7 @@ const setMedicalRecommendation = (documentId: number) => ({
   },
 });
 
-export const setUserMedicalRecommendation = (documentId: number) => (
-  dispatch
-) => {
+export const setUserMedicalRecommendation = (documentId: number) => (dispatch) => {
   return dispatch(setMedicalRecommendation(documentId));
 };
 
@@ -270,11 +244,7 @@ export const GENERATE_REFERRALS_FAILURE = 'GENERATE_REFERRALS_FAILURE';
 const generateReferrals = () => ({
   [CALL_API]: {
     httpAction: 'POST',
-    types: [
-      GENERATE_REFERRALS,
-      GENERATE_REFERRALS_SUCCESS,
-      GENERATE_REFERRALS_FAILURE,
-    ],
+    types: [GENERATE_REFERRALS, GENERATE_REFERRALS_SUCCESS, GENERATE_REFERRALS_FAILURE],
     endPoint: `referral/generate-referral-codes`,
     schema: Schemas.EMPTY, // <-- needs attention. A new Schema is added with an empty array, might break things.
     // This function also doesn't seemed to be used anywhere
@@ -285,12 +255,9 @@ export const doGenerateReferrals = () => (dispatch) => {
   return dispatch(generateReferrals());
 };
 
-export const GET_USER_MEDICAL_RECOMMENDATION =
-  'GET_USER_MEDICAL_RECOMMENDATION';
-export const GET_USER_MEDICAL_RECOMMENDATION_SUCCESS =
-  'GET_USER_MEDICAL_RECOMMENDATION_SUCCES';
-export const GET_USER_MEDICAL_RECOMMENDATION_FAILURE =
-  'GET_USER_MEDICAL_RECOMMENDATION_FAILURE';
+export const GET_USER_MEDICAL_RECOMMENDATION = 'GET_USER_MEDICAL_RECOMMENDATION';
+export const GET_USER_MEDICAL_RECOMMENDATION_SUCCESS = 'GET_USER_MEDICAL_RECOMMENDATION_SUCCES';
+export const GET_USER_MEDICAL_RECOMMENDATION_FAILURE = 'GET_USER_MEDICAL_RECOMMENDATION_FAILURE';
 
 const userMedicalRecommendation = (userId) => ({
   [CALL_API]: {
@@ -313,22 +280,13 @@ export const VERIFY_USER_DOCUMENT = 'VERIFY_USER_DOCUMENT';
 export const VERIFY_USER_DOCUMENT_SUCCESS = 'VERIFY_USER_DOCUMENT_SUCCESS';
 export const VERIFY_USER_DOCUMENT_FAILURE = 'VERIFY_USER_DOCUMENT_FAILURE';
 
-const userDocumentVerification = (
-  userId,
-  documentId,
-  documentType,
-  document
-) => {
+const userDocumentVerification = (userId, documentId, documentType, document) => {
   document.user = { id: userId };
   document.id = documentId;
   return {
     [CALL_API]: {
       httpAction: 'POST',
-      types: [
-        VERIFY_USER_DOCUMENT,
-        VERIFY_USER_DOCUMENT_SUCCESS,
-        VERIFY_USER_DOCUMENT_FAILURE,
-      ],
+      types: [VERIFY_USER_DOCUMENT, VERIFY_USER_DOCUMENT_SUCCESS, VERIFY_USER_DOCUMENT_FAILURE],
       endPoint: `user/${documentType}/verify`,
       schema:
         documentType === USER_ID_DOCUMENT
@@ -339,29 +297,15 @@ const userDocumentVerification = (
   };
 };
 
-export const verifyUserDocument = (
-  userId,
-  documentId,
-  documentType,
-  document
-) => (dispatch) => {
-  return dispatch(
-    userDocumentVerification(userId, documentId, documentType, document)
-  );
+export const verifyUserDocument = (userId, documentId, documentType, document) => (dispatch) => {
+  return dispatch(userDocumentVerification(userId, documentId, documentType, document));
 };
 
 export const ADMIN_CHANGES_USER_DETAILS = 'ADMIN_CHANGES_USER_DETAILS';
-export const ADMIN_CHANGES_USER_DETAILS_SUCCESS =
-  'ADMIN_CHANGES_USER_DETAILS_SUCCESS';
-export const ADMIN_CHANGES_USER_DETAILS_FAILURE =
-  'ADMIN_CHANGES_USER_DETAILS_FAILURE';
+export const ADMIN_CHANGES_USER_DETAILS_SUCCESS = 'ADMIN_CHANGES_USER_DETAILS_SUCCESS';
+export const ADMIN_CHANGES_USER_DETAILS_FAILURE = 'ADMIN_CHANGES_USER_DETAILS_FAILURE';
 
-const adminUserInfoChanger = (
-  userId,
-  newFirstName,
-  newLastName,
-  newPhoneNumber
-) => {
+const adminUserInfoChanger = (userId, newFirstName, newLastName, newPhoneNumber) => {
   const userInfoBody = {
     id: userId,
     firstName: newFirstName,
@@ -383,15 +327,11 @@ const adminUserInfoChanger = (
   };
 };
 
-export const adminChangesUserInfo = (
-  userId,
-  newFirstName,
-  newLastName,
-  newPhoneNumber
-) => (dispatch, getState) => {
-  return dispatch(
-    adminUserInfoChanger(userId, newFirstName, newLastName, newPhoneNumber)
-  );
+export const adminChangesUserInfo = (userId, newFirstName, newLastName, newPhoneNumber) => (
+  dispatch,
+  getState
+) => {
+  return dispatch(adminUserInfoChanger(userId, newFirstName, newLastName, newPhoneNumber));
 };
 export const ADMIN_CHANGES_PASSWORD = 'ADMIN_CHANGES_PASSWORD';
 export const ADMIN_CHANGES_PASSWORD_SUCCESS = 'ADMIN_CHANGES_PASSWORD_SUCCESS';
@@ -414,10 +354,7 @@ const adminPasswordChanger = (userId, newPassword) => {
   };
 };
 
-export const adminChangesPassword = (userId, newPassword) => (
-  dispatch,
-  getState
-) => {
+export const adminChangesPassword = (userId, newPassword) => (dispatch, getState) => {
   return dispatch(adminPasswordChanger(userId, newPassword));
 };
 
@@ -431,11 +368,7 @@ const adminPhoneChanger = (userId, newPhone) => {
   return {
     [CALL_API]: {
       httpAction: 'POST',
-      types: [
-        ADMIN_CHANGES_PHONE,
-        ADMIN_CHANGES_PHONE_SUCCESS,
-        ADMIN_CHANGES_PHONE_FAILURE,
-      ],
+      types: [ADMIN_CHANGES_PHONE, ADMIN_CHANGES_PHONE_SUCCESS, ADMIN_CHANGES_PHONE_FAILURE],
       endPoint: `user/admin-change-phone`,
       schema: Schemas.USER,
       body: phoneChanger,
@@ -463,11 +396,7 @@ const userDocumentUploader = (userId, docType, imageFile) => {
       return {
         [CALL_API]: {
           httpAction: 'POST',
-          types: [
-            UPLOAD_USER_DOCUMENT,
-            UPLOAD_USER_DOCUMENT_SUCCESS,
-            UPLOAD_USER_DOCUMENT_FAILURE,
-          ],
+          types: [UPLOAD_USER_DOCUMENT, UPLOAD_USER_DOCUMENT_SUCCESS, UPLOAD_USER_DOCUMENT_FAILURE],
           endPoint: `user/${docType}`,
           schema:
             docType === USER_ID_DOCUMENT
@@ -482,10 +411,7 @@ const userDocumentUploader = (userId, docType, imageFile) => {
   }
 };
 
-export const uploadUserDocument = (userId, docType, imageFile) => (
-  dispatch,
-  getState
-) => {
+export const uploadUserDocument = (userId, docType, imageFile) => (dispatch, getState) => {
   return dispatch(userDocumentUploader(userId, docType, imageFile)).then(() =>
     dispatch(getSpecificUser(userId))
   );
@@ -506,11 +432,7 @@ const userDocumentHider = (documentId, docType) => {
       return {
         [CALL_API]: {
           httpAction: 'POST',
-          types: [
-            HIDE_USER_DOCUMENT,
-            HIDE_USER_DOCUMENT_SUCCESS,
-            HIDE_USER_DOCUMENT_FAILURE,
-          ],
+          types: [HIDE_USER_DOCUMENT, HIDE_USER_DOCUMENT_SUCCESS, HIDE_USER_DOCUMENT_FAILURE],
           endPoint: `user/${docType}/hide`,
           schema:
             docType === USER_ID_DOCUMENT
@@ -524,10 +446,7 @@ const userDocumentHider = (documentId, docType) => {
   }
 };
 
-export const hideUserDocument = (documentId, docType) => (
-  dispatch,
-  getState
-) => {
+export const hideUserDocument = (documentId, docType) => (dispatch, getState) => {
   return dispatch(userDocumentHider(documentId, docType));
 };
 
@@ -546,11 +465,7 @@ const userDocumentUnhider = (documentId, docType) => {
       return {
         [CALL_API]: {
           httpAction: 'POST',
-          types: [
-            UNHIDE_USER_DOCUMENT,
-            UNHIDE_USER_DOCUMENT_SUCCESS,
-            UNHIDE_USER_DOCUMENT_FAILURE,
-          ],
+          types: [UNHIDE_USER_DOCUMENT, UNHIDE_USER_DOCUMENT_SUCCESS, UNHIDE_USER_DOCUMENT_FAILURE],
           endPoint: `user/${docType}/unhide`,
           schema:
             docType === USER_ID_DOCUMENT
@@ -564,10 +479,7 @@ const userDocumentUnhider = (documentId, docType) => {
   }
 };
 
-export const unhideUserDocument = (documentId, docType) => (
-  dispatch,
-  getState
-) => {
+export const unhideUserDocument = (documentId, docType) => (dispatch, getState) => {
   return dispatch(userDocumentUnhider(documentId, docType));
 };
 
@@ -583,9 +495,7 @@ const userNoteCreator = (userId, note, dsprDriverId, dsprManagerId) => {
 
   if (dsprDriverId) {
     if (dsprManagerId)
-      throw new Error(
-        'Cannot have both dsprDriverId and dsprManagerId when creating a userNote'
-      );
+      throw new Error('Cannot have both dsprDriverId and dsprManagerId when creating a userNote');
     userNote['dsprDriver'] = { id: dsprDriverId };
   } else {
     if (dsprManagerId == null)
@@ -597,11 +507,7 @@ const userNoteCreator = (userId, note, dsprDriverId, dsprManagerId) => {
   return {
     [CALL_API]: {
       httpAction: 'POST',
-      types: [
-        CREATE_USER_NOTE,
-        CREATE_USER_NOTE_SUCCESS,
-        CREATE_USER_NOTE_FAILURE,
-      ],
+      types: [CREATE_USER_NOTE, CREATE_USER_NOTE_SUCCESS, CREATE_USER_NOTE_FAILURE],
       endPoint: `user/note`,
       schema: Schemas.USER_NOTE,
       body: userNote,

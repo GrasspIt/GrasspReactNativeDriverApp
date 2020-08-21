@@ -19,14 +19,11 @@ export const ACCESS_TOKEN_TYPES = { user: 'USER', app: 'APP' };
 
 export const GET_APP_ACCESS_TOKEN_SUCCESS = 'GET_APP_ACCESS_TOKEN_SUCCESS';
 export const GET_APP_ACCESS_TOKEN_FAILURE = 'GET_APP_ACCESS_TOKEN_FAILURE';
-export const PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE =
-  'PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE';
+export const PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE = 'PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE';
 
 export const preloadAccessTokenFromLocalStorage = () => {
   return async (dispatch) => {
-    const accessToken = await SecureStore.getItemAsync(
-      LOCAL_STORAGE_ACCESS_TOKEN_KEY
-    );
+    const accessToken = await SecureStore.getItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
     if (!accessToken) {
       RootNavigation.navigate('Login', null);
       return;
@@ -87,25 +84,16 @@ const fetchAccessToken = (body) => {
   });
 };
 
-const callOnFetchAccessToken = (
-  body,
-  successType,
-  failureType,
-  accessTokenType
-) => {
+const callOnFetchAccessToken = (body, successType, failureType, accessTokenType) => {
   return (dispatch) => {
     return fetchAccessToken(body)
       .then((response) =>
         response.json().then(
           (json) => {
             if (!response.ok) {
-              return dispatch(
-                apiError(failureType, 'Fetch Access Token Fail', { body })
-              );
+              return dispatch(apiError(failureType, 'Fetch Access Token Fail', { body }));
             } else {
-              return dispatch(
-                setAccessToken(successType, json.access_token, accessTokenType)
-              );
+              return dispatch(setAccessToken(successType, json.access_token, accessTokenType));
             }
           },
           (error) => {
@@ -139,11 +127,7 @@ export const LOGGED_IN_USER_INFO_FAILURE = 'LOGGED_IN_USER_INFO_FAILURE';
 const getLoggedInUser = () => ({
   [CALL_API]: {
     httpAction: 'GET',
-    types: [
-      LOGGED_IN_USER_INFO,
-      LOGGED_IN_USER_INFO_SUCCESS,
-      LOGGED_IN_USER_INFO_FAILURE,
-    ],
+    types: [LOGGED_IN_USER_INFO, LOGGED_IN_USER_INFO_SUCCESS, LOGGED_IN_USER_INFO_FAILURE],
     endPoint: 'user',
     schema: Schemas.USER,
   },
@@ -181,11 +165,5 @@ export const attemptLogin = (email, password) => (dispatch) => {
 export const UPDATE_ACCESS_TOKEN = 'UPDATE_ACCESS_TOKEN';
 
 export const invalidateStateAccessToken = () => (dispatch) => {
-  dispatch(
-    setAccessToken(
-      UPDATE_ACCESS_TOKEN,
-      getAccessToken() + 'a',
-      getAccessTokenType()
-    )
-  );
+  dispatch(setAccessToken(UPDATE_ACCESS_TOKEN, getAccessToken() + 'a', getAccessTokenType()));
 };

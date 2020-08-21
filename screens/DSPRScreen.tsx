@@ -7,17 +7,12 @@ import { View, StyleSheet, FlatList, Text } from 'react-native';
 import Colors from '../constants/Colors';
 import DsprCard from '../components/DsprCard';
 
-type DSPRScreenNavigationProp = StackNavigationProp<
-  DrawerStackParamsList,
-  'DSPRs'
->;
+type DSPRScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'DSPRs'>;
 type Props = { navigation: DSPRScreenNavigationProp };
 
 const DSPRScreen = ({ navigation }: Props) => {
   const dsprs = useSelector<State, Object>((state) => state.api.entities.DSPRs);
-  const dsprDrivers = useSelector<State, Object>(
-    (state) => state.api.entities.dsprDrivers
-  );
+  const dsprDrivers = useSelector<State, Object>((state) => state.api.entities.dsprDrivers);
 
   const dsprDataList = Object.values(dsprs);
   let dsprDriverDataList;
@@ -27,9 +22,7 @@ const DSPRScreen = ({ navigation }: Props) => {
 
   const handleSelectDspr = (dsprId: number) => {
     // find the dsprDriver that matches the dsprId
-    const selectedDriver = dsprDriverDataList.find(
-      (driver: any) => driver.dspr === dsprId
-    );
+    const selectedDriver = dsprDriverDataList.find((driver: any) => driver.dspr === dsprId);
     // navigate to dashboard passing driverId as props
     navigation.navigate('Dashboard', { driverId: selectedDriver.id });
   };
@@ -41,9 +34,7 @@ const DSPRScreen = ({ navigation }: Props) => {
       </View>
       <FlatList
         data={dsprDataList}
-        renderItem={(item) => (
-          <DsprCard handleSelect={handleSelectDspr} dspr={item.item} />
-        )}
+        renderItem={(item) => <DsprCard handleSelect={handleSelectDspr} dspr={item.item} />}
         keyExtractor={(item: any) => item.id.toString()}
       />
     </View>

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import { ListItem } from 'react-native-elements';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import {
-  getOrderDetailsWithId,
-  GET_ORDER_DETAILS_WITH_ID_FAILURE,
-} from '../actions/orderActions';
+import { getOrderDetailsWithId, GET_ORDER_DETAILS_WITH_ID_FAILURE } from '../actions/orderActions';
 
 import { getUserNotesFromProps } from '../selectors/userSelectors';
 import {
@@ -30,10 +28,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
 import OrderButtons from '../components/OrderButtons';
 
-type DetailsScreenNavigationProp = StackNavigationProp<
-  RootStackParamsList,
-  'Details'
->;
+type DetailsScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Details'>;
 
 type Props = {
   navigation: DetailsScreenNavigationProp;
@@ -57,23 +52,18 @@ const OrderDetails = ({ route, navigation }: Props) => {
       }),
     shallowEqual
   );
-  console.log('idDocument', idDocument);
 
-  const medicalRecommendations = useSelector<
-    State,
-    { [key: number]: MedicalRecommendation }
-  >((state) => getUserMedicalRecommendations(state), shallowEqual);
-
-  console.log('medicalRecommendations', medicalRecommendations);
+  const medicalRecommendations = useSelector<State, { [key: number]: MedicalRecommendation }>(
+    (state) => getUserMedicalRecommendations(state),
+    shallowEqual
+  );
 
   const getMedicalRecommendationDetails = () => {
     const medicalRecommendation =
       order &&
       order.userMedicalRecommendation &&
       medicalRecommendations[order.userMedicalRecommendation];
-    return medicalRecommendation ? (
-      <Text>Medical ID: {medicalRecommendation.idNumber}</Text>
-    ) : null;
+    return medicalRecommendation ? <Text>Medical ID: {medicalRecommendation.idNumber}</Text> : null;
   };
 
   const getIdentificationDocumentDetails = () => {
@@ -85,8 +75,8 @@ const OrderDetails = ({ route, navigation }: Props) => {
           Birth Date: &nbsp;
           {birthDate ? (
             <span className="date">
-              {birthDate.toLocaleString('en-us', { month: 'long' })}{' '}
-              {birthDate.getDate()}, {birthDate.getFullYear()}
+              {birthDate.toLocaleString('en-us', { month: 'long' })} {birthDate.getDate()},{' '}
+              {birthDate.getFullYear()}
             </span>
           ) : (
             <span>Not provided</span>
@@ -131,8 +121,8 @@ const OrderDetails = ({ route, navigation }: Props) => {
         <View style={styles.userContainer}>
           <Text style={styles.title}>Medical User</Text>
           <Text style={styles.userDetails}>
-            {date.toLocaleString('en-us', { month: 'long' })} {date.getDate()},{' '}
-            {date.getFullYear()}, at{' '}
+            {date.toLocaleString('en-us', { month: 'long' })} {date.getDate()}, {date.getFullYear()}
+            , at{' '}
             {date.toLocaleString('en-US', {
               hour: 'numeric',
               minute: 'numeric',
@@ -142,32 +132,28 @@ const OrderDetails = ({ route, navigation }: Props) => {
           <Text style={styles.userDetails}>
             {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
           </Text>
-          {getIdentificationDocumentDetails()}
-          {getMedicalRecommendationDetails()}
+          {/* {getIdentificationDocumentDetails()}
+          {getMedicalRecommendationDetails()} */}
           <Text style={styles.userDetails}>
             {address.street}, {address.zipCode}
           </Text>
         </View>
-        <View style={styles.product}>
-          <Text>Product</Text>
-        </View>
-        <View style={styles.priceDetails}>
-          <Text>SubTotal</Text>
-          <Text>${orderInfo.cashTotalPreTaxesAndFees.toFixed(2)}</Text>
-        </View>
-        <View style={styles.priceDetails}>
-          <Text>State and Local Sales Tax: %</Text>
-          <Text>${orderInfo.taxesTotal.toFixed(2)}</Text>
-        </View>
-        <View style={styles.priceDetails}>
-          <Text>Delivery Fee</Text>
-          <Text>${orderInfo.deliveryFee.toFixed(2)}</Text>
-        </View>
-        <View style={styles.priceDetails}>
-          <Text>Total: ${orderInfo.cashTotal.toFixed(2)}</Text>
-        </View>
+        <ListItem
+          title="Product"
+          subtitle="company"
+          rightSubtitle="price"
+          bottomDivider
+          topDivider
+        />
+        <ListItem title="Subtotal" subtitle={`$${orderInfo.cashTotalPreTaxesAndFees.toFixed(2)}`} />
+        <ListItem
+          title="State and Local Sales Tax: %"
+          subtitle={`$${orderInfo.taxesTotal.toFixed(2)}`}
+        />
+        <ListItem title="Delivery Fee" subtitle={`$${orderInfo.deliveryFee.toFixed(2)}`} />
+        <ListItem title={`Total: ${orderInfo.cashTotal.toFixed(2)}`} />
       </ScrollView>
-      <OrderButtons />
+      <OrderButtons navigation={navigation} orderId={orderInfo.id} />
     </>
   );
 };
@@ -179,13 +165,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingBottom: 30,
   },
-  product: {
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderTopColor: Colors.medium,
-    borderBottomColor: Colors.medium,
-    padding: 10,
-  },
   title: {
     fontWeight: 'bold',
     padding: 10,
@@ -194,9 +173,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   userDetails: {
-    padding: 10,
-  },
-  priceDetails: {
     padding: 10,
   },
 });

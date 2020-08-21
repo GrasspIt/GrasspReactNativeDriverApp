@@ -73,9 +73,7 @@ import {
 // import { GET_METRICS_FOR_USERS_SUCCESS } from '../actions/metricsActions'
 
 import merge from 'lodash/merge';
-import entitiesReducer, {
-  initialState as entitiesInitialState,
-} from './entitiesReducer';
+import entitiesReducer, { initialState as entitiesInitialState } from './entitiesReducer';
 
 const initialState = {
   accessToken: '',

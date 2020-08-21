@@ -24,8 +24,7 @@ export const parseDate = (date) => {
 
   // An RFC 822 date string, e.g. "2018-02-06T20:00:00.000+0400", won't work with Safari
   // Safari can parse ISO 8601 date strings, e.g. "2018-02-06T20:00:00.000+04:00" - notice the colon near the end
-  if (date && date.length === 28)
-    return new Date(`${date.substring(0, 26)}:${date.substring(26)}`);
+  if (date && date.length === 28) return new Date(`${date.substring(0, 26)}:${date.substring(26)}`);
 
   throw new Error(`Invalid Date : ${date}`);
 };

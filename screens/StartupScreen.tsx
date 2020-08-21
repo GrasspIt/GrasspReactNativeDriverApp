@@ -7,10 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { preloadAccessTokenFromLocalStorage } from '../actions/oauthActions';
 import { State, User } from '../store/reduxStoreState';
 
-type LoginScreenNavigationProp = StackNavigationProp<
-  RootStackParamsList,
-  'Startup'
->;
+type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Startup'>;
 type Props = {
   navigation: LoginScreenNavigationProp;
 };
@@ -18,15 +15,9 @@ type Props = {
 const Startup = ({ navigation }: Props) => {
   const dispatch = useDispatch();
 
-  const userId = useSelector<State, string>(
-    (state) => state.api.loggedInUserId
-  );
-  const dsprDriver = useSelector<State, string>(
-    (state) => state.api.dsprDriverId
-  );
-  const loggedInUser = useSelector<State, User>(
-    (state) => state.api.entities.users[userId]
-  );
+  const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
+  const dsprDriver = useSelector<State, string>((state) => state.api.dsprDriverId);
+  const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
 
   // if a valid token is stored, login automatically
   useEffect(() => {

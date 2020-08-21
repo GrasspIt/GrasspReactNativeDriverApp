@@ -14,14 +14,10 @@ export const API_ROOT = API_HOST + 'v1/';
 const accessTokenKey = SecureStore.getItemAsync('accessToken');
 
 export const getUserDocumentUrl = (document, userId) =>
-  API_ROOT +
-  `user/${document}/document/${userId}?access_token=${accessTokenKey}`;
+  API_ROOT + `user/${document}/document/${userId}?access_token=${accessTokenKey}`;
 
 export const getDocumentImage = (document, filename: string) =>
-  API_ROOT +
-  `user/${document}/documentfile/${btoa(
-    filename
-  )}?access_token=${accessTokenKey}`;
+  API_ROOT + `user/${document}/documentfile/${btoa(filename)}?access_token=${accessTokenKey}`;
 
 export const getImage = (filename: string) =>
   API_HOST + `${filename}?access_token=${accessTokenKey}`;
@@ -43,8 +39,7 @@ const callApi = (
   queryParamsMap.access_token = accessToken;
   const queryParamsString = qs.stringify(queryParamsMap);
   const fullUrl =
-    (endpoint.indexOf(API_ROOT) === -1 ? API_ROOT + endpoint : endpoint) +
-    `?${queryParamsString}`;
+    (endpoint.indexOf(API_ROOT) === -1 ? API_ROOT + endpoint : endpoint) + `?${queryParamsString}`;
 
   let fetchInit = {};
 
@@ -491,9 +486,7 @@ export const Schemas = {
   DSPR_DRIVER_INVENTORY_ITEM: dsprDriverInventoryItemSchema,
   DSPR_DRIVER_INVENTORY_ITEM_ARRAY: [dsprDriverInventoryItemSchema],
   DSPR_PRODUCT_INVENTORY_TRANSACTION: dsprProductInventoryTransactionSchema,
-  DSPR_PRODUCT_INVENTORY_TRANSACTION_ARRAY: [
-    dsprProductInventoryTransactionSchema,
-  ],
+  DSPR_PRODUCT_INVENTORY_TRANSACTION_ARRAY: [dsprProductInventoryTransactionSchema],
   DSPR_CURRENT_INVENTORY_ITEM: dsprCurrentInventoryItemSchema,
   DSPR_CURRENT_INVENTORY_ITEM_ARRAY: [dsprCurrentInventoryItemSchema],
   USER_ID_DOCUMENT: userIdDocumentSchema,
@@ -575,15 +568,7 @@ export default (store) => (next) => (action) => {
   const [requestType, successType, failureType] = types;
   next(actionWith({ type: requestType }));
 
-  return callApi(
-    httpAction,
-    endPoint,
-    schema,
-    accessToken,
-    body,
-    queryParamsMap,
-    file
-  ).then(
+  return callApi(httpAction, endPoint, schema, accessToken, body, queryParamsMap, file).then(
     (response) =>
       next(
         actionWith({

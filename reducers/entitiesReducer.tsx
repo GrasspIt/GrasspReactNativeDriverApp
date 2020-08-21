@@ -132,11 +132,7 @@ const appendAndUpdateEntitiesFromResponseWithArrayOverwrite = (
     if (skipEntityTypes.includes(entityType)) return;
     let oldStateTypeEntities = oldState[entityType];
     let entitiesInResponse = responseEntities[entityType];
-    newState[entityType] = _.mergeWith(
-      oldStateTypeEntities,
-      entitiesInResponse,
-      overwriteArray
-    );
+    newState[entityType] = _.mergeWith(oldStateTypeEntities, entitiesInResponse, overwriteArray);
   });
   return newState;
 };
@@ -256,8 +252,7 @@ export default (state = initialState, action) => {
       return appendAndUpdateEntitiesFromResponse(state, responseEntities);
     case SET_CURRENT_USER_ID_SUCCESS:
       const idUserKey = Object.keys(responseEntities.users)[0];
-      responseEntities.users[idUserKey].identificationDocument =
-        action.response.result;
+      responseEntities.users[idUserKey].identificationDocument = action.response.result;
       return appendAndUpdateEntitiesFromResponse(state, responseEntities);
     // case SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS:
     //     const recommendationUserKey = Object.keys(responseEntities.users)[0];

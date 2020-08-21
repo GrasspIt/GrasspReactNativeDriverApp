@@ -6,11 +6,7 @@ import * as TaskManager from 'expo-task-manager';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { State, User, DsprDriver } from '../store/reduxStoreState';
-import {
-  getDSPRDriver,
-  setDsprDriverId,
-  setDriverLocation,
-} from '../actions/driverActions';
+import { getDSPRDriver, setDsprDriverId, setDriverLocation } from '../actions/driverActions';
 import { store } from '../store/store';
 
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -20,10 +16,7 @@ import TopNavBar from '../components/TopNavBar';
 import { useInterval } from '../hooks/useInterval';
 import OrderQueue from '../components/OrderQueue';
 
-type DashboardScreenNavigationProp = StackNavigationProp<
-  DrawerStackParamsList,
-  'Dashboard'
->;
+type DashboardScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
   navigation: DashboardScreenNavigationProp;
   route;
@@ -36,15 +29,9 @@ const Dashboard = ({ route, navigation }: Props) => {
   const { driverId } = route.params;
   const dispatch = useDispatch();
 
-  const userId = useSelector<State, string>(
-    (state) => state.api.loggedInUserId
-  );
-  const loggedInUser = useSelector<State, User>(
-    (state) => state.api.entities.users[userId]
-  );
-  dsprDriver = useSelector<State, DsprDriver>(
-    (state) => state.api.entities.dsprDrivers[driverId]
-  );
+  const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
+  const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
+  dsprDriver = useSelector<State, DsprDriver>((state) => state.api.entities.dsprDrivers[driverId]);
 
   const [isTracking, setIsTracking] = useState(false);
 
@@ -76,8 +63,7 @@ const Dashboard = ({ route, navigation }: Props) => {
             distanceInterval: 0,
             foregroundService: {
               notificationTitle: 'Location Updates',
-              notificationBody:
-                'Grassp Health Driver App is tracking your current location.',
+              notificationBody: 'Grassp Health Driver App is tracking your current location.',
             },
             pausesUpdatesAutomatically: false,
           });

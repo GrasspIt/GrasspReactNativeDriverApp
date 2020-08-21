@@ -10,8 +10,7 @@ const getDSPRDrivers = (state: State) => state.api.entities.dsprDrivers;
 
 export const getDSPRs = (state: State) => state.api.entities.DSPRs;
 
-export const getDSPRFromProps = (state: State, props) =>
-  state.api.entities.DSPRs[props.dsprId];
+export const getDSPRFromProps = (state: State, props) => state.api.entities.DSPRs[props.dsprId];
 
 export const getDSPRPromotionsForProductCategories = (state: State, props) =>
   state.api.entities.dsprProductCategoryPromotions
@@ -25,8 +24,7 @@ export const getAwayMessageForDSPRWithProps = (state: State, props) => {
   return dspr && dspr.dsprAwayMessage && dspr.dsprAwayMessage.message;
 };
 
-const getDSPROrderHistories = (state: State) =>
-  state.api.entities.dsprOrderHistories;
+const getDSPROrderHistories = (state: State) => state.api.entities.dsprOrderHistories;
 
 // export const getDSPRsForDSP = createSelector(
 //     [getDSPRs, getDSPFromProps], (dsprs, dsp) => {

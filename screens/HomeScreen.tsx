@@ -3,10 +3,7 @@ import DrawerNavigator from '../navigation/DrawerNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
 
-type HomeScreenNavigationProp = StackNavigationProp<
-  RootStackParamsList,
-  'Home'
->;
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Home'>;
 
 type Props = {
   navigation: HomeScreenNavigationProp;

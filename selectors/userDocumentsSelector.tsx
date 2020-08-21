@@ -2,8 +2,7 @@ import { State } from '../store/reduxStoreState';
 
 export const getUserMedicalRecommendations = (state: State) =>
   state.api.entities.usersMedicalRecommendations;
-export const getUserIdDocuments = (state: State) =>
-  state.api.entities.usersIdDocuments;
+export const getUserIdDocuments = (state: State) => state.api.entities.usersIdDocuments;
 
 export const getUserIdDocumentFromProps = (state: State, props) => {
   return state.api.entities.users &&
@@ -18,9 +17,7 @@ export const getUserIdDocumentFromProps = (state: State, props) => {
 export const getUserIdDocumentFromPropsWithOrder = (state: State, props) => {
   return state.api.entities.usersIdDocuments
     ? state.api.entities.users[props.userId]
-      ? state.api.entities.usersIdDocuments[
-          props.order.userIdentificationDocument
-        ]
+      ? state.api.entities.usersIdDocuments[props.order.userIdentificationDocument]
       : null
     : null;
 };

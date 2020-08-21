@@ -8,8 +8,7 @@ import { getUsers, getLoggedInUser } from './userSelectors';
 // import { getUserMedicalRecommendations, getUserIdDocuments } from './userDocumentsSelector';
 import { State } from '../store/reduxStoreState';
 
-export const getDSPRDrivers = (state: State, props) =>
-  state.api.entities.dsprDrivers;
+export const getDSPRDrivers = (state: State, props) => state.api.entities.dsprDrivers;
 export const getDSPRDriverFromProps = (state: State, props) =>
   state.api.entities.dsprDrivers[props.dsprDriverId];
 
@@ -83,12 +82,9 @@ export const getDrivers = (state: State) => {
   return state.api.entities.dsprDrivers;
 };
 
-export const getOnCallDrivers = createSelector(
-  [getDriversForDSPR],
-  (drivers) => {
-    return drivers ? drivers.filter((driver) => driver.onCall) : [];
-  }
-);
+export const getOnCallDrivers = createSelector([getDriversForDSPR], (drivers) => {
+  return drivers ? drivers.filter((driver) => driver.onCall) : [];
+});
 
 export const getDriverForLoggedInUserGivenDSPR = createSelector(
   [getDSPRFromProps, getDrivers, getLoggedInUser],
