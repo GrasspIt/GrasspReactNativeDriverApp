@@ -42,8 +42,6 @@ const OrderDetails = ({ route, navigation }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState(orderInfo);
 
-  const date = parseDate(orderInfo.createdTime);
-
   const idDocument = useSelector<State, IdDocument>(
     (state) =>
       getUserIdDocumentFromPropsWithOrder(state, {
@@ -52,39 +50,18 @@ const OrderDetails = ({ route, navigation }: Props) => {
       }),
     shallowEqual
   );
-
+  console.log('idDocument', idDocument);
   const medicalRecommendations = useSelector<State, { [key: number]: MedicalRecommendation }>(
     (state) => getUserMedicalRecommendations(state),
     shallowEqual
   );
 
-  const getMedicalRecommendationDetails = () => {
-    const medicalRecommendation =
-      order &&
-      order.userMedicalRecommendation &&
-      medicalRecommendations[order.userMedicalRecommendation];
-    return medicalRecommendation ? <Text>Medical ID: {medicalRecommendation.idNumber}</Text> : null;
-  };
-
-  const getIdentificationDocumentDetails = () => {
-    const birthDate = idDocument && parseDate(idDocument.birthDate);
-    return idDocument ? (
-      <View>
-        <Text>Identification Document: {idDocument.idNumber}</Text>
-        <Text>
-          Birth Date: &nbsp;
-          {birthDate ? (
-            <span className="date">
-              {birthDate.toLocaleString('en-us', { month: 'long' })} {birthDate.getDate()},{' '}
-              {birthDate.getFullYear()}
-            </span>
-          ) : (
-            <span>Not provided</span>
-          )}
-        </Text>
-      </View>
-    ) : null;
-  };
+  const date = parseDate(orderInfo.createdTime);
+  const birthDate = idDocument && parseDate(idDocument.birthDate);
+  const medicalRecommendation =
+    order &&
+    order.userMedicalRecommendation &&
+    medicalRecommendations[order.userMedicalRecommendation];
 
   useEffect(() => {
     const getOrderDetails = () => {
@@ -132,8 +109,23 @@ const OrderDetails = ({ route, navigation }: Props) => {
           <Text style={styles.userDetails}>
             {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
           </Text>
-          {/* {getIdentificationDocumentDetails()}
-          {getMedicalRecommendationDetails()} */}
+          {idDocument ? (
+            <View>
+              <Text>Identification Document: {idDocument.idNumber}</Text>
+              <Text>
+                Birth Date: &nbsp;
+                {birthDate ? (
+                  <span className="date">
+                    {birthDate.toLocaleString('en-us', { month: 'long' })} {birthDate.getDate()},{' '}
+                    {birthDate.getFullYear()}
+                  </span>
+                ) : (
+                  <span>Not provided</span>
+                )}
+              </Text>
+            </View>
+          ) : null}
+          {medicalRecommendation ? <Text>Medical ID: {medicalRecommendation.idNumber}</Text> : null}
           <Text style={styles.userDetails}>
             {address.street}, {address.zipCode}
           </Text>

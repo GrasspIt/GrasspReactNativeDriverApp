@@ -9,18 +9,27 @@ import {
   LOGOUT,
   UPDATE_ACCESS_TOKEN,
 } from '../actions/oauthActions';
-// import {
-//     GET_ALL_USERS_SUCCESS, GET_SPECIFIC_USER_SUCCESS,
-//     GET_USERS_WITH_UNVERIFIED_DOCUMENTS_SUCCESS, GET_USER_ID_DOCUMENT_SUCCESS,
-//     GET_USER_MEDICAL_RECOMMENDATION_SUCCESS, VERIFY_USER_DOCUMENT_SUCCESS, UPLOAD_USER_DOCUMENT_SUCCESS,
-//     GET_USERS_BY_SEARCH_SUCCESS, GET_ORDER_HISTORY_FOR_USER_SUCCESS, CREATE_USER_NOTE_SUCCESS, GET_ALL_USER_ID_DOCUMENTS_SUCCESS,
-//     SET_CURRENT_USER_ID_SUCCESS, GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS, SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS,
-//     HIDE_USER_NOTE_SUCCESS,
-//     UNHIDE_USER_NOTE_SUCCESS,
-//     ADMIN_CHANGES_USER_DETAILS_SUCCESS,
-//     HIDE_USER_DOCUMENT_SUCCESS,
-//     UNHIDE_USER_DOCUMENT_SUCCESS
-// } from '../actions/userActions';
+import {
+  GET_ALL_USERS_SUCCESS,
+  GET_SPECIFIC_USER_SUCCESS,
+  GET_USERS_WITH_UNVERIFIED_DOCUMENTS_SUCCESS,
+  GET_USER_ID_DOCUMENT_SUCCESS,
+  GET_USER_MEDICAL_RECOMMENDATION_SUCCESS,
+  VERIFY_USER_DOCUMENT_SUCCESS,
+  UPLOAD_USER_DOCUMENT_SUCCESS,
+  GET_USERS_BY_SEARCH_SUCCESS,
+  GET_ORDER_HISTORY_FOR_USER_SUCCESS,
+  CREATE_USER_NOTE_SUCCESS,
+  GET_ALL_USER_ID_DOCUMENTS_SUCCESS,
+  SET_CURRENT_USER_ID_SUCCESS,
+  GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS,
+  SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS,
+  HIDE_USER_NOTE_SUCCESS,
+  UNHIDE_USER_NOTE_SUCCESS,
+  ADMIN_CHANGES_USER_DETAILS_SUCCESS,
+  HIDE_USER_DOCUMENT_SUCCESS,
+  UNHIDE_USER_DOCUMENT_SUCCESS,
+} from '../actions/userActions';
 // import {
 //     CREATE_DSP_SUCCESS, ASSIGN_DSP_MANAGER_SUCCESS, TOGGLE_DSP_MANAGER_ACTIVE_STATUS_SUCCESS,
 //     GET_ALL_DSPS_SUCCESS, GET_DSP_SUCCESS
@@ -52,7 +61,7 @@ import {
 //     GET_PRODUCT_BY_SEARCH_SUCCESS, CREATE_DSP_PRODUCT_FAILURE, GET_PRODUCT_CATEGORIES_FOR_DSP_SUCCESS, GET_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS,
 //     POST_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS
 // } from '../actions/dspProductActions';
-// import { CLEAR_API_ERROR_MESSAGE } from '../actions/apiUIHelperActions';
+import { CLEAR_API_ERROR_MESSAGE } from '../actions/apiUIHelperActions';
 // import {
 //     CREATE_INVENTORY_PERIOD_SUCCESS, GET_DRIVER_INVENTORY_PERIOD_SUCCESS, REMOVE_INVENTORY_ITEM_FROM_PERIOD_SUCCESS,
 //     ADD_INVENTORY_ITEM_TO_PERIOD_SUCCESS, TRANSFER_INVENTORY_PERIOD_SUCCESS
@@ -68,7 +77,12 @@ import {
 //     CREATE_NEW_COUPON_SUCCESS, GET_DSPR_COUPONS_SUCCESS,
 //     SEARCH_DSPR_COUPONS_SUCCESS, TOGGLE_COUPON_ACTIVE_STATUS_SUCCESS
 // } from '../actions/couponActions';
-// import { COMPLETE_ORDER_SUCCESS, CANCEL_ORDER_SUCCESS, MODIFY_ORDER_SUCCESS, GET_ORDER_DETAILS_WITH_ID_SUCCESS } from '../actions/orderActions';
+import {
+  COMPLETE_ORDER_SUCCESS,
+  CANCEL_ORDER_SUCCESS,
+  MODIFY_ORDER_SUCCESS,
+  GET_ORDER_DETAILS_WITH_ID_SUCCESS,
+} from '../actions/orderActions';
 // import { SEND_TEXT_BLAST_SUCCESS } from '../actions/marketingActions';
 // import { GET_METRICS_FOR_USERS_SUCCESS } from '../actions/metricsActions'
 
@@ -129,54 +143,54 @@ export default (state = initialState, action) => {
     //     case GET_DSP_SUCCESS:
     //     case GET_ALL_DSPRS_FOR_DSP_SUCCESS:
     //     case GET_DSPR_SUCCESS:
-    //     case GET_SPECIFIC_USER_SUCCESS:
+    case GET_SPECIFIC_USER_SUCCESS:
     case SET_DRIVER_LOCATION_SUCCESS:
     case SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS:
     //     case GET_PRODUCT_SUCCESS:
     //     case CREATE_DSP_PRODUCT_SUCCESS:
     case GET_DSPR_DRIVER_SUCCESS:
-      //     case CREATE_INVENTORY_PERIOD_SUCCESS:
-      //     case GET_ALL_ZIP_CODES_FOR_DSPR_SUCCESS:
-      //     case ADD_DSPR_ZIP_CODE_SUCCESS:
-      //     case TOGGLE_DSPR_ZIP_CODE_ACTIVE_STATUS_SUCCESS:
-      //     case GET_ALL_PRODUCTS_FOR_DSP_SUCCESS:
-      //     case CREATE_NEW_INVENTORY_TRANSACTION_SUCCESS:
-      //     case GET_DSPR_CURRENT_INVENTORY_SUCCESS:
-      //     case GET_DRIVER_INVENTORY_PERIOD_SUCCESS:
-      //     case GET_USERS_WITH_UNVERIFIED_DOCUMENTS_SUCCESS:
-      //     case REMOVE_INVENTORY_ITEM_FROM_PERIOD_SUCCESS:
-      //     case ADD_INVENTORY_ITEM_TO_PERIOD_SUCCESS:
-      //     case GET_USER_ID_DOCUMENT_SUCCESS:
-      //     case GET_USER_MEDICAL_RECOMMENDATION_SUCCESS:
-      //     case VERIFY_USER_DOCUMENT_SUCCESS:
-      //     case SET_DSPR_PRODUCT_PRICE_SUCCESS:
-      //     case CREATE_NEW_CATEGORY_SUCCESS:
-      //     case CREATE_NEW_COUPON_SUCCESS:
-      //     case GET_DSPR_COUPONS_SUCCESS:
-      //     case TOGGLE_COUPON_ACTIVE_STATUS_SUCCESS:
-      //     case COMPLETE_ORDER_SUCCESS:
-      //     case CANCEL_ORDER_SUCCESS:
-      //     case TOGGLE_DSPR_MANAGER_ORDER_NOTIFICATION_STATUS_SUCCESS:
-      //     case GET_ORDER_HISTORY_FOR_DSPR_SUCCESS:
-      //     case UPLOAD_USER_DOCUMENT_SUCCESS:
-      //     case SEND_TEXT_BLAST_SUCCESS:
-      //     case ZIP_CODE_MINIMUM_CHANGE_SUCCESS:
-      //     case TRANSFER_INVENTORY_PERIOD_SUCCESS:
-      //     case GET_ORDER_HISTORY_FOR_USER_SUCCESS:
-      //     case GET_ANALYTICS_FOR_DSPR_SUCCESS:
-      //     case SEARCH_DSPR_COUPONS_SUCCESS:
-      //     case GET_PRODUCT_BY_SEARCH_SUCCESS:
-      //     case CREATE_USER_NOTE_SUCCESS:
-      //     case SET_DRIVER_INFORMATION_SUCCESS:
-      //     case SET_CURRENT_USER_ID_SUCCESS:
-      //     case SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS:
-      //     case GET_ALL_DRIVERS_FOR_DSPR_SUCCESS:
-      //     case MODIFY_ORDER_SUCCESS:
-      //     case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
-      //     case HIDE_USER_NOTE_SUCCESS:
-      //     case UNHIDE_USER_NOTE_SUCCESS:
-      //     case HIDE_USER_DOCUMENT_SUCCESS:
-      //     case UNHIDE_USER_DOCUMENT_SUCCESS:
+    //     case CREATE_INVENTORY_PERIOD_SUCCESS:
+    //     case GET_ALL_ZIP_CODES_FOR_DSPR_SUCCESS:
+    //     case ADD_DSPR_ZIP_CODE_SUCCESS:
+    //     case TOGGLE_DSPR_ZIP_CODE_ACTIVE_STATUS_SUCCESS:
+    //     case GET_ALL_PRODUCTS_FOR_DSP_SUCCESS:
+    //     case CREATE_NEW_INVENTORY_TRANSACTION_SUCCESS:
+    //     case GET_DSPR_CURRENT_INVENTORY_SUCCESS:
+    //     case GET_DRIVER_INVENTORY_PERIOD_SUCCESS:
+    //     case GET_USERS_WITH_UNVERIFIED_DOCUMENTS_SUCCESS:
+    //     case REMOVE_INVENTORY_ITEM_FROM_PERIOD_SUCCESS:
+    //     case ADD_INVENTORY_ITEM_TO_PERIOD_SUCCESS:
+    case GET_USER_ID_DOCUMENT_SUCCESS:
+    case GET_USER_MEDICAL_RECOMMENDATION_SUCCESS:
+    case VERIFY_USER_DOCUMENT_SUCCESS:
+    //     case SET_DSPR_PRODUCT_PRICE_SUCCESS:
+    //     case CREATE_NEW_CATEGORY_SUCCESS:
+    //     case CREATE_NEW_COUPON_SUCCESS:
+    //     case GET_DSPR_COUPONS_SUCCESS:
+    //     case TOGGLE_COUPON_ACTIVE_STATUS_SUCCESS:
+    case COMPLETE_ORDER_SUCCESS:
+    case CANCEL_ORDER_SUCCESS:
+    //     case TOGGLE_DSPR_MANAGER_ORDER_NOTIFICATION_STATUS_SUCCESS:
+    //     case GET_ORDER_HISTORY_FOR_DSPR_SUCCESS:
+    //     case UPLOAD_USER_DOCUMENT_SUCCESS:
+    //     case SEND_TEXT_BLAST_SUCCESS:
+    //     case ZIP_CODE_MINIMUM_CHANGE_SUCCESS:
+    //     case TRANSFER_INVENTORY_PERIOD_SUCCESS:
+    //     case GET_ORDER_HISTORY_FOR_USER_SUCCESS:
+    //     case GET_ANALYTICS_FOR_DSPR_SUCCESS:
+    //     case SEARCH_DSPR_COUPONS_SUCCESS:
+    //     case GET_PRODUCT_BY_SEARCH_SUCCESS:
+    //     case CREATE_USER_NOTE_SUCCESS:
+    case SET_DRIVER_INFORMATION_SUCCESS:
+    case SET_CURRENT_USER_ID_SUCCESS:
+    case SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS:
+    //     case GET_ALL_DRIVERS_FOR_DSPR_SUCCESS:
+    //     case MODIFY_ORDER_SUCCESS:
+    case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
+    case HIDE_USER_NOTE_SUCCESS:
+    case UNHIDE_USER_NOTE_SUCCESS:
+    case HIDE_USER_DOCUMENT_SUCCESS:
+    case UNHIDE_USER_DOCUMENT_SUCCESS:
       //     case ADMIN_CHANGES_USER_DETAILS_SUCCESS:
       //     case GET_PRODUCT_CATEGORIES_FOR_DSP_SUCCESS:
       //     case CREATE_DSPR_PROMOTION_FOR_PRODUCT_CATEGORY_SUCCESS:
@@ -192,14 +206,21 @@ export default (state = initialState, action) => {
       return merge({}, newState, {
         entities: entitiesReducer(state.entities, action),
       });
-    //     case GET_ALL_USER_ID_DOCUMENTS_SUCCESS:
-    //         const newEntitiesState = { ...state, entities: {...state.entities, usersIdDocuments: {}}};
-    //         return merge({}, newEntitiesState, {entities: entitiesReducer(newEntitiesState.entities, action)})
-    //     case GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS:
-    //         const newStateWithoutMedicalRecommendations = { ...state, entities: {...state.entities, usersMedicalRecommendations: {}}};
-    //         return merge({}, newStateWithoutMedicalRecommendations, {entities: entitiesReducer(newStateWithoutMedicalRecommendations.entities, action)})
-    //     case CLEAR_API_ERROR_MESSAGE:
-    //         return { ...state, errorMessage: '' };
+    case GET_ALL_USER_ID_DOCUMENTS_SUCCESS:
+      const newEntitiesState = { ...state, entities: { ...state.entities, usersIdDocuments: {} } };
+      return merge({}, newEntitiesState, {
+        entities: entitiesReducer(newEntitiesState.entities, action),
+      });
+    case GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS:
+      const newStateWithoutMedicalRecommendations = {
+        ...state,
+        entities: { ...state.entities, usersMedicalRecommendations: {} },
+      };
+      return merge({}, newStateWithoutMedicalRecommendations, {
+        entities: entitiesReducer(newStateWithoutMedicalRecommendations.entities, action),
+      });
+    case CLEAR_API_ERROR_MESSAGE:
+      return { ...state, errorMessage: '' };
     // case MODIFY_ORDER_SUCCESS:
     //     return merge({}, state, { entities: entitiesReducer(state.entities, action) });
     default:

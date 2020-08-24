@@ -64,7 +64,12 @@ import {
 // import {
 //     CREATE_NEW_COUPON_SUCCESS, GET_DSPR_COUPONS_SUCCESS, TOGGLE_COUPON_ACTIVE_STATUS_SUCCESS, SEARCH_DSPR_COUPONS_SUCCESS
 // } from '../actions/couponActions'
-// import { COMPLETE_ORDER_SUCCESS, CANCEL_ORDER_SUCCESS, MODIFY_ORDER_SUCCESS, GET_ORDER_DETAILS_WITH_ID_SUCCESS} from '../actions/orderActions';
+import {
+  COMPLETE_ORDER_SUCCESS,
+  CANCEL_ORDER_SUCCESS,
+  MODIFY_ORDER_SUCCESS,
+  GET_ORDER_DETAILS_WITH_ID_SUCCESS,
+} from '../actions/orderActions';
 // import { SEND_TEXT_BLAST_SUCCESS } from '../actions/marketingActions';
 // import { GET_METRICS_FOR_USERS_SUCCESS } from '../actions/metricsActions'
 
@@ -154,43 +159,43 @@ export default (state = initialState, action) => {
     // case GET_ALL_DSPS_SUCCESS:
     // case GET_DSP_SUCCESS:
     // case GET_ALL_DSPRS_FOR_DSP_SUCCESS:
-    // case GET_SPECIFIC_USER_SUCCESS:
+    case GET_SPECIFIC_USER_SUCCESS:
     // case GET_PRODUCT_SUCCESS:
     // case CREATE_DSP_PRODUCT_SUCCESS:
     case SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS:
     case SET_DRIVER_LOCATION_SUCCESS:
-      // case CREATE_INVENTORY_PERIOD_SUCCESS:
-      // case GET_ALL_ZIP_CODES_FOR_DSPR_SUCCESS:
-      // case ADD_DSPR_ZIP_CODE_SUCCESS:
-      // case TOGGLE_DSPR_ZIP_CODE_ACTIVE_STATUS_SUCCESS:
-      // case GET_ALL_PRODUCTS_FOR_DSP_SUCCESS:
-      // case CREATE_NEW_INVENTORY_TRANSACTION_SUCCESS:
-      // case GET_DSPR_CURRENT_INVENTORY_SUCCESS:
-      // case GET_DRIVER_INVENTORY_PERIOD_SUCCESS:
-      // case GET_USERS_WITH_UNVERIFIED_DOCUMENTS_SUCCESS:
-      // case ADD_INVENTORY_ITEM_TO_PERIOD_SUCCESS:
-      // case GET_USER_ID_DOCUMENT_SUCCESS:
-      // case GET_USER_MEDICAL_RECOMMENDATION_SUCCESS:
-      // case VERIFY_USER_DOCUMENT_SUCCESS:
-      // case SET_DSPR_PRODUCT_PRICE_SUCCESS:
-      // case CREATE_NEW_CATEGORY_SUCCESS:
-      // case CREATE_NEW_COUPON_SUCCESS:
-      // case GET_DSPR_COUPONS_SUCCESS:
-      // case TOGGLE_COUPON_ACTIVE_STATUS_SUCCESS:
-      // case COMPLETE_ORDER_SUCCESS:
-      // case CANCEL_ORDER_SUCCESS:
-      // case TOGGLE_DSPR_MANAGER_ORDER_NOTIFICATION_STATUS_SUCCESS:
-      // case UPLOAD_USER_DOCUMENT_SUCCESS:
-      // case SEND_TEXT_BLAST_SUCCESS:
-      // case TRANSFER_INVENTORY_PERIOD_SUCCESS:
-      // case GET_ANALYTICS_FOR_DSPR_SUCCESS:
-      // case CREATE_USER_NOTE_SUCCESS:
-      // case SET_DRIVER_INFORMATION_SUCCESS:
-      // case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
-      // case HIDE_USER_NOTE_SUCCESS:
-      // case UNHIDE_USER_NOTE_SUCCESS:
-      // case HIDE_USER_DOCUMENT_SUCCESS:
-      // case UNHIDE_USER_DOCUMENT_SUCCESS:
+    // case CREATE_INVENTORY_PERIOD_SUCCESS:
+    // case GET_ALL_ZIP_CODES_FOR_DSPR_SUCCESS:
+    // case ADD_DSPR_ZIP_CODE_SUCCESS:
+    // case TOGGLE_DSPR_ZIP_CODE_ACTIVE_STATUS_SUCCESS:
+    // case GET_ALL_PRODUCTS_FOR_DSP_SUCCESS:
+    // case CREATE_NEW_INVENTORY_TRANSACTION_SUCCESS:
+    // case GET_DSPR_CURRENT_INVENTORY_SUCCESS:
+    // case GET_DRIVER_INVENTORY_PERIOD_SUCCESS:
+    // case GET_USERS_WITH_UNVERIFIED_DOCUMENTS_SUCCESS:
+    // case ADD_INVENTORY_ITEM_TO_PERIOD_SUCCESS:
+    case GET_USER_ID_DOCUMENT_SUCCESS:
+    case GET_USER_MEDICAL_RECOMMENDATION_SUCCESS:
+    // case VERIFY_USER_DOCUMENT_SUCCESS:
+    // case SET_DSPR_PRODUCT_PRICE_SUCCESS:
+    // case CREATE_NEW_CATEGORY_SUCCESS:
+    // case CREATE_NEW_COUPON_SUCCESS:
+    // case GET_DSPR_COUPONS_SUCCESS:
+    // case TOGGLE_COUPON_ACTIVE_STATUS_SUCCESS:
+    case COMPLETE_ORDER_SUCCESS:
+    case CANCEL_ORDER_SUCCESS:
+    // case TOGGLE_DSPR_MANAGER_ORDER_NOTIFICATION_STATUS_SUCCESS:
+    // case UPLOAD_USER_DOCUMENT_SUCCESS:
+    // case SEND_TEXT_BLAST_SUCCESS:
+    // case TRANSFER_INVENTORY_PERIOD_SUCCESS:
+    // case GET_ANALYTICS_FOR_DSPR_SUCCESS:
+    // case CREATE_USER_NOTE_SUCCESS:
+    // case SET_DRIVER_INFORMATION_SUCCESS:
+    // case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
+    case HIDE_USER_NOTE_SUCCESS:
+    case UNHIDE_USER_NOTE_SUCCESS:
+    case HIDE_USER_DOCUMENT_SUCCESS:
+    case UNHIDE_USER_DOCUMENT_SUCCESS:
       // case ADMIN_CHANGES_USER_DETAILS_SUCCESS:
       // case GET_PRODUCT_CATEGORIES_FOR_DSP_SUCCESS:
       // case CREATE_DSPR_PROMOTION_FOR_PRODUCT_CATEGORY_SUCCESS:
@@ -204,12 +209,12 @@ export default (state = initialState, action) => {
     // case REMOVE_INVENTORY_ITEM_FROM_PERIOD_SUCCESS:
     // case GET_ORDER_HISTORY_FOR_DSPR_SUCCESS:
     // case GET_ORDER_HISTORY_FOR_USER_SUCCESS:
-    // case GET_ALL_USER_ID_DOCUMENTS_SUCCESS:
-    // case GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS:
-    // case GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS:
-    // case UPDATE_DSPR_MENU_MECHANISM_SUCCESS:
-    // case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
-    // return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
+    case GET_ALL_USER_ID_DOCUMENTS_SUCCESS:
+    case GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS:
+      // case GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS:
+      // case UPDATE_DSPR_MENU_MECHANISM_SUCCESS:
+      // case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
+      return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
 
     // case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
     //     const dsprServiceAreaFromResponse:any = responseEntities && responseEntities.dsprDriverServiceAreas ? Object.values(responseEntities.dsprDriverServiceAreas)[0]: undefined;
@@ -254,10 +259,10 @@ export default (state = initialState, action) => {
       const idUserKey = Object.keys(responseEntities.users)[0];
       responseEntities.users[idUserKey].identificationDocument = action.response.result;
       return appendAndUpdateEntitiesFromResponse(state, responseEntities);
-    // case SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS:
-    //     const recommendationUserKey = Object.keys(responseEntities.users)[0];
-    //     responseEntities.users[recommendationUserKey].medicalRecommendation = action.response.result;
-    //     return appendAndUpdateEntitiesFromResponse(state, responseEntities);
+    case SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS:
+      const recommendationUserKey = Object.keys(responseEntities.users)[0];
+      responseEntities.users[recommendationUserKey].medicalRecommendation = action.response.result;
+      return appendAndUpdateEntitiesFromResponse(state, responseEntities);
     // case MODIFY_ORDER_SUCCESS:
     //     const modifiedState = merge({},state);
     //     const oldOrderId = responseEntities.orders[action.response.result].modifiedOrder.id;
