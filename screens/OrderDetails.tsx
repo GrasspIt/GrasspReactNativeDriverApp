@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { getOrderDetailsWithId, GET_ORDER_DETAILS_WITH_ID_FAILURE } from '../actions/orderActions';
@@ -50,7 +50,6 @@ const OrderDetails = ({ route, navigation }: Props) => {
       }),
     shallowEqual
   );
-  console.log('idDocument', idDocument);
   const medicalRecommendations = useSelector<State, { [key: number]: MedicalRecommendation }>(
     (state) => getUserMedicalRecommendations(state),
     shallowEqual
@@ -91,8 +90,15 @@ const OrderDetails = ({ route, navigation }: Props) => {
   }, [orderInfo]);
 
   return (
+    // <View style={styles.screen}>
+    //   {isLoading ? (
+    //     <ActivityIndicator size="large" color={Colors.primary} />
+    //   ) : error ? (
+    //     <Text>{error}</Text>
+    //   ) : (
+    //     <View>
     <>
-      <ScrollView style={styles.screen}>
+      <ScrollView style={styles.scroll}>
         <Text style={styles.title}>Special Instructions:</Text>
         <Text style={styles.userDetails}>{orderInfo.specialInstructions}</Text>
         <View style={styles.userContainer}>
@@ -111,21 +117,23 @@ const OrderDetails = ({ route, navigation }: Props) => {
           </Text>
           {idDocument ? (
             <View>
-              <Text>Identification Document: {idDocument.idNumber}</Text>
-              <Text>
+              <Text style={styles.userDetails}>Identification Document: {idDocument.idNumber}</Text>
+              <Text style={styles.userDetails}>
                 Birth Date: &nbsp;
                 {birthDate ? (
-                  <span className="date">
+                  <Text>
                     {birthDate.toLocaleString('en-us', { month: 'long' })} {birthDate.getDate()},{' '}
                     {birthDate.getFullYear()}
-                  </span>
+                  </Text>
                 ) : (
-                  <span>Not provided</span>
+                  <Text>Not provided</Text>
                 )}
               </Text>
             </View>
           ) : null}
-          {medicalRecommendation ? <Text>Medical ID: {medicalRecommendation.idNumber}</Text> : null}
+          {medicalRecommendation ? (
+            <Text style={styles.userDetails}>Medical ID: {medicalRecommendation.idNumber}</Text>
+          ) : null}
           <Text style={styles.userDetails}>
             {address.street}, {address.zipCode}
           </Text>
@@ -147,11 +155,17 @@ const OrderDetails = ({ route, navigation }: Props) => {
       </ScrollView>
       <OrderButtons navigation={navigation} orderId={orderInfo.id} />
     </>
+    //     </View>
+    //   )}
+    // </View>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
+    flex: 1,
+  },
+  scroll: {
     flex: 1,
     backgroundColor: Colors.light,
     paddingHorizontal: 10,

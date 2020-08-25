@@ -31,7 +31,6 @@ const LoginScreen = ({ navigation }: Props) => {
     }
     if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
       setIsLoading(false);
-      console.log('loggedInUser.dsprDrivers', loggedInUser.dsprDrivers);
       navigation.navigate('Home', { dsprDrivers: loggedInUser.dsprDrivers });
     }
   }, [loggedInUser, errorMessage]);

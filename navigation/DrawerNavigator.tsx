@@ -23,7 +23,6 @@ const Drawer = createDrawerNavigator<DrawerStackParamsList>();
 
 const DrawerNavigator = ({ navigation, dsprDrivers }) => {
   const dispatch = useDispatch();
-  console.log('dsprDrivers', dsprDrivers);
 
   const handleLogout = () => {
     navigation.dispatch(DrawerActions.closeDrawer());
