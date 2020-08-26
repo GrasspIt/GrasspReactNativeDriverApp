@@ -31,7 +31,7 @@ type Props = {
 let dsprDriver;
 
 const Dashboard = ({ route, navigation }: Props) => {
-  const { driverId } = route.params;
+  const { dsprDrivers } = route.params;
   const dispatch = useDispatch();
 
   const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
@@ -43,18 +43,18 @@ const Dashboard = ({ route, navigation }: Props) => {
 
   // polling data from API while logged in
   const refreshData = () => {
-    if (userId) dispatch(getDSPRDriver(driverId));
+    if (userId && driverId) dispatch(getDSPRDriver(driverId));
   };
   useInterval(refreshData, 60000);
 
   useEffect(() => {
-    dispatch(setDsprDriverId(driverId));
     const getDriverInfo = () => {
-      dispatch<any>(getDSPRDriver(driverId)).then((response) => {
+      dispatch(setDsprDriverId(dsprDrivers[0]));
+      dispatch<any>(getDSPRDriver(dsprDrivers[0])).then((response) => {
         if (response.type === GET_DSPR_DRIVER_FAILURE) {
           setError(response.error);
         } else {
-          dsprDriver = response.response.entities.dsprDrivers[driverId];
+          dsprDriver = response.response.entities.dsprDrivers[dsprDrivers[0]];
           if (dsprDriver) {
             setError('');
           } else {
@@ -67,8 +67,13 @@ const Dashboard = ({ route, navigation }: Props) => {
       });
     };
     setIsLoading(true);
-    getDriverInfo();
-  }, [driverId]);
+    //check if there is more than one dsprDriver
+    if (dsprDrivers.length > 1) {
+      console.log('open modal');
+    } else {
+      getDriverInfo();
+    }
+  }, [dsprDrivers]);
 
   useEffect(() => {
     (async () => {
