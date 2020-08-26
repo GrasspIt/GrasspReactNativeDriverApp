@@ -5,7 +5,6 @@ import { navigationRef } from './RootNavigation';
 
 import StartupScreen from '../screens/StartupScreen';
 import LoginScreen from '../screens/LoginScreen';
-import HomeScreen from '../screens/HomeScreen';
 import Dashboard from '../screens/Dashboard';
 import OrderDetails from '../screens/OrderDetails';
 import { Order } from '../store/reduxStoreState';
