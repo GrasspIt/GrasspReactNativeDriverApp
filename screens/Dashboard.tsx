@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Alert, ActivityIndicator, FlatList } from 'react-native';
 import Colors from '../constants/Colors';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { State, User, DsprDriver } from '../store/reduxStoreState';
+import { State, User, Order, DsprDriver } from '../store/reduxStoreState';
+import { getOrders } from '../selectors/orderSelectors';
 import {
   getDSPRDriver,
   setDsprDriverId,
@@ -20,6 +21,7 @@ import OnCallSwitch from '../components/OnCallSwitch';
 import TopNavBar from '../components/TopNavBar';
 import { useInterval } from '../hooks/useInterval';
 import OrderQueue from '../components/OrderQueue';
+import OrderItem from '../components/OrderItem';
 
 type DashboardScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
@@ -36,10 +38,15 @@ const Dashboard = ({ route, navigation }: Props) => {
 
   const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
   const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
+  const orders = useSelector<State, Order>(getOrders);
+  const orderList = Object.values(orders);
+  const queuedOrders = orderList.filter((order) => order.orderStatus == 'queued' || 'in_process');
 
   const [isTracking, setIsTracking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [driverId, setDriverId] = useState(null);
+  // const [currentDriver, setCurrentDriver] = useState(dsprDriver);
 
   // polling data from API while logged in
   const refreshData = () => {
@@ -48,21 +55,20 @@ const Dashboard = ({ route, navigation }: Props) => {
   useInterval(refreshData, 60000);
 
   useEffect(() => {
-    const getDriverInfo = () => {
-      dispatch(setDsprDriverId(dsprDrivers[0]));
-      dispatch<any>(getDSPRDriver(dsprDrivers[0])).then((response) => {
+    const getDriverInfo = (id) => {
+      dispatch(setDsprDriverId(id));
+      dispatch<any>(getDSPRDriver(id)).then((response) => {
         if (response.type === GET_DSPR_DRIVER_FAILURE) {
           setError(response.error);
         } else {
-          dsprDriver = response.response.entities.dsprDrivers[dsprDrivers[0]];
-          if (dsprDriver) {
-            setError('');
-          } else {
-            setError(
-              'An unexpected error occurred when fetching driver details. Please try again.'
-            );
-          }
+          dsprDriver = response.response.entities.dsprDrivers[id];
+          dsprDriver
+            ? setError('')
+            : setError(
+                'An unexpected error occurred when fetching driver details. Please try again.'
+              );
         }
+        setDriverId(id);
         setIsLoading(false);
       });
     };
@@ -71,7 +77,7 @@ const Dashboard = ({ route, navigation }: Props) => {
     if (dsprDrivers.length > 1) {
       console.log('open modal');
     } else {
-      getDriverInfo();
+      getDriverInfo(dsprDrivers[0]);
     }
   }, [dsprDrivers]);
 
@@ -129,7 +135,12 @@ const Dashboard = ({ route, navigation }: Props) => {
           Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
         </Text>
         <OnCallSwitch dsprDriver={dsprDriver} />
-        <OrderQueue dsprDriver={dsprDriver} />
+        <FlatList
+          data={queuedOrders}
+          renderItem={(item) => <OrderItem orderInfo={item.item} />}
+          keyExtractor={(item: any) => item.id.toString()}
+          style={{ paddingHorizontal: 20, marginVertical: 20 }}
+        />
       </View>
     </View>
   ) : null;
