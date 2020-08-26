@@ -89,14 +89,21 @@ const OrderDetails = ({ route, navigation }: Props) => {
     getOrderDetails();
   }, [orderInfo]);
 
+  if (isLoading)
+    return (
+      <View style={styles.fillScreen}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+
+  if (error)
+    return (
+      <View style={styles.fillScreen}>
+        <Text>{error}</Text>
+      </View>
+    );
+
   return (
-    // <View style={styles.screen}>
-    //   {isLoading ? (
-    //     <ActivityIndicator size="large" color={Colors.primary} />
-    //   ) : error ? (
-    //     <Text>{error}</Text>
-    //   ) : (
-    //     <View>
     <>
       <ScrollView style={styles.scroll}>
         <Text style={styles.title}>Special Instructions:</Text>
@@ -155,15 +162,15 @@ const OrderDetails = ({ route, navigation }: Props) => {
       </ScrollView>
       <OrderButtons navigation={navigation} orderId={orderInfo.id} />
     </>
-    //     </View>
-    //   )}
-    // </View>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
+  fillScreen: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.light,
   },
   scroll: {
     flex: 1,

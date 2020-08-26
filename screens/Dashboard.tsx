@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Alert } from 'react-native';
+import { StyleSheet, Text, View, Alert, ActivityIndicator } from 'react-native';
 import Colors from '../constants/Colors';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { State, User, DsprDriver } from '../store/reduxStoreState';
-import { getDSPRDriver, setDsprDriverId, setDriverLocation } from '../actions/driverActions';
+import {
+  getDSPRDriver,
+  setDsprDriverId,
+  setDriverLocation,
+  GET_DSPR_DRIVER_FAILURE,
+} from '../actions/driverActions';
 import { store } from '../store/store';
 
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -31,9 +36,10 @@ const Dashboard = ({ route, navigation }: Props) => {
 
   const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
   const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
-  dsprDriver = useSelector<State, DsprDriver>((state) => state.api.entities.dsprDrivers[driverId]);
 
   const [isTracking, setIsTracking] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   // polling data from API while logged in
   const refreshData = () => {
@@ -43,7 +49,25 @@ const Dashboard = ({ route, navigation }: Props) => {
 
   useEffect(() => {
     dispatch(setDsprDriverId(driverId));
-    dispatch(getDSPRDriver(driverId));
+    const getDriverInfo = () => {
+      dispatch<any>(getDSPRDriver(driverId)).then((response) => {
+        if (response.type === GET_DSPR_DRIVER_FAILURE) {
+          setError(response.error);
+        } else {
+          dsprDriver = response.response.entities.dsprDrivers[driverId];
+          if (dsprDriver) {
+            setError('');
+          } else {
+            setError(
+              'An unexpected error occurred when fetching driver details. Please try again.'
+            );
+          }
+        }
+        setIsLoading(false);
+      });
+    };
+    setIsLoading(true);
+    getDriverInfo();
   }, [driverId]);
 
   useEffect(() => {
@@ -77,6 +101,20 @@ const Dashboard = ({ route, navigation }: Props) => {
       }
     })();
   }, [dsprDriver, isTracking]);
+
+  if (isLoading)
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+
+  if (error)
+    return (
+      <View style={styles.container}>
+        <Text>{error}</Text>
+      </View>
+    );
 
   return loggedInUser && dsprDriver ? (
     <View style={styles.container}>
