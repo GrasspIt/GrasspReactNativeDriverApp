@@ -5,7 +5,7 @@ import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { State, User, Order, DsprDriver } from '../store/reduxStoreState';
+import { State, User, Order } from '../store/reduxStoreState';
 import { getOrders } from '../selectors/orderSelectors';
 import {
   getDSPRDriver,
@@ -20,8 +20,8 @@ import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import OnCallSwitch from '../components/OnCallSwitch';
 import TopNavBar from '../components/TopNavBar';
 import { useInterval } from '../hooks/useInterval';
-import OrderQueue from '../components/OrderQueue';
 import OrderItem from '../components/OrderItem';
+import DsprModal from '../components/DsprModal';
 
 type DashboardScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
@@ -42,11 +42,11 @@ const Dashboard = ({ route, navigation }: Props) => {
   const orderList = Object.values(orders);
   const queuedOrders = orderList.filter((order) => order.orderStatus == 'queued' || 'in_process');
 
+  const [modalVisible, setModalVisible] = useState(false);
   const [isTracking, setIsTracking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [driverId, setDriverId] = useState(null);
-  // const [currentDriver, setCurrentDriver] = useState(dsprDriver);
 
   // polling data from API while logged in
   const refreshData = () => {
@@ -54,28 +54,29 @@ const Dashboard = ({ route, navigation }: Props) => {
   };
   useInterval(refreshData, 60000);
 
+  const getDriverInfo = (id) => {
+    dispatch(setDsprDriverId(id));
+    dispatch<any>(getDSPRDriver(id)).then((response) => {
+      if (response.type === GET_DSPR_DRIVER_FAILURE) {
+        setError(response.error);
+      } else {
+        dsprDriver = response.response.entities.dsprDrivers[id];
+        dsprDriver
+          ? setError('')
+          : setError(
+              'An unexpected error occurred when fetching driver details. Please try again.'
+            );
+      }
+      setDriverId(id);
+      setIsLoading(false);
+    });
+  };
+
   useEffect(() => {
-    const getDriverInfo = (id) => {
-      dispatch(setDsprDriverId(id));
-      dispatch<any>(getDSPRDriver(id)).then((response) => {
-        if (response.type === GET_DSPR_DRIVER_FAILURE) {
-          setError(response.error);
-        } else {
-          dsprDriver = response.response.entities.dsprDrivers[id];
-          dsprDriver
-            ? setError('')
-            : setError(
-                'An unexpected error occurred when fetching driver details. Please try again.'
-              );
-        }
-        setDriverId(id);
-        setIsLoading(false);
-      });
-    };
     setIsLoading(true);
     //check if there is more than one dsprDriver
     if (dsprDrivers.length > 1) {
-      console.log('open modal');
+      setModalVisible(true);
     } else {
       getDriverInfo(dsprDrivers[0]);
     }
@@ -117,6 +118,11 @@ const Dashboard = ({ route, navigation }: Props) => {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color={Colors.primary} />
+        <DsprModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          getDriverInfo={getDriverInfo}
+        />
       </View>
     );
 
@@ -140,6 +146,11 @@ const Dashboard = ({ route, navigation }: Props) => {
           renderItem={(item) => <OrderItem orderInfo={item.item} />}
           keyExtractor={(item: any) => item.id.toString()}
           style={{ paddingHorizontal: 20, marginVertical: 20 }}
+        />
+        <DsprModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          getDriverInfo={getDriverInfo}
         />
       </View>
     </View>

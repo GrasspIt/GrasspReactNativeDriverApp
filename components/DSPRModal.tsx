@@ -1,16 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { State } from '../store/reduxStoreState';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import { View, StyleSheet, FlatList, Text, Modal } from 'react-native';
 import Colors from '../constants/Colors';
-import DsprCard from '../components/DsprCard';
+import DsprCard from './DsprCard';
 
-type DSPRScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'DSPRs'>;
-type Props = { navigation: DSPRScreenNavigationProp };
-
-const DSPRScreen = ({ navigation }: Props) => {
+const DsprModal = ({ modalVisible, setModalVisible, getDriverInfo }) => {
   const dsprs = useSelector<State, Object>((state) => state.api.entities.DSPRs);
   const dsprDrivers = useSelector<State, Object>((state) => state.api.entities.dsprDrivers);
 
@@ -23,12 +18,12 @@ const DSPRScreen = ({ navigation }: Props) => {
   const handleSelectDspr = (dsprId: number) => {
     // find the dsprDriver that matches the dsprId
     const selectedDriver = dsprDriverDataList.find((driver: any) => driver.dspr === dsprId);
-    // navigate to dashboard passing driverId as props
-    navigation.navigate('Dashboard', { driverId: selectedDriver.id });
+    getDriverInfo(selectedDriver.id);
+    setModalVisible(false);
   };
 
   return (
-    <Modal visible={true} presentationStyle="fullScreen" animationType="slide">
+    <Modal visible={modalVisible} presentationStyle="fullScreen" animationType="slide">
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Choose a Dispensary</Text>
@@ -59,4 +54,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DSPRScreen;
+export default DsprModal;
