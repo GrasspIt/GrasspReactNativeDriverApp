@@ -4,7 +4,7 @@ import Colors from '../constants/Colors';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
 import { useSelector, useDispatch } from 'react-redux';
-import { preloadAccessTokenFromLocalStorage } from '../actions/oauthActions';
+import { preloadAccessTokenFromLocalStorage, logout } from '../actions/oauthActions';
 import { State, User } from '../store/reduxStoreState';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Startup'>;
@@ -26,7 +26,12 @@ const Startup = ({ navigation }: Props) => {
 
   useEffect(() => {
     if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
-      navigation.navigate('Dashboard', { dsprDrivers: loggedInUser.dsprDrivers });
+      if (loggedInUser.dsprDrivers.length > 0) {
+        navigation.navigate('Dashboard', { dsprDrivers: loggedInUser.dsprDrivers });
+      } else {
+        dispatch(logout());
+        navigation.navigate('Login');
+      }
     }
   }, [loggedInUser]);
 

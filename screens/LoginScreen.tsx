@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { attemptLogin } from '../actions/oauthActions';
+import { attemptLogin, logout } from '../actions/oauthActions';
 import { State, User } from '../store/reduxStoreState';
 
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -30,8 +30,16 @@ const LoginScreen = ({ navigation }: Props) => {
       Alert.alert(errorMessage);
     }
     if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
-      setIsLoading(false);
-      navigation.navigate('Dashboard', { dsprDrivers: loggedInUser.dsprDrivers });
+      if (loggedInUser.dsprDrivers.length > 0) {
+        setIsLoading(false);
+        navigation.navigate('Dashboard', { dsprDrivers: loggedInUser.dsprDrivers });
+      } else {
+        dispatch(logout());
+        setIsLoading(false);
+        Alert.alert(
+          'You must be a DSPR driver to use this app. You can sign up on the Grassp website.'
+        );
+      }
     }
   }, [loggedInUser, errorMessage]);
 
