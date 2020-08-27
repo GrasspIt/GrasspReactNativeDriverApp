@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 import { ListItem } from 'react-native-elements';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { getOrderDetailsWithId, GET_ORDER_DETAILS_WITH_ID_FAILURE } from '../actions/orderActions';

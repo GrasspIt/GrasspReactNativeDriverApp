@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { State, Order, Address, User } from '../store/reduxStoreState';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,6 +17,15 @@ const OrderItem = ({ orderId }: OrderProps) => {
     (state) => state.api.entities.addresses[orderInfo.address]
   );
   const user = useSelector<State, User>((state) => state.api.entities.users[orderInfo.user]);
+
+  const [isInProcess, setIsInProcess] = useState(
+    orderInfo.orderStatus == 'in_process' ? true : false
+  );
+
+  const handleProcessOrder = () => {
+    dispatch(markOrderInProcess(orderInfo.id));
+    setIsInProcess(!isInProcess);
+  };
 
   return (
     <View style={styles.orderContainer}>
@@ -38,15 +47,8 @@ const OrderItem = ({ orderId }: OrderProps) => {
         >
           <Entypo name="info-with-circle" size={24} color={Colors.primary} />
         </TouchableOpacity>
-        <TouchableOpacity
-          disabled={orderInfo.orderStatus === 'queued' ? false : true}
-          onPress={() => dispatch(markOrderInProcess(orderInfo.id))}
-        >
-          <FontAwesome
-            name="gear"
-            size={26}
-            color={orderInfo.orderStatus === 'queued' ? Colors.primary : Colors.medium}
-          />
+        <TouchableOpacity disabled={isInProcess} onPress={handleProcessOrder}>
+          <FontAwesome name="gear" size={26} color={isInProcess ? Colors.medium : Colors.primary} />
         </TouchableOpacity>
       </View>
     </View>
