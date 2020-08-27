@@ -5,7 +5,7 @@ import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { State, User, Order } from '../store/reduxStoreState';
+import { State, User, Order, DsprDriver } from '../store/reduxStoreState';
 import { getOrders } from '../selectors/orderSelectors';
 import {
   getDSPRDriver,
@@ -15,15 +15,15 @@ import {
 } from '../actions/driverActions';
 import { store } from '../store/store';
 
+import { RootStackParamsList } from '../navigation/ScreenNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import OnCallSwitch from '../components/OnCallSwitch';
 import TopNavBar from '../components/TopNavBar';
 import { useInterval } from '../hooks/useInterval';
 import OrderItem from '../components/OrderItem';
 import DsprModal from '../components/DsprModal';
 
-type DashboardScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
+type DashboardScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Dashboard'>;
 type Props = {
   navigation: DashboardScreenNavigationProp;
   route;
@@ -36,23 +36,26 @@ const Dashboard = ({ route, navigation }: Props) => {
   const { dsprDrivers } = route.params;
   const dispatch = useDispatch();
 
-  const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
-  const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
-  const orders = useSelector<State, Order>(getOrders);
-  const orderList = Object.values(orders);
-  const queuedOrders = orderList.filter((order) => order.orderStatus == 'queued' || 'in_process');
-
   const [modalVisible, setModalVisible] = useState(false);
   const [isTracking, setIsTracking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [driverId, setDriverId] = useState(null);
+
+  const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
+  const driverId = useSelector<State, string>((state) => state.api.dsprDriverId);
+  const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
+  const orders = useSelector<State, Order>(getOrders);
+  const orderList = Object.values(orders);
+  const queuedOrders = orderList.filter((order) => order.orderStatus == 'queued' || 'in_process');
+  dsprDriver = useSelector<State, DsprDriver>((state) => state.api.entities.dsprDrivers[driverId]);
 
   // polling data from API while logged in
   const refreshData = () => {
     if (userId && driverId) dispatch(getDSPRDriver(driverId));
   };
   useInterval(refreshData, 60000);
+
+  //when dashboard is in focus, call refreshData
 
   const getDriverInfo = (id) => {
     dispatch(setDsprDriverId(id));
@@ -67,7 +70,6 @@ const Dashboard = ({ route, navigation }: Props) => {
               'An unexpected error occurred when fetching driver details. Please try again.'
             );
       }
-      setDriverId(id);
       setIsLoading(false);
     });
   };
