@@ -44,18 +44,6 @@ const Dashboard = ({ route, navigation }: Props) => {
   const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
   const driverId = useSelector<State, string>((state) => state.api.dsprDriverId);
   const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
-  const orders = useSelector<State, Order>(getOrders);
-  const orderList = Object.values(orders);
-  const queuedOrders = orderList.filter((order) => order.orderStatus == 'queued' || 'in_process');
-  dsprDriver = useSelector<State, DsprDriver>((state) => state.api.entities.dsprDrivers[driverId]);
-
-  // polling data from API while logged in
-  const refreshData = () => {
-    if (userId && driverId) dispatch(getDSPRDriver(driverId));
-  };
-  useInterval(refreshData, 60000);
-
-  //when dashboard is in focus, call refreshData
 
   const getDriverInfo = (id) => {
     dispatch(setDsprDriverId(id));
@@ -66,13 +54,26 @@ const Dashboard = ({ route, navigation }: Props) => {
         dsprDriver = response.response.entities.dsprDrivers[id];
         dsprDriver
           ? setError('')
-          : setError(
-              'An unexpected error occurred when fetching driver details. Please try again.'
-            );
+          : setError('An unexpected error occurred when fetching driver info. Please try again.');
       }
       setIsLoading(false);
     });
   };
+
+  // polling data from API while logged in
+  const refreshData = () => {
+    if (userId && driverId) dispatch(getDSPRDriver(driverId));
+  };
+  useInterval(refreshData, 60000);
+
+  // refresh data when screen is focused
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setIsLoading(true);
+      getDriverInfo(driverId);
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -108,7 +109,7 @@ const Dashboard = ({ route, navigation }: Props) => {
         }
       }
       //stop location updates if driver is not on call
-      if (isTracking && !dsprDriver.onCall) {
+      if (isTracking && dsprDriver && !dsprDriver.onCall) {
         console.log('stop location updates');
         setIsTracking(false);
         await Location.stopLocationUpdatesAsync('location-tracking');
@@ -144,9 +145,9 @@ const Dashboard = ({ route, navigation }: Props) => {
         </Text>
         <OnCallSwitch dsprDriver={dsprDriver} />
         <FlatList
-          data={queuedOrders}
-          renderItem={(item) => <OrderItem orderInfo={item.item} />}
-          keyExtractor={(item: any) => item.id.toString()}
+          data={dsprDriver.queuedOrders}
+          renderItem={(item) => <OrderItem orderId={item.item} />}
+          keyExtractor={(item: any) => item.toString()}
           style={{ paddingHorizontal: 20, marginVertical: 20 }}
         />
         <DsprModal

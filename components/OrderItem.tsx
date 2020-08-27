@@ -1,28 +1,22 @@
 import React from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import { State, Order, Address } from '../store/reduxStoreState';
+import { State, Order, Address, User } from '../store/reduxStoreState';
 import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../constants/Colors';
 import { FontAwesome, Entypo } from '@expo/vector-icons';
-import { getAddresses } from '../selectors/addressSelectors';
-import { getUsers } from '../selectors/userSelectors';
 import { markOrderInProcess } from '../actions/orderActions';
 import * as RootNavigation from '../navigation/RootNavigation';
 
-type OrderProps = { orderInfo: Order };
+type OrderProps = { orderId: number };
 
-const OrderItem = ({ orderInfo }: OrderProps) => {
+const OrderItem = ({ orderId }: OrderProps) => {
   const dispatch = useDispatch();
 
-  const addresses = useSelector<State, Address>(getAddresses);
-  const addressList = Object.values(addresses);
-  const address = addressList.find(
-    (address) => address.id === orderInfo.address
+  const orderInfo = useSelector<State, Order>((state) => state.api.entities.orders[orderId]);
+  const address = useSelector<State, Address>(
+    (state) => state.api.entities.addresses[orderInfo.address]
   );
-
-  const users = useSelector<State, Address>(getUsers);
-  const userList = Object.values(users);
-  const user = userList.find((user) => user.id === orderInfo.user);
+  const user = useSelector<State, User>((state) => state.api.entities.users[orderInfo.user]);
 
   return (
     <View style={styles.orderContainer}>
@@ -40,9 +34,7 @@ const OrderItem = ({ orderInfo }: OrderProps) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={{ marginHorizontal: 30 }}
-          onPress={() =>
-            RootNavigation.navigate('Details', { orderInfo, user, address })
-          }
+          onPress={() => RootNavigation.navigate('Details', { orderInfo, user, address })}
         >
           <Entypo name="info-with-circle" size={24} color={Colors.primary} />
         </TouchableOpacity>
@@ -53,11 +45,7 @@ const OrderItem = ({ orderInfo }: OrderProps) => {
           <FontAwesome
             name="gear"
             size={26}
-            color={
-              orderInfo.orderStatus === 'queued'
-                ? Colors.primary
-                : Colors.medium
-            }
+            color={orderInfo.orderStatus === 'queued' ? Colors.primary : Colors.medium}
           />
         </TouchableOpacity>
       </View>
