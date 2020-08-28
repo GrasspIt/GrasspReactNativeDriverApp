@@ -4,10 +4,10 @@ import { ActivityIndicator } from 'react-native-paper';
 import Colors from '../constants/Colors';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
+import { useIsFocused } from '@react-navigation/native';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { State, User, Order, DsprDriver } from '../store/reduxStoreState';
-import { getOrders } from '../selectors/orderSelectors';
+import { State, User } from '../store/reduxStoreState';
 import {
   getDSPRDriver,
   setDsprDriverId,
@@ -36,6 +36,7 @@ let dsprDriver;
 const Dashboard = ({ route, navigation }: Props) => {
   const { dsprDrivers } = route.params;
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [isTracking, setIsTracking] = useState(false);
@@ -43,7 +44,6 @@ const Dashboard = ({ route, navigation }: Props) => {
   const [error, setError] = useState('');
 
   const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
-  const driverId = useSelector<State, string>((state) => state.api.dsprDriverId);
   const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
 
   const getDriverInfo = (id) => {
@@ -63,28 +63,22 @@ const Dashboard = ({ route, navigation }: Props) => {
 
   // polling data from API while logged in
   const refreshData = () => {
-    if (userId && driverId) dispatch(getDSPRDriver(driverId));
+    if (userId && dsprDriver) dispatch(getDSPRDriver(dsprDriver.id));
   };
   useInterval(refreshData, 60000);
 
-  // refresh data when screen is focused
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    // refresh data when screen is focused
+    if (isFocused) {
       setIsLoading(true);
-      getDriverInfo(driverId);
-    });
-    return unsubscribe;
-  }, [navigation]);
-
-  useEffect(() => {
-    setIsLoading(true);
-    //check if there is more than one dsprDriver
-    if (dsprDrivers.length > 1) {
-      setModalVisible(true);
-    } else {
-      getDriverInfo(dsprDrivers[0]);
+      //check if there is more than one dsprDriver
+      if (dsprDrivers.length > 1 && !dsprDriver) {
+        setModalVisible(true);
+      } else {
+        getDriverInfo(dsprDrivers[0]);
+      }
     }
-  }, [dsprDrivers]);
+  }, [navigation, dsprDrivers, dsprDriver, isFocused]);
 
   useEffect(() => {
     (async () => {
