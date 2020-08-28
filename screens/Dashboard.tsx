@@ -23,6 +23,7 @@ import TopNavBar from '../components/TopNavBar';
 import { useInterval } from '../hooks/useInterval';
 import OrderItem from '../components/OrderItem';
 import DsprModal from '../components/DsprModal';
+import DrawerNavigator from '../navigation/DrawerNavigator';
 
 type DashboardScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Dashboard'>;
 type Props = {
@@ -133,7 +134,11 @@ const Dashboard = ({ route, navigation }: Props) => {
 
   return loggedInUser && dsprDriver ? (
     <>
-      <TopNavBar navigation={navigation} />
+      <TopNavBar
+        dsprDrivers={dsprDrivers}
+        setModalVisible={setModalVisible}
+        navigation={navigation}
+      />
       <View style={styles.container}>
         <View style={styles.body}>
           <Text style={styles.title}>

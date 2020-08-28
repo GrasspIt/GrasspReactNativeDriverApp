@@ -1,17 +1,26 @@
 import React from 'react';
 import { Image, StyleSheet } from 'react-native';
-import { Appbar } from 'react-native-paper';
+import { Appbar, Menu } from 'react-native-paper';
 import Colors from '../constants/Colors';
 import { logout } from '../actions/oauthActions';
 import { useDispatch } from 'react-redux';
-import * as RootNavigation from '../navigation/RootNavigation';
 
-const TopNavBar = () => {
+const TopNavBar = ({ navigation, setModalVisible, dsprDrivers }) => {
   const dispatch = useDispatch();
+
+  const [visible, setVisible] = React.useState(false);
+
+  const toggleMenu = () => setVisible(!visible);
 
   const handleLogout = () => {
     dispatch(logout());
-    RootNavigation.navigate('Login', null);
+    toggleMenu();
+    navigation.navigate('Login', null);
+  };
+
+  const handleDsprs = () => {
+    setModalVisible(true);
+    toggleMenu();
   };
 
   return (
@@ -19,31 +28,16 @@ const TopNavBar = () => {
       <Appbar.Content
         title={<Image source={require('../assets/grassp_health.png')} style={styles.image} />}
       />
-      <Appbar.Action icon="dots-vertical" onPress={handleLogout} />
+      <Menu
+        visible={visible}
+        onDismiss={toggleMenu}
+        anchor={<Appbar.Action icon="dots-vertical" onPress={toggleMenu} />}
+        style={{ top: 75 }}
+      >
+        {dsprDrivers.length > 1 ? <Menu.Item onPress={handleDsprs} title="DSPRs" /> : null}
+        <Menu.Item onPress={handleLogout} title="Logout" />
+      </Menu>
     </Appbar.Header>
-    // <Header
-    //   leftComponent={{
-    //     icon: 'menu',
-    //     color: Colors.black,
-    //     onPress: () => navigation.toggleDrawer(),
-    //   }}
-    //   centerComponent={
-    //     <Image
-    //       source={require('../assets/grassp_health.png')}
-    //       style={{ marginLeft: 20, height: 40, width: 200 }}
-    //     />
-    //   }
-    //   rightComponent={{
-    //     icon: 'menu',
-    //     color: Colors.black,
-    //     onPress: () => handleLogout(),
-    //   }}
-    //   containerStyle={{
-    //     backgroundColor: Colors.light,
-    //     borderBottomWidth: 2,
-    //     borderBottomColor: Colors.medium,
-    //   }}
-    // />
   );
 };
 
