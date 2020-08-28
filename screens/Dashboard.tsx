@@ -113,25 +113,6 @@ const Dashboard = ({ route, navigation }: Props) => {
     })();
   }, [dsprDriver, isTracking]);
 
-  if (isLoading)
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-        <DsprModal
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          getDriverInfo={getDriverInfo}
-        />
-      </View>
-    );
-
-  if (error)
-    return (
-      <View style={styles.container}>
-        <Text>{error}</Text>
-      </View>
-    );
-
   return loggedInUser && dsprDriver ? (
     <>
       <TopNavBar
@@ -140,23 +121,29 @@ const Dashboard = ({ route, navigation }: Props) => {
         navigation={navigation}
       />
       <View style={styles.container}>
-        <View style={styles.body}>
-          <Text style={styles.title}>
-            Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
-          </Text>
-          <OnCallSwitch dsprDriver={dsprDriver} />
-          <FlatList
-            data={dsprDriver.queuedOrders}
-            renderItem={(item) => <OrderItem orderId={item.item} />}
-            keyExtractor={(item: any) => item.toString()}
-            style={{ paddingHorizontal: 20, marginVertical: 20 }}
-          />
-          <DsprModal
-            modalVisible={modalVisible}
-            setModalVisible={setModalVisible}
-            getDriverInfo={getDriverInfo}
-          />
-        </View>
+        {isLoading ? (
+          <ActivityIndicator size="large" color={Colors.primary} />
+        ) : error ? (
+          <Text>{error}</Text>
+        ) : (
+          <View style={styles.body}>
+            <Text style={styles.title}>
+              Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
+            </Text>
+            <OnCallSwitch dsprDriver={dsprDriver} />
+            <FlatList
+              data={dsprDriver.queuedOrders}
+              renderItem={(item) => <OrderItem orderId={item.item} />}
+              keyExtractor={(item: any) => item.toString()}
+              style={{ paddingHorizontal: 20, marginVertical: 20 }}
+            />
+            <DsprModal
+              modalVisible={modalVisible}
+              setModalVisible={setModalVisible}
+              getDriverInfo={getDriverInfo}
+            />
+          </View>
+        )}
       </View>
     </>
   ) : null;
