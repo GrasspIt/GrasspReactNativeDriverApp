@@ -138,26 +138,28 @@ const Dashboard = ({ route, navigation }: Props) => {
     );
 
   return loggedInUser && dsprDriver ? (
-    <View style={styles.container}>
+    <>
       <TopNavBar navigation={navigation} />
-      <View style={styles.body}>
-        <Text style={styles.title}>
-          Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
-        </Text>
-        <OnCallSwitch dsprDriver={dsprDriver} />
-        <FlatList
-          data={dsprDriver.queuedOrders}
-          renderItem={(item) => <OrderItem orderId={item.item} />}
-          keyExtractor={(item: any) => item.toString()}
-          style={{ paddingHorizontal: 20, marginVertical: 20 }}
-        />
-        <DsprModal
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          getDriverInfo={getDriverInfo}
-        />
+      <View style={styles.container}>
+        <View style={styles.body}>
+          <Text style={styles.title}>
+            Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
+          </Text>
+          <OnCallSwitch dsprDriver={dsprDriver} />
+          <FlatList
+            data={dsprDriver.queuedOrders}
+            renderItem={(item) => <OrderItem orderId={item.item} />}
+            keyExtractor={(item: any) => item.toString()}
+            style={{ paddingHorizontal: 20, marginVertical: 20 }}
+          />
+          <DsprModal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            getDriverInfo={getDriverInfo}
+          />
+        </View>
       </View>
-    </View>
+    </>
   ) : null;
 };
 
