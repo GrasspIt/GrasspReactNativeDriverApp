@@ -7,7 +7,7 @@ import * as TaskManager from 'expo-task-manager';
 import { useIsFocused } from '@react-navigation/native';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { State, User, Order } from '../store/reduxStoreState';
+import { State, User, Order, DSPR } from '../store/reduxStoreState';
 import {
   getDSPRDriver,
   setDsprDriverId,
@@ -24,6 +24,7 @@ import { useInterval } from '../hooks/useInterval';
 import OrderItem from '../components/OrderItem';
 import DsprModal from '../components/DsprModal';
 import { getOrders } from '../selectors/orderSelectors';
+import { getDSPRs } from '../selectors/dsprSelectors';
 
 type DashboardScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Dashboard'>;
 type Props = {
@@ -47,8 +48,12 @@ const Dashboard = ({ route, navigation }: Props) => {
   const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
   const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
   const orders = useSelector<State, Order>(getOrders);
+  const dsprs = useSelector<State, DSPR>(getDSPRs);
   const orderList = Object.values(orders);
-  console.log('orderList', orderList);
+  const dspr = dsprDriver
+    ? Object.values(dsprs).filter((item) => item.id === dsprDriver.dspr)
+    : null;
+  console.log('dspr', dspr);
 
   const getDriverInfo = (id) => {
     dispatch(setDsprDriverId(id));
@@ -130,9 +135,7 @@ const Dashboard = ({ route, navigation }: Props) => {
           <Text>{error}</Text>
         ) : (
           <View style={styles.body}>
-            <Text style={styles.title}>
-              Welcome {loggedInUser.firstName} {loggedInUser.lastName}!
-            </Text>
+            <Text style={styles.title}>{dspr[0].name}</Text>
             <OnCallSwitch dsprDriver={dsprDriver} />
             <FlatList
               data={orderList}

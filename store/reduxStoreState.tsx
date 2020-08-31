@@ -42,7 +42,7 @@ interface DSPRMenuManagementContainer {
   dspProductCategories: { [key: number]: DspProductCategory };
 }
 
-interface Api {
+export interface Api {
   accessToken: string;
   loggedInUserId: string;
   dsprDriverId: string;
@@ -50,7 +50,7 @@ interface Api {
   entities: Entities;
 }
 
-interface Entities {
+export interface Entities {
   users: { [key: number]: User };
   unverifiedUsers: { [key: number]: UnverifiedUser };
   searchUsers: { [key: number]: User };
@@ -218,7 +218,7 @@ export interface DsprDriverLocation {
   dspr: number;
 }
 
-interface DsprDriverInventoryPeriod {
+export interface DsprDriverInventoryPeriod {
   id: number;
   cashOnHand: number;
   dsprDriverInventoryItems: number[];
@@ -227,7 +227,7 @@ interface DsprDriverInventoryPeriod {
   current?: boolean;
 }
 
-interface DsprDriverInventoryItem {
+export interface DsprDriverInventoryItem {
   id: number;
   product: number;
   quantityInitial: number;
@@ -245,7 +245,7 @@ interface DsprDriverInventoryItem {
   inventoryPeriod?: number;
 }
 
-interface DsprCurrentInventoryItem {
+export interface DsprCurrentInventoryItem {
   id: number;
   dspr: number;
   product: number;
@@ -274,7 +274,7 @@ interface DsprProductCategoryPromotion {
   current: boolean;
 }
 
-interface UserDocument {
+export interface UserDocument {
   id: number;
   idNumber?: string;
   fileName?: string;
@@ -283,17 +283,17 @@ interface UserDocument {
   visible?: boolean;
 }
 
-interface IdDocument extends UserDocument {
+export interface IdDocument extends UserDocument {
   birthDate: number;
   expirationDate: number;
 }
 
-interface MedicalRecommendation extends UserDocument {
+export interface MedicalRecommendation extends UserDocument {
   id: number;
   stateIssued: boolean;
 }
 
-interface DsprProductPriceHistory {
+export interface DsprProductPriceHistory {
   id: number;
   // dspr: number;
   price?: number;
@@ -305,7 +305,7 @@ interface DsprProductPriceHistory {
   ozPrice?: number;
 }
 
-interface DspProductCategory {
+export interface DspProductCategory {
   id: number;
   deliveryServiceProvider: number;
   name: string;
@@ -314,7 +314,7 @@ interface DspProductCategory {
 
 type DiscountType = 'absolute' | 'percent';
 
-interface Coupon {
+export interface Coupon {
   id: number;
   dspr: number;
   code: string;
@@ -356,7 +356,7 @@ export interface Order {
   medicalRecommendation?: MedicalRecommendation;
 }
 
-interface OrderDetail {
+export interface OrderDetail {
   id: number;
   product: SearchProduct;
   priceHistory: DsprProductPriceHistory;
@@ -374,7 +374,7 @@ export interface Address {
   longitude: number;
 }
 
-interface OrderTaxDetail {
+export interface OrderTaxDetail {
   applicableTaxId: number;
   name: string;
   amount: number;
@@ -388,7 +388,7 @@ interface DsprOrderHistory {
   endTimestamp: string;
 }
 
-interface SearchProduct {
+export interface SearchProduct {
   id: number;
   deliveryServiceProvider: { [key: number]: number };
   productCategories: { id: number }[];
@@ -405,7 +405,7 @@ interface SearchProduct {
   cbnPercentage?: number;
 }
 
-interface DspProduct {
+export interface DspProduct {
   deliveryServiceProvider: number;
   name: string;
   isActive: boolean;
