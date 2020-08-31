@@ -7,7 +7,7 @@ import * as TaskManager from 'expo-task-manager';
 import { useIsFocused } from '@react-navigation/native';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { State, User } from '../store/reduxStoreState';
+import { State, User, Order } from '../store/reduxStoreState';
 import {
   getDSPRDriver,
   setDsprDriverId,
@@ -23,6 +23,7 @@ import TopNavBar from '../components/TopNavBar';
 import { useInterval } from '../hooks/useInterval';
 import OrderItem from '../components/OrderItem';
 import DsprModal from '../components/DsprModal';
+import { getOrders } from '../selectors/orderSelectors';
 
 type DashboardScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Dashboard'>;
 type Props = {
@@ -45,6 +46,9 @@ const Dashboard = ({ route, navigation }: Props) => {
 
   const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
   const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
+  const orders = useSelector<State, Order>(getOrders);
+  const orderList = Object.values(orders);
+  console.log('orderList', orderList);
 
   const getDriverInfo = (id) => {
     dispatch(setDsprDriverId(id));
@@ -131,9 +135,9 @@ const Dashboard = ({ route, navigation }: Props) => {
             </Text>
             <OnCallSwitch dsprDriver={dsprDriver} />
             <FlatList
-              data={dsprDriver.queuedOrders}
-              renderItem={(item) => <OrderItem orderId={item.item} />}
-              keyExtractor={(item: any) => item.toString()}
+              data={orderList}
+              renderItem={(item) => <OrderItem orderInfo={item.item} />}
+              keyExtractor={(item: any) => item.id.toString()}
               style={{ paddingHorizontal: 20, marginVertical: 20 }}
             />
             <DsprModal
