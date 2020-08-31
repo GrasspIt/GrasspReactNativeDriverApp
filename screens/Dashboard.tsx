@@ -23,7 +23,6 @@ import TopNavBar from '../components/TopNavBar';
 import { useInterval } from '../hooks/useInterval';
 import OrderItem from '../components/OrderItem';
 import DsprModal from '../components/DsprModal';
-import DrawerNavigator from '../navigation/DrawerNavigator';
 
 type DashboardScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Dashboard'>;
 type Props = {
