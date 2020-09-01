@@ -55,11 +55,10 @@ const LoginForm: React.FC<LoginProps> = (props) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <Image
-            source={require('../assets/grassp_health.png')}
-            style={styles.image}
-          />
-          <Card title="LOGIN" containerStyle={styles.card}>
+          <Image source={require('../assets/grassp_health.png')} style={styles.image} />
+          <Card containerStyle={styles.card}>
+            <Card.Title>LOGIN</Card.Title>
+            <Card.Divider />
             <Input
               containerStyle={styles.input}
               placeholder="Email"
@@ -97,11 +96,7 @@ const LoginForm: React.FC<LoginProps> = (props) => {
             {isLoading ? (
               <Button buttonStyle={styles.button} loading />
             ) : (
-              <Button
-                buttonStyle={styles.button}
-                title="Login"
-                onPress={handleSubmit}
-              />
+              <Button buttonStyle={styles.button} title="Login" onPress={handleSubmit} />
             )}
           </Card>
         </View>

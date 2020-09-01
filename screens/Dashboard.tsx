@@ -53,7 +53,6 @@ const Dashboard = ({ route, navigation }: Props) => {
   const dspr = dsprDriver
     ? Object.values(dsprs).filter((item) => item.id === dsprDriver.dspr)
     : null;
-  console.log('dspr', dspr);
 
   const getDriverInfo = (id) => {
     dispatch(setDsprDriverId(id));

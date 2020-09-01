@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Text, StyleSheet } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { getOrderDetailsWithId, GET_ORDER_DETAILS_WITH_ID_FAILURE } from '../actions/orderActions';
@@ -10,6 +9,7 @@ import {
   getUserIdDocumentFromPropsWithOrder,
   getUserMedicalRecommendations,
 } from '../selectors/userDocumentsSelector';
+import OrderDetailListItem from '../components/OrderDetailListItem';
 import Colors from '../constants/Colors';
 
 import {
@@ -28,6 +28,7 @@ import { parseDate, formatPhone } from '../hooks/util';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
 import OrderButtons from '../components/OrderButtons';
+import { Divider } from 'react-native-paper';
 
 type DetailsScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Details'>;
 
@@ -42,7 +43,7 @@ const OrderDetails = ({ route, navigation }: Props) => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState(orderInfo);
-
+  console.log('order', order);
   const idDocument = useSelector<State, IdDocument>(
     (state) =>
       getUserIdDocumentFromPropsWithOrder(state, {
@@ -107,10 +108,25 @@ const OrderDetails = ({ route, navigation }: Props) => {
   return (
     <>
       <ScrollView style={styles.scroll}>
-        <Text style={styles.title}>Special Instructions:</Text>
-        <Text style={styles.userDetails}>{orderInfo.specialInstructions}</Text>
+        {order.specialInstructions ? (
+          <Text style={styles.title}>
+            <strong>Special Instructions:</strong> {order.specialInstructions}
+          </Text>
+        ) : null}
+
         <View style={styles.userContainer}>
-          <Text style={styles.title}>Medical User</Text>
+          {order.userFirstTimeOrderWithDSPR ? (
+            <ListItem>
+              <ListItem.Title>FIRST TIME ORDER</ListItem.Title>
+            </ListItem>
+          ) : null}
+
+          {medicalRecommendation ? (
+            <Text style={styles.title}>Medical User</Text>
+          ) : (
+            <Text style={styles.title}>Adult User</Text>
+          )}
+
           <Text style={styles.userDetails}>
             {date.toLocaleString('en-us', { month: 'long' })} {date.getDate()}, {date.getFullYear()}
             , at{' '}
@@ -120,9 +136,13 @@ const OrderDetails = ({ route, navigation }: Props) => {
               hour12: true,
             })}
           </Text>
-          <Text style={styles.userDetails}>
-            {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
-          </Text>
+
+          {user ? (
+            <Text style={styles.userDetails}>
+              {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
+            </Text>
+          ) : null}
+
           {idDocument ? (
             <View>
               <Text style={styles.userDetails}>Identification Document: {idDocument.idNumber}</Text>
@@ -139,27 +159,87 @@ const OrderDetails = ({ route, navigation }: Props) => {
               </Text>
             </View>
           ) : null}
+
           {medicalRecommendation ? (
             <Text style={styles.userDetails}>Medical ID: {medicalRecommendation.idNumber}</Text>
           ) : null}
-          <Text style={styles.userDetails}>
-            {address.street}, {address.zipCode}
-          </Text>
+
+          {address ? (
+            <Text style={styles.userDetails}>
+              {address.street}, {address.zipCode}
+            </Text>
+          ) : null}
         </View>
-        <ListItem
-          title="Product"
-          subtitle="company"
-          rightSubtitle="price"
-          bottomDivider
-          topDivider
-        />
-        <ListItem title="Subtotal" subtitle={`$${orderInfo.cashTotalPreTaxesAndFees.toFixed(2)}`} />
-        <ListItem
-          title="State and Local Sales Tax: %"
-          subtitle={`$${orderInfo.taxesTotal.toFixed(2)}`}
-        />
-        <ListItem title="Delivery Fee" subtitle={`$${orderInfo.deliveryFee.toFixed(2)}`} />
-        <ListItem title={`Total: ${orderInfo.cashTotal.toFixed(2)}`} />
+
+        {order && order.orderDetails
+          ? order.orderDetails.map((detail) => (
+              <OrderDetailListItem
+                key={`${detail.product.id}-${detail.unit || '0'}`}
+                orderDetail={detail}
+              />
+            ))
+          : null}
+        <Divider />
+
+        {order.coupon ? (
+          <>
+            <ListItem>
+              <ListItem.Content>
+                <ListItem.Title>Code</ListItem.Title>
+                <ListItem.Subtitle>{`${order.coupon.code}`}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+            <ListItem>
+              <ListItem.Content>
+                <ListItem.Title>Discount</ListItem.Title>
+                <ListItem.Subtitle>{`$${order.discountTotal}`}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+          </>
+        ) : null}
+
+        <ListItem>
+          <ListItem.Content>
+            <ListItem.Title>Subtotal</ListItem.Title>
+            <ListItem.Subtitle>{`$${orderInfo.cashTotalPreTaxesAndFees.toFixed(
+              2
+            )}`}</ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
+
+        {order.orderTaxDetails.length !== 0 ? (
+          order.orderTaxDetails
+            .slice(0)
+            .reverse()
+            .map((detail) => (
+              <ListItem key={detail.name + detail.amount.toString()}>
+                <ListItem.Content>
+                  <ListItem.Title>{`${detail.name} : ${detail.rate}%`}</ListItem.Title>
+                  <ListItem.Subtitle>{`$${detail.amount.toFixed(2)}`}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            ))
+        ) : (
+          <ListItem key="Tax0">
+            <ListItem.Content>
+              <ListItem.Title>Tax</ListItem.Title>
+              <ListItem.Subtitle>$0.00</ListItem.Subtitle>
+            </ListItem.Content>
+          </ListItem>
+        )}
+
+        <ListItem>
+          <ListItem.Content>
+            <ListItem.Title>Delivery Fee</ListItem.Title>
+            <ListItem.Subtitle>{`$${orderInfo.deliveryFee.toFixed(2)}`}</ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
+
+        <ListItem>
+          <ListItem.Content>
+            <ListItem.Title>{`Total: $${orderInfo.cashTotal.toFixed(2)}`}</ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
       </ScrollView>
       <OrderButtons navigation={navigation} orderId={orderInfo.id} />
     </>
