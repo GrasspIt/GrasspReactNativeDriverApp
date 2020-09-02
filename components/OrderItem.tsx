@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { ListItem, Icon } from 'react-native-elements';
 import { State, Order, Address, User } from '../store/reduxStoreState';
 import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../constants/Colors';
-import { FontAwesome, Entypo } from '@expo/vector-icons';
 import { markOrderInProcess, MARK_IN_PROCESS_FAILURE } from '../actions/orderActions';
 import * as RootNavigation from '../navigation/RootNavigation';
 
@@ -32,8 +32,48 @@ const OrderItem = ({ orderInfo }: OrderProps) => {
   };
 
   return (
-    <View style={styles.orderContainer}>
-      <View>
+    <View>
+      <ListItem bottomDivider>
+        <ListItem.Content>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+            <View>
+              <ListItem.Title>
+                {user.firstName} {user.lastName},{' '}
+                <Text style={{ fontSize: 14 }}>${orderInfo.cashTotal}</Text>
+              </ListItem.Title>
+              <ListItem.Subtitle>
+                {address.street} {address.zipCode}
+              </ListItem.Subtitle>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon
+                name="info-with-circle"
+                type="entypo"
+                color={Colors.primary}
+                size={26}
+                style={{ marginLeft: 20 }}
+                onPress={() => RootNavigation.navigate('Details', { orderInfo, user, address })}
+              />
+              {isLoading ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+              ) : (
+                <Icon
+                  disabled={orderInfo.orderStatus == 'in_process'}
+                  disabledStyle={{ backgroundColor: Colors.light }}
+                  name="gear"
+                  type="font-awesome"
+                  size={28}
+                  style={{ marginLeft: 20 }}
+                  color={orderInfo.orderStatus == 'in_process' ? Colors.medium : Colors.primary}
+                  onPress={handleProcessOrder}
+                />
+              )}
+            </View>
+          </View>
+        </ListItem.Content>
+      </ListItem>
+
+      {/* <View>
         <View style={styles.topText}>
           <Text style={styles.name}>
             {user.firstName} {user.lastName},
@@ -43,8 +83,8 @@ const OrderItem = ({ orderInfo }: OrderProps) => {
         <Text style={styles.address}>
           {address.street} {address.zipCode}
         </Text>
-      </View>
-      <View style={styles.buttonContainer}>
+      </View> */}
+      {/* <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={{ marginHorizontal: 30 }}
           onPress={() => RootNavigation.navigate('Details', { orderInfo, user, address })}
@@ -64,8 +104,8 @@ const OrderItem = ({ orderInfo }: OrderProps) => {
               color={orderInfo.orderStatus == 'in_process' ? Colors.medium : Colors.primary}
             />
           </TouchableOpacity>
-        )}
-      </View>
+        )} */}
+      {/* </View> */}
     </View>
   );
 };

@@ -126,29 +126,31 @@ const Dashboard = ({ route, navigation }: Props) => {
         setModalVisible={setModalVisible}
         navigation={navigation}
       />
-      <View style={styles.container}>
-        {isLoading ? (
+      {isLoading ? (
+        <View style={styles.container}>
           <ActivityIndicator size="large" color={Colors.primary} />
-        ) : error ? (
+        </View>
+      ) : error ? (
+        <View style={styles.container}>
           <Text>{error}</Text>
-        ) : (
-          <View style={styles.body}>
-            <Text style={styles.title}>{dspr[0].name}</Text>
-            <OnCallSwitch dsprDriver={dsprDriver} />
-            <FlatList
-              data={orderList}
-              renderItem={(item) => <OrderItem orderInfo={item.item} />}
-              keyExtractor={(item: any) => item.id.toString()}
-              style={{ paddingHorizontal: 20, marginVertical: 20 }}
-            />
-            <DsprModal
-              modalVisible={modalVisible}
-              setModalVisible={setModalVisible}
-              getDriverInfo={getDriverInfo}
-            />
-          </View>
-        )}
-      </View>
+        </View>
+      ) : (
+        <View style={styles.body}>
+          <Text style={styles.title}>{dspr[0].name}</Text>
+          <OnCallSwitch dsprDriver={dsprDriver} />
+          <FlatList
+            data={orderList}
+            renderItem={(item) => <OrderItem orderInfo={item.item} />}
+            keyExtractor={(item: any) => item.id.toString()}
+            style={{ paddingHorizontal: 20, marginVertical: 20 }}
+          />
+          <DsprModal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            getDriverInfo={getDriverInfo}
+          />
+        </View>
+      )}
     </>
   ) : null;
 };
@@ -172,8 +174,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light,
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontSize: 20,
@@ -183,7 +185,6 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: Colors.light,
-    justifyContent: 'center',
   },
 });
 
