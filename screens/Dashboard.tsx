@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Alert, FlatList } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import { StyleSheet, Text, View, Alert, FlatList, ActivityIndicator } from 'react-native';
 import Colors from '../constants/Colors';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';

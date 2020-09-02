@@ -22,7 +22,7 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
               <ListItem.Title>{`${orderDetail.quantity} ${unit} ${product.name}`}</ListItem.Title>
               <View style={styles.subtitle}>
                 <View>
-                  <Text style={{ color: Colors.primary }}>
+                  <Text style={{ color: Colors.primary, fontWeight: 'bold' }}>
                     {product.flowerType.replace('_', ' ').toUpperCase()}
                   </Text>
                 </View>
