@@ -52,8 +52,8 @@ const OrderDetails = ({ route, navigation }: Props) => {
   const [order, setOrder] = useState(orderInfo);
   console.log('order', order);
 
-  const dsprManagers = useSelector<State, DsprManager>((state) => state.api.entities.dsprManagers);
-  const dsprManager = Object.values(dsprManagers).find((manager) => order.dspr === manager.dspr);
+  // const dsprManagers = useSelector<State, DsprManager>((state) => state.api.entities.dsprManagers);
+  // const dsprManager = Object.values(dsprManagers).find((manager) => order.dspr === manager.dspr);
   const userNotes = useSelector<State, any[]>(
     (state) => getUserNotesFromProps(state, { userId: user.id }),
     shallowEqual
@@ -119,99 +119,99 @@ const OrderDetails = ({ route, navigation }: Props) => {
         <>
           <ScrollView style={styles.scroll}>
             <UserNotes
-              createUserNote={(userId, note, dsprDriverId, dsprManagerId) =>
-                dispatch(createUserNote(userId, note, dsprDriverId, dsprManagerId))
+              createUserNote={(userId, note, dsprDriverId) =>
+                dispatch(createUserNote(userId, note, dsprDriverId))
               }
               hideUserNote={(noteId) => dispatch(hideUserNote(noteId))}
               unhideUserNote={(noteId) => dispatch(unhideUserNote(noteId))}
               userId={user.id}
               dsprDriverId={order.dsprDriver}
-              dsprManagerId={dsprManager.id}
               userNotes={userNotes}
               refreshUser={() => dispatch(getSpecificUser(user.id))}
             />
             {order.specialInstructions ? (
-              <Text style={styles.title}>
-                <strong>Special Instructions:</strong> {order.specialInstructions}
-              </Text>
+              <ListItem>
+                <ListItem.Content>
+                  <ListItem.Title style={{ fontWeight: 'bold' }}>
+                    Special Instructions:
+                  </ListItem.Title>
+                  <ListItem.Subtitle>{order.specialInstructions}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
             ) : null}
 
-            <View style={styles.userContainer}>
-              {order.userFirstTimeOrderWithDSPR ? (
-                <ListItem>
-                  <ListItem.Title>FIRST TIME ORDER</ListItem.Title>
-                </ListItem>
-              ) : null}
+            {order.userFirstTimeOrderWithDSPR ? (
+              <ListItem>
+                <ListItem.Title>FIRST TIME ORDER</ListItem.Title>
+              </ListItem>
+            ) : null}
 
-              {medicalRecommendation ? (
-                <ListItem>
-                  <ListItem.Subtitle style={{ fontWeight: 'bold' }}>Medical User</ListItem.Subtitle>
-                </ListItem>
-              ) : (
-                <ListItem>
-                  <ListItem.Subtitle style={{ fontWeight: 'bold' }}>Adult User</ListItem.Subtitle>
-                </ListItem>
-              )}
+            {medicalRecommendation ? (
+              <ListItem>
+                <ListItem.Subtitle style={{ fontWeight: 'bold' }}>Medical User</ListItem.Subtitle>
+              </ListItem>
+            ) : (
+              <ListItem>
+                <ListItem.Subtitle style={{ fontWeight: 'bold' }}>Adult User</ListItem.Subtitle>
+              </ListItem>
+            )}
 
+            <ListItem>
+              <ListItem.Subtitle>
+                {date.toLocaleString('en-us', { month: 'long' })} {date.getDate()},{' '}
+                {date.getFullYear()}, at{' '}
+                {date.toLocaleString('en-US', {
+                  hour: 'numeric',
+                  minute: 'numeric',
+                  hour12: true,
+                })}{' '}
+              </ListItem.Subtitle>
+            </ListItem>
+
+            {user ? (
               <ListItem>
                 <ListItem.Subtitle>
-                  {date.toLocaleString('en-us', { month: 'long' })} {date.getDate()},{' '}
-                  {date.getFullYear()}, at{' '}
-                  {date.toLocaleString('en-US', {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true,
-                  })}{' '}
+                  {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
                 </ListItem.Subtitle>
               </ListItem>
+            ) : null}
 
-              {user ? (
+            {idDocument ? (
+              <View>
                 <ListItem>
                   <ListItem.Subtitle>
-                    {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
+                    Identification Document: {idDocument.idNumber}
                   </ListItem.Subtitle>
                 </ListItem>
-              ) : null}
-
-              {idDocument ? (
-                <View>
-                  <ListItem>
-                    <ListItem.Subtitle>
-                      Identification Document: {idDocument.idNumber}
-                    </ListItem.Subtitle>
-                  </ListItem>
-                  <ListItem>
-                    <ListItem.Subtitle>
-                      Birth Date: &nbsp;
-                      {birthDate ? (
-                        <Text>
-                          {birthDate.toLocaleString('en-us', { month: 'long' })}{' '}
-                          {birthDate.getDate()}, {birthDate.getFullYear()}
-                        </Text>
-                      ) : (
-                        <Text>Not provided</Text>
-                      )}{' '}
-                    </ListItem.Subtitle>
-                  </ListItem>
-                </View>
-              ) : null}
-
-              {medicalRecommendation ? (
                 <ListItem>
                   <ListItem.Subtitle>
-                    Medical ID: {medicalRecommendation.idNumber}{' '}
+                    Birth Date: &nbsp;
+                    {birthDate ? (
+                      <Text>
+                        {birthDate.toLocaleString('en-us', { month: 'long' })} {birthDate.getDate()}
+                        , {birthDate.getFullYear()}
+                      </Text>
+                    ) : (
+                      <Text>Not provided</Text>
+                    )}{' '}
                   </ListItem.Subtitle>
                 </ListItem>
-              ) : null}
+              </View>
+            ) : null}
 
-              {address ? (
-                <ListItem>
-                  <ListItem.Subtitle>
-                    {address.street}, {address.zipCode}
-                  </ListItem.Subtitle>
-                </ListItem>
-              ) : null}
-            </View>
+            {medicalRecommendation ? (
+              <ListItem>
+                <ListItem.Subtitle>Medical ID: {medicalRecommendation.idNumber} </ListItem.Subtitle>
+              </ListItem>
+            ) : null}
+
+            {address ? (
+              <ListItem>
+                <ListItem.Subtitle>
+                  {address.street}, {address.zipCode}
+                </ListItem.Subtitle>
+              </ListItem>
+            ) : null}
 
             {order && order.orderDetails
               ? order.orderDetails.map((detail) => (
@@ -306,9 +306,6 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     padding: 10,
-  },
-  userContainer: {
-    marginTop: 20,
   },
 });
 

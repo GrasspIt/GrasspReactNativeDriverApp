@@ -53,10 +53,16 @@ const NewUserNoteForm = (
         className="field"
       />
       <Dialog.Actions>
-        <Button mode="contained" color={Colors.primary} onPress={handleSubmit}>
-          Create Note
+        <Button
+          mode="contained"
+          color={Colors.primary}
+          labelStyle={{ color: Colors.light }}
+          style={{ flex: 1 }}
+          onPress={handleSubmit}
+        >
+          Submit
         </Button>
-        <Button color={Colors.primary} labelStyle={{ color: Colors.light }} onPress={closeDialog}>
+        <Button color={Colors.primary} style={{ flex: 1 }} onPress={closeDialog}>
           Cancel
         </Button>
       </Dialog.Actions>

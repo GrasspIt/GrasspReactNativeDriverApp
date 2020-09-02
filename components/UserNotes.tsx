@@ -18,7 +18,6 @@ const UserNotes = (props: UserNotesProps) => {
   const {
     userId,
     dsprDriverId,
-    dsprManagerId,
     userNotes,
     refreshUser,
     createUserNote,
@@ -29,20 +28,11 @@ const UserNotes = (props: UserNotesProps) => {
 
   const [showNotes, setShowNotes] = useState(false);
   const [showHidden, setShowHidden] = useState(false);
-  const [canEditNotes, setCanEditNotes] = useState(false);
 
   const handleNewNoteSubmit = (values) => {
-    createUserNote(userId, values.note, dsprDriverId, dsprManagerId).then(() => refreshUser());
+    createUserNote(userId, values.note, dsprDriverId).then(() => refreshUser());
     setShowNotes(false);
   };
-
-  useEffect(() => {
-    if (dsprDriverId) {
-      setCanEditNotes(true);
-    } else {
-      setCanEditNotes(false);
-    }
-  }, [dsprDriverId]);
 
   return (
     <Card>
@@ -51,39 +41,37 @@ const UserNotes = (props: UserNotesProps) => {
       ) : showTitle ? (
         <Card.Title title="Notes" />
       ) : null}
-      {canEditNotes ? (
-        <Card.Actions>
-          <Button
-            mode="contained"
-            color={Colors.primary}
-            labelStyle={{ color: Colors.light }}
-            onPress={() => setShowNotes(true)}
-          >
-            Create Note
-          </Button>
+      <Card.Actions>
+        <Button
+          mode="contained"
+          color={Colors.primary}
+          labelStyle={{ color: Colors.light }}
+          onPress={() => setShowNotes(true)}
+        >
+          Create Note
+        </Button>
 
-          <Checkbox
-            status={showHidden ? 'checked' : 'unchecked'}
-            onPress={() => {
-              setShowHidden(!showHidden);
-            }}
-          >
-            Show Hidden
-          </Checkbox>
-        </Card.Actions>
-      ) : null}
+        <Checkbox
+          status={showHidden ? 'checked' : 'unchecked'}
+          onPress={() => {
+            setShowHidden(!showHidden);
+          }}
+        >
+          Show Hidden
+        </Checkbox>
+      </Card.Actions>
       <Card.Content>
         <List.Section>
-          {userNotes &&
-            userNotes
-              .filter((userNote) => (showHidden ? userNote : userNote.isVisible))
-              .map((userNote) => (
-                <>
-                  <List.Item key={userNote.id} title={userNote.note} />
-                  {canEditNotes ? (
-                    userNote.isVisible ? (
+          {userNotes
+            ? userNotes
+                .filter((userNote) => (showHidden ? userNote : userNote.isVisible))
+                .map((userNote) => (
+                  <>
+                    <List.Item key={userNote.id} title={userNote.note} />
+                    {userNote.isVisible ? (
                       <Button
                         color={Colors.primary}
+                        labelStyle={{ color: Colors.light }}
                         mode="contained"
                         onPress={() => hideUserNote(userNote.id)}
                       >
@@ -92,15 +80,16 @@ const UserNotes = (props: UserNotesProps) => {
                     ) : (
                       <Button
                         color={Colors.primary}
+                        labelStyle={{ color: Colors.light }}
                         mode="contained"
                         onPress={() => unhideUserNote(userNote.id)}
                       >
                         UNHIDE
                       </Button>
-                    )
-                  ) : null}
-                </>
-              ))}
+                    )}
+                  </>
+                ))
+            : null}
         </List.Section>
       </Card.Content>
       <Dialog visible={showNotes} onDismiss={() => setShowNotes(false)}>
