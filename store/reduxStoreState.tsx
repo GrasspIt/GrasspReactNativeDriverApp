@@ -185,7 +185,7 @@ interface Analytic {
   numFirstTimeCompletedOrders: number;
 }
 
-interface DsprManager {
+export interface DsprManager {
   id: number;
   dspr: number;
   user: number;

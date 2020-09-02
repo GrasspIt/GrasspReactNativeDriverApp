@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button } from 'react-native-paper';
 import Colors from '../constants/Colors';
 import { completeOrder, cancelOrder } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
@@ -35,17 +35,21 @@ const OrderButtons = ({ orderId, navigation }) => {
   return (
     <View style={styles.buttonContainer}>
       <Button
-        title="Cancel Order"
-        containerStyle={styles.buttons}
-        buttonStyle={{ backgroundColor: Colors.primary }}
+        mode="contained"
+        color={Colors.primary}
+        labelStyle={{ color: Colors.light }}
         onPress={handleCancelOrder}
-      />
+      >
+        Cancel Order{' '}
+      </Button>
       <Button
-        title="Complete Order"
-        containerStyle={styles.buttons}
-        buttonStyle={{ backgroundColor: Colors.primary }}
+        mode="contained"
+        color={Colors.primary}
+        labelStyle={{ color: Colors.light }}
         onPress={handleCompleteOrder}
-      />
+      >
+        Complete Order
+      </Button>
     </View>
   );
 };
@@ -55,11 +59,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light,
     flexDirection: 'row',
     justifyContent: 'space-around',
+    padding: 10,
     bottom: 0,
-  },
-  buttons: {
-    flex: 1,
-    margin: 8,
   },
 });
 

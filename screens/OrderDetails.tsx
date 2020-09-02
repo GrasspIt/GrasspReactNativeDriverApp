@@ -3,7 +3,12 @@ import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-nat
 import { ListItem } from 'react-native-elements';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { getOrderDetailsWithId, GET_ORDER_DETAILS_WITH_ID_FAILURE } from '../actions/orderActions';
-
+import {
+  getSpecificUser,
+  createUserNote,
+  hideUserNote,
+  unhideUserNote,
+} from '../actions/userActions';
 import { getUserNotesFromProps } from '../selectors/userSelectors';
 import {
   getUserIdDocumentFromPropsWithOrder,
@@ -19,6 +24,7 @@ import {
   IdDocument,
   State,
   MedicalRecommendation,
+  DsprManager,
   DsprDriver,
   DspProduct,
   DsprDriverInventoryItem,
@@ -28,6 +34,7 @@ import { parseDate, formatPhone } from '../hooks/util';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/ScreenNavigator';
 import OrderButtons from '../components/OrderButtons';
+import UserNotes from '../components/UserNotes';
 import { Divider } from 'react-native-paper';
 
 type DetailsScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Details'>;
@@ -44,6 +51,13 @@ const OrderDetails = ({ route, navigation }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState(orderInfo);
   console.log('order', order);
+
+  const dsprManagers = useSelector<State, DsprManager>((state) => state.api.entities.dsprManagers);
+  const dsprManager = Object.values(dsprManagers).find((manager) => order.dspr === manager.dspr);
+  const userNotes = useSelector<State, any[]>(
+    (state) => getUserNotesFromProps(state, { userId: user.id }),
+    shallowEqual
+  );
   const idDocument = useSelector<State, IdDocument>(
     (state) =>
       getUserIdDocumentFromPropsWithOrder(state, {
@@ -104,6 +118,18 @@ const OrderDetails = ({ route, navigation }: Props) => {
       ) : (
         <>
           <ScrollView style={styles.scroll}>
+            <UserNotes
+              createUserNote={(userId, note, dsprDriverId, dsprManagerId) =>
+                dispatch(createUserNote(userId, note, dsprDriverId, dsprManagerId))
+              }
+              hideUserNote={(noteId) => dispatch(hideUserNote(noteId))}
+              unhideUserNote={(noteId) => dispatch(unhideUserNote(noteId))}
+              userId={user.id}
+              dsprDriverId={order.dsprDriver}
+              dsprManagerId={dsprManager.id}
+              userNotes={userNotes}
+              refreshUser={() => dispatch(getSpecificUser(user.id))}
+            />
             {order.specialInstructions ? (
               <Text style={styles.title}>
                 <strong>Special Instructions:</strong> {order.specialInstructions}
@@ -118,54 +144,72 @@ const OrderDetails = ({ route, navigation }: Props) => {
               ) : null}
 
               {medicalRecommendation ? (
-                <Text style={styles.title}>Medical User</Text>
+                <ListItem>
+                  <ListItem.Subtitle style={{ fontWeight: 'bold' }}>Medical User</ListItem.Subtitle>
+                </ListItem>
               ) : (
-                <Text style={styles.title}>Adult User</Text>
+                <ListItem>
+                  <ListItem.Subtitle style={{ fontWeight: 'bold' }}>Adult User</ListItem.Subtitle>
+                </ListItem>
               )}
 
-              <Text style={styles.userDetails}>
-                {date.toLocaleString('en-us', { month: 'long' })} {date.getDate()},{' '}
-                {date.getFullYear()}, at{' '}
-                {date.toLocaleString('en-US', {
-                  hour: 'numeric',
-                  minute: 'numeric',
-                  hour12: true,
-                })}
-              </Text>
+              <ListItem>
+                <ListItem.Subtitle>
+                  {date.toLocaleString('en-us', { month: 'long' })} {date.getDate()},{' '}
+                  {date.getFullYear()}, at{' '}
+                  {date.toLocaleString('en-US', {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true,
+                  })}{' '}
+                </ListItem.Subtitle>
+              </ListItem>
 
               {user ? (
-                <Text style={styles.userDetails}>
-                  {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
-                </Text>
+                <ListItem>
+                  <ListItem.Subtitle>
+                    {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
+                  </ListItem.Subtitle>
+                </ListItem>
               ) : null}
 
               {idDocument ? (
                 <View>
-                  <Text style={styles.userDetails}>
-                    Identification Document: {idDocument.idNumber}
-                  </Text>
-                  <Text style={styles.userDetails}>
-                    Birth Date: &nbsp;
-                    {birthDate ? (
-                      <Text>
-                        {birthDate.toLocaleString('en-us', { month: 'long' })} {birthDate.getDate()}
-                        , {birthDate.getFullYear()}
-                      </Text>
-                    ) : (
-                      <Text>Not provided</Text>
-                    )}
-                  </Text>
+                  <ListItem>
+                    <ListItem.Subtitle>
+                      Identification Document: {idDocument.idNumber}
+                    </ListItem.Subtitle>
+                  </ListItem>
+                  <ListItem>
+                    <ListItem.Subtitle>
+                      Birth Date: &nbsp;
+                      {birthDate ? (
+                        <Text>
+                          {birthDate.toLocaleString('en-us', { month: 'long' })}{' '}
+                          {birthDate.getDate()}, {birthDate.getFullYear()}
+                        </Text>
+                      ) : (
+                        <Text>Not provided</Text>
+                      )}{' '}
+                    </ListItem.Subtitle>
+                  </ListItem>
                 </View>
               ) : null}
 
               {medicalRecommendation ? (
-                <Text style={styles.userDetails}>Medical ID: {medicalRecommendation.idNumber}</Text>
+                <ListItem>
+                  <ListItem.Subtitle>
+                    Medical ID: {medicalRecommendation.idNumber}{' '}
+                  </ListItem.Subtitle>
+                </ListItem>
               ) : null}
 
               {address ? (
-                <Text style={styles.userDetails}>
-                  {address.street}, {address.zipCode}
-                </Text>
+                <ListItem>
+                  <ListItem.Subtitle>
+                    {address.street}, {address.zipCode}
+                  </ListItem.Subtitle>
+                </ListItem>
               ) : null}
             </View>
 
@@ -265,9 +309,6 @@ const styles = StyleSheet.create({
   },
   userContainer: {
     marginTop: 20,
-  },
-  userDetails: {
-    padding: 10,
   },
 });
 
