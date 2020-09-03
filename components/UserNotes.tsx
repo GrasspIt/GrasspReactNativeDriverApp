@@ -53,6 +53,7 @@ const UserNotes = (props: UserNotesProps) => {
 
         <Checkbox
           status={showHidden ? 'checked' : 'unchecked'}
+          color={Colors.primary}
           onPress={() => {
             setShowHidden(!showHidden);
           }}

@@ -123,6 +123,7 @@ const Dashboard = ({ route, navigation }: Props) => {
     <>
       <TopNavBar
         dsprDrivers={dsprDrivers}
+        dsprName={dspr[0].name}
         setModalVisible={setModalVisible}
         navigation={navigation}
       />
@@ -136,13 +137,12 @@ const Dashboard = ({ route, navigation }: Props) => {
         </View>
       ) : (
         <View style={styles.body}>
-          <Text style={styles.title}>{dspr[0].name}</Text>
           <OnCallSwitch dsprDriver={dsprDriver} />
           <FlatList
             data={orderList}
             renderItem={(item) => <OrderItem orderInfo={item.item} />}
             keyExtractor={(item: any) => item.id.toString()}
-            style={{ paddingHorizontal: 20, marginVertical: 20 }}
+            style={styles.orders}
           />
           <DsprModal
             modalVisible={modalVisible}
@@ -177,14 +177,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  title: {
-    fontSize: 20,
-    textAlign: 'center',
-    paddingVertical: 14,
-  },
   body: {
     flex: 1,
     backgroundColor: Colors.light,
+  },
+  orders: {
+    paddingHorizontal: 10,
   },
 });
 

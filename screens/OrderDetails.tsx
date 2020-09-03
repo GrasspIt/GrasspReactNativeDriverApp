@@ -129,6 +129,7 @@ const OrderDetails = ({ route, navigation }: Props) => {
               userNotes={userNotes}
               refreshUser={() => dispatch(getSpecificUser(user.id))}
             />
+
             {order.specialInstructions ? (
               <ListItem>
                 <ListItem.Content>
@@ -142,22 +143,22 @@ const OrderDetails = ({ route, navigation }: Props) => {
 
             {order.userFirstTimeOrderWithDSPR ? (
               <ListItem>
-                <ListItem.Title>FIRST TIME ORDER</ListItem.Title>
+                <ListItem.Title style={{ fontWeight: 'bold' }}>FIRST TIME ORDER</ListItem.Title>
               </ListItem>
             ) : null}
 
             {medicalRecommendation ? (
               <ListItem>
-                <ListItem.Subtitle style={{ fontWeight: 'bold' }}>Medical User</ListItem.Subtitle>
+                <ListItem.Title style={{ fontWeight: 'bold' }}>Medical User</ListItem.Title>
               </ListItem>
             ) : (
               <ListItem>
-                <ListItem.Subtitle style={{ fontWeight: 'bold' }}>Adult User</ListItem.Subtitle>
+                <ListItem.Title style={{ fontWeight: 'bold' }}>Adult User</ListItem.Title>
               </ListItem>
             )}
 
             <ListItem>
-              <ListItem.Subtitle>
+              <ListItem.Title>
                 {date.toLocaleString('en-us', { month: 'long' })} {date.getDate()},{' '}
                 {date.getFullYear()}, at{' '}
                 {date.toLocaleString('en-US', {
@@ -165,26 +166,24 @@ const OrderDetails = ({ route, navigation }: Props) => {
                   minute: 'numeric',
                   hour12: true,
                 })}{' '}
-              </ListItem.Subtitle>
+              </ListItem.Title>
             </ListItem>
 
             {user ? (
               <ListItem>
-                <ListItem.Subtitle>
+                <ListItem.Title>
                   {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
-                </ListItem.Subtitle>
+                </ListItem.Title>
               </ListItem>
             ) : null}
 
             {idDocument ? (
               <View>
                 <ListItem>
-                  <ListItem.Subtitle>
-                    Identification Document: {idDocument.idNumber}
-                  </ListItem.Subtitle>
+                  <ListItem.Title>Identification Document: {idDocument.idNumber}</ListItem.Title>
                 </ListItem>
                 <ListItem>
-                  <ListItem.Subtitle>
+                  <ListItem.Title>
                     Birth Date: &nbsp;
                     {birthDate ? (
                       <Text>
@@ -194,22 +193,22 @@ const OrderDetails = ({ route, navigation }: Props) => {
                     ) : (
                       <Text>Not provided</Text>
                     )}{' '}
-                  </ListItem.Subtitle>
+                  </ListItem.Title>
                 </ListItem>
               </View>
             ) : null}
 
             {medicalRecommendation ? (
               <ListItem>
-                <ListItem.Subtitle>Medical ID: {medicalRecommendation.idNumber} </ListItem.Subtitle>
+                <ListItem.Title>Medical ID: {medicalRecommendation.idNumber} </ListItem.Title>
               </ListItem>
             ) : null}
 
             {address ? (
               <ListItem>
-                <ListItem.Subtitle>
+                <ListItem.Title>
                   {address.street}, {address.zipCode}
-                </ListItem.Subtitle>
+                </ListItem.Title>
               </ListItem>
             ) : null}
 

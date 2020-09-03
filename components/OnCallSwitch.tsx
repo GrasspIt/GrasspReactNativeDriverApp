@@ -23,7 +23,7 @@ const OnCallSwitch = ({ dsprDriver }: SwitchProps) => {
   }, [dsprDriver]);
 
   return (
-    <View style={{ alignItems: 'center' }}>
+    <View style={{ alignItems: 'center', paddingVertical: 20 }}>
       <Switch
         trackColor={{ false: Colors.medium, true: Colors.green }}
         thumbColor={isOnCall ? '#ffffff' : '#ffffff'}

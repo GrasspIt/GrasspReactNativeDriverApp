@@ -5,7 +5,7 @@ import Colors from '../constants/Colors';
 import { logout } from '../actions/oauthActions';
 import { useDispatch } from 'react-redux';
 
-const TopNavBar = ({ navigation, setModalVisible, dsprDrivers }) => {
+const TopNavBar = ({ navigation, setModalVisible, dsprDrivers, dsprName }) => {
   const dispatch = useDispatch();
 
   const [visible, setVisible] = React.useState(false);
@@ -26,7 +26,10 @@ const TopNavBar = ({ navigation, setModalVisible, dsprDrivers }) => {
   return (
     <Appbar.Header style={styles.header}>
       <Appbar.Content
-        title={<Image source={require('../assets/grassp_health.png')} style={styles.image} />}
+        title={dsprName}
+        color={Colors.dark}
+        titleStyle={{ fontSize: 22 }}
+        // title={<Image source={require('../assets/grassp_health.png')} style={styles.image} />}
       />
       <Menu
         visible={visible}

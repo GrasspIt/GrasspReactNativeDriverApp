@@ -35,7 +35,7 @@ const OrderItem = ({ orderInfo }: OrderProps) => {
     <View>
       <ListItem bottomDivider>
         <ListItem.Content>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+          <View style={styles.itemContainer}>
             <View>
               <ListItem.Title>
                 {user.firstName} {user.lastName},{' '}
@@ -45,13 +45,13 @@ const OrderItem = ({ orderInfo }: OrderProps) => {
                 {address.street} {address.zipCode}
               </ListItem.Subtitle>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={styles.buttonContainer}>
               <Icon
                 name="info-with-circle"
                 type="entypo"
                 color={Colors.primary}
-                size={26}
-                style={{ marginLeft: 20 }}
+                size={28}
+                containerStyle={{ marginHorizontal: 20 }}
                 onPress={() => RootNavigation.navigate('Details', { orderInfo, user, address })}
               />
               {isLoading ? (
@@ -62,8 +62,7 @@ const OrderItem = ({ orderInfo }: OrderProps) => {
                   disabledStyle={{ backgroundColor: Colors.light }}
                   name="gear"
                   type="font-awesome"
-                  size={28}
-                  style={{ marginLeft: 20 }}
+                  size={30}
                   color={orderInfo.orderStatus == 'in_process' ? Colors.medium : Colors.primary}
                   onPress={handleProcessOrder}
                 />
@@ -72,71 +71,19 @@ const OrderItem = ({ orderInfo }: OrderProps) => {
           </View>
         </ListItem.Content>
       </ListItem>
-
-      {/* <View>
-        <View style={styles.topText}>
-          <Text style={styles.name}>
-            {user.firstName} {user.lastName},
-          </Text>
-          <Text style={styles.cash}>${orderInfo.cashTotal}</Text>
-        </View>
-        <Text style={styles.address}>
-          {address.street} {address.zipCode}
-        </Text>
-      </View> */}
-      {/* <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={{ marginHorizontal: 30 }}
-          onPress={() => RootNavigation.navigate('Details', { orderInfo, user, address })}
-        >
-          <Entypo name="info-with-circle" size={24} color={Colors.primary} />
-        </TouchableOpacity>
-        {isLoading ? (
-          <ActivityIndicator size="small" color={Colors.primary} />
-        ) : (
-          <TouchableOpacity
-            disabled={orderInfo.orderStatus == 'in_process'}
-            onPress={handleProcessOrder}
-          >
-            <FontAwesome
-              name="gear"
-              size={26}
-              color={orderInfo.orderStatus == 'in_process' ? Colors.medium : Colors.primary}
-            />
-          </TouchableOpacity>
-        )} */}
-      {/* </View> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  name: { fontSize: 14 },
-  cash: {
-    color: Colors.dark,
-    marginLeft: 4,
-    fontSize: 12,
-  },
-  address: {
-    color: Colors.dark,
-    marginTop: 2,
-    fontSize: 12,
-  },
-  topText: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-  },
   buttonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  orderContainer: {
+  itemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.medium,
+    width: '100%',
   },
 });
 
