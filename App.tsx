@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
-import ScreenNavigator from './navigation/ScreenNavigator';
+import AuthNavigator from './navigation/AuthNavigator';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 // import { AppRegistry } from 'react-native';
 // import { name as appName } from './app.json';
@@ -36,7 +36,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <PaperProvider theme={theme}>
-        <ScreenNavigator />
+        <AuthNavigator />
       </PaperProvider>
     </Provider>
   );

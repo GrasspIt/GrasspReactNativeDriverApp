@@ -32,7 +32,7 @@ import {
 import { parseDate, formatPhone } from '../hooks/util';
 
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamsList } from '../navigation/ScreenNavigator';
+import { RootStackParamsList } from '../navigation/AuthNavigator';
 import OrderButtons from '../components/OrderButtons';
 import UserNotes from '../components/UserNotes';
 import { Divider } from 'react-native-paper';

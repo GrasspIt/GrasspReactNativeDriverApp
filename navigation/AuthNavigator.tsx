@@ -5,22 +5,17 @@ import { navigationRef } from './RootNavigation';
 
 import StartupScreen from '../screens/StartupScreen';
 import LoginScreen from '../screens/LoginScreen';
-import Dashboard from '../screens/Dashboard';
-import OrderDetails from '../screens/OrderDetails';
-import HomeScreen from '../screens/HomeScreen';
-import { Order } from '../store/reduxStoreState';
+import MainScreen from '../screens/MainScreen';
 
 export type RootStackParamsList = {
   Startup: undefined;
   Login: undefined;
-  Home: { dsprDrivers: number[] };
-  // Dashboard: { dsprDrivers: number[] };
-  // Details: { orderInfo: Order };
+  Main: { dsprDrivers: number[] };
 };
 
 const RootStack = createStackNavigator<RootStackParamsList>();
 
-const ScreenNavigator = () => {
+const AuthNavigator = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <RootStack.Navigator initialRouteName="Startup" screenOptions={{ gestureEnabled: false }}>
@@ -39,29 +34,15 @@ const ScreenNavigator = () => {
           }}
         />
         <RootStack.Screen
-          name="Home"
-          component={HomeScreen}
+          name="Main"
+          component={MainScreen}
           options={{
             headerShown: false,
           }}
         />
-        {/* <RootStack.Screen
-          name="Dashboard"
-          component={Dashboard}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <RootStack.Screen
-          name="Details"
-          component={OrderDetails}
-          options={{
-            headerShown: true,
-          }}
-        /> */}
       </RootStack.Navigator>
     </NavigationContainer>
   );
 };
 
-export default ScreenNavigator;
+export default AuthNavigator;

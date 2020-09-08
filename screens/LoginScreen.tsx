@@ -5,7 +5,7 @@ import { attemptLogin, logout } from '../actions/oauthActions';
 import { State, User } from '../store/reduxStoreState';
 
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamsList } from '../navigation/ScreenNavigator';
+import { RootStackParamsList } from '../navigation/AuthNavigator';
 
 import LoginForm from '../components/LoginForm';
 import { Alert } from 'react-native';
@@ -32,9 +32,7 @@ const LoginScreen = ({ navigation }: Props) => {
     if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
       if (loggedInUser.dsprDrivers.length > 0) {
         setIsLoading(false);
-        navigation.navigate('Home', { dsprDrivers: loggedInUser.dsprDrivers });
-
-        // navigation.navigate('Dashboard', { dsprDrivers: loggedInUser.dsprDrivers });
+        navigation.navigate('Main', { dsprDrivers: loggedInUser.dsprDrivers });
       } else {
         dispatch(logout());
         setIsLoading(false);

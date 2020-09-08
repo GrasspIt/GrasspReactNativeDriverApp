@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/drawer';
 
 import DSPRScreen from '../screens/DSPRScreen';
-import Dashboard from '../screens/Dashboard';
+import Dashboard from '../screens/HomeScreen';
 import { logout } from '../actions/oauthActions';
 import { useDispatch } from 'react-redux';
 import { DrawerActions } from '@react-navigation/native';
@@ -33,7 +33,6 @@ const DrawerNavigator = ({ navigation, dsprDrivers }) => {
 
   return (
     <Drawer.Navigator
-      // initialRouteName="DSPRs"
       drawerContentOptions={{
         labelStyle: { fontSize: 16 },
         activeTintColor: Colors.light,

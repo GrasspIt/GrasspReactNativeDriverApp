@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import Colors from '../constants/Colors';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamsList } from '../navigation/ScreenNavigator';
+import { RootStackParamsList } from '../navigation/AuthNavigator';
 import { useSelector, useDispatch } from 'react-redux';
 import { preloadAccessTokenFromLocalStorage, logout } from '../actions/oauthActions';
 import { State, User } from '../store/reduxStoreState';
@@ -27,9 +27,7 @@ const Startup = ({ navigation }: Props) => {
   useEffect(() => {
     if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
       if (loggedInUser.dsprDrivers.length > 0) {
-        navigation.navigate('Home', { dsprDrivers: loggedInUser.dsprDrivers });
-
-        // navigation.navigate('Dashboard', { dsprDrivers: loggedInUser.dsprDrivers });
+        navigation.navigate('Main', { dsprDrivers: loggedInUser.dsprDrivers });
       } else {
         dispatch(logout());
         navigation.navigate('Login');
