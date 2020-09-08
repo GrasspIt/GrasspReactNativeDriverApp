@@ -149,7 +149,7 @@ const HomeScreen = ({ route, navigation }: Props) => {
           <OnCallSwitch dsprDriver={dsprDriver} />
           <FlatList
             data={orderList}
-            renderItem={(item) => <OrderItem orderInfo={item.item} />}
+            renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
             keyExtractor={(item: any) => item.id.toString()}
             style={styles.orders}
           />

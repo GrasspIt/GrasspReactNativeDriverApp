@@ -7,9 +7,7 @@ import Colors from '../constants/Colors';
 import { markOrderInProcess, MARK_IN_PROCESS_FAILURE } from '../actions/orderActions';
 import * as RootNavigation from '../navigation/RootNavigation';
 
-type OrderProps = { orderInfo: Order };
-
-const OrderItem = ({ orderInfo }: OrderProps) => {
+const OrderItem = ({ orderInfo, navigation }) => {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -32,59 +30,42 @@ const OrderItem = ({ orderInfo }: OrderProps) => {
   };
 
   return (
-    <View>
-      <ListItem bottomDivider>
-        <ListItem.Content>
-          <View style={styles.itemContainer}>
-            <View>
-              <ListItem.Title>
-                {user.firstName} {user.lastName},{' '}
-                <Text style={{ fontSize: 14 }}>${orderInfo.cashTotal}</Text>
-              </ListItem.Title>
-              <ListItem.Subtitle>
-                {address.street} {address.zipCode}
-              </ListItem.Subtitle>
-            </View>
-            <View style={styles.buttonContainer}>
-              <Icon
-                name="info-with-circle"
-                type="entypo"
-                color={Colors.primary}
-                size={28}
-                containerStyle={{ marginHorizontal: 20 }}
-                onPress={() => RootNavigation.navigate('Details', { orderInfo, user, address })}
-              />
-              {isLoading ? (
-                <ActivityIndicator size="small" color={Colors.primary} />
-              ) : (
-                <Icon
-                  disabled={orderInfo.orderStatus == 'in_process'}
-                  disabledStyle={{ backgroundColor: Colors.light }}
-                  name="gear"
-                  type="font-awesome"
-                  size={30}
-                  color={orderInfo.orderStatus == 'in_process' ? Colors.medium : Colors.primary}
-                  onPress={handleProcessOrder}
-                />
-              )}
-            </View>
-          </View>
-        </ListItem.Content>
-      </ListItem>
-    </View>
+    <ListItem
+      bottomDivider
+      onPress={() =>
+        navigation.navigate('Main', {
+          screen: 'Dashboard',
+          params: { screen: 'Details', params: { orderInfo, user, address } },
+        })
+      }
+    >
+      {isLoading ? (
+        <ActivityIndicator size="small" color={Colors.primary} />
+      ) : (
+        <Icon
+          disabled={orderInfo.orderStatus == 'in_process'}
+          disabledStyle={{ backgroundColor: Colors.light }}
+          name="gear"
+          type="font-awesome"
+          size={30}
+          color={orderInfo.orderStatus == 'in_process' ? Colors.medium : Colors.primary}
+          onPress={handleProcessOrder}
+        />
+      )}
+      <ListItem.Content>
+        <ListItem.Title>
+          {user.firstName} {user.lastName},{' '}
+          <Text style={{ fontSize: 14 }}>${orderInfo.cashTotal}</Text>
+        </ListItem.Title>
+        <ListItem.Subtitle>
+          {address.street} {address.zipCode}
+        </ListItem.Subtitle>
+      </ListItem.Content>
+      <ListItem.Chevron />
+    </ListItem>
   );
 };
 
-const styles = StyleSheet.create({
-  buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  itemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-});
+const styles = StyleSheet.create({});
 
 export default OrderItem;

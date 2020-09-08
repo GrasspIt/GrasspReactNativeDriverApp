@@ -26,7 +26,7 @@ const DrawerNavigator = ({ navigation, dsprDrivers }) => {
 
   const handleLogout = () => {
     navigation.dispatch(DrawerActions.closeDrawer());
-    navigation.navigate('DSPRs');
+    if (dsprDrivers.length > 1) navigation.navigate('DSPRs');
     dispatch(logout());
     RootNavigation.navigate('Login', null);
   };
