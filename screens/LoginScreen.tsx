@@ -32,7 +32,9 @@ const LoginScreen = ({ navigation }: Props) => {
     if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
       if (loggedInUser.dsprDrivers.length > 0) {
         setIsLoading(false);
-        navigation.navigate('Dashboard', { dsprDrivers: loggedInUser.dsprDrivers });
+        navigation.navigate('Home', { dsprDrivers: loggedInUser.dsprDrivers });
+
+        // navigation.navigate('Dashboard', { dsprDrivers: loggedInUser.dsprDrivers });
       } else {
         dispatch(logout());
         setIsLoading(false);

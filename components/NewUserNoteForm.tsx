@@ -4,6 +4,7 @@ import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import { Button, TextInput, Dialog } from 'react-native-paper';
 import Colors from '../constants/Colors';
 
+// error if field is left empty
 const validate = (values) => {
   const errors: any = {};
   if (!values.note) {
@@ -24,6 +25,10 @@ const renderField = ({
     type={type}
     {...input}
     {...custom}
+    // onChangeText={input.onChange}
+    // onBlur={input.onBlur}
+    // onFocus={input.onFocus}
+    // value={input.value}
     error={!!(touched && error)}
     helperText={touched && error ? error : ''}
   />

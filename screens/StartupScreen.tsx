@@ -27,7 +27,9 @@ const Startup = ({ navigation }: Props) => {
   useEffect(() => {
     if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
       if (loggedInUser.dsprDrivers.length > 0) {
-        navigation.navigate('Dashboard', { dsprDrivers: loggedInUser.dsprDrivers });
+        navigation.navigate('Home', { dsprDrivers: loggedInUser.dsprDrivers });
+
+        // navigation.navigate('Dashboard', { dsprDrivers: loggedInUser.dsprDrivers });
       } else {
         dispatch(logout());
         navigation.navigate('Login');

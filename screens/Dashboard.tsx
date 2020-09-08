@@ -5,8 +5,8 @@ import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import { useIsFocused } from '@react-navigation/native';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { State, User, Order, DSPR } from '../store/reduxStoreState';
+import { useSelector, useDispatch, connect } from 'react-redux';
+import { State, User, Order, DSPR, DsprDriver } from '../store/reduxStoreState';
 import {
   getDSPRDriver,
   setDsprDriverId,
@@ -32,10 +32,12 @@ type Props = {
 };
 
 //initialize variable outside of component to be used in TaskManager below
-let dsprDriver;
+// let dsprDriver;
 
 const Dashboard = ({ route, navigation }: Props) => {
-  const { dsprDrivers } = route.params;
+  const { driverId } = route.params;
+
+  // const { dsprDrivers } = route.params;
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
@@ -45,6 +47,10 @@ const Dashboard = ({ route, navigation }: Props) => {
   const [error, setError] = useState('');
 
   const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
+  // const driverId = useSelector<State, string>((state) => state.api.dsprDriverId);
+  const dsprDrivers = useSelector<State, any>((state) => state.api.entities.dsprDrivers);
+  let dsprDriver = Object.values(dsprDrivers).find((driver: any) => driver.id === driverId);
+
   const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
   const orders = useSelector<State, Order>(getOrders);
   const dsprs = useSelector<State, DSPR>(getDSPRs);
@@ -53,13 +59,16 @@ const Dashboard = ({ route, navigation }: Props) => {
     ? Object.values(dsprs).filter((item) => item.id === dsprDriver.dspr)
     : null;
 
-  const getDriverInfo = (id) => {
-    dispatch(setDsprDriverId(id));
-    dispatch<any>(getDSPRDriver(id)).then((response) => {
+  const getDriverInfo = () => {
+    dispatch(setDsprDriverId(driverId));
+
+    // dispatch(setDsprDriverId(id));
+    dispatch<any>(getDSPRDriver(driverId)).then((response) => {
       if (response.type === GET_DSPR_DRIVER_FAILURE) {
         setError(response.error);
       } else {
-        dsprDriver = response.response.entities.dsprDrivers[id];
+        // setDsprDriverId(response.response.entities.dsprDrivers[id]);
+        dsprDriver = response.response.entities.dsprDrivers[driverId];
         dsprDriver
           ? setError('')
           : setError('An unexpected error occurred when fetching driver info. Please try again.');
@@ -70,34 +79,35 @@ const Dashboard = ({ route, navigation }: Props) => {
 
   // polling data from API while logged in
   const refreshData = () => {
-    if (userId && dsprDriver) dispatch(getDSPRDriver(dsprDriver.id));
+    if (userId) dispatch(getDSPRDriver(driverId));
   };
   useInterval(refreshData, 60000);
 
   useEffect(() => {
     // refresh data when screen is focused
-    if (isFocused) {
-      setIsLoading(true);
-      //check if there is more than one dsprDriver
-      if (dsprDrivers.length > 1 && !dsprDriver) {
-        setModalVisible(true);
-      } else {
-        getDriverInfo(dsprDrivers[0]);
-      }
-    }
-  }, [navigation, dsprDrivers, dsprDriver, isFocused]);
+    // if (isFocused) {
+    //check if there is more than one dsprDriver
+    // if (dsprDrivers.length > 1 && !dsprDriver) {
+    //   setModalVisible(true);
+    // }
+    // if (dsprDrivers.length === 1 && !dsprDriver) {
+    setIsLoading(true);
+    getDriverInfo();
+    // }
+    // }
+  }, []);
 
   useEffect(() => {
     (async () => {
       //permissions for location tracking
-      if (dsprDriver) {
+      if (dsprDriver !== undefined) {
         let { status } = await Location.requestPermissionsAsync();
         if (status !== 'granted') {
           Alert.alert('Permission to access location was denied.');
         }
         //start location updates if driver is on call
-        if (status === 'granted' && dsprDriver && dsprDriver.onCall) {
-          console.log('location update');
+        if (status === 'granted' && dsprDriver !== undefined && dsprDriver.onCall) {
+          console.log('start location updates');
           setIsTracking(true);
           await Location.startLocationUpdatesAsync('location-tracking', {
             timeInterval: 30000,
@@ -157,16 +167,19 @@ const Dashboard = ({ route, navigation }: Props) => {
 
 // define the task that will be called with startLocationTrackingUpdates
 TaskManager.defineTask('location-tracking', ({ data, error }) => {
+  const movingDriverId = store.getState().api.dsprDriverId;
+  const movingDsprDriver = store.getState().api.entities.dsprDrivers[movingDriverId];
   if (error) {
     console.log('Error: ', error.message);
     return;
   }
   if (data) {
+    console.log('location update');
     const { locations } = data;
     let lat = locations[0].coords.latitude;
     let long = locations[0].coords.longitude;
     //dispatch location to api
-    store.dispatch(setDriverLocation(dsprDriver.dspr, lat, long));
+    store.dispatch(setDriverLocation(movingDsprDriver.dspr, lat, long));
   }
 });
 

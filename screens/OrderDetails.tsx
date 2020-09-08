@@ -50,10 +50,7 @@ const OrderDetails = ({ route, navigation }: Props) => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState(orderInfo);
-  console.log('order', order);
 
-  // const dsprManagers = useSelector<State, DsprManager>((state) => state.api.entities.dsprManagers);
-  // const dsprManager = Object.values(dsprManagers).find((manager) => order.dspr === manager.dspr);
   const userNotes = useSelector<State, any[]>(
     (state) => getUserNotesFromProps(state, { userId: user.id }),
     shallowEqual

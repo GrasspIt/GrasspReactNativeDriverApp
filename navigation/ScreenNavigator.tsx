@@ -7,13 +7,15 @@ import StartupScreen from '../screens/StartupScreen';
 import LoginScreen from '../screens/LoginScreen';
 import Dashboard from '../screens/Dashboard';
 import OrderDetails from '../screens/OrderDetails';
+import HomeScreen from '../screens/HomeScreen';
 import { Order } from '../store/reduxStoreState';
 
 export type RootStackParamsList = {
   Startup: undefined;
   Login: undefined;
-  Dashboard: { dsprDrivers: number[] };
-  Details: { orderInfo: Order };
+  Home: { dsprDrivers: number[] };
+  // Dashboard: { dsprDrivers: number[] };
+  // Details: { orderInfo: Order };
 };
 
 const RootStack = createStackNavigator<RootStackParamsList>();
@@ -37,6 +39,13 @@ const ScreenNavigator = () => {
           }}
         />
         <RootStack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        {/* <RootStack.Screen
           name="Dashboard"
           component={Dashboard}
           options={{
@@ -49,7 +58,7 @@ const ScreenNavigator = () => {
           options={{
             headerShown: true,
           }}
-        />
+        /> */}
       </RootStack.Navigator>
     </NavigationContainer>
   );
