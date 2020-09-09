@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert, ActivityIndicator } from 'react-native';
-import { ListItem, Icon } from 'react-native-elements';
+import { ListItem, Icon, Button } from 'react-native-elements';
 import { State, Order, Address, User } from '../store/reduxStoreState';
 import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../constants/Colors';
@@ -40,15 +40,25 @@ const OrderItem = ({ orderInfo, navigation }) => {
       }
     >
       {isLoading ? (
-        <ActivityIndicator size="small" color={Colors.primary} />
+        <Button
+          loading
+          buttonStyle={{
+            width: 80,
+            height: 60,
+            backgroundColor: Colors.primary,
+          }}
+        />
       ) : (
-        <Icon
+        <Button
           disabled={orderInfo.orderStatus == 'in_process'}
           disabledStyle={{ backgroundColor: Colors.light }}
-          name="gear"
-          type="font-awesome"
-          size={30}
-          color={orderInfo.orderStatus == 'in_process' ? Colors.medium : Colors.primary}
+          title="Set In Process"
+          titleStyle={{ fontSize: 16 }}
+          buttonStyle={{
+            width: 80,
+            height: 60,
+            backgroundColor: Colors.primary,
+          }}
           onPress={handleProcessOrder}
         />
       )}
