@@ -24,10 +24,22 @@ const Startup = ({ navigation }: Props) => {
     dispatch(preloadAccessTokenFromLocalStorage());
   }, []);
 
+  const handleNavigate = () => {
+    if (loggedInUser && loggedInUser.dsprDrivers && loggedInUser.dsprDrivers.length === 1) {
+      navigation.navigate('Main', {
+        screen: 'Dashboard',
+        params: { driverId: loggedInUser.dsprDrivers[0] },
+      });
+    }
+    if (loggedInUser && loggedInUser.dsprDrivers && loggedInUser.dsprDrivers.length > 1) {
+      navigation.navigate('Main', { screen: 'DSPRs' });
+    }
+  };
+
   useEffect(() => {
     if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
       if (loggedInUser.dsprDrivers.length > 0) {
-        navigation.navigate('Main', { dsprDrivers: loggedInUser.dsprDrivers });
+        handleNavigate();
       } else {
         dispatch(logout());
         navigation.navigate('Login');

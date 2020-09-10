@@ -8,7 +8,9 @@ import {
 
 import DSPRScreen from '../screens/DSPRScreen';
 import { logout } from '../actions/oauthActions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { State } from '../store/reduxStoreState';
+
 import { DrawerActions } from '@react-navigation/native';
 import * as RootNavigation from '../navigation/RootNavigation';
 import Colors from '../constants/Colors';
@@ -25,15 +27,15 @@ type Props = {
 
 export type DrawerStackParamsList = {
   DSPRs: { driverIds: number[] };
-  Dashboard: { driverId: number };
+  Dashboard: any;
 };
 
 const Drawer = createDrawerNavigator<DrawerStackParamsList>();
 
 const DrawerNavigator = ({ navigation, route }: Props) => {
-  const { dsprDrivers } = route.params;
-
   const dispatch = useDispatch();
+
+  const dsprDrivers = useSelector<State, any>((state) => state.api.entities.dsprDrivers);
 
   const handleLogout = () => {
     navigation.dispatch(DrawerActions.closeDrawer());

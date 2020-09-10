@@ -24,6 +24,23 @@ const LoginScreen = ({ navigation }: Props) => {
   const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
   const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
 
+  const handleLogin = (username: string, password: string) => {
+    setIsLoading(true);
+    dispatch(attemptLogin(username, password));
+  };
+
+  const handleNavigate = () => {
+    if (loggedInUser && loggedInUser.dsprDrivers && loggedInUser.dsprDrivers.length === 1) {
+      navigation.navigate('Main', {
+        screen: 'Dashboard',
+        params: { driverId: loggedInUser.dsprDrivers[0] },
+      });
+    }
+    if (loggedInUser && loggedInUser.dsprDrivers && loggedInUser.dsprDrivers.length > 1) {
+      navigation.navigate('Main', { screen: 'DSPRs' });
+    }
+  };
+
   useEffect(() => {
     if (!loggedInUser && errorMessage) {
       setIsLoading(false);
@@ -32,7 +49,7 @@ const LoginScreen = ({ navigation }: Props) => {
     if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
       if (loggedInUser.dsprDrivers.length > 0) {
         setIsLoading(false);
-        navigation.navigate('Main', { dsprDrivers: loggedInUser.dsprDrivers });
+        handleNavigate();
       } else {
         dispatch(logout());
         setIsLoading(false);
@@ -42,11 +59,6 @@ const LoginScreen = ({ navigation }: Props) => {
       }
     }
   }, [loggedInUser, errorMessage]);
-
-  const handleLogin = (username: string, password: string) => {
-    setIsLoading(true);
-    dispatch(attemptLogin(username, password));
-  };
 
   return <LoginForm handleLogin={handleLogin} isLoading={isLoading} />;
 };

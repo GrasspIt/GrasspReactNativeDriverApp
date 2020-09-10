@@ -10,7 +10,7 @@ import DrawerNavigator from './DrawerNavigator';
 export type RootStackParamsList = {
   Startup: undefined;
   Login: undefined;
-  Main: { dsprDrivers: number[] };
+  Main: any;
 };
 
 const RootStack = createStackNavigator<RootStackParamsList>();

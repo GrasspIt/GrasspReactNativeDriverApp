@@ -193,4 +193,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default connect(null)(HomeScreen);
