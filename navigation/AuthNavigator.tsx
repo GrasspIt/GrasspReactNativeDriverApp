@@ -5,7 +5,7 @@ import { navigationRef } from './RootNavigation';
 
 import StartupScreen from '../screens/StartupScreen';
 import LoginScreen from '../screens/LoginScreen';
-import MainScreen from '../screens/MainScreen';
+import DrawerNavigator from './DrawerNavigator';
 
 export type RootStackParamsList = {
   Startup: undefined;
@@ -35,7 +35,7 @@ const AuthNavigator = () => {
         />
         <RootStack.Screen
           name="Main"
-          component={MainScreen}
+          component={DrawerNavigator}
           options={{
             headerShown: false,
           }}

@@ -29,16 +29,12 @@ const OrderItem = ({ orderInfo, navigation }) => {
     });
   };
 
+  const handleNavigate = () => {
+    navigation.navigate('Details', { orderInfo, user, address });
+  };
+
   return (
-    <ListItem
-      bottomDivider
-      onPress={() =>
-        navigation.navigate('Main', {
-          screen: 'Dashboard',
-          params: { screen: 'Details', params: { orderInfo, user, address } },
-        })
-      }
-    >
+    <ListItem bottomDivider onPress={handleNavigate}>
       {isLoading ? (
         <Button
           loading

@@ -7,12 +7,21 @@ import {
 } from '@react-navigation/drawer';
 
 import DSPRScreen from '../screens/DSPRScreen';
-import Dashboard from '../screens/HomeScreen';
 import { logout } from '../actions/oauthActions';
 import { useDispatch } from 'react-redux';
 import { DrawerActions } from '@react-navigation/native';
 import * as RootNavigation from '../navigation/RootNavigation';
 import Colors from '../constants/Colors';
+import DashboardNavigator from './DashboardNavigator';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamsList } from '../navigation/AuthNavigator';
+
+type MainScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Main'>;
+
+type Props = {
+  navigation: MainScreenNavigationProp;
+  route;
+};
 
 export type DrawerStackParamsList = {
   DSPRs: { driverIds: number[] };
@@ -21,12 +30,14 @@ export type DrawerStackParamsList = {
 
 const Drawer = createDrawerNavigator<DrawerStackParamsList>();
 
-const DrawerNavigator = ({ navigation, dsprDrivers }) => {
+const DrawerNavigator = ({ navigation, route }: Props) => {
+  const { dsprDrivers } = route.params;
+
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     navigation.dispatch(DrawerActions.closeDrawer());
-    if (dsprDrivers.length > 1) navigation.navigate('DSPRs');
+    if (dsprDrivers.length > 1) RootNavigation.navigate('DSPRs', null);
     dispatch(logout());
     RootNavigation.navigate('Login', null);
   };
@@ -54,12 +65,12 @@ const DrawerNavigator = ({ navigation, dsprDrivers }) => {
       {dsprDrivers.length > 1 ? (
         <>
           <Drawer.Screen name="DSPRs" component={DSPRScreen} />
-          <Drawer.Screen name="Dashboard" component={Dashboard} />
+          <Drawer.Screen name="Dashboard" component={DashboardNavigator} />
         </>
       ) : (
         <Drawer.Screen
           name="Dashboard"
-          component={Dashboard}
+          component={DashboardNavigator}
           initialParams={{ driverId: dsprDrivers[0] }}
         />
       )}

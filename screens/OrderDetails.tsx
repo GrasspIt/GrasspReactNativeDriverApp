@@ -32,12 +32,12 @@ import {
 import { parseDate, formatPhone } from '../hooks/util';
 
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamsList } from '../navigation/AuthNavigator';
+import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
 import OrderButtons from '../components/OrderButtons';
 import UserNotes from '../components/UserNotes';
 import { Divider } from 'react-native-paper';
 
-type DetailsScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Details'>;
+type DetailsScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Details'>;
 
 type Props = {
   navigation: DetailsScreenNavigationProp;
