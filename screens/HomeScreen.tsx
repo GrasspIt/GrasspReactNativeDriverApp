@@ -5,8 +5,7 @@ import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import { useIsFocused } from '@react-navigation/native';
 
-import { useSelector, useDispatch, connect } from 'react-redux';
-import { State, User, Order, DSPR, DsprDriver } from '../store/reduxStoreState';
+import { useDispatch, connect } from 'react-redux';
 import {
   getDSPRDriver,
   setDsprDriverId,
@@ -30,29 +29,18 @@ type Props = {
   route;
 };
 
-//initialize variable outside of component to be used in TaskManager below
-// let dsprDriver;
-
-const HomeScreen = ({ route, navigation }: Props) => {
+const HomeScreen = ({ route, navigation, userId, dsprDrivers, orders, dsprs }) => {
   const { driverId } = route.params;
 
-  // const { dsprDrivers } = route.params;
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
-  const [modalVisible, setModalVisible] = useState(false);
   const [isTracking, setIsTracking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
-  // const driverId = useSelector<State, string>((state) => state.api.dsprDriverId);
-  const dsprDrivers = useSelector<State, any>((state) => state.api.entities.dsprDrivers);
   let dsprDriver = Object.values(dsprDrivers).find((driver: any) => driver.id === driverId);
 
-  const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
-  const orders = useSelector<State, Order>(getOrders);
-  const dsprs = useSelector<State, DSPR>(getDSPRs);
   const orderList = Object.values(orders);
   const dspr = dsprDriver
     ? Object.values(dsprs).filter((item) => item.id === dsprDriver.dspr)
@@ -60,13 +48,10 @@ const HomeScreen = ({ route, navigation }: Props) => {
 
   const getDriverInfo = () => {
     dispatch(setDsprDriverId(driverId));
-
-    // dispatch(setDsprDriverId(id));
     dispatch<any>(getDSPRDriver(driverId)).then((response) => {
       if (response.type === GET_DSPR_DRIVER_FAILURE) {
         setError(response.error);
       } else {
-        // setDsprDriverId(response.response.entities.dsprDrivers[id]);
         dsprDriver = response.response.entities.dsprDrivers[driverId];
         dsprDriver
           ? setError('')
@@ -128,14 +113,9 @@ const HomeScreen = ({ route, navigation }: Props) => {
     })();
   }, [dsprDriver, isTracking]);
 
-  return loggedInUser && dsprDriver ? (
+  return userId && dsprDriver ? (
     <>
-      <TopNavBar
-        dsprDrivers={dsprDrivers}
-        dsprName={dspr[0].name}
-        setModalVisible={setModalVisible}
-        navigation={navigation}
-      />
+      <TopNavBar dsprDrivers={dsprDrivers} dsprName={dspr[0].name} navigation={navigation} />
       {isLoading ? (
         <View style={styles.container}>
           <ActivityIndicator size="large" color={Colors.primary} />
@@ -193,4 +173,18 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(null)(HomeScreen);
+const mapStateToProps = (state) => {
+  // const dsprDriverId = state.api.dsprDriverId;
+  const userId = state.api.loggedInUserId;
+  const dsprDrivers = state.api.entities.dsprDrivers;
+  const orders = getOrders(state);
+  const dsprs = getDSPRs(state);
+
+  // const dsprDriver = getDSPRDriverWithUserAndOrdersFromProps(state, { dsprDriverId: dsprDriverId });
+
+  return { userId, dsprDrivers, orders, dsprs };
+};
+
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
