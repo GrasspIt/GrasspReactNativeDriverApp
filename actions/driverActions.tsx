@@ -57,7 +57,6 @@ export const setDsprDriverId = (dsprDriverId) => {
 
 export const getDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
   return dispatch(dsprDriverGetter(dsprDriverId)).then((response) => {
-    console.log('response', response);
     return response;
   });
 };

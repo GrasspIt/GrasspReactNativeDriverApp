@@ -3,9 +3,11 @@ import { StyleSheet, Text, View, Alert, FlatList, ActivityIndicator } from 'reac
 import Colors from '../constants/Colors';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
+import { useInterval } from '../hooks/useInterval';
+import { useDispatch, connect } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 
-import { useDispatch, connect } from 'react-redux';
+import { Order } from '../store/reduxStoreState';
 import {
   getDSPRDriver,
   setDsprDriverId,
@@ -18,18 +20,20 @@ import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
 import OnCallSwitch from '../components/OnCallSwitch';
 import TopNavBar from '../components/TopNavBar';
-import { useInterval } from '../hooks/useInterval';
 import OrderItem from '../components/OrderItem';
-import { getOrders } from '../selectors/orderSelectors';
 import { getDSPRs } from '../selectors/dsprSelectors';
 
 type HomeScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Home'>;
 type Props = {
   navigation: HomeScreenNavigationProp;
   route;
+  userId;
+  dsprDrivers;
+  orders: Order[];
+  dsprs;
 };
 
-const HomeScreen = ({ route, navigation, userId, dsprDrivers, orders, dsprs }) => {
+const HomeScreen = ({ route, navigation, userId, dsprDrivers, orders, dsprs }: Props) => {
   const { driverId } = route.params;
 
   const dispatch = useDispatch();
@@ -38,10 +42,13 @@ const HomeScreen = ({ route, navigation, userId, dsprDrivers, orders, dsprs }) =
   const [isTracking, setIsTracking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [orderList, setOrderList] = useState(
+    Object.values(orders).filter((order) => order.orderStatus == 'queued' || 'in_process')
+  );
+  const [dsprDriver, setDsprDriver] = useState(
+    Object.values(dsprDrivers).find((driver: any) => driver.id === driverId)
+  );
 
-  let dsprDriver = Object.values(dsprDrivers).find((driver: any) => driver.id === driverId);
-
-  const orderList = Object.values(orders);
   const dspr = dsprDriver
     ? Object.values(dsprs).filter((item) => item.id === dsprDriver.dspr)
     : null;
@@ -52,7 +59,7 @@ const HomeScreen = ({ route, navigation, userId, dsprDrivers, orders, dsprs }) =
       if (response.type === GET_DSPR_DRIVER_FAILURE) {
         setError(response.error);
       } else {
-        dsprDriver = response.response.entities.dsprDrivers[driverId];
+        setDsprDriver(response.response.entities.dsprDrivers[driverId]);
         dsprDriver
           ? setError('')
           : setError('An unexpected error occurred when fetching driver info. Please try again.');
@@ -68,18 +75,16 @@ const HomeScreen = ({ route, navigation, userId, dsprDrivers, orders, dsprs }) =
   useInterval(refreshData, 60000);
 
   useEffect(() => {
-    // refresh data when screen is focused
-    // if (isFocused) {
-    //check if there is more than one dsprDriver
-    // if (dsprDrivers.length > 1 && !dsprDriver) {
-    //   setModalVisible(true);
-    // }
-    // if (dsprDrivers.length === 1 && !dsprDriver) {
     setIsLoading(true);
     getDriverInfo();
-    // }
-    // }
   }, []);
+
+  useEffect(() => {
+    console.log('orders');
+    setOrderList(
+      Object.values(orders).filter((order) => order.orderStatus == 'queued' || 'in_process')
+    );
+  }, [orders, isFocused]);
 
   useEffect(() => {
     (async () => {
@@ -127,6 +132,7 @@ const HomeScreen = ({ route, navigation, userId, dsprDrivers, orders, dsprs }) =
       ) : (
         <View style={styles.body}>
           <OnCallSwitch dsprDriver={dsprDriver} />
+          {/* {getOrderList()} */}
           <FlatList
             data={orderList}
             renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
@@ -141,6 +147,7 @@ const HomeScreen = ({ route, navigation, userId, dsprDrivers, orders, dsprs }) =
 
 // define the task that will be called with startLocationTrackingUpdates
 TaskManager.defineTask('location-tracking', ({ data, error }) => {
+  console.log('call location update');
   const movingDriverId = store.getState().api.dsprDriverId;
   const movingDsprDriver = store.getState().api.entities.dsprDrivers[movingDriverId];
   if (error) {
@@ -174,14 +181,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  // const dsprDriverId = state.api.dsprDriverId;
   const userId = state.api.loggedInUserId;
   const dsprDrivers = state.api.entities.dsprDrivers;
-  const orders = getOrders(state);
+  const orders = state.api.entities.orders;
   const dsprs = getDSPRs(state);
-
-  // const dsprDriver = getDSPRDriverWithUserAndOrdersFromProps(state, { dsprDriverId: dsprDriverId });
-
   return { userId, dsprDrivers, orders, dsprs };
 };
 
