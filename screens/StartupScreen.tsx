@@ -6,6 +6,7 @@ import { RootStackParamsList } from '../navigation/AuthNavigator';
 import { useSelector, useDispatch } from 'react-redux';
 import { preloadAccessTokenFromLocalStorage, logout } from '../actions/oauthActions';
 import { State, User } from '../store/reduxStoreState';
+import { setDsprDriverId } from '../actions/driverActions';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Startup'>;
 type Props = {
@@ -26,10 +27,12 @@ const Startup = ({ navigation }: Props) => {
 
   const handleNavigate = () => {
     if (loggedInUser && loggedInUser.dsprDrivers && loggedInUser.dsprDrivers.length === 1) {
-      navigation.navigate('Main', {
-        screen: 'Dashboard',
-        params: { driverId: loggedInUser.dsprDrivers[0] },
-      });
+      dispatch(setDsprDriverId(loggedInUser.dsprDrivers[0]));
+
+      // navigation.navigate('Main', {
+      //   screen: 'Dashboard',
+      //   params: { driverId: loggedInUser.dsprDrivers[0] },
+      // });
     }
     if (loggedInUser && loggedInUser.dsprDrivers && loggedInUser.dsprDrivers.length > 1) {
       navigation.navigate('Main', { screen: 'DSPRs' });

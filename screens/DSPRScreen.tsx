@@ -1,5 +1,6 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setDsprDriverId } from '../actions/driverActions';
 import { State } from '../store/reduxStoreState';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
@@ -11,6 +12,8 @@ type DSPRScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'DSPR
 type Props = { navigation: DSPRScreenNavigationProp };
 
 const DSPRScreen = ({ navigation }: Props) => {
+  const dispatch = useDispatch();
+
   const dsprs = useSelector<State, Object>((state) => state.api.entities.DSPRs);
   const dsprDrivers = useSelector<State, Object>((state) => state.api.entities.dsprDrivers);
 
@@ -24,7 +27,8 @@ const DSPRScreen = ({ navigation }: Props) => {
     // find the dsprDriver that matches the dsprId
     const selectedDriver = dsprDriverDataList.find((driver: any) => driver.dspr === dsprId);
     // navigate to dashboard passing driverId as props
-    navigation.navigate('Dashboard', { driverId: selectedDriver.id });
+    dispatch(setDsprDriverId(selectedDriver));
+    // navigation.navigate('Dashboard', { driverId: selectedDriver.id });
   };
 
   return (

@@ -31,10 +31,12 @@ type Props = {
   dsprDrivers;
   orders: Order[];
   dsprs;
+  driverId;
 };
 
-const HomeScreen = ({ route, navigation, userId, dsprDrivers, orders, dsprs }: Props) => {
-  const { driverId } = route.params;
+const HomeScreen = ({ route, navigation, driverId, userId, dsprDrivers, orders, dsprs }: Props) => {
+  // const { driverId } = route.params;
+  console.log('driverId', driverId);
 
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
@@ -181,11 +183,12 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
+  const driverId = state.api.dsprDriverId;
   const userId = state.api.loggedInUserId;
   const dsprDrivers = state.api.entities.dsprDrivers;
   const orders = state.api.entities.orders;
   const dsprs = getDSPRs(state);
-  return { userId, dsprDrivers, orders, dsprs };
+  return { driverId, userId, dsprDrivers, orders, dsprs };
 };
 
 const mapDispatchToProps = {};

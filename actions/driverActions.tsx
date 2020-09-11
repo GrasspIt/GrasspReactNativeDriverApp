@@ -2,6 +2,7 @@ import { CALL_API, Schemas } from '../middleware/api';
 
 import { getSpecificUser } from './userActions';
 import { getDSPR } from './dsprActions';
+import * as RootNavigation from '../navigation/RootNavigation';
 
 export const ASSIGN_DSPR_DRIVER = 'ASSIGN_DSPR_DRIVER';
 export const ASSIGN_DSPR_DRIVER_SUCCESS = 'ASSIGN_DSPR_DRIVER_SUCCESS';
@@ -51,8 +52,11 @@ const dsprDriverGetter = (dsprDriverId) => {
   };
 };
 
-export const setDsprDriverId = (dsprDriverId) => {
-  return { type: SET_DSPR_DRIVER_ID, payload: dsprDriverId };
+export const setDsprDriverId = (dsprDriverId) => (dispatch) => {
+  dispatch({ type: SET_DSPR_DRIVER_ID, payload: dsprDriverId });
+  RootNavigation.navigate('Main', {
+    screen: 'Dashboard',
+  });
 };
 
 export const getDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
