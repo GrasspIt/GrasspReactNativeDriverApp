@@ -58,10 +58,6 @@ const driverIdSetter = (item, dispatch) =>
     resolve();
   });
 
-// const driverIdSetter = (driverId) => {
-//   return { type: SET_DSPR_DRIVER_ID, payload: driverId }
-// }
-
 export const setDsprDriverId = (dsprDriverId) => (dispatch) => {
   driverIdSetter(dsprDriverId, dispatch).then(() =>
     RootNavigation.navigate('Main', {
