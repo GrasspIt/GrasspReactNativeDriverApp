@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert, ActivityIndicator } from 'react-native';
-import { ListItem, Icon, Button } from 'react-native-elements';
-import { State, Order, Address, User } from '../store/reduxStoreState';
+import { Text, StyleSheet, Alert } from 'react-native';
+import { ListItem, Button } from 'react-native-elements';
+import { State, Address, User } from '../store/reduxStoreState';
 import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../constants/Colors';
 import { markOrderInProcess, MARK_IN_PROCESS_FAILURE } from '../actions/orderActions';
-import * as RootNavigation from '../navigation/RootNavigation';
 
 const OrderItem = ({ orderInfo, navigation }) => {
   const dispatch = useDispatch();
@@ -33,7 +32,7 @@ const OrderItem = ({ orderInfo, navigation }) => {
     navigation.navigate('Details', { orderInfo, user, address });
   };
 
-  return (
+  return orderInfo ? (
     <ListItem bottomDivider onPress={handleNavigate}>
       {isLoading ? (
         <Button
@@ -60,16 +59,16 @@ const OrderItem = ({ orderInfo, navigation }) => {
       )}
       <ListItem.Content>
         <ListItem.Title>
-          {user.firstName} {user.lastName},{' '}
+          {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}
           <Text style={{ fontSize: 14 }}>${orderInfo.cashTotal}</Text>
         </ListItem.Title>
         <ListItem.Subtitle>
-          {address.street} {address.zipCode}
+          {orderInfo.address.street} {orderInfo.address.zipCode}
         </ListItem.Subtitle>
       </ListItem.Content>
       <ListItem.Chevron />
     </ListItem>
-  );
+  ) : null;
 };
 
 const styles = StyleSheet.create({});

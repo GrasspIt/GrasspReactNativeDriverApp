@@ -32,7 +32,7 @@ export const preloadAccessTokenFromLocalStorage = () => {
       type: PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE,
       accessToken,
     });
-    dispatch(updateLoggedInUserInfo());
+    dispatch(getLoggedInUser());
   };
 };
 
@@ -69,7 +69,6 @@ export const logout = () => {
 
 const apiError = (type, error, context) => {
   // logException(error, context);
-  console.log('Context:', context);
   return { type, error };
 };
 
@@ -134,9 +133,9 @@ const getLoggedInUser = () => ({
   },
 });
 
-export const updateLoggedInUserInfo = () => (dispatch) => {
-  return dispatch(getLoggedInUser());
-};
+// export const updateLoggedInUserInfo = () => (dispatch) => {
+//   return dispatch(getLoggedInUser());
+// };
 
 export const LOGIN = 'LOGIN';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -158,7 +157,7 @@ const login = (email, password) => {
 export const attemptLogin = (email, password) => (dispatch) => {
   dispatch(login(email, password)).then((response) => {
     if (!response.error) {
-      dispatch(updateLoggedInUserInfo());
+      dispatch(getLoggedInUser());
     }
   });
 };

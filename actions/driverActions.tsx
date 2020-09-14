@@ -52,18 +52,28 @@ const dsprDriverGetter = (dsprDriverId) => {
   };
 };
 
-const driverIdSetter = (item, dispatch) =>
-  new Promise((resolve, reject) => {
-    dispatch({ type: SET_DSPR_DRIVER_ID, payload: item });
-    resolve();
-  });
+const setDriverId = (driverId) => {
+  return { type: SET_DSPR_DRIVER_ID, payload: driverId };
+};
+// const driverIdSetter = (item, dispatch) =>
+//   new Promise((resolve, reject) => {
+//     dispatch(setDriverId(item));
+//     resolve();
+//   });
+
+// export const setDsprDriverId = (dsprDriverId) => (dispatch) => {
+//   dispatch(driverIdSetter(dsprDriverId, dispatch)).then(() =>
+//     RootNavigation.navigate('Main', {
+//       screen: 'Dashboard',
+//     })
+//   );
+// };
 
 export const setDsprDriverId = (dsprDriverId) => (dispatch) => {
-  driverIdSetter(dsprDriverId, dispatch).then(() =>
-    RootNavigation.navigate('Main', {
-      screen: 'Dashboard',
-    })
-  );
+  dispatch(setDriverId(dsprDriverId));
+  RootNavigation.navigate('Main', {
+    screen: 'Dashboard',
+  });
 };
 
 export const getDSPRDriver = (dsprDriverId) => (dispatch, getState) => {

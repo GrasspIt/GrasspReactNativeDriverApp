@@ -10,7 +10,6 @@ import { useIsFocused } from '@react-navigation/native';
 import { Order } from '../store/reduxStoreState';
 import {
   getDSPRDriver,
-  setDsprDriverId,
   setDriverLocation,
   GET_DSPR_DRIVER_FAILURE,
 } from '../actions/driverActions';
@@ -23,6 +22,7 @@ import TopNavBar from '../components/TopNavBar';
 import OrderItem from '../components/OrderItem';
 import { getDSPRs } from '../selectors/dsprSelectors';
 import { logout } from '../actions/oauthActions';
+import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriverSelector';
 
 type HomeScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Home'>;
 type Props = {
@@ -33,12 +33,19 @@ type Props = {
   orders: Order[];
   dsprs;
   driverId;
+  dsprDriver;
 };
 
-const HomeScreen = ({ route, navigation, driverId, userId, dsprDrivers, orders, dsprs }: Props) => {
-  // const { driverId } = route.params;
-  console.log('driverId', driverId);
-
+const HomeScreen = ({
+  route,
+  navigation,
+  driverId,
+  userId,
+  dsprDrivers,
+  orders,
+  dsprs,
+  dsprDriver,
+}: Props) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
@@ -48,16 +55,15 @@ const HomeScreen = ({ route, navigation, driverId, userId, dsprDrivers, orders, 
   const [orderList, setOrderList] = useState(
     Object.values(orders).filter((order) => order.orderStatus == 'queued' || 'in_process')
   );
-  const [dsprDriver, setDsprDriver] = useState(
-    Object.values(dsprDrivers).find((driver: any) => driver.id === driverId)
-  );
+  // const [dsprDriver, setDsprDriver] = useState(
+  //   Object.values(dsprDrivers).find((driver: any) => driver.id === driverId)
+  // );
 
   const dspr = dsprDriver
     ? Object.values(dsprs).filter((item) => item.id === dsprDriver.dspr)
     : null;
 
   const getDriverInfo = () => {
-    // dispatch(setDsprDriverId(driverId));
     dispatch<any>(getDSPRDriver(driverId)).then((response) => {
       if (response.type === GET_DSPR_DRIVER_FAILURE) {
         Alert.alert('Error', 'Failed to fetch driver info. Try again?', [
@@ -65,7 +71,7 @@ const HomeScreen = ({ route, navigation, driverId, userId, dsprDrivers, orders, 
           { text: 'Yes', onPress: () => getDriverInfo() },
         ]);
       } else {
-        setDsprDriver(response.response.entities.dsprDrivers[driverId]);
+        // setDsprDriver(response.response.entities.dsprDrivers[driverId]);
         dsprDriver
           ? setError('')
           : setError('An unexpected error occurred when fetching driver info. Please try again.');
@@ -80,14 +86,15 @@ const HomeScreen = ({ route, navigation, driverId, userId, dsprDrivers, orders, 
   };
   useInterval(refreshData, 60000);
 
+  console.log('dsprDriver', dsprDriver);
   useEffect(() => {
+    console.log('driverId', driverId);
     console.log('getDriverInfo');
     setIsLoading(true);
     getDriverInfo();
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
-    console.log('orders');
     setOrderList(
       Object.values(orders).filter((order) => order.orderStatus == 'queued' || 'in_process')
     );
@@ -139,9 +146,8 @@ const HomeScreen = ({ route, navigation, driverId, userId, dsprDrivers, orders, 
       ) : (
         <View style={styles.body}>
           <OnCallSwitch dsprDriver={dsprDriver} />
-          {/* {getOrderList()} */}
           <FlatList
-            data={orderList}
+            data={dsprDriver.queuedOrders}
             renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
             keyExtractor={(item: any) => item.id.toString()}
             style={styles.orders}
@@ -193,7 +199,8 @@ const mapStateToProps = (state) => {
   const dsprDrivers = state.api.entities.dsprDrivers;
   const orders = state.api.entities.orders;
   const dsprs = getDSPRs(state);
-  return { driverId, userId, dsprDrivers, orders, dsprs };
+  const dsprDriver = getDSPRDriverWithUserAndOrdersFromProps(state, { dsprDriverId: driverId });
+  return { driverId, userId, dsprDrivers, orders, dsprs, dsprDriver };
 };
 
 const mapDispatchToProps = {};

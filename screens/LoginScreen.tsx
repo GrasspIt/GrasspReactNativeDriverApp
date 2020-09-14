@@ -31,6 +31,7 @@ const LoginScreen = ({ navigation }: Props) => {
   };
 
   const handleNavigate = () => {
+    console.log('handleNavigate');
     if (loggedInUser && loggedInUser.dsprDrivers && loggedInUser.dsprDrivers.length === 1) {
       dispatch(setDsprDriverId(loggedInUser.dsprDrivers[0]));
     }
