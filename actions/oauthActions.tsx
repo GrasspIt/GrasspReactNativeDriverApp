@@ -63,6 +63,7 @@ export const LOGOUT = 'LOGOUT';
 export const logout = () => {
   SecureStore.deleteItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
   SecureStore.deleteItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_TYPE);
+  RootNavigation.navigate('Login', null);
   return { type: LOGOUT };
 };
 

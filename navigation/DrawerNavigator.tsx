@@ -41,7 +41,6 @@ const DrawerNavigator = ({ navigation, route }: Props) => {
     navigation.dispatch(DrawerActions.closeDrawer());
     if (dsprDrivers.length > 1) RootNavigation.navigate('DSPRs', null);
     dispatch(logout());
-    RootNavigation.navigate('Login', null);
   };
 
   return (

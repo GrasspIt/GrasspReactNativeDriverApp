@@ -22,6 +22,7 @@ import OnCallSwitch from '../components/OnCallSwitch';
 import TopNavBar from '../components/TopNavBar';
 import OrderItem from '../components/OrderItem';
 import { getDSPRs } from '../selectors/dsprSelectors';
+import { logout } from '../actions/oauthActions';
 
 type HomeScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Home'>;
 type Props = {
@@ -56,10 +57,13 @@ const HomeScreen = ({ route, navigation, driverId, userId, dsprDrivers, orders, 
     : null;
 
   const getDriverInfo = () => {
-    dispatch(setDsprDriverId(driverId));
+    // dispatch(setDsprDriverId(driverId));
     dispatch<any>(getDSPRDriver(driverId)).then((response) => {
       if (response.type === GET_DSPR_DRIVER_FAILURE) {
-        setError(response.error);
+        Alert.alert('Error', 'Failed to fetch driver info. Try again?', [
+          { text: 'No', onPress: () => dispatch(logout()) },
+          { text: 'Yes', onPress: () => getDriverInfo() },
+        ]);
       } else {
         setDsprDriver(response.response.entities.dsprDrivers[driverId]);
         dsprDriver
@@ -77,6 +81,7 @@ const HomeScreen = ({ route, navigation, driverId, userId, dsprDrivers, orders, 
   useInterval(refreshData, 60000);
 
   useEffect(() => {
+    console.log('getDriverInfo');
     setIsLoading(true);
     getDriverInfo();
   }, []);
