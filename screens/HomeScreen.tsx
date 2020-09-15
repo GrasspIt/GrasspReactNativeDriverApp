@@ -22,18 +22,26 @@ import OrderItem from '../components/OrderItem';
 import { getDSPRFromProps, getDSPRs } from '../selectors/dsprSelectors';
 import { logout } from '../actions/oauthActions';
 import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriverSelector';
+import { getLoggedInUser } from '../selectors/userSelectors';
 
 type HomeScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Home'>;
 type Props = {
   navigation: HomeScreenNavigationProp;
-  userId;
+  loggedInUser;
   dsprDrivers;
   dspr;
   driverId;
   dsprDriver;
 };
 
-const HomeScreen = ({ navigation, driverId, userId, dsprDrivers, dspr, dsprDriver }: Props) => {
+const HomeScreen = ({
+  navigation,
+  driverId,
+  loggedInUser,
+  dsprDrivers,
+  dspr,
+  dsprDriver,
+}: Props) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
@@ -49,7 +57,6 @@ const HomeScreen = ({ navigation, driverId, userId, dsprDrivers, dspr, dsprDrive
           { text: 'Yes', onPress: () => getDriverInfo() },
         ]);
       } else {
-        // setDsprDriver(response.response.entities.dsprDrivers[driverId]);
         dsprDriver
           ? setError('')
           : setError('An unexpected error occurred when fetching driver info. Please try again.');
@@ -60,16 +67,14 @@ const HomeScreen = ({ navigation, driverId, userId, dsprDrivers, dspr, dsprDrive
 
   // polling data from API while logged in
   const refreshData = () => {
-    if (userId) dispatch(getDSPRDriver(driverId));
+    if (loggedInUser) dispatch(getDSPRDriver(driverId));
   };
   useInterval(refreshData, 60000);
 
-  console.log('dspr', dspr);
   useEffect(() => {
-    console.log('getDriverInfo');
     setIsLoading(true);
     getDriverInfo();
-  }, [isFocused]);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -103,7 +108,7 @@ const HomeScreen = ({ navigation, driverId, userId, dsprDrivers, dspr, dsprDrive
     })();
   }, [dsprDriver, isTracking]);
 
-  return userId && dsprDriver ? (
+  return loggedInUser && dsprDriver ? (
     <>
       <TopNavBar dsprDrivers={dsprDrivers} dsprName={dspr.name} navigation={navigation} />
       {isLoading ? (
@@ -117,6 +122,7 @@ const HomeScreen = ({ navigation, driverId, userId, dsprDrivers, dspr, dsprDrive
       ) : (
         <View style={styles.body}>
           <OnCallSwitch dsprDriver={dsprDriver} />
+          <OrderItem orderInfo={dsprDriver.currentInProcessOrder} navigation={navigation} />
           <FlatList
             data={dsprDriver.queuedOrders}
             renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
@@ -166,11 +172,10 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   const driverId = state.api.dsprDriverId;
-  const userId = state.api.loggedInUserId;
   const dsprDriver = getDSPRDriverWithUserAndOrdersFromProps(state, { dsprDriverId: driverId });
   const dsprDrivers = state.api.entities.dsprDrivers;
   const dspr = dsprDriver ? getDSPRFromProps(state, { dsprId: dsprDriver.dspr }) : undefined;
-  return { driverId, userId, dsprDrivers, dspr, dsprDriver };
+  return { loggedInUser: getLoggedInUser(state), driverId, dsprDrivers, dspr, dsprDriver };
 };
 
 const mapDispatchToProps = {};

@@ -26,7 +26,7 @@ type Props = {
 };
 
 export type DrawerStackParamsList = {
-  DSPRs: { driverIds: number[] };
+  DSPRs: any;
   Dashboard: any;
 };
 
@@ -35,7 +35,8 @@ const Drawer = createDrawerNavigator<DrawerStackParamsList>();
 const DrawerNavigator = ({ navigation, route }: Props) => {
   const dispatch = useDispatch();
 
-  const dsprDrivers = useSelector<State, any>((state) => state.api.entities.dsprDrivers);
+  const dsprDriversObj = useSelector<State, any>((state) => state.api.entities.dsprDrivers);
+  const dsprDrivers = Object.keys(dsprDriversObj);
 
   const handleLogout = () => {
     navigation.dispatch(DrawerActions.closeDrawer());

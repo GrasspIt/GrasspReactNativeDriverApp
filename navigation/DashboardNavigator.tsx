@@ -21,14 +21,11 @@ export type DashboardStackParamsList = {
 const DashboardStack = createStackNavigator<DashboardStackParamsList>();
 
 const DashboardNavigator = ({ route, navigation }: Props) => {
-  const { driverId } = route.params;
-
   return (
     <DashboardStack.Navigator initialRouteName="Home" screenOptions={{ gestureEnabled: false }}>
       <DashboardStack.Screen
         name="Home"
         component={HomeScreen}
-        initialParams={{ driverId }}
         options={{
           headerShown: false,
         }}

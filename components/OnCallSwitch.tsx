@@ -19,7 +19,7 @@ const OnCallSwitch = ({ dsprDriver }: SwitchProps) => {
   };
 
   useEffect(() => {
-    setIsOnCall(dsprDriver.onCall);
+    if (dsprDriver) setIsOnCall(dsprDriver.onCall);
   }, [dsprDriver]);
 
   return (

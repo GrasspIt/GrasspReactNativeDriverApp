@@ -16,6 +16,8 @@ const DSPRScreen = ({ navigation }: Props) => {
 
   const dsprs = useSelector<State, Object>((state) => state.api.entities.DSPRs);
   const dsprDrivers = useSelector<State, Object>((state) => state.api.entities.dsprDrivers);
+  console.log('dsprs', dsprs);
+  console.log('dsprDrivers', dsprDrivers);
 
   const dsprDataList = Object.values(dsprs);
   let dsprDriverDataList;
@@ -26,9 +28,7 @@ const DSPRScreen = ({ navigation }: Props) => {
   const handleSelectDspr = (dsprId: number) => {
     // find the dsprDriver that matches the dsprId
     const selectedDriver = dsprDriverDataList.find((driver: any) => driver.dspr === dsprId);
-    // navigate to dashboard passing driverId as props
-    dispatch(setDsprDriverId(selectedDriver));
-    // navigation.navigate('Dashboard', { driverId: selectedDriver.id });
+    dispatch(setDsprDriverId(selectedDriver.id));
   };
 
   return (

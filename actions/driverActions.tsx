@@ -55,19 +55,6 @@ const dsprDriverGetter = (dsprDriverId) => {
 const setDriverId = (driverId) => {
   return { type: SET_DSPR_DRIVER_ID, payload: driverId };
 };
-// const driverIdSetter = (item, dispatch) =>
-//   new Promise((resolve, reject) => {
-//     dispatch(setDriverId(item));
-//     resolve();
-//   });
-
-// export const setDsprDriverId = (dsprDriverId) => (dispatch) => {
-//   dispatch(driverIdSetter(dsprDriverId, dispatch)).then(() =>
-//     RootNavigation.navigate('Main', {
-//       screen: 'Dashboard',
-//     })
-//   );
-// };
 
 export const setDsprDriverId = (dsprDriverId) => (dispatch) => {
   dispatch(setDriverId(dsprDriverId));

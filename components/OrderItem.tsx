@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, Alert } from 'react-native';
 import { ListItem, Button } from 'react-native-elements';
-import { State, Address, User } from '../store/reduxStoreState';
 import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../constants/Colors';
 import { markOrderInProcess, MARK_IN_PROCESS_FAILURE } from '../actions/orderActions';
@@ -11,11 +10,6 @@ const OrderItem = ({ orderInfo, navigation }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-
-  const address = useSelector<State, Address>(
-    (state) => state.api.entities.addresses[orderInfo.address]
-  );
-  const user = useSelector<State, User>((state) => state.api.entities.users[orderInfo.user]);
 
   const handleProcessOrder = () => {
     setIsLoading(true);
@@ -29,7 +23,7 @@ const OrderItem = ({ orderInfo, navigation }) => {
   };
 
   const handleNavigate = () => {
-    navigation.navigate('Details', { orderInfo, user, address });
+    navigation.navigate('Details', { orderInfo });
   };
 
   return orderInfo ? (

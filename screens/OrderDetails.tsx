@@ -46,7 +46,9 @@ type Props = {
 const OrderDetails = ({ route, navigation }: Props) => {
   const dispatch = useDispatch();
 
-  const { orderInfo, user, address } = route.params;
+  const { orderInfo } = route.params;
+  const user = orderInfo.user;
+  const address = orderInfo.address;
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState(orderInfo);
