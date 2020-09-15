@@ -55,6 +55,7 @@ import {
   SET_DRIVER_INFORMATION_SUCCESS,
   GET_ALL_DRIVERS_FOR_DSPR_SUCCESS,
   SET_DSPR_DRIVER_ID,
+  DRIVER_DATA_PENDING,
 } from '../actions/driverActions';
 // import {
 //     CREATE_DSP_PRODUCT_SUCCESS, GET_PRODUCT_SUCCESS, GET_ALL_PRODUCTS_FOR_DSP_SUCCESS, CREATE_NEW_CATEGORY_SUCCESS,
@@ -94,6 +95,7 @@ const initialState = {
   loggedInUserId: '',
   dsprDriverId: '',
   errorMessage: '',
+  isLoading: false,
   entities: entitiesInitialState,
 };
 
@@ -202,7 +204,7 @@ export default (state = initialState, action) => {
       //     case GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS:
       //     case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
       //     case UPDATE_DSPR_MENU_MECHANISM_SUCCESS:
-      const newState = { ...state, entities: entitiesInitialState };
+      const newState = { ...state, isLoading: false, entities: entitiesInitialState };
       return merge({}, newState, {
         entities: entitiesReducer(state.entities, action),
       });
@@ -219,6 +221,8 @@ export default (state = initialState, action) => {
       return merge({}, newStateWithoutMedicalRecommendations, {
         entities: entitiesReducer(newStateWithoutMedicalRecommendations.entities, action),
       });
+    case DRIVER_DATA_PENDING:
+      return { ...state, isLoading: true };
     case CLEAR_API_ERROR_MESSAGE:
       return { ...state, errorMessage: '' };
     // case MODIFY_ORDER_SUCCESS:

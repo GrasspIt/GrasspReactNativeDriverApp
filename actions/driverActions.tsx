@@ -40,17 +40,7 @@ export const SET_DSPR_DRIVER_ID = 'SET_DSPR_DRIVER_ID';
 export const GET_DSPR_DRIVER = 'GET_DSPR_DRIVER';
 export const GET_DSPR_DRIVER_SUCCESS = 'GET_DSPR_DRIVER_SUCCESS';
 export const GET_DSPR_DRIVER_FAILURE = 'GET_DSPR_DRIVER_FAILURE';
-
-const dsprDriverGetter = (dsprDriverId) => {
-  return {
-    [CALL_API]: {
-      httpAction: 'GET',
-      types: [GET_DSPR_DRIVER, GET_DSPR_DRIVER_SUCCESS, GET_DSPR_DRIVER_FAILURE],
-      endPoint: `dspr/driver/${dsprDriverId}`,
-      schema: Schemas.DSPR_DRIVER,
-    },
-  };
-};
+export const DRIVER_DATA_PENDING = 'DRIVER_DATA_PENDING';
 
 const setDriverId = (driverId) => {
   return { type: SET_DSPR_DRIVER_ID, payload: driverId };
@@ -63,8 +53,20 @@ export const setDsprDriverId = (dsprDriverId) => (dispatch) => {
   });
 };
 
+const dsprDriverGetter = (dsprDriverId) => {
+  return {
+    [CALL_API]: {
+      httpAction: 'GET',
+      types: [GET_DSPR_DRIVER, GET_DSPR_DRIVER_SUCCESS, GET_DSPR_DRIVER_FAILURE],
+      endPoint: `dspr/driver/${dsprDriverId}`,
+      schema: Schemas.DSPR_DRIVER,
+    },
+  };
+};
+
 export const getDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
-  return dispatch(dsprDriverGetter(dsprDriverId)).then((response) => {
+  dispatch({ type: DRIVER_DATA_PENDING });
+  dispatch(dsprDriverGetter(dsprDriverId)).then((response) => {
     return response;
   });
 };

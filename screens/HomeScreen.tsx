@@ -7,11 +7,7 @@ import { useInterval } from '../hooks/useInterval';
 import { useDispatch, connect } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 
-import {
-  getDSPRDriver,
-  setDriverLocation,
-  GET_DSPR_DRIVER_FAILURE,
-} from '../actions/driverActions';
+import { getDSPRDriver, setDriverLocation } from '../actions/driverActions';
 import { store } from '../store/store';
 
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
@@ -27,25 +23,17 @@ type HomeScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'H
 type Props = {
   navigation: HomeScreenNavigationProp;
   loggedInUser;
-  dsprDrivers;
   dspr;
   driverId;
   dsprDriver;
+  isLoading;
 };
 
-const HomeScreen = ({
-  navigation,
-  driverId,
-  loggedInUser,
-  dsprDrivers,
-  dspr,
-  dsprDriver,
-}: Props) => {
+const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLoading }: Props) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
   const [isTracking, setIsTracking] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const orderList =
@@ -54,22 +42,6 @@ const HomeScreen = ({
       : dsprDriver && dsprDriver.queuedOrders
       ? [...dsprDriver.queuedOrders]
       : [];
-  // const getDriverInfo = () => {
-  //   dispatch<any>(getDSPRDriver(driverId)).then((response) => {
-  //     if (response.type === GET_DSPR_DRIVER_FAILURE) {
-  //       Alert.alert('Error', 'Failed to fetch driver info. Try again?', [
-  //         { text: 'No', onPress: () => dispatch(logout()) },
-  //         { text: 'Yes', onPress: () => getDriverInfo() },
-  //       ]);
-  //     } else {
-  //       let responseDriver = response.entities.dsprDrivers[0];
-  //       console.log('responseDriver', responseDriver);
-  //       setOrderList([responseDriver.currentInProcessOrder, ...responseDriver.queuedOrders]);
-  //       setError('');
-  //     }
-  //     setIsLoading(false);
-  //   });
-  // };
 
   // polling data from API while logged in
   const getDriverData = () => {
@@ -177,9 +149,15 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   const driverId = state.api.dsprDriverId;
   const dsprDriver = getDSPRDriverWithUserAndOrdersFromProps(state, { dsprDriverId: driverId });
-  const dsprDrivers = state.api.entities.dsprDrivers;
   const dspr = dsprDriver ? getDSPRFromProps(state, { dsprId: dsprDriver.dspr }) : undefined;
-  return { loggedInUser: getLoggedInUser(state), driverId, dsprDrivers, dspr, dsprDriver };
+  const isLoading = state.api.isLoading;
+  return {
+    loggedInUser: getLoggedInUser(state),
+    driverId,
+    dspr,
+    dsprDriver,
+    isLoading,
+  };
 };
 
 const mapDispatchToProps = {};
