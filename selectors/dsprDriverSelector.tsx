@@ -38,35 +38,23 @@ export const getDSPRDriverWithUserAndOrdersFromProps = createSelector(
     return driver
       ? users
         ? locations
-          ? orders
-            ? addresses
-              ? driver.queuedOrders
-                ? {
-                    ...driver,
-                    user: users[driver.user],
-                    currentLocation: locations[driver.currentLocation],
-                    queuedOrders: driver.queuedOrders.map((orderId) =>
-                      mapAddressIntoOrder(orderId, orders, addresses, users, medicalRecs, idDocs)
-                    ),
-                    currentInProcessOrder: mapAddressIntoOrder(
-                      driver.currentInProcessOrder,
-                      orders,
-                      addresses,
-                      users,
-                      medicalRecs,
-                      idDocs
-                    ),
-                  }
-                : {
-                    ...driver,
-                    user: users[driver.user],
-                    currentLocation: locations[driver.currentLocation],
-                  }
-              : {
-                  ...driver,
-                  user: users[driver.user],
-                  currentLocation: locations[driver.currentLocation],
-                }
+          ? orders && addresses && driver.queuedOrders
+            ? {
+                ...driver,
+                user: users[driver.user],
+                currentLocation: locations[driver.currentLocation],
+                queuedOrders: driver.queuedOrders.map((orderId) =>
+                  mapAddressIntoOrder(orderId, orders, addresses, users, medicalRecs, idDocs)
+                ),
+                currentInProcessOrder: mapAddressIntoOrder(
+                  driver.currentInProcessOrder,
+                  orders,
+                  addresses,
+                  users,
+                  medicalRecs,
+                  idDocs
+                ),
+              }
             : {
                 ...driver,
                 user: users[driver.user],

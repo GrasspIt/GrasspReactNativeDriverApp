@@ -57,7 +57,7 @@ const OrderDetails = ({ route, navigation }: Props) => {
     (state) => getUserNotesFromProps(state, { userId: user.id }),
     shallowEqual
   );
-  const idDocument = useSelector<State, IdDocument>(
+  const idDocument = useSelector<State, IdDocument | null>(
     (state) =>
       getUserIdDocumentFromPropsWithOrder(state, {
         userId: user.id,
@@ -119,7 +119,7 @@ const OrderDetails = ({ route, navigation }: Props) => {
           <ScrollView style={styles.scroll}>
             <UserNotes
               createUserNote={(userId, note, dsprDriverId) =>
-                dispatch(createUserNote(userId, note, dsprDriverId))
+                dispatch(createUserNote(userId, note, dsprDriverId, null))
               }
               hideUserNote={(noteId) => dispatch(hideUserNote(noteId))}
               unhideUserNote={(noteId) => dispatch(unhideUserNote(noteId))}
@@ -156,17 +156,19 @@ const OrderDetails = ({ route, navigation }: Props) => {
               </ListItem>
             )}
 
-            <ListItem>
-              <ListItem.Title>
-                {date.toLocaleString('en-us', { month: 'long' })} {date.getDate()},{' '}
-                {date.getFullYear()}, at{' '}
-                {date.toLocaleString('en-US', {
-                  hour: 'numeric',
-                  minute: 'numeric',
-                  hour12: true,
-                })}{' '}
-              </ListItem.Title>
-            </ListItem>
+            {date ? (
+              <ListItem>
+                <ListItem.Title>
+                  {date.toLocaleString('en-us', { month: 'long' })} {date.getDate()},{' '}
+                  {date.getFullYear()}, at{' '}
+                  {date.toLocaleString('en-US', {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true,
+                  })}{' '}
+                </ListItem.Title>
+              </ListItem>
+            ) : null}
 
             {user ? (
               <ListItem>

@@ -37,10 +37,10 @@ const OrderItem = ({ orderInfo, navigation }) => {
             backgroundColor: Colors.primary,
           }}
         />
+      ) : orderInfo.orderStatus == 'in_process' ? (
+        <Text style={styles.inProcess}>Order In Process</Text>
       ) : (
         <Button
-          disabled={orderInfo.orderStatus == 'in_process'}
-          disabledStyle={{ backgroundColor: Colors.light }}
           title="Set In Process"
           titleStyle={{ fontSize: 16 }}
           buttonStyle={{
@@ -65,6 +65,16 @@ const OrderItem = ({ orderInfo, navigation }) => {
   ) : null;
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  inProcess: {
+    width: 80,
+    padding: 9,
+    color: Colors.primary,
+    fontSize: 16,
+    borderColor: Colors.primary,
+    borderWidth: 1,
+    borderRadius: 4,
+  },
+});
 
 export default OrderItem;

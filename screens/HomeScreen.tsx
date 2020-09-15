@@ -49,6 +49,8 @@ const HomeScreen = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const orderList = [dsprDriver.currentInProcessOrder, ...dsprDriver.queuedOrders];
+
   const getDriverInfo = () => {
     dispatch<any>(getDSPRDriver(driverId)).then((response) => {
       if (response.type === GET_DSPR_DRIVER_FAILURE) {
@@ -122,9 +124,8 @@ const HomeScreen = ({
       ) : (
         <View style={styles.body}>
           <OnCallSwitch dsprDriver={dsprDriver} />
-          <OrderItem orderInfo={dsprDriver.currentInProcessOrder} navigation={navigation} />
           <FlatList
-            data={dsprDriver.queuedOrders}
+            data={orderList}
             renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
             keyExtractor={(item: any) => item.id.toString()}
             style={styles.orders}
