@@ -10,7 +10,7 @@ type SwitchProps = { dsprDriver: DsprDriver };
 const OnCallSwitch = ({ dsprDriver }: SwitchProps) => {
   const dispatch = useDispatch();
 
-  const [isOnCall, setIsOnCall] = useState(dsprDriver.onCall);
+  const [isOnCall, setIsOnCall] = useState<boolean | undefined>(false);
 
   const toggleSwitch = () => {
     let onCallString = !dsprDriver.onCall ? 'on' : null;

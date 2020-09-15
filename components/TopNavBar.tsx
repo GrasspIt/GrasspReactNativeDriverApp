@@ -1,6 +1,6 @@
 import React from 'react';
-import { Image, StyleSheet } from 'react-native';
-import { Appbar, Menu } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
+import { Appbar } from 'react-native-paper';
 import Colors from '../constants/Colors';
 
 const TopNavBar = ({ navigation, dsprName }) => {

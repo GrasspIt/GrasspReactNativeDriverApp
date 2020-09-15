@@ -19,7 +19,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import OnCallSwitch from '../components/OnCallSwitch';
 import TopNavBar from '../components/TopNavBar';
 import OrderItem from '../components/OrderItem';
-import { getDSPRFromProps, getDSPRs } from '../selectors/dsprSelectors';
+import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { logout } from '../actions/oauthActions';
 import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
@@ -110,7 +110,7 @@ const HomeScreen = ({
 
   return loggedInUser && dsprDriver ? (
     <>
-      <TopNavBar dsprDrivers={dsprDrivers} dsprName={dspr.name} navigation={navigation} />
+      <TopNavBar dsprName={dspr.name} navigation={navigation} />
       {isLoading ? (
         <View style={styles.container}>
           <ActivityIndicator size="large" color={Colors.primary} />
@@ -146,7 +146,7 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
   }
   if (data) {
     console.log('location update');
-    const { locations } = data;
+    const { locations } = data as any;
     let lat = locations[0].coords.latitude;
     let long = locations[0].coords.longitude;
     //dispatch location to api
