@@ -20,7 +20,6 @@ import OnCallSwitch from '../components/OnCallSwitch';
 import TopNavBar from '../components/TopNavBar';
 import OrderItem from '../components/OrderItem';
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
-import { logout } from '../actions/oauthActions';
 import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
 
@@ -49,34 +48,38 @@ const HomeScreen = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const orderList = [dsprDriver.currentInProcessOrder, ...dsprDriver.queuedOrders];
-
-  const getDriverInfo = () => {
-    dispatch<any>(getDSPRDriver(driverId)).then((response) => {
-      if (response.type === GET_DSPR_DRIVER_FAILURE) {
-        Alert.alert('Error', 'Failed to fetch driver info. Try again?', [
-          { text: 'No', onPress: () => dispatch(logout()) },
-          { text: 'Yes', onPress: () => getDriverInfo() },
-        ]);
-      } else {
-        dsprDriver
-          ? setError('')
-          : setError('An unexpected error occurred when fetching driver info. Please try again.');
-      }
-      setIsLoading(false);
-    });
-  };
+  const orderList =
+    dsprDriver && dsprDriver.queuedOrders && dsprDriver.currentInProcessOrder
+      ? [dsprDriver.currentInProcessOrder, ...dsprDriver.queuedOrders]
+      : dsprDriver && dsprDriver.queuedOrders
+      ? [...dsprDriver.queuedOrders]
+      : [];
+  // const getDriverInfo = () => {
+  //   dispatch<any>(getDSPRDriver(driverId)).then((response) => {
+  //     if (response.type === GET_DSPR_DRIVER_FAILURE) {
+  //       Alert.alert('Error', 'Failed to fetch driver info. Try again?', [
+  //         { text: 'No', onPress: () => dispatch(logout()) },
+  //         { text: 'Yes', onPress: () => getDriverInfo() },
+  //       ]);
+  //     } else {
+  //       let responseDriver = response.entities.dsprDrivers[0];
+  //       console.log('responseDriver', responseDriver);
+  //       setOrderList([responseDriver.currentInProcessOrder, ...responseDriver.queuedOrders]);
+  //       setError('');
+  //     }
+  //     setIsLoading(false);
+  //   });
+  // };
 
   // polling data from API while logged in
-  const refreshData = () => {
+  const getDriverData = () => {
     if (loggedInUser) dispatch(getDSPRDriver(driverId));
   };
-  useInterval(refreshData, 60000);
+  useInterval(getDriverData, 60000);
 
   useEffect(() => {
-    setIsLoading(true);
-    getDriverInfo();
-  }, []);
+    getDriverData();
+  }, [driverId]);
 
   useEffect(() => {
     (async () => {

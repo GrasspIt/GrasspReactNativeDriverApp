@@ -15,15 +15,10 @@ const DSPRScreen = ({ navigation }: Props) => {
   const dispatch = useDispatch();
 
   const dsprs = useSelector<State, Object>((state) => state.api.entities.DSPRs);
-  const dsprDrivers = useSelector<State, Object>((state) => state.api.entities.dsprDrivers);
-  console.log('dsprs', dsprs);
-  console.log('dsprDrivers', dsprDrivers);
-
   const dsprDataList = Object.values(dsprs);
-  let dsprDriverDataList;
-  if (dsprDrivers) {
-    dsprDriverDataList = Object.values(dsprDrivers);
-  }
+
+  const dsprDrivers = useSelector<State, Object>((state) => state.api.entities.dsprDrivers);
+  const dsprDriverDataList = dsprDrivers && Object.values(dsprDrivers);
 
   const handleSelectDspr = (dsprId: number) => {
     // find the dsprDriver that matches the dsprId
