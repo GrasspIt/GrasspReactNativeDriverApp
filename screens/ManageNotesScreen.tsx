@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Checkbox, List, Dialog } from 'react-native-paper';
+import { ScrollView, View, StyleSheet } from 'react-native';
+import { Button, Dialog } from 'react-native-paper';
+import { ListItem } from 'react-native-elements';
 import NewUserNoteForm from '../components/NewUserNoteForm';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
-import { useSelector, useDispatch, shallowEqual, connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   getSpecificUser,
   createUserNote,
@@ -23,13 +25,7 @@ type Props = {
   showTitle?: boolean;
 };
 
-const ManageNotes = ({
-  navigation,
-  route,
-}: //   userId,
-//   dsprDriverId,
-//   userNotes,
-Props) => {
+const ManageNotes = ({ navigation, route }: Props) => {
   const dispatch = useDispatch();
   const { userId, dsprDriverId, userNotes } = route.params;
   const [showNotes, setShowNotes] = useState(false);
@@ -47,68 +43,60 @@ Props) => {
   };
 
   return (
-    <Card>
-      <Card.Title title="Notes" />
-      <Card.Actions>
+    <>
+      <ScrollView style={{ flex: 1, backgroundColor: Colors.light }}>
+        {userNotes && userNotes.length > 0 ? (
+          userNotes.map((userNote) => (
+            <ListItem key={userNote.id}>
+              <ListItem.Content>
+                <ListItem.Title>{userNote.note}</ListItem.Title>
+                <ListItem.CheckBox
+                  checkedColor={Colors.primary}
+                  title={userNote.isVisible ? 'visible' : 'hidden'}
+                  onPress={
+                    userNote.isVisible
+                      ? () => hideUserNote(userNote.id)
+                      : () => unhideUserNote(userNote.id)
+                  }
+                  checked={userNote.isVisible}
+                />
+              </ListItem.Content>
+            </ListItem>
+          ))
+        ) : (
+          <View>No User Notes</View>
+        )}
+        <Dialog style={{ flex: 1 }} visible={showNotes} onDismiss={() => setShowNotes(false)}>
+          <Dialog.Title>New Note</Dialog.Title>
+          <Dialog.Content>
+            <NewUserNoteForm
+              closeDialog={() => setShowNotes(false)}
+              onSubmit={handleNewNoteSubmit}
+            />
+          </Dialog.Content>
+        </Dialog>
+      </ScrollView>
+      <View style={styles.buttonContainer}>
         <Button
           mode="contained"
           color={Colors.primary}
           labelStyle={{ color: Colors.light }}
           onPress={() => setShowNotes(true)}
+          style={{ width: '100%' }}
         >
           Create Note
         </Button>
-
-        <Checkbox
-          status={showHidden ? 'checked' : 'unchecked'}
-          color={Colors.primary}
-          onPress={() => {
-            setShowHidden(!showHidden);
-          }}
-        >
-          Show Hidden
-        </Checkbox>
-      </Card.Actions>
-      <Card.Content>
-        <List.Section>
-          {userNotes
-            ? userNotes
-                .filter((userNote) => (showHidden ? userNote : userNote.isVisible))
-                .map((userNote) => (
-                  <>
-                    <List.Item key={userNote.id} title={userNote.note} />
-                    {userNote.isVisible ? (
-                      <Button
-                        color={Colors.primary}
-                        labelStyle={{ color: Colors.light }}
-                        mode="contained"
-                        onPress={() => hideUserNote(userNote.id)}
-                      >
-                        HIDE
-                      </Button>
-                    ) : (
-                      <Button
-                        color={Colors.primary}
-                        labelStyle={{ color: Colors.light }}
-                        mode="contained"
-                        onPress={() => unhideUserNote(userNote.id)}
-                      >
-                        UNHIDE
-                      </Button>
-                    )}
-                  </>
-                ))
-            : null}
-        </List.Section>
-      </Card.Content>
-      <Dialog visible={showNotes} onDismiss={() => setShowNotes(false)}>
-        <Dialog.Title>New Note</Dialog.Title>
-        <Dialog.Content>
-          <NewUserNoteForm closeDialog={() => setShowNotes(false)} onSubmit={handleNewNoteSubmit} />
-        </Dialog.Content>
-      </Dialog>
-    </Card>
+      </View>
+    </>
   );
 };
+
+const styles = StyleSheet.create({
+  buttonContainer: {
+    backgroundColor: Colors.light,
+    padding: 10,
+    bottom: 0,
+  },
+});
 
 export default ManageNotes;

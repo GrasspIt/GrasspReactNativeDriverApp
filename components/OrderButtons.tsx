@@ -42,7 +42,7 @@ const OrderButtons = ({ orderId, navigation, orderStatus }) => {
             labelStyle={{ color: Colors.light }}
             onPress={handleCancelOrder}
           >
-            Cancel Order{' '}
+            Cancel Order
           </Button>
           <Button
             mode="contained"
@@ -61,7 +61,7 @@ const OrderButtons = ({ orderId, navigation, orderStatus }) => {
             labelStyle={{ color: Colors.light }}
             onPress={handleCancelOrder}
           >
-            Cancel Order{' '}
+            Cancel Order
           </Button>
         </View>
       )}

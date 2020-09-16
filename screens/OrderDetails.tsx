@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { ListItem, Button } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
+import { Button, Card, Title } from 'react-native-paper';
 import { useSelector, useDispatch, shallowEqual, connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { getUserNotesFromProps } from '../selectors/userSelectors';
@@ -77,6 +78,7 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
   const handleManageNotes = () => {
     navigation.navigate('Notes', { userId: user.id, dsprDriverId: order.dsprDriver, userNotes });
   };
+
   return (
     <>
       {isLoading ? (
@@ -90,19 +92,35 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
       ) : (
         <>
           <ScrollView style={styles.scroll}>
-            {userNotes
-              ? userNotes.map((userNote) =>
-                  userNote.isVisible ? (
-                    <ListItem key={userNote.id}>
-                      <ListItem.Content>
-                        <ListItem.Title>{userNote.note}</ListItem.Title>
-                        <ListItem.Subtitle>{userNote.updatedTimestamp}</ListItem.Subtitle>
-                      </ListItem.Content>
-                    </ListItem>
-                  ) : null
-                )
-              : null}
-            <Button title="Manage Notes" onPress={handleManageNotes} />
+            <Card>
+              <Card.Title title="Notes" />
+              <Card.Content>
+                {userNotes ? (
+                  userNotes.map((userNote) =>
+                    userNote.isVisible ? (
+                      <ListItem key={userNote.id}>
+                        <ListItem.Content>
+                          <ListItem.Title>{userNote.note}</ListItem.Title>
+                          <ListItem.Subtitle>{userNote.updatedTimestamp}</ListItem.Subtitle>
+                        </ListItem.Content>
+                      </ListItem>
+                    ) : null
+                  )
+                ) : (
+                  <Text>No Notes</Text>
+                )}
+              </Card.Content>
+              <Card.Actions style={{ justifyContent: 'center' }}>
+                <Button
+                  mode="contained"
+                  onPress={handleManageNotes}
+                  color={Colors.primary}
+                  labelStyle={{ color: Colors.light }}
+                >
+                  Manage Notes
+                </Button>
+              </Card.Actions>
+            </Card>
 
             {order && order.specialInstructions ? (
               <ListItem>
