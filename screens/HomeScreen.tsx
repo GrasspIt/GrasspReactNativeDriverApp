@@ -100,6 +100,13 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
         <View style={styles.body}>
           <OnCallSwitch dsprDriver={dsprDriver} />
           <FlatList
+            ListEmptyComponent={
+              <View style={styles.container}>
+                <Text>No Orders</Text>
+              </View>
+            }
+            onRefresh={() => getDriverData()}
+            refreshing={isLoading}
             data={orderList}
             renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
             keyExtractor={(item: any) => item.id.toString()}
