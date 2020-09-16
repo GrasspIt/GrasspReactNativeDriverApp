@@ -136,6 +136,7 @@ export const getOrderCost = (order) => (dispatch) => {
   return dispatch(orderCostGetter(order));
 };
 
+export const ORDER_DETAILS_PENDING = 'ORDER_DETAILS_PENDING';
 export const GET_ORDER_DETAILS_WITH_ID = 'GET_ORDER_DETAILS_WITH_ID';
 export const GET_ORDER_DETAILS_WITH_ID_SUCCESS = 'GET_ORDER_DETAILS_WITH_ID_SUCCESS';
 export const GET_ORDER_DETAILS_WITH_ID_FAILURE = 'GET_ORDER_DETAILS_WITH_ID_FAILURE';
@@ -156,5 +157,6 @@ const orderGetter = (orderId: number) => {
 };
 
 export const getOrderDetailsWithId = (orderId: number) => (dispatch) => {
-  return dispatch(orderGetter(orderId));
+  dispatch({ type: ORDER_DETAILS_PENDING });
+  dispatch(orderGetter(orderId));
 };

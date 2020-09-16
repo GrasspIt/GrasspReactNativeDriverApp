@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { getOrderDetailsWithId, GET_ORDER_DETAILS_WITH_ID_FAILURE } from '../actions/orderActions';
+import { useSelector, useDispatch, shallowEqual, connect } from 'react-redux';
+import { getOrderDetailsWithId } from '../actions/orderActions';
 import {
   getSpecificUser,
   createUserNote,
@@ -42,17 +42,16 @@ type DetailsScreenNavigationProp = StackNavigationProp<DashboardStackParamsList,
 type Props = {
   navigation: DetailsScreenNavigationProp;
   route;
+  isLoading;
 };
-const OrderDetails = ({ route, navigation }: Props) => {
+const OrderDetails = ({ route, navigation, isLoading }: Props) => {
   const dispatch = useDispatch();
 
   const { orderInfo } = route.params;
   const user = orderInfo.user;
   const address = orderInfo.address;
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState(orderInfo);
-
   const userNotes = useSelector<State, any[]>(
     (state) => getUserNotesFromProps(state, { userId: user.id }),
     shallowEqual
@@ -78,31 +77,8 @@ const OrderDetails = ({ route, navigation }: Props) => {
     medicalRecommendations[order.userMedicalRecommendation];
 
   useEffect(() => {
-    const getOrderDetails = () => {
-      dispatch<any>(getOrderDetailsWithId(orderInfo.id)).then((response) => {
-        if (response.type === GET_ORDER_DETAILS_WITH_ID_FAILURE) {
-          setError(response.error);
-        } else {
-          const orderWithDetails =
-            response.response &&
-            response.response.entities &&
-            response.response.entities.orders &&
-            response.response.entities.orders[orderInfo.id];
-          if (orderWithDetails) {
-            setError('');
-            setOrder(orderWithDetails);
-          } else {
-            setError(
-              'An unexpected error happened when fetching the order details. Please try again.'
-            );
-          }
-        }
-        setIsLoading(false);
-      });
-    };
-    setIsLoading(true);
-    getOrderDetails();
-  }, [orderInfo]);
+    dispatch(getOrderDetailsWithId(orderInfo.id));
+  }, [orderInfo.id]);
 
   return (
     <>
@@ -129,7 +105,7 @@ const OrderDetails = ({ route, navigation }: Props) => {
               refreshUser={() => dispatch(getSpecificUser(user.id))}
             />
 
-            {order.specialInstructions ? (
+            {order && order.specialInstructions ? (
               <ListItem>
                 <ListItem.Content>
                   <ListItem.Title style={{ fontWeight: 'bold' }}>
@@ -140,7 +116,7 @@ const OrderDetails = ({ route, navigation }: Props) => {
               </ListItem>
             ) : null}
 
-            {order.userFirstTimeOrderWithDSPR ? (
+            {order && order.userFirstTimeOrderWithDSPR ? (
               <ListItem>
                 <ListItem.Title style={{ fontWeight: 'bold' }}>FIRST TIME ORDER</ListItem.Title>
               </ListItem>
@@ -223,7 +199,7 @@ const OrderDetails = ({ route, navigation }: Props) => {
               : null}
             <Divider />
 
-            {order.coupon ? (
+            {order && order.coupon ? (
               <>
                 <ListItem>
                   <ListItem.Content>
@@ -249,7 +225,7 @@ const OrderDetails = ({ route, navigation }: Props) => {
               </ListItem.Content>
             </ListItem>
 
-            {order.orderTaxDetails.length !== 0 ? (
+            {order && order.orderTaxDetails && order.orderTaxDetails.length !== 0 ? (
               order.orderTaxDetails
                 .slice(0)
                 .reverse()
@@ -313,4 +289,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OrderDetails;
+const mapStateToProps = (state) => {
+  // const driverId = state.api.dsprDriverId;
+  // const dsprDriver = getDSPRDriverWithUserAndOrdersFromProps(state, { dsprDriverId: driverId });
+  // const dspr = dsprDriver ? getDSPRFromProps(state, { dsprId: dsprDriver.dspr }) : undefined;
+  const isLoading = state.api.isLoading;
+  return {
+    isLoading,
+  };
+};
+
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(OrderDetails);

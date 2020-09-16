@@ -83,6 +83,7 @@ import {
   CANCEL_ORDER_SUCCESS,
   MODIFY_ORDER_SUCCESS,
   GET_ORDER_DETAILS_WITH_ID_SUCCESS,
+  ORDER_DETAILS_PENDING,
 } from '../actions/orderActions';
 // import { SEND_TEXT_BLAST_SUCCESS } from '../actions/marketingActions';
 // import { GET_METRICS_FOR_USERS_SUCCESS } from '../actions/metricsActions'
@@ -219,6 +220,7 @@ export default (state = initialState, action) => {
         entities: entitiesReducer(newStateWithoutMedicalRecommendations.entities, action),
       });
     case DRIVER_DATA_PENDING:
+    case ORDER_DETAILS_PENDING:
       return { ...state, isLoading: true };
     case CLEAR_API_ERROR_MESSAGE:
       return { ...state, errorMessage: '' };
