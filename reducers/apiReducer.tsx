@@ -110,9 +110,6 @@ export default (state = initialState, action) => {
     case LOGOUT:
       return {
         ...state,
-        accessToken: '',
-        loggedInUserId: '',
-        dsprDriverId: '',
       };
     case LOGGED_IN_USER_INFO_SUCCESS:
       let entities = action.response.entities;

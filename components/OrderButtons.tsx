@@ -4,23 +4,13 @@ import { Button } from 'react-native-paper';
 import Colors from '../constants/Colors';
 import { completeOrder, cancelOrder } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
-import { CANCEL_ORDER_FAILURE, COMPLETE_ORDER_FAILURE } from '../actions/orderActions';
 
 const OrderButtons = ({ orderId, navigation }) => {
   const dispatch = useDispatch();
 
   const cancelAndReturn = () => {
-    // dispatch(cancelOrder(orderId));
-    // navigation.goBack();
-    dispatch<any>(cancelOrder(orderId)).then((response) => {
-      if (response.type === CANCEL_ORDER_FAILURE) {
-        Alert.alert('Cancel Order Failure', response.error);
-      } else {
-        Alert.alert('Order Canceled', undefined, [
-          { text: 'Ok', onPress: () => navigation.navigate('Home') },
-        ]);
-      }
-    });
+    dispatch(cancelOrder(orderId));
+    navigation.navigate('Home');
   };
 
   const handleCancelOrder = () => {
@@ -31,17 +21,8 @@ const OrderButtons = ({ orderId, navigation }) => {
   };
 
   const completeAndReturn = () => {
-    // dispatch(completeOrder(orderId));
-    // navigation.goBack();
-    dispatch<any>(completeOrder(orderId)).then((response) => {
-      if (response.type === COMPLETE_ORDER_FAILURE) {
-        Alert.alert('Complete Order Failure', response.error);
-      } else {
-        Alert.alert('Order Completed', undefined, [
-          { text: 'Ok', onPress: () => navigation.navigate('Home') },
-        ]);
-      }
-    });
+    dispatch(completeOrder(orderId));
+    navigation.navigate('Home');
   };
 
   const handleCompleteOrder = () => {
