@@ -13,7 +13,7 @@ const OrderItem = ({ orderInfo, navigation }) => {
   };
 
   const handleNavigate = () => {
-    navigation.navigate('Details', { orderInfo });
+    navigation.navigate('Details', { order: orderInfo });
   };
 
   return orderInfo ? (

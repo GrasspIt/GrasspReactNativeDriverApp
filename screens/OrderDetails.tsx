@@ -47,11 +47,11 @@ type Props = {
 const OrderDetails = ({ route, navigation, isLoading }: Props) => {
   const dispatch = useDispatch();
 
-  const { orderInfo } = route.params;
-  const user = orderInfo.user;
-  const address = orderInfo.address;
+  const { order } = route.params;
+  const user = order && order.user;
+  const address = order && order.address;
   const [error, setError] = useState('');
-  const [order, setOrder] = useState(orderInfo);
+
   const userNotes = useSelector<State, any[]>(
     (state) => getUserNotesFromProps(state, { userId: user.id }),
     shallowEqual
@@ -69,7 +69,7 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
     shallowEqual
   );
 
-  const date = parseDate(orderInfo.createdTime);
+  const date = parseDate(order.createdTime);
   const birthDate = idDocument && parseDate(idDocument.birthDate);
   const medicalRecommendation =
     order &&
@@ -77,8 +77,8 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
     medicalRecommendations[order.userMedicalRecommendation];
 
   useEffect(() => {
-    dispatch(getOrderDetailsWithId(orderInfo.id));
-  }, [orderInfo.id]);
+    dispatch(getOrderDetailsWithId(order.id));
+  }, [order.id]);
 
   return (
     <>
@@ -219,7 +219,7 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
             <ListItem>
               <ListItem.Content>
                 <ListItem.Title>Subtotal</ListItem.Title>
-                <ListItem.Subtitle>{`$${orderInfo.cashTotalPreTaxesAndFees.toFixed(
+                <ListItem.Subtitle>{`$${order.cashTotalPreTaxesAndFees.toFixed(
                   2
                 )}`}</ListItem.Subtitle>
               </ListItem.Content>
@@ -249,20 +249,20 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
             <ListItem>
               <ListItem.Content>
                 <ListItem.Title>Delivery Fee</ListItem.Title>
-                <ListItem.Subtitle>{`$${orderInfo.deliveryFee.toFixed(2)}`}</ListItem.Subtitle>
+                <ListItem.Subtitle>{`$${order.deliveryFee.toFixed(2)}`}</ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
 
             <ListItem>
               <ListItem.Content>
-                <ListItem.Title>{`Total: $${orderInfo.cashTotal.toFixed(2)}`}</ListItem.Title>
+                <ListItem.Title>{`Total: $${order.cashTotal.toFixed(2)}`}</ListItem.Title>
               </ListItem.Content>
             </ListItem>
           </ScrollView>
           <OrderButtons
             navigation={navigation}
-            orderId={orderInfo.id}
-            orderStatus={orderInfo.orderStatus}
+            orderId={order.id}
+            orderStatus={order.orderStatus}
           />
         </>
       )}
