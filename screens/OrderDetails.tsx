@@ -283,7 +283,11 @@ const OrderDetails = ({ route, navigation }: Props) => {
               </ListItem.Content>
             </ListItem>
           </ScrollView>
-          <OrderButtons navigation={navigation} orderId={orderInfo.id} />
+          <OrderButtons
+            navigation={navigation}
+            orderId={orderInfo.id}
+            orderStatus={orderInfo.orderStatus}
+          />
         </>
       )}
     </>

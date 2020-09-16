@@ -5,7 +5,7 @@ import Colors from '../constants/Colors';
 import { completeOrder, cancelOrder } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
 
-const OrderButtons = ({ orderId, navigation }) => {
+const OrderButtons = ({ orderId, navigation, orderStatus }) => {
   const dispatch = useDispatch();
 
   const cancelAndReturn = () => {
@@ -33,24 +33,39 @@ const OrderButtons = ({ orderId, navigation }) => {
   };
 
   return (
-    <View style={styles.buttonContainer}>
-      <Button
-        mode="contained"
-        color={Colors.primary}
-        labelStyle={{ color: Colors.light }}
-        onPress={handleCancelOrder}
-      >
-        Cancel Order{' '}
-      </Button>
-      <Button
-        mode="contained"
-        color={Colors.primary}
-        labelStyle={{ color: Colors.light }}
-        onPress={handleCompleteOrder}
-      >
-        Complete Order
-      </Button>
-    </View>
+    <>
+      {orderStatus == 'in_process' ? (
+        <View style={styles.buttonContainer}>
+          <Button
+            mode="contained"
+            color={Colors.primary}
+            labelStyle={{ color: Colors.light }}
+            onPress={handleCancelOrder}
+          >
+            Cancel Order{' '}
+          </Button>
+          <Button
+            mode="contained"
+            color={Colors.primary}
+            labelStyle={{ color: Colors.light }}
+            onPress={handleCompleteOrder}
+          >
+            Complete Order
+          </Button>
+        </View>
+      ) : (
+        <View style={{ padding: 10, backgroundColor: Colors.light }}>
+          <Button
+            mode="contained"
+            color={Colors.primary}
+            labelStyle={{ color: Colors.light }}
+            onPress={handleCancelOrder}
+          >
+            Cancel Order{' '}
+          </Button>
+        </View>
+      )}
+    </>
   );
 };
 

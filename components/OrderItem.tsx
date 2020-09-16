@@ -1,25 +1,15 @@
-import React, { useState } from 'react';
-import { Text, StyleSheet, Alert } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet } from 'react-native';
 import { ListItem, Button } from 'react-native-elements';
 import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../constants/Colors';
-import { markOrderInProcess, MARK_IN_PROCESS_FAILURE } from '../actions/orderActions';
+import { markOrderInProcess } from '../actions/orderActions';
 
 const OrderItem = ({ orderInfo, navigation }) => {
   const dispatch = useDispatch();
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-
   const handleProcessOrder = () => {
-    setIsLoading(true);
-    dispatch<any>(markOrderInProcess(orderInfo.id)).then((response) => {
-      if (response.type === MARK_IN_PROCESS_FAILURE) {
-        setError(response.error);
-        Alert.alert('Failed to set order in process. Try again.');
-      }
-      setIsLoading(false);
-    });
+    dispatch(markOrderInProcess(orderInfo.id));
   };
 
   const handleNavigate = () => {
@@ -28,16 +18,7 @@ const OrderItem = ({ orderInfo, navigation }) => {
 
   return orderInfo ? (
     <ListItem bottomDivider onPress={handleNavigate}>
-      {isLoading ? (
-        <Button
-          loading
-          buttonStyle={{
-            width: 80,
-            height: 60,
-            backgroundColor: Colors.primary,
-          }}
-        />
-      ) : orderInfo.orderStatus == 'in_process' ? (
+      {orderInfo.orderStatus == 'in_process' ? (
         <Text style={styles.inProcess}>Order In Process</Text>
       ) : (
         <Button
