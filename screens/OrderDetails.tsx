@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import { Button, Card, Title } from 'react-native-paper';
+import { Button, Card } from 'react-native-paper';
 import { useSelector, useDispatch, shallowEqual, connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { getUserNotesFromProps } from '../selectors/userSelectors';
@@ -12,18 +12,7 @@ import {
 import OrderDetailListItem from '../components/OrderDetailListItem';
 import Colors from '../constants/Colors';
 
-import {
-  User,
-  Address,
-  Order,
-  IdDocument,
-  State,
-  MedicalRecommendation,
-  DsprManager,
-  DsprDriver,
-  DspProduct,
-  DsprDriverInventoryItem,
-} from '../store/reduxStoreState';
+import { IdDocument, State, MedicalRecommendation } from '../store/reduxStoreState';
 import { parseDate, formatPhone } from '../hooks/util';
 
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -93,7 +82,19 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
         <>
           <ScrollView style={styles.scroll}>
             <Card>
-              <Card.Title title="Notes" />
+              <Card.Title
+                title="Notes"
+                right={() => (
+                  <Button
+                    mode="contained"
+                    onPress={handleManageNotes}
+                    color={Colors.primary}
+                    labelStyle={{ color: Colors.light }}
+                  >
+                    Manage
+                  </Button>
+                )}
+              />
               <Card.Content>
                 {userNotes ? (
                   userNotes.map((userNote) =>
@@ -110,16 +111,6 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
                   <Text>No Notes</Text>
                 )}
               </Card.Content>
-              <Card.Actions style={{ justifyContent: 'center' }}>
-                <Button
-                  mode="contained"
-                  onPress={handleManageNotes}
-                  color={Colors.primary}
-                  labelStyle={{ color: Colors.light }}
-                >
-                  Manage Notes
-                </Button>
-              </Card.Actions>
             </Card>
 
             {order && order.specialInstructions ? (

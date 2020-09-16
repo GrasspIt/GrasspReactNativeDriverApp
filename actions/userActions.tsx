@@ -551,7 +551,7 @@ const unhideNote = (id: number) => {
   return {
     [CALL_API]: {
       httpAction: 'POST',
-      types: [HIDE_USER_NOTE, HIDE_USER_NOTE_SUCCESS, HIDE_USER_NOTE_FAILURE],
+      types: [UNHIDE_USER_NOTE, UNHIDE_USER_NOTE_SUCCESS, UNHIDE_USER_NOTE_FAILURE],
       endPoint: `user/note/show`,
       schema: Schemas.USER_NOTE,
       body: userNote,

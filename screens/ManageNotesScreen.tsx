@@ -29,16 +29,16 @@ const ManageNotes = ({ navigation, route }: Props) => {
   const dispatch = useDispatch();
   const { userId, dsprDriverId, userNotes } = route.params;
   const [showNotes, setShowNotes] = useState(false);
-  const [showHidden, setShowHidden] = useState(false);
 
-  const createUserNote = (userId, note, dsprDriverId) =>
-    dispatch(createUserNote(userId, note, dsprDriverId));
-  const hideUserNote = (noteId) => dispatch(hideUserNote(noteId));
-  const unhideUserNote = (noteId) => dispatch(unhideUserNote(noteId));
+  const createNote = (userId, note, dsprDriverId) =>
+    dispatch(createUserNote(userId, note, dsprDriverId, null));
+  const hideNote = (noteId) => dispatch(hideUserNote(noteId));
+  const unhideNote = (noteId) => dispatch(unhideUserNote(noteId));
   const refreshUser = () => dispatch(getSpecificUser(userId));
 
   const handleNewNoteSubmit = (values) => {
-    createUserNote(userId, values.note, dsprDriverId).then(() => refreshUser());
+    createNote(userId, values.note, dsprDriverId);
+    refreshUser();
     setShowNotes(false);
   };
 
@@ -54,9 +54,7 @@ const ManageNotes = ({ navigation, route }: Props) => {
                   checkedColor={Colors.primary}
                   title={userNote.isVisible ? 'visible' : 'hidden'}
                   onPress={
-                    userNote.isVisible
-                      ? () => hideUserNote(userNote.id)
-                      : () => unhideUserNote(userNote.id)
+                    userNote.isVisible ? () => hideNote(userNote.id) : () => unhideNote(userNote.id)
                   }
                   checked={userNote.isVisible}
                 />
