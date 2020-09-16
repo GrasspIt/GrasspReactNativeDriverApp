@@ -7,7 +7,7 @@ import { useInterval } from '../hooks/useInterval';
 import { useDispatch, connect } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 
-import { getDSPRDriver, setDriverLocation } from '../actions/driverActions';
+import { refreshDSPRDriver, getDSPRDriver, setDriverLocation } from '../actions/driverActions';
 import { store } from '../store/store';
 
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
@@ -45,12 +45,12 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
 
   // polling data from API while logged in
   const getDriverData = () => {
-    if (loggedInUser) dispatch(getDSPRDriver(driverId));
+    if (loggedInUser) dispatch(refreshDSPRDriver(driverId));
   };
   useInterval(getDriverData, 60000);
 
   useEffect(() => {
-    getDriverData();
+    dispatch(getDSPRDriver(driverId));
   }, [driverId]);
 
   useEffect(() => {

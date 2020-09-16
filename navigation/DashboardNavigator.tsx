@@ -6,6 +6,7 @@ import OrderDetails from '../screens/OrderDetails';
 import { Order } from '../store/reduxStoreState';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
+import ManageNotes from '../screens/ManageNotesScreen';
 
 type DashboardNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
@@ -16,6 +17,7 @@ type Props = {
 export type DashboardStackParamsList = {
   Home: { driverId: number };
   Details: { orderInfo: Order };
+  Notes: any;
 };
 
 const DashboardStack = createStackNavigator<DashboardStackParamsList>();
@@ -33,6 +35,13 @@ const DashboardNavigator = ({ route, navigation }: Props) => {
       <DashboardStack.Screen
         name="Details"
         component={OrderDetails}
+        options={{
+          headerShown: true,
+        }}
+      />
+      <DashboardStack.Screen
+        name="Notes"
+        component={ManageNotes}
         options={{
           headerShown: true,
         }}

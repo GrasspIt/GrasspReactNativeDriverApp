@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { ListItem, Button } from 'react-native-elements';
 import { useSelector, useDispatch, shallowEqual, connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
-import {
-  getSpecificUser,
-  createUserNote,
-  hideUserNote,
-  unhideUserNote,
-} from '../actions/userActions';
 import { getUserNotesFromProps } from '../selectors/userSelectors';
 import {
   getUserIdDocumentFromPropsWithOrder,
@@ -34,7 +28,6 @@ import { parseDate, formatPhone } from '../hooks/util';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
 import OrderButtons from '../components/OrderButtons';
-import UserNotes from '../components/UserNotes';
 import { Divider } from 'react-native-paper';
 
 type DetailsScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Details'>;
@@ -69,8 +62,9 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
     shallowEqual
   );
 
-  const date = parseDate(order.createdTime);
+  const orderDate = parseDate(order.createdTime);
   const birthDate = idDocument && parseDate(idDocument.birthDate);
+
   const medicalRecommendation =
     order &&
     order.userMedicalRecommendation &&
@@ -80,6 +74,9 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
     dispatch(getOrderDetailsWithId(order.id));
   }, [order.id]);
 
+  const handleManageNotes = () => {
+    navigation.navigate('Notes', { userId: user.id, dsprDriverId: order.dsprDriver, userNotes });
+  };
   return (
     <>
       {isLoading ? (
@@ -93,17 +90,19 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
       ) : (
         <>
           <ScrollView style={styles.scroll}>
-            <UserNotes
-              createUserNote={(userId, note, dsprDriverId) =>
-                dispatch(createUserNote(userId, note, dsprDriverId, null))
-              }
-              hideUserNote={(noteId) => dispatch(hideUserNote(noteId))}
-              unhideUserNote={(noteId) => dispatch(unhideUserNote(noteId))}
-              userId={user.id}
-              dsprDriverId={order.dsprDriver}
-              userNotes={userNotes}
-              refreshUser={() => dispatch(getSpecificUser(user.id))}
-            />
+            {userNotes
+              ? userNotes.map((userNote) =>
+                  userNote.isVisible ? (
+                    <ListItem key={userNote.id}>
+                      <ListItem.Content>
+                        <ListItem.Title>{userNote.note}</ListItem.Title>
+                        <ListItem.Subtitle>{userNote.updatedTimestamp}</ListItem.Subtitle>
+                      </ListItem.Content>
+                    </ListItem>
+                  ) : null
+                )
+              : null}
+            <Button title="Manage Notes" onPress={handleManageNotes} />
 
             {order && order.specialInstructions ? (
               <ListItem>
@@ -132,12 +131,12 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
               </ListItem>
             )}
 
-            {date ? (
+            {orderDate ? (
               <ListItem>
                 <ListItem.Title>
-                  {date.toLocaleString('en-us', { month: 'long' })} {date.getDate()},{' '}
-                  {date.getFullYear()}, at{' '}
-                  {date.toLocaleString('en-US', {
+                  {orderDate.toLocaleString('en-us', { month: 'long' })} {orderDate.getDate()},{' '}
+                  {orderDate.getFullYear()}, at{' '}
+                  {orderDate.toLocaleString('en-US', {
                     hour: 'numeric',
                     minute: 'numeric',
                     hour12: true,

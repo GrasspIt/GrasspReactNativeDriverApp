@@ -1,33 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Checkbox, List, Dialog } from 'react-native-paper';
-import NewUserNoteForm from './NewUserNoteForm';
+import NewUserNoteForm from '../components/NewUserNoteForm';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
+import { useSelector, useDispatch, shallowEqual, connect } from 'react-redux';
+import {
+  getSpecificUser,
+  createUserNote,
+  hideUserNote,
+  unhideUserNote,
+} from '../actions/userActions';
 import Colors from '../constants/Colors';
 
-interface UserNotesProps {
-  createUserNote: (userId: number, note: any, dsprDriverId: number) => any;
-  hideUserNote: (noteId: number) => any;
-  unhideUserNote: (noteId: number) => any;
+type ManageNotesScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Notes'>;
+
+type Props = {
+  navigation: ManageNotesScreenNavigationProp;
+  route;
   userId: number;
   dsprDriverId?: number;
   userNotes: any[];
-  refreshUser: () => any;
   showTitle?: boolean;
-}
+};
 
-const UserNotes = (props: UserNotesProps) => {
-  const {
-    userId,
-    dsprDriverId,
-    userNotes,
-    refreshUser,
-    createUserNote,
-    hideUserNote,
-    unhideUserNote,
-    showTitle,
-  } = props;
-
+const ManageNotes = ({
+  navigation,
+  route,
+}: //   userId,
+//   dsprDriverId,
+//   userNotes,
+Props) => {
+  const dispatch = useDispatch();
+  const { userId, dsprDriverId, userNotes } = route.params;
   const [showNotes, setShowNotes] = useState(false);
   const [showHidden, setShowHidden] = useState(false);
+
+  const createUserNote = (userId, note, dsprDriverId) =>
+    dispatch(createUserNote(userId, note, dsprDriverId));
+  const hideUserNote = (noteId) => dispatch(hideUserNote(noteId));
+  const unhideUserNote = (noteId) => dispatch(unhideUserNote(noteId));
+  const refreshUser = () => dispatch(getSpecificUser(userId));
 
   const handleNewNoteSubmit = (values) => {
     createUserNote(userId, values.note, dsprDriverId).then(() => refreshUser());
@@ -36,11 +48,7 @@ const UserNotes = (props: UserNotesProps) => {
 
   return (
     <Card>
-      {showTitle === undefined ? (
-        <Card.Title title="Notes" />
-      ) : showTitle ? (
-        <Card.Title title="Notes" />
-      ) : null}
+      <Card.Title title="Notes" />
       <Card.Actions>
         <Button
           mode="contained"
@@ -103,4 +111,4 @@ const UserNotes = (props: UserNotesProps) => {
   );
 };
 
-export default UserNotes;
+export default ManageNotes;

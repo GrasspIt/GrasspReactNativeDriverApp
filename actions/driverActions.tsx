@@ -71,6 +71,12 @@ export const getDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
   });
 };
 
+export const refreshDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
+  dispatch(dsprDriverGetter(dsprDriverId)).then((response) => {
+    return response;
+  });
+};
+
 export const GET_ALL_DRIVERS_FOR_DSPR = 'GET_ALL_DRIVERS_FOR_DSPR';
 export const GET_ALL_DRIVERS_FOR_DSPR_SUCCESS = 'GET_ALL_DRIVERS_FOR_DSPR_SUCCESS';
 export const GET_ALL_DRIVERS_FOR_DSPR_FAILURE = 'GET_ALL_DRIVERS_FOR_DSPR_FAILURE';
