@@ -3,7 +3,7 @@ import { camelizeKeys } from 'humps';
 import qs from 'query-string';
 import * as SecureStore from 'expo-secure-store';
 // import { logException } from '../actions/apiUIHelperActions';
-// import { logout } from '../actions/oauthActions';
+import { logout } from '../actions/oauthActions';
 import { getEnvVars } from '../environment';
 const { apiUrl } = getEnvVars();
 
@@ -555,7 +555,7 @@ export default (store) => (next) => (action) => {
   const accessToken = store.getState().api.accessToken;
 
   if (!accessToken || typeof accessToken !== 'string') {
-    // store.dispatch(logout());
+    store.dispatch(logout());
     // history.push("/login");
   }
 
@@ -584,7 +584,7 @@ export default (store) => (next) => (action) => {
       //     state: store.getState()
       // });
       if (error.status === 401 || error.error === 'invalid_token') {
-        // store.dispatch(logout());
+        store.dispatch(logout());
         // history.push("/login");
       } else {
         return next(

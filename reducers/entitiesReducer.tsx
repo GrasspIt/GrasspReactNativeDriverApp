@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { LOGGED_IN_USER_INFO_SUCCESS } from '../actions/oauthActions';
+import { LOGGED_IN_USER_INFO_SUCCESS, LOGOUT } from '../actions/oauthActions';
 import {
   GET_ALL_USERS_SUCCESS,
   GET_SPECIFIC_USER_SUCCESS,
@@ -292,6 +292,9 @@ export default (state = initialState, action) => {
     //     return { ...state, searchProducts: responseEntities.searchProducts };
     // case SEARCH_DSPR_COUPONS_SUCCESS:
     //     return { ...state, coupons: responseEntities.coupons };
+    case LOGOUT:
+      return { ...initialState };
+
     default:
       return state;
   }

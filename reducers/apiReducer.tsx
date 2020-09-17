@@ -110,7 +110,7 @@ export default (state = initialState, action) => {
       return { ...state, accessToken: action.accessToken };
     case LOGOUT:
       return {
-        ...state,
+        ...initialState,
       };
     case LOGGED_IN_USER_INFO_SUCCESS:
       let entities = action.response.entities;
