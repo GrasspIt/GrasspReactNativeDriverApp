@@ -1,23 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Alert, FlatList, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  FlatList,
+  ActivityIndicator,
+  Platform,
+  Button,
+} from 'react-native';
 import Colors from '../constants/Colors';
+
+import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import { useInterval } from '../hooks/useInterval';
-import { useDispatch, connect } from 'react-redux';
-import { useIsFocused } from '@react-navigation/native';
-
-import { refreshDSPRDriver, getDSPRDriver, setDriverLocation } from '../actions/driverActions';
-import { store } from '../store/store';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
+
+import { refreshDSPRDriver, getDSPRDriver, setDriverLocation } from '../actions/driverActions';
+import { useDispatch, connect } from 'react-redux';
+import { store } from '../store/store';
+import { useInterval } from '../hooks/useInterval';
+
 import OnCallSwitch from '../components/OnCallSwitch';
 import TopNavBar from '../components/TopNavBar';
 import OrderItem from '../components/OrderItem';
+
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
+
+// handler for push notifications
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 type HomeScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Home'>;
 type Props = {
@@ -31,10 +54,13 @@ type Props = {
 
 const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLoading }: Props) => {
   const dispatch = useDispatch();
-  const isFocused = useIsFocused();
+  const notificationListener = useRef();
+  const responseListener = useRef();
 
   const [isTracking, setIsTracking] = useState(false);
   const [error, setError] = useState('');
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
 
   const orderList =
     dsprDriver && dsprDriver.queuedOrders && dsprDriver.currentInProcessOrder
@@ -53,6 +79,25 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
     dispatch(getDSPRDriver(driverId));
   }, [driverId]);
 
+  // push notifications
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
+    // listen for when a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+      setNotification(notification);
+    });
+    // listen for when a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      console.log(response);
+    });
+    // listener cleanup
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    };
+  }, []);
+
+  // location tracking
   useEffect(() => {
     (async () => {
       //permissions for location tracking
@@ -98,6 +143,26 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
         </View>
       ) : (
         <View style={styles.body}>
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'space-around',
+            }}
+          >
+            <Text>Your expo push token: {expoPushToken}</Text>
+            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+              <Text>Title: {notification && notification.request.content.title} </Text>
+              <Text>Body: {notification && notification.request.content.body}</Text>
+              <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
+            </View>
+            <Button
+              title="Press to Send Notification"
+              onPress={async () => {
+                await sendPushNotification(expoPushToken);
+              }}
+            />
+          </View>
           <OnCallSwitch dsprDriver={dsprDriver} />
           <FlatList
             ListEmptyComponent={
@@ -117,6 +182,59 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
     </>
   ) : null;
 };
+
+// Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/dashboard/notifications
+async function sendPushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: 'Original Title',
+    body: 'And here is the body!',
+    data: { data: 'goes here' },
+  };
+
+  await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  });
+}
+
+// get permission for push notifications and set token
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    // set token in Redux state
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+  return token;
+}
 
 // define the task that will be called with startLocationTrackingUpdates
 TaskManager.defineTask('location-tracking', ({ data, error }) => {

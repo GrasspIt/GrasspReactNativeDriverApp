@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { ScrollView, View, StyleSheet, Text } from 'react-native';
 import { Button, Dialog } from 'react-native-paper';
 import { ListItem } from 'react-native-elements';
 import NewUserNoteForm from '../components/NewUserNoteForm';
@@ -53,9 +53,9 @@ const ManageNotes = ({ navigation, route }: Props) => {
   return (
     <>
       <View style={{ flex: 1, backgroundColor: Colors.light }}>
-        <ScrollView style={{ flex: 1, backgroundColor: Colors.light }}>
-          {userNotes && userNotes.length > 0 ? (
-            userNotes.map((userNote) => (
+        {userNotes && userNotes.length > 0 ? (
+          <ScrollView style={{ flex: 1, backgroundColor: Colors.light }}>
+            {userNotes.map((userNote) => (
               <ListItem key={userNote.id} bottomDivider>
                 <ListItem.Content>
                   <ListItem.CheckBox
@@ -84,11 +84,13 @@ const ManageNotes = ({ navigation, route }: Props) => {
                   </ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
-            ))
-          ) : (
-            <View>No User Notes</View>
-          )}
-        </ScrollView>
+            ))}
+          </ScrollView>
+        ) : (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>No User Notes</Text>
+          </View>
+        )}
         <View style={styles.buttonContainer}>
           <Button
             mode="contained"
