@@ -5,9 +5,10 @@ import { ListItem } from 'react-native-elements';
 import NewUserNoteForm from '../components/NewUserNoteForm';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
-import { useDispatch, useSelector, shallowEqual, connect } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { State } from '../store/reduxStoreState';
 import { getUserNotesFromProps } from '../selectors/userSelectors';
+import { parseDate } from '../hooks/util';
 
 import {
   getSpecificUser,
@@ -55,9 +56,8 @@ const ManageNotes = ({ navigation, route }: Props) => {
         <ScrollView style={{ flex: 1, backgroundColor: Colors.light }}>
           {userNotes && userNotes.length > 0 ? (
             userNotes.map((userNote) => (
-              <ListItem key={userNote.id}>
+              <ListItem key={userNote.id} bottomDivider>
                 <ListItem.Content>
-                  <ListItem.Title>{userNote.note}</ListItem.Title>
                   <ListItem.CheckBox
                     containerStyle={{ backgroundColor: Colors.light, borderColor: Colors.light }}
                     checkedColor={Colors.primary}
@@ -69,6 +69,19 @@ const ManageNotes = ({ navigation, route }: Props) => {
                     }
                     checked={userNote.isVisible}
                   />
+                  <ListItem.Title style={{ margin: 6 }}>{userNote.note}</ListItem.Title>
+                  <ListItem.Subtitle style={{ alignSelf: 'flex-end' }}>
+                    {parseDate(userNote.createdTimestamp).toLocaleString('en-us', {
+                      month: 'long',
+                    })}{' '}
+                    {parseDate(userNote.createdTimestamp).getDate()},{' '}
+                    {parseDate(userNote.createdTimestamp).getFullYear()}, at{' '}
+                    {parseDate(userNote.createdTimestamp).toLocaleString('en-US', {
+                      hour: 'numeric',
+                      minute: 'numeric',
+                      hour12: true,
+                    })}
+                  </ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
             ))

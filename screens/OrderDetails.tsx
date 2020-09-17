@@ -102,7 +102,19 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
                       <ListItem key={userNote.id}>
                         <ListItem.Content>
                           <ListItem.Title>{userNote.note}</ListItem.Title>
-                          <ListItem.Subtitle>{userNote.updatedTimestamp}</ListItem.Subtitle>
+                          <ListItem.Subtitle style={{ alignSelf: 'flex-end', paddingTop: 6 }}>
+                            {' '}
+                            {parseDate(userNote.createdTimestamp).toLocaleString('en-us', {
+                              month: 'long',
+                            })}{' '}
+                            {parseDate(userNote.createdTimestamp).getDate()},{' '}
+                            {parseDate(userNote.createdTimestamp).getFullYear()}, at{' '}
+                            {parseDate(userNote.createdTimestamp).toLocaleString('en-US', {
+                              hour: 'numeric',
+                              minute: 'numeric',
+                              hour12: true,
+                            })}
+                          </ListItem.Subtitle>
                         </ListItem.Content>
                       </ListItem>
                     ) : null
@@ -149,7 +161,7 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
                     hour: 'numeric',
                     minute: 'numeric',
                     hour12: true,
-                  })}{' '}
+                  })}
                 </ListItem.Title>
               </ListItem>
             ) : null}
