@@ -5,7 +5,10 @@ import { ListItem } from 'react-native-elements';
 import NewUserNoteForm from '../components/NewUserNoteForm';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual, connect } from 'react-redux';
+import { State } from '../store/reduxStoreState';
+import { getUserNotesFromProps } from '../selectors/userSelectors';
+
 import {
   getSpecificUser,
   createUserNote,
@@ -21,13 +24,12 @@ type Props = {
   route;
   userId: number;
   dsprDriverId?: number;
-  userNotes: any[];
   showTitle?: boolean;
 };
 
 const ManageNotes = ({ navigation, route }: Props) => {
   const dispatch = useDispatch();
-  const { userId, dsprDriverId, userNotes } = route.params;
+  const { userId, dsprDriverId } = route.params;
   const [showNotes, setShowNotes] = useState(false);
 
   const createNote = (userId, note, dsprDriverId) =>
@@ -42,6 +44,11 @@ const ManageNotes = ({ navigation, route }: Props) => {
     setShowNotes(false);
   };
 
+  const userNotes = useSelector<State, any[]>(
+    (state) => getUserNotesFromProps(state, { userId }),
+    shallowEqual
+  );
+
   return (
     <>
       <View style={{ flex: 1, backgroundColor: Colors.light }}>
@@ -52,6 +59,7 @@ const ManageNotes = ({ navigation, route }: Props) => {
                 <ListItem.Content>
                   <ListItem.Title>{userNote.note}</ListItem.Title>
                   <ListItem.CheckBox
+                    containerStyle={{ backgroundColor: Colors.light, borderColor: Colors.light }}
                     checkedColor={Colors.primary}
                     title={userNote.isVisible ? 'visible' : 'hidden'}
                     onPress={
