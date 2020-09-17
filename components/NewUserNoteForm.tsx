@@ -25,6 +25,9 @@ const renderField = ({
     type={type}
     {...input}
     {...custom}
+    multiline={true}
+    numberOfLines={3}
+    underlineColor={Colors.primary}
     // onChangeText={input.onChange}
     // onBlur={input.onBlur}
     // onFocus={input.onFocus}

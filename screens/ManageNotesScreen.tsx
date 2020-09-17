@@ -44,47 +44,48 @@ const ManageNotes = ({ navigation, route }: Props) => {
 
   return (
     <>
-      <ScrollView style={{ flex: 1, backgroundColor: Colors.light }}>
-        {userNotes && userNotes.length > 0 ? (
-          userNotes.map((userNote) => (
-            <ListItem key={userNote.id}>
-              <ListItem.Content>
-                <ListItem.Title>{userNote.note}</ListItem.Title>
-                <ListItem.CheckBox
-                  checkedColor={Colors.primary}
-                  title={userNote.isVisible ? 'visible' : 'hidden'}
-                  onPress={
-                    userNote.isVisible ? () => hideNote(userNote.id) : () => unhideNote(userNote.id)
-                  }
-                  checked={userNote.isVisible}
-                />
-              </ListItem.Content>
-            </ListItem>
-          ))
-        ) : (
-          <View>No User Notes</View>
-        )}
-        <Dialog style={{ flex: 1 }} visible={showNotes} onDismiss={() => setShowNotes(false)}>
-          <Dialog.Title>New Note</Dialog.Title>
-          <Dialog.Content>
-            <NewUserNoteForm
-              closeDialog={() => setShowNotes(false)}
-              onSubmit={handleNewNoteSubmit}
-            />
-          </Dialog.Content>
-        </Dialog>
-      </ScrollView>
-      <View style={styles.buttonContainer}>
-        <Button
-          mode="contained"
-          color={Colors.primary}
-          labelStyle={{ color: Colors.light }}
-          onPress={() => setShowNotes(true)}
-          style={{ width: '100%' }}
-        >
-          Create Note
-        </Button>
+      <View style={{ flex: 1, backgroundColor: Colors.light }}>
+        <ScrollView style={{ flex: 1, backgroundColor: Colors.light }}>
+          {userNotes && userNotes.length > 0 ? (
+            userNotes.map((userNote) => (
+              <ListItem key={userNote.id}>
+                <ListItem.Content>
+                  <ListItem.Title>{userNote.note}</ListItem.Title>
+                  <ListItem.CheckBox
+                    checkedColor={Colors.primary}
+                    title={userNote.isVisible ? 'visible' : 'hidden'}
+                    onPress={
+                      userNote.isVisible
+                        ? () => hideNote(userNote.id)
+                        : () => unhideNote(userNote.id)
+                    }
+                    checked={userNote.isVisible}
+                  />
+                </ListItem.Content>
+              </ListItem>
+            ))
+          ) : (
+            <View>No User Notes</View>
+          )}
+        </ScrollView>
+        <View style={styles.buttonContainer}>
+          <Button
+            mode="contained"
+            color={Colors.primary}
+            labelStyle={{ color: Colors.light }}
+            onPress={() => setShowNotes(true)}
+            style={{ width: '100%' }}
+          >
+            Create Note
+          </Button>
+        </View>
       </View>
+      <Dialog visible={showNotes} onDismiss={() => setShowNotes(false)}>
+        <Dialog.Title>New Note</Dialog.Title>
+        <Dialog.Content>
+          <NewUserNoteForm closeDialog={() => setShowNotes(false)} onSubmit={handleNewNoteSubmit} />
+        </Dialog.Content>
+      </Dialog>
     </>
   );
 };
