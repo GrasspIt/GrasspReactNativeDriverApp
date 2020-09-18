@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Platform,
+  Keyboard,
   View,
   StyleSheet,
   Image,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
 } from 'react-native';
 import { Input, Button, Card } from 'react-native-elements';
 import Colors from '../constants/Colors';

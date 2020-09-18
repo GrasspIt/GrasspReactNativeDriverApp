@@ -32,7 +32,8 @@ import OrderItem from '../components/OrderItem';
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
-import { Title } from 'react-native-paper';
+import { Divider } from 'react-native-elements';
+import InProcessOrderItem from '../components/InProcessOrderItem';
 
 // handler for push notifications
 Notifications.setNotificationHandler({
@@ -63,13 +64,6 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
 
-  const orderList =
-    dsprDriver && dsprDriver.queuedOrders && dsprDriver.currentInProcessOrder
-      ? [dsprDriver.currentInProcessOrder, ...dsprDriver.queuedOrders]
-      : dsprDriver && dsprDriver.queuedOrders
-      ? [...dsprDriver.queuedOrders]
-      : [];
-
   // polling data from API while logged in
   const getDriverData = () => {
     if (loggedInUser) dispatch(refreshDSPRDriver(driverId));
@@ -96,7 +90,7 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
       Notifications.removeNotificationSubscription(notificationListener);
       Notifications.removeNotificationSubscription(responseListener);
     };
-  }, []);
+  }, [notification, notificationListener, responseListener]);
 
   // location tracking
   useEffect(() => {
@@ -144,21 +138,30 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
         </View>
       ) : (
         <View style={styles.body}>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'space-around',
-            }}
-          >
-            <Button
+          {/* <Button
               title="Press to Send Notification"
               onPress={async () => {
                 await sendPushNotification(expoPushToken);
               }}
-            />
-          </View>
-          <Text style={{ fontSize: 22, textAlign: 'center' }}>{dspr.name}</Text>
+            /> */}
+          <Text style={styles.dsprTitle}>{dspr.name}</Text>
           <OnCallSwitch dsprDriver={dsprDriver} />
+          <Divider style={{ height: 2 }} />
+          <Text style={styles.listTitle}>In Process Order</Text>
+          <Divider style={{ height: 1, marginHorizontal: 10 }} />
+
+          {dsprDriver.currentInProcessOrder ? (
+            <InProcessOrderItem
+              orderInfo={dsprDriver.currentInProcessOrder}
+              navigation={navigation}
+            />
+          ) : (
+            <Text>No order in process.</Text>
+          )}
+          <Divider style={{ height: 2 }} />
+          <Text style={styles.listTitle}>Queued Orders</Text>
+          <Divider style={{ height: 1, marginHorizontal: 10 }} />
+
           <FlatList
             ListEmptyComponent={
               <View style={styles.container}>
@@ -167,7 +170,7 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
             }
             onRefresh={() => getDriverData()}
             refreshing={isLoading}
-            data={orderList}
+            data={dsprDriver.queuedOrders}
             renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
             keyExtractor={(item: any) => item.id.toString()}
             style={styles.orders}
@@ -177,6 +180,34 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
     </>
   ) : null;
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.light,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  body: {
+    flex: 1,
+    backgroundColor: Colors.light,
+  },
+  orders: {
+    paddingHorizontal: 10,
+  },
+  dsprTitle: {
+    fontSize: 22,
+    textAlign: 'center',
+    paddingTop: 20,
+  },
+  listTitle: {
+    fontSize: 16,
+    paddingLeft: 10,
+    paddingVertical: 10,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+});
 
 // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/dashboard/notifications
 async function sendPushNotification(expoPushToken) {
@@ -248,22 +279,6 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
     //dispatch location to api
     store.dispatch(setDriverLocation(movingDsprDriver.dspr, lat, long));
   }
-});
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  body: {
-    flex: 1,
-    backgroundColor: Colors.light,
-  },
-  orders: {
-    paddingHorizontal: 10,
-  },
 });
 
 const mapStateToProps = (state) => {

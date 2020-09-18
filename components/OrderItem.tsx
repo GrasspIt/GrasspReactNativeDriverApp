@@ -16,11 +16,9 @@ const OrderItem = ({ orderInfo, navigation }) => {
     navigation.navigate('Details', { order: orderInfo });
   };
 
-  return orderInfo ? (
-    <ListItem bottomDivider onPress={handleNavigate}>
-      {orderInfo.orderStatus == 'in_process' ? (
-        <Text style={styles.inProcess}>Order In Process</Text>
-      ) : (
+  return (
+    orderInfo && (
+      <ListItem bottomDivider onPress={handleNavigate}>
         <Button
           title="Set In Process"
           titleStyle={{ fontSize: 16 }}
@@ -31,28 +29,21 @@ const OrderItem = ({ orderInfo, navigation }) => {
           }}
           onPress={handleProcessOrder}
         />
-      )}
-      <ListItem.Content>
-        <ListItem.Title>
-          {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}
-          <Text style={{ fontSize: 14 }}>${orderInfo.cashTotal}</Text>
-        </ListItem.Title>
-        <ListItem.Subtitle>
-          {orderInfo.address.street} {orderInfo.address.zipCode}
-        </ListItem.Subtitle>
-      </ListItem.Content>
-      <ListItem.Chevron />
-    </ListItem>
-  ) : null;
+        <ListItem.Content>
+          <ListItem.Title>
+            {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}
+            <Text style={{ fontSize: 14 }}>${orderInfo.cashTotal}</Text>
+          </ListItem.Title>
+          <ListItem.Subtitle>
+            {orderInfo.address.street} {orderInfo.address.zipCode}
+          </ListItem.Subtitle>
+        </ListItem.Content>
+        <ListItem.Chevron />
+      </ListItem>
+    )
+  );
 };
 
-const styles = StyleSheet.create({
-  inProcess: {
-    width: 80,
-    color: Colors.primary,
-    fontSize: 16,
-    paddingLeft: 4,
-  },
-});
+const styles = StyleSheet.create({});
 
 export default OrderItem;

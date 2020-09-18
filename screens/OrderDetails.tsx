@@ -14,7 +14,7 @@ import Colors from '../constants/Colors';
 import Moment from 'moment';
 
 import { IdDocument, State, MedicalRecommendation } from '../store/reduxStoreState';
-import { parseDate, formatPhone } from '../hooks/util';
+import { formatPhone } from '../hooks/util';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';

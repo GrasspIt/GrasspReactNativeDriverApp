@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, StyleSheet, Text } from 'react-native';
+import {
+  ScrollView,
+  View,
+  StyleSheet,
+  Text,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Platform,
+  Keyboard,
+} from 'react-native';
+
 import { Button, Dialog } from 'react-native-paper';
 import { ListItem } from 'react-native-elements';
 import NewUserNoteForm from '../components/NewUserNoteForm';
@@ -8,7 +18,7 @@ import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { State } from '../store/reduxStoreState';
 import { getUserNotesFromProps } from '../selectors/userSelectors';
-import { parseDate } from '../hooks/util';
+import Moment from 'moment';
 
 import {
   getSpecificUser,
@@ -71,16 +81,7 @@ const ManageNotes = ({ navigation, route }: Props) => {
                   />
                   <ListItem.Title style={{ margin: 6 }}>{userNote.note}</ListItem.Title>
                   <ListItem.Subtitle style={{ alignSelf: 'flex-end' }}>
-                    {parseDate(userNote.createdTimestamp).toLocaleString('en-us', {
-                      month: 'long',
-                    })}{' '}
-                    {parseDate(userNote.createdTimestamp).getDate()},{' '}
-                    {parseDate(userNote.createdTimestamp).getFullYear()}, at{' '}
-                    {parseDate(userNote.createdTimestamp).toLocaleString('en-US', {
-                      hour: 'numeric',
-                      minute: 'numeric',
-                      hour12: true,
-                    })}
+                    {Moment(userNote.createdTimestamp).format('MMMM Do YYYY, h:mm a')}
                   </ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>

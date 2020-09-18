@@ -33,39 +33,35 @@ const OrderButtons = ({ orderId, navigation, orderStatus }) => {
   };
 
   return (
-    <>
+    <View style={styles.buttonContainer}>
+      <Button
+        mode="contained"
+        color={Colors.red}
+        labelStyle={{ color: Colors.light }}
+        onPress={handleCancelOrder}
+      >
+        Cancel Order
+      </Button>
       {orderStatus == 'in_process' ? (
-        <View style={styles.buttonContainer}>
-          <Button
-            mode="contained"
-            color={Colors.primary}
-            labelStyle={{ color: Colors.light }}
-            onPress={handleCancelOrder}
-          >
-            Cancel Order
-          </Button>
-          <Button
-            mode="contained"
-            color={Colors.primary}
-            labelStyle={{ color: Colors.light }}
-            onPress={handleCompleteOrder}
-          >
-            Complete Order
-          </Button>
-        </View>
+        <Button
+          mode="contained"
+          color={Colors.primary}
+          labelStyle={{ color: Colors.light }}
+          onPress={handleCompleteOrder}
+        >
+          Complete Order
+        </Button>
       ) : (
-        <View style={{ padding: 5, backgroundColor: Colors.light }}>
-          <Button
-            mode="contained"
-            color={Colors.primary}
-            labelStyle={{ color: Colors.light }}
-            onPress={handleCancelOrder}
-          >
-            Cancel Order
-          </Button>
-        </View>
+        <Button
+          mode="contained"
+          color={Colors.primary}
+          labelStyle={{ color: Colors.light }}
+          onPress={() => console.log('in process')}
+        >
+          Set In Process
+        </Button>
       )}
-    </>
+    </View>
   );
 };
 

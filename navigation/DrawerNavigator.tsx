@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../store/reduxStoreState';
 
 import { DrawerActions } from '@react-navigation/native';
-import * as Linking from 'expo-linking';
+// import * as Linking from 'expo-linking';
 import * as RootNavigation from '../navigation/RootNavigation';
 import Colors from '../constants/Colors';
 import DashboardNavigator from './DashboardNavigator';
@@ -61,7 +61,7 @@ const DrawerNavigator = ({ navigation, route }: Props) => {
               labelStyle={{ fontSize: 16 }}
               onPress={() => handleLogout()}
             />
-            <DrawerItem
+            {/* <DrawerItem
               label="Contact Us"
               labelStyle={{ fontSize: 16 }}
               onPress={() => Linking.openURL('https://grassphealth.com/contact/')}
@@ -70,7 +70,7 @@ const DrawerNavigator = ({ navigation, route }: Props) => {
               label="Privacy Policy"
               labelStyle={{ fontSize: 16 }}
               onPress={() => Linking.openURL('https://grassphealth.com/grassp-privacy-policy/')}
-            />
+            /> */}
           </DrawerContentScrollView>
         );
       }}

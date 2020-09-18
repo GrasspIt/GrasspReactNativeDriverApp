@@ -97,10 +97,12 @@ const initialState = {
   dsprDriverId: '',
   errorMessage: '',
   isLoading: false,
-  entities: entitiesInitialState,
+  entities: Object.assign({}, entitiesInitialState),
 };
 
-export default (state = initialState, action) => {
+const applicationState = Object.assign({}, initialState);
+
+export default (state = applicationState, action) => {
   switch (action.type) {
     case GET_APP_ACCESS_TOKEN_SUCCESS:
     case UPDATE_ACCESS_TOKEN:
@@ -108,10 +110,8 @@ export default (state = initialState, action) => {
     case PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE:
       return { ...state, accessToken: action.accessToken };
     case LOGOUT:
-      return {
-        ...initialState,
-        entities: entitiesInitialState,
-      };
+      console.log(entitiesInitialState);
+      return initialState;
     case LOGGED_IN_USER_INFO_SUCCESS:
       let entities = action.response.entities;
       let usersFromResponse = entities.users;
@@ -202,7 +202,7 @@ export default (state = initialState, action) => {
       //     case GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS:
       //     case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
       //     case UPDATE_DSPR_MENU_MECHANISM_SUCCESS:
-      const newState = { ...state, isLoading: false, entities: entitiesInitialState };
+      const newState = { ...state, isLoading: false };
       return merge({}, newState, {
         entities: entitiesReducer(state.entities, action),
       });
