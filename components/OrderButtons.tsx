@@ -54,7 +54,7 @@ const OrderButtons = ({ orderId, navigation, orderStatus }) => {
           </Button>
         </View>
       ) : (
-        <View style={{ padding: 10, backgroundColor: Colors.light }}>
+        <View style={{ padding: 5, backgroundColor: Colors.light }}>
           <Button
             mode="contained"
             color={Colors.primary}
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    padding: 10,
+    padding: 5,
     bottom: 0,
   },
 });

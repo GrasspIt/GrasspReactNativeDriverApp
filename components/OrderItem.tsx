@@ -26,7 +26,7 @@ const OrderItem = ({ orderInfo, navigation }) => {
           titleStyle={{ fontSize: 16 }}
           buttonStyle={{
             width: 80,
-            height: 60,
+            height: 70,
             backgroundColor: Colors.primary,
           }}
           onPress={handleProcessOrder}
@@ -49,12 +49,9 @@ const OrderItem = ({ orderInfo, navigation }) => {
 const styles = StyleSheet.create({
   inProcess: {
     width: 80,
-    padding: 9,
     color: Colors.primary,
     fontSize: 16,
-    borderColor: Colors.primary,
-    borderWidth: 1,
-    borderRadius: 4,
+    paddingLeft: 4,
   },
 });
 
