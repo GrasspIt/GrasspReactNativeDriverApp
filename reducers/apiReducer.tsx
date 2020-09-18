@@ -108,14 +108,10 @@ export default (state = initialState, action) => {
     case PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE:
       return { ...state, accessToken: action.accessToken };
     case LOGOUT:
-      const resetState = { ...initialState, entities: entitiesInitialState };
-      return merge({}, resetState, {
-        entities: entitiesReducer(state.entities, null),
-      });
-    // return {
-    //   ...initialState,
-    //   entities: entitiesInitialState,
-    // };
+      return {
+        ...initialState,
+        entities: entitiesInitialState,
+      };
     case LOGGED_IN_USER_INFO_SUCCESS:
       let entities = action.response.entities;
       let usersFromResponse = entities.users;

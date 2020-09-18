@@ -11,6 +11,7 @@ import {
 } from '../selectors/userDocumentsSelector';
 import OrderDetailListItem from '../components/OrderDetailListItem';
 import Colors from '../constants/Colors';
+import Moment from 'moment';
 
 import { IdDocument, State, MedicalRecommendation } from '../store/reduxStoreState';
 import { parseDate, formatPhone } from '../hooks/util';
@@ -52,8 +53,8 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
     shallowEqual
   );
 
-  const orderDate = parseDate(order.createdTime);
-  const birthDate = idDocument && parseDate(idDocument.birthDate);
+  const orderDate = Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
+  const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
   const medicalRecommendation =
     order &&
@@ -103,17 +104,7 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
                         <ListItem.Content>
                           <ListItem.Title>{userNote.note}</ListItem.Title>
                           <ListItem.Subtitle style={{ alignSelf: 'flex-end', paddingTop: 6 }}>
-                            {' '}
-                            {parseDate(userNote.createdTimestamp).toLocaleString('en-us', {
-                              month: 'long',
-                            })}{' '}
-                            {parseDate(userNote.createdTimestamp).getDate()},{' '}
-                            {parseDate(userNote.createdTimestamp).getFullYear()}, at{' '}
-                            {parseDate(userNote.createdTimestamp).toLocaleString('en-US', {
-                              hour: 'numeric',
-                              minute: 'numeric',
-                              hour12: true,
-                            })}
+                            {Moment(userNote.createdTimestamp).format('MMMM Do YYYY, h:mm a')}
                           </ListItem.Subtitle>
                         </ListItem.Content>
                       </ListItem>
@@ -154,15 +145,7 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
 
             {orderDate ? (
               <ListItem>
-                <ListItem.Title>
-                  {orderDate.toLocaleString('en-us', { month: 'long' })} {orderDate.getDate()},{' '}
-                  {orderDate.getFullYear()}, at{' '}
-                  {orderDate.toLocaleString('en-US', {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true,
-                  })}
-                </ListItem.Title>
+                <ListItem.Title>{orderDate}</ListItem.Title>
               </ListItem>
             ) : null}
 
@@ -182,14 +165,7 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
                 <ListItem>
                   <ListItem.Title>
                     Birth Date: &nbsp;
-                    {birthDate ? (
-                      <Text>
-                        {birthDate.toLocaleString('en-us', { month: 'long' })} {birthDate.getDate()}
-                        , {birthDate.getFullYear()}
-                      </Text>
-                    ) : (
-                      <Text>Not provided</Text>
-                    )}{' '}
+                    {birthDate ? <Text>{birthDate}</Text> : <Text>Not provided</Text>}{' '}
                   </ListItem.Title>
                 </ListItem>
               </View>
