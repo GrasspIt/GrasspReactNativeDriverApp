@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import { Button, Card } from 'react-native-paper';
+import { Button, Card, Title } from 'react-native-paper';
 import { useSelector, useDispatch, shallowEqual, connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { getUserNotesFromProps } from '../selectors/userSelectors';
@@ -82,40 +82,31 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
       ) : (
         <>
           <ScrollView style={styles.scroll}>
-            <Card>
-              <Card.Title
-                title="Notes"
-                right={() => (
-                  <Button
-                    mode="contained"
-                    onPress={handleManageNotes}
-                    color={Colors.primary}
-                    labelStyle={{ color: Colors.light }}
-                  >
-                    Manage
-                  </Button>
-                )}
-              />
-              <Card.Content>
-                {userNotes ? (
-                  userNotes.map((userNote) =>
-                    userNote.isVisible ? (
-                      <ListItem key={userNote.id}>
-                        <ListItem.Content>
-                          <ListItem.Title>{userNote.note}</ListItem.Title>
-                          <ListItem.Subtitle style={{ alignSelf: 'flex-end', paddingTop: 6 }}>
-                            {Moment(userNote.createdTimestamp).format('MMMM Do YYYY, h:mm a')}
-                          </ListItem.Subtitle>
-                        </ListItem.Content>
-                      </ListItem>
-                    ) : null
-                  )
-                ) : (
-                  <Text>No Notes</Text>
-                )}
-              </Card.Content>
-            </Card>
-
+            <Title>Notes</Title>
+            {userNotes ? (
+              userNotes.map((userNote) =>
+                userNote.isVisible ? (
+                  <ListItem key={userNote.id}>
+                    <ListItem.Content>
+                      <ListItem.Title>{userNote.note}</ListItem.Title>
+                      <ListItem.Subtitle style={{ alignSelf: 'flex-end', paddingTop: 6 }}>
+                        {Moment(userNote.createdTimestamp).format('MMMM Do YYYY, h:mm a')}
+                      </ListItem.Subtitle>
+                    </ListItem.Content>
+                  </ListItem>
+                ) : null
+              )
+            ) : (
+              <Text>No Notes</Text>
+            )}
+            <Button
+              mode="contained"
+              onPress={handleManageNotes}
+              color={Colors.primary}
+              labelStyle={{ color: Colors.light }}
+            >
+              Manage Notes
+            </Button>
             {order && order.specialInstructions ? (
               <ListItem>
                 <ListItem.Content>

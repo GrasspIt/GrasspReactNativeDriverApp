@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {
-  ScrollView,
-  View,
-  StyleSheet,
-  Text,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Platform,
-  Keyboard,
-} from 'react-native';
+import { ScrollView, View, StyleSheet, Text, KeyboardAvoidingView, Platform } from 'react-native';
 
-import { Button, Dialog } from 'react-native-paper';
+import { Button, Portal } from 'react-native-paper';
 import { ListItem } from 'react-native-elements';
 import NewUserNoteForm from '../components/NewUserNoteForm';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -61,56 +52,55 @@ const ManageNotes = ({ navigation, route }: Props) => {
   );
 
   return (
-    <>
-      <View style={{ flex: 1, backgroundColor: Colors.light }}>
-        {userNotes && userNotes.length > 0 ? (
-          <ScrollView style={{ flex: 1, backgroundColor: Colors.light }}>
-            {userNotes.map((userNote) => (
-              <ListItem key={userNote.id} bottomDivider>
-                <ListItem.Content>
-                  <ListItem.CheckBox
-                    containerStyle={{ backgroundColor: Colors.light, borderColor: Colors.light }}
-                    checkedColor={Colors.primary}
-                    title={userNote.isVisible ? 'visible' : 'hidden'}
-                    onPress={
-                      userNote.isVisible
-                        ? () => hideNote(userNote.id)
-                        : () => unhideNote(userNote.id)
-                    }
-                    checked={userNote.isVisible}
-                  />
-                  <ListItem.Title style={{ margin: 6 }}>{userNote.note}</ListItem.Title>
-                  <ListItem.Subtitle style={{ alignSelf: 'flex-end' }}>
-                    {Moment(userNote.createdTimestamp).format('MMMM Do YYYY, h:mm a')}
-                  </ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
-            ))}
-          </ScrollView>
-        ) : (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>No User Notes</Text>
-          </View>
-        )}
-        <View style={styles.buttonContainer}>
-          <Button
-            mode="contained"
-            color={Colors.primary}
-            labelStyle={{ color: Colors.light }}
-            onPress={() => setShowNotes(true)}
-            style={{ width: '100%' }}
-          >
-            Create Note
-          </Button>
+    <View style={{ flex: 1, backgroundColor: Colors.light }}>
+      {userNotes && userNotes.length > 0 ? (
+        <ScrollView style={{ flex: 1, backgroundColor: Colors.light }}>
+          {userNotes.map((userNote) => (
+            <ListItem key={userNote.id} bottomDivider>
+              <ListItem.Content>
+                <ListItem.CheckBox
+                  containerStyle={{ backgroundColor: Colors.light, borderColor: Colors.light }}
+                  checkedColor={Colors.primary}
+                  title={userNote.isVisible ? 'visible' : 'hidden'}
+                  onPress={
+                    userNote.isVisible ? () => hideNote(userNote.id) : () => unhideNote(userNote.id)
+                  }
+                  checked={userNote.isVisible}
+                />
+                <ListItem.Title style={{ margin: 6 }}>{userNote.note}</ListItem.Title>
+                <ListItem.Subtitle style={{ alignSelf: 'flex-end' }}>
+                  {Moment(userNote.createdTimestamp).format('MMMM Do YYYY, h:mm a')}
+                </ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+          ))}
+        </ScrollView>
+      ) : (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text>No User Notes</Text>
         </View>
+      )}
+      <View style={styles.buttonContainer}>
+        <Button
+          mode="contained"
+          color={Colors.primary}
+          labelStyle={{ color: Colors.light }}
+          onPress={() => setShowNotes(true)}
+          style={{ width: '100%' }}
+        >
+          Create Note
+        </Button>
+        <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+          <Portal>
+            <NewUserNoteForm
+              showNotes={showNotes}
+              closeDialog={() => setShowNotes(false)}
+              onSubmit={handleNewNoteSubmit}
+            />
+          </Portal>
+        </KeyboardAvoidingView>
       </View>
-      <Dialog visible={showNotes} onDismiss={() => setShowNotes(false)}>
-        <Dialog.Title>New Note</Dialog.Title>
-        <Dialog.Content>
-          <NewUserNoteForm closeDialog={() => setShowNotes(false)} onSubmit={handleNewNoteSubmit} />
-        </Dialog.Content>
-      </Dialog>
-    </>
+    </View>
   );
 };
 

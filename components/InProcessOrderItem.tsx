@@ -1,13 +1,21 @@
 import React from 'react';
-import { ListItem } from 'react-native-elements';
-import { Alert, Text } from 'react-native';
+import { ListItem, Button } from 'react-native-elements';
+import { Alert, Text, Platform } from 'react-native';
 import { formatPhone } from '../hooks/util';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Linking from 'expo-linking';
 
 const InProcessOrderItem = ({ orderInfo, navigation }) => {
   const handleNavigate = () => {
     navigation.navigate('Details', { order: orderInfo });
+  };
+
+  const handleMap = () => {
+    let daddr = encodeURIComponent(`${orderInfo.address.street} ${orderInfo.address.zipCode}`);
+    if (Platform.OS === 'ios') {
+      Linking.openURL(`http://maps.apple.com/?daddr=${daddr}`);
+    } else {
+      Linking.openURL(`http://maps.google.com/?daddr=${daddr}`);
+    }
   };
 
   const handlePhone = () => {
@@ -23,24 +31,24 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
 
   return (
     orderInfo && (
-      <ListItem style={{ paddingLeft: 10 }}>
+      <ListItem onPress={handleNavigate}>
         <ListItem.Content>
-          <ListItem.Title style={{ fontSize: 18 }}>
+          <ListItem.Title style={{ fontSize: 18, paddingLeft: 10, paddingBottom: 10 }}>
             {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}
             <Text style={{ fontSize: 16 }}>${orderInfo.cashTotal}</Text>
           </ListItem.Title>
-          <TouchableOpacity>
-            <ListItem.Subtitle style={{ fontSize: 16, paddingVertical: 6, color: 'blue' }}>
-              {orderInfo.address.street} {orderInfo.address.zipCode}
-            </ListItem.Subtitle>
-          </TouchableOpacity>
-          {orderInfo.orderStatus == 'in_process' ? (
-            <TouchableOpacity onPress={handlePhone}>
-              <ListItem.Subtitle style={{ fontSize: 16, color: 'blue' }}>
-                {formatPhone(orderInfo.user.phoneNumber)}
-              </ListItem.Subtitle>
-            </TouchableOpacity>
-          ) : null}
+          <Button
+            type="clear"
+            title={`${orderInfo.address.street} ${orderInfo.address.zipCode}`}
+            titleStyle={{ fontSize: 16 }}
+            onPress={handleMap}
+          />
+          <Button
+            type="clear"
+            title={formatPhone(orderInfo.user.phoneNumber)}
+            titleStyle={{ fontSize: 16 }}
+            onPress={handlePhone}
+          />
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>

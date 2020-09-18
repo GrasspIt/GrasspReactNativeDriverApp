@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import { Button, TextInput, Dialog } from 'react-native-paper';
 import Colors from '../constants/Colors';
@@ -40,37 +39,36 @@ interface NewUserNoteFormProps {
 const NewUserNoteForm = (
   props: NewUserNoteFormProps & InjectedFormProps<{}, NewUserNoteFormProps>
 ) => {
-  const {
-    closeDialog,
-    handleSubmit,
-    // submitting
-  } = props;
+  const { closeDialog, handleSubmit, showNotes } = props;
   return (
-    <>
-      <Field
-        name="note"
-        component={renderField}
-        multiline
-        rows={3}
-        mode="outlined"
-        label="Note"
-        className="field"
-      />
-      <Dialog.Actions>
-        <Button
-          mode="contained"
-          color={Colors.primary}
-          labelStyle={{ color: Colors.light }}
-          style={{ flex: 1 }}
-          onPress={handleSubmit}
-        >
-          Submit
-        </Button>
-        <Button color={Colors.primary} style={{ flex: 1 }} onPress={closeDialog}>
-          Cancel
-        </Button>
-      </Dialog.Actions>
-    </>
+    <Dialog visible={showNotes} onDismiss={closeDialog}>
+      <Dialog.Title>New Note</Dialog.Title>
+      <Dialog.Content>
+        <Field
+          name="note"
+          component={renderField}
+          multiline
+          rows={3}
+          mode="outlined"
+          label="Note"
+          className="field"
+        />
+        <Dialog.Actions>
+          <Button
+            mode="contained"
+            color={Colors.primary}
+            labelStyle={{ color: Colors.light }}
+            style={{ flex: 1 }}
+            onPress={handleSubmit}
+          >
+            Submit
+          </Button>
+          <Button color={Colors.primary} style={{ flex: 1 }} onPress={closeDialog}>
+            Cancel
+          </Button>
+        </Dialog.Actions>
+      </Dialog.Content>
+    </Dialog>
   );
 };
 
