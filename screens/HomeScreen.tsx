@@ -32,6 +32,7 @@ import OrderItem from '../components/OrderItem';
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
+import { Title } from 'react-native-paper';
 
 // handler for push notifications
 Notifications.setNotificationHandler({
@@ -156,6 +157,7 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
               }}
             />
           </View>
+          <Text style={{ fontSize: 22, textAlign: 'center' }}>{dspr.name}</Text>
           <OnCallSwitch dsprDriver={dsprDriver} />
           <FlatList
             ListEmptyComponent={

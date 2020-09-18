@@ -72,7 +72,7 @@ const productCategoryAutoCompleteSelected = (state, action) => {
 //     }
 // };
 
-const appReducer = combineReducers({
+const rootReducer = combineReducers({
   // DriverInventoryPeriodForm: (state, action) => {if(state) return productForDriverInventoryAutoCompleteSelected(state, action)}
   form: formReducer.plugin({
     DSPForm: (state, action) => {
@@ -102,12 +102,5 @@ const appReducer = combineReducers({
   }),
   api,
 });
-
-const rootReducer = (state, action) => {
-  if (action.type === LOGOUT) {
-    state = undefined;
-  }
-  return appReducer(state, action);
-};
 
 export default rootReducer;

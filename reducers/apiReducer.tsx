@@ -101,7 +101,6 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
-  console.log('action.type:', action.type);
   switch (action.type) {
     case GET_APP_ACCESS_TOKEN_SUCCESS:
     case UPDATE_ACCESS_TOKEN:
@@ -109,9 +108,14 @@ export default (state = initialState, action) => {
     case PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE:
       return { ...state, accessToken: action.accessToken };
     case LOGOUT:
-      return {
-        ...initialState,
-      };
+      const resetState = { ...initialState, entities: entitiesInitialState };
+      return merge({}, resetState, {
+        entities: entitiesReducer(state.entities, null),
+      });
+    // return {
+    //   ...initialState,
+    //   entities: entitiesInitialState,
+    // };
     case LOGGED_IN_USER_INFO_SUCCESS:
       let entities = action.response.entities;
       let usersFromResponse = entities.users;
