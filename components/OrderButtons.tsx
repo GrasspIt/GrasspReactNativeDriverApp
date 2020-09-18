@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import Colors from '../constants/Colors';
-import { completeOrder, cancelOrder } from '../actions/orderActions';
+import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
 
 const OrderButtons = ({ orderId, navigation, orderStatus }) => {
@@ -32,6 +32,18 @@ const OrderButtons = ({ orderId, navigation, orderStatus }) => {
     ]);
   };
 
+  const processAndReturn = () => {
+    dispatch(markOrderInProcess(orderId));
+    navigation.navigate('Home');
+  };
+
+  const handleProcessOrder = () => {
+    Alert.alert('Process Order', 'Mark this order as in-process?', [
+      { text: 'No', style: 'cancel' },
+      { text: 'Yes', onPress: () => processAndReturn() },
+    ]);
+  };
+
   return (
     <View style={styles.buttonContainer}>
       <Button
@@ -56,7 +68,7 @@ const OrderButtons = ({ orderId, navigation, orderStatus }) => {
           mode="contained"
           color={Colors.primary}
           labelStyle={{ color: Colors.light }}
-          onPress={() => console.log('in process')}
+          onPress={handleProcessOrder}
         >
           Set In Process
         </Button>
