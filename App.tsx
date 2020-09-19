@@ -1,12 +1,11 @@
 import React from 'react';
-import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+import { store } from './store/store';
+import AuthNavigator from './navigation/AuthNavigator';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+// import { AppRegistry } from 'react-native';
+// import { name as appName } from './app.json';
 
-import ScreenNavigator from './navigation/ScreenNavigator';
-import rootReducer from './reducers/rootReducer';
-import api from './middleware/api';
-import { createLogger } from 'redux-logger';
 // import * as Sentry from 'sentry-expo';
 
 // Sentry.init({
@@ -15,14 +14,32 @@ import { createLogger } from 'redux-logger';
 //   debug: true,
 // });
 
-const store = createStore(
-  rootReducer, applyMiddleware(thunk, api, createLogger())
-);
+const theme = {
+  ...DefaultTheme,
+  dark: false,
+  roundness: 4,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#6200ee',
+    accent: '#03dac4',
+    background: '#f6f6f6',
+    surface: DefaultTheme.colors.surface,
+    error: '#B00020',
+    text: DefaultTheme.colors.text,
+    onBackground: '#000000',
+    onSurface: '#000000',
+    notification: DefaultTheme.colors.notification,
+  },
+};
 
 export default function App() {
   return (
     <Provider store={store}>
-      <ScreenNavigator />
+      <PaperProvider theme={theme}>
+        <AuthNavigator />
+      </PaperProvider>
     </Provider>
   );
 }
+
+// AppRegistry.registerComponent(appName, () => App);
