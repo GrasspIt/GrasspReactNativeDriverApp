@@ -33,7 +33,7 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
     orderInfo && (
       <ListItem onPress={handleNavigate}>
         <ListItem.Content>
-          <ListItem.Title style={{ fontSize: 18, paddingLeft: 10, paddingBottom: 10 }}>
+          <ListItem.Title style={{ fontSize: 18, paddingLeft: 10, paddingBottom: 2 }}>
             {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}
             <Text style={{ fontSize: 16 }}>${orderInfo.cashTotal}</Text>
           </ListItem.Title>
@@ -41,12 +41,14 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
             type="clear"
             title={`${orderInfo.address.street} ${orderInfo.address.zipCode}`}
             titleStyle={{ fontSize: 16 }}
+            buttonStyle={{ padding: 2, paddingLeft: 10 }}
             onPress={handleMap}
           />
           <Button
             type="clear"
             title={formatPhone(orderInfo.user.phoneNumber)}
             titleStyle={{ fontSize: 16 }}
+            buttonStyle={{ padding: 2, paddingLeft: 10 }}
             onPress={handlePhone}
           />
         </ListItem.Content>

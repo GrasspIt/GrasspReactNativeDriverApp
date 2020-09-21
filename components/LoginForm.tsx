@@ -44,6 +44,7 @@ const LoginForm: React.FC<LoginProps> = (props) => {
       setPasswordInvalid(true);
       return;
     }
+    Keyboard.dismiss();
     handleLogin(email, password);
     setEmail('');
     setPassword('');
