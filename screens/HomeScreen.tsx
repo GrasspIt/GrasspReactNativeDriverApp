@@ -156,7 +156,9 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
               navigation={navigation}
             />
           ) : (
-            <Text>No order in process.</Text>
+            <View style={styles.container}>
+              <Text>No order in process.</Text>
+            </View>
           )}
           <Divider style={{ height: 2 }} />
           <Text style={styles.listTitle}>Queued Orders</Text>

@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-
+import { Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { attemptLogin, logout } from '../actions/oauthActions';
 import { State, User } from '../store/reduxStoreState';
-
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/AuthNavigator';
-
-import LoginForm from '../components/LoginForm';
-import { Alert } from 'react-native';
 import { setDsprDriverId } from '../actions/driverActions';
 import * as RootNavigation from '../navigation/RootNavigation';
+import LoginForm from '../components/LoginForm';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Login'>;
 type Props = {
