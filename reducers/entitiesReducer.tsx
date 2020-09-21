@@ -142,9 +142,7 @@ const appendAndUpdateEntitiesFromResponseWithArrayOverwrite = (
   return newState;
 };
 
-const applicationState = Object.assign({}, initialState);
-
-export default (state = applicationState, action) => {
+export default (state = initialState, action) => {
   let responseEntities = action.response.entities;
   switch (action.type) {
     case LOGGED_IN_USER_INFO_SUCCESS:

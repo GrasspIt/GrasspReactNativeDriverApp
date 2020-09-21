@@ -97,21 +97,16 @@ const initialState = {
   dsprDriverId: '',
   errorMessage: '',
   isLoading: false,
-  entities: Object.assign({}, entitiesInitialState),
+  entities: entitiesInitialState,
 };
 
-const applicationState = Object.assign({}, initialState);
-
-export default (state = applicationState, action) => {
+export default (state = initialState, action) => {
   switch (action.type) {
     case GET_APP_ACCESS_TOKEN_SUCCESS:
     case UPDATE_ACCESS_TOKEN:
     case LOGIN_SUCCESS:
     case PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE:
       return { ...state, accessToken: action.accessToken };
-    case LOGOUT:
-      console.log(entitiesInitialState);
-      return initialState;
     case LOGGED_IN_USER_INFO_SUCCESS:
       let entities = action.response.entities;
       let usersFromResponse = entities.users;
@@ -226,6 +221,45 @@ export default (state = applicationState, action) => {
       return { ...state, errorMessage: '' };
     // case MODIFY_ORDER_SUCCESS:
     //     return merge({}, state, { entities: entitiesReducer(state.entities, action) });
+    case LOGOUT:
+      return {
+        accessToken: '',
+        loggedInUserId: '',
+        dsprDriverId: '',
+        errorMessage: '',
+        isLoading: false,
+        entities: {
+          users: {},
+          unverifiedUsers: {},
+          searchUsers: {},
+          deliveryServiceProviders: {},
+          dspManagers: {},
+          DSPRs: {},
+          dsprManagers: {},
+          dsprDrivers: {},
+          dsprDriverLocations: {},
+          dsprDriverInventoryPeriods: {},
+          dsprDriverInventoryItems: {},
+          dsprProductInventoryTransactions: {},
+          dsprCurrentInventoryItems: {},
+          dsprZipCodes: {},
+          usersIdDocuments: {},
+          usersMedicalRecommendations: {},
+          dsprProductPriceHistories: {},
+          dspProductCategories: {},
+          dsprProductCategoryPromotions: {},
+          coupons: {},
+          orders: {},
+          addresses: {},
+          dsprOrderHistories: {},
+          textBlasts: {},
+          userNotes: {},
+          searchProducts: {},
+          dsprDriverServiceAreas: {},
+          dsprDriverServiceAreaVertices: {},
+          metrics: {},
+        },
+      };
     default:
       return state;
   }
