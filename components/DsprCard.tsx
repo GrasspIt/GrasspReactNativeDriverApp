@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions } from 'react-native';
 import Colors from '../constants/Colors';
+import { StatusBar } from 'expo-status-bar';
 import { getEnvVars } from '../environment';
 const { apiUrl } = getEnvVars();
 
@@ -17,15 +11,15 @@ type CardProps = {
 };
 
 const DsprCard = ({ dspr, handleSelect }: CardProps) => {
+  // const image = dspr.imageLocation
+  //   ? { uri: `https://api.grassp.it/${dspr.imageLocation}` }
+  //   : require('../assets/grassp_health.png');
   const image = dspr.imageLocation
-    ? { uri: `https://api.grassp.it/${dspr.imageLocation}` }
+    ? { uri: `${apiUrl}${dspr.imageLocation}` }
     : require('../assets/grassp_health.png');
-  // const image = dspr.imageLocation ? `${apiUrl}${dspr.imageLocation}` : '';
+
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => handleSelect(dspr.id)}
-    >
+    <TouchableOpacity style={styles.container} onPress={() => handleSelect(dspr.id)}>
       <View style={styles.cardContainer}>
         <View style={styles.imageContainer}>
           <Image resizeMode="contain" style={styles.image} source={image} />
@@ -34,6 +28,7 @@ const DsprCard = ({ dspr, handleSelect }: CardProps) => {
           <Text style={styles.title}>{dspr.name}</Text>
         </View>
       </View>
+      <StatusBar style="dark" />
     </TouchableOpacity>
   );
 };
