@@ -9,6 +9,7 @@ import {
   Image,
 } from 'react-native';
 import { Input, Button, Card } from 'react-native-elements';
+import { StatusBar } from 'expo-status-bar';
 import Colors from '../constants/Colors';
 
 interface LoginProps {
@@ -101,6 +102,7 @@ const LoginForm: React.FC<LoginProps> = (props) => {
           </Card>
         </View>
       </TouchableWithoutFeedback>
+      <StatusBar style="dark" />
     </KeyboardAvoidingView>
   );
 };
