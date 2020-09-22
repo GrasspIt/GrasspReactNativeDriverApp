@@ -122,7 +122,7 @@ const appendAndUpdateEntitiesFromResponse = (
     if (skipEntityTypes.includes(entityType)) return;
     let oldStateTypeEntities = oldState[entityType];
     let entitiesInResponse = responseEntities[entityType];
-    newState[entityType] = _.merge(oldStateTypeEntities, entitiesInResponse);
+    newState[entityType] = _.merge({}, oldStateTypeEntities, entitiesInResponse);
   });
   return newState;
 };
@@ -137,7 +137,12 @@ const appendAndUpdateEntitiesFromResponseWithArrayOverwrite = (
     if (skipEntityTypes.includes(entityType)) return;
     let oldStateTypeEntities = oldState[entityType];
     let entitiesInResponse = responseEntities[entityType];
-    newState[entityType] = _.mergeWith(oldStateTypeEntities, entitiesInResponse, overwriteArray);
+    newState[entityType] = _.mergeWith(
+      {},
+      oldStateTypeEntities,
+      entitiesInResponse,
+      overwriteArray
+    );
   });
   return newState;
 };

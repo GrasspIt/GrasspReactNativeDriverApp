@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
-import { LOGOUT } from '../actions/oauthActions';
 import api from './apiReducer';
 import { AUTOCOMPLETE_SELECTED, DRIVER_AUTOCOMPLETE_SELECTED } from '../actions/formHelperActions';
 

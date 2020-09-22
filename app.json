@@ -1,8 +1,11 @@
 {
   "expo": {
-    "name": "GrasspReactNativeDriverApp",
-    "slug": "GrasspReactNativeDriverApp",
+    "name": "Grassp Driver App",
+    "slug": "GrasspDriverApp",
+    "owner": "Grassp Health",
     "version": "1.0.0",
+    "sdkVersion": "38.0.0",
+    "platforms": ["ios", "android"],
     "orientation": "portrait",
     "icon": "./assets/grasspLogo1024.png",
     "splash": {
@@ -21,8 +24,13 @@
         "UIBackgroundModes": ["location", "fetch"]
       }
     },
+    "android": {
+      "package": "com.GrasspHealth.DriverApp",
+      "googleServicesFile": "./google-services.json"
+    },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "A mobile app for Grassp Health dispensary drivers."
   }
 }
