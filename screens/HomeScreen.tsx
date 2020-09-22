@@ -147,7 +147,7 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
             /> */}
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           <OnCallSwitch dsprDriver={dsprDriver} />
-          <CurrentLocation location={dsprDriver.currentLocation} />
+          {/* <CurrentLocation location={dsprDriver.currentLocation} /> */}
 
           <Divider style={{ height: 2 }} />
           <Text style={styles.listTitle}>In Process Order</Text>

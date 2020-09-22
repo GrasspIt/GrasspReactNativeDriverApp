@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "86818988749",
+    "firebase_url": "https://grassp-driver-app-7172.firebaseio.com",
+    "project_id": "grassp-driver-app-7172",
+    "storage_bucket": "grassp-driver-app-7172.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:86818988749:android:531e0df3bfef856f043f84",
+        "android_client_info": {
+          "package_name": "com.GrasspHealth.DriverApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "86818988749-uk0emnonu6ngu06s0kc7cnegeclu986k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5GXk1djPDWxHa67oakhTs4FEu4AQuSyA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "86818988749-uk0emnonu6ngu06s0kc7cnegeclu986k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
