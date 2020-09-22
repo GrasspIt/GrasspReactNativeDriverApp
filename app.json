@@ -2,7 +2,6 @@
   "expo": {
     "name": "Grassp Driver App",
     "slug": "GrasspDriverApp",
-    "owner": "Grassp Health",
     "version": "1.0.0",
     "sdkVersion": "38.0.0",
     "platforms": ["ios", "android"],
