@@ -34,6 +34,7 @@ import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriver
 import { getLoggedInUser } from '../selectors/userSelectors';
 import { Divider } from 'react-native-elements';
 import InProcessOrderItem from '../components/InProcessOrderItem';
+import CurrentLocation from '../components/CurrentLocation';
 
 // handler for push notifications
 Notifications.setNotificationHandler({
@@ -146,6 +147,8 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
             /> */}
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           <OnCallSwitch dsprDriver={dsprDriver} />
+          <CurrentLocation location={dsprDriver.currentLocation} />
+
           <Divider style={{ height: 2 }} />
           <Text style={styles.listTitle}>In Process Order</Text>
           <Divider style={{ height: 1, marginHorizontal: 10 }} />
@@ -156,18 +159,19 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
               navigation={navigation}
             />
           ) : (
-            <View style={styles.container}>
+            <View style={styles.empty}>
               <Text>No order in process.</Text>
             </View>
           )}
+
           <Divider style={{ height: 2 }} />
           <Text style={styles.listTitle}>Queued Orders</Text>
           <Divider style={{ height: 1, marginHorizontal: 10 }} />
 
           <FlatList
             ListEmptyComponent={
-              <View style={styles.container}>
-                <Text>No Orders</Text>
+              <View style={styles.empty}>
+                <Text>No orders.</Text>
               </View>
             }
             onRefresh={() => getDriverData()}
@@ -189,6 +193,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  empty: {
+    backgroundColor: Colors.light,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
   body: {
     flex: 1,
@@ -212,25 +222,25 @@ const styles = StyleSheet.create({
 });
 
 // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/dashboard/notifications
-async function sendPushNotification(expoPushToken) {
-  const message = {
-    to: expoPushToken,
-    sound: 'default',
-    title: 'Original Title',
-    body: 'And here is the body!',
-    data: { data: 'goes here' },
-  };
+// async function sendPushNotification(expoPushToken) {
+//   const message = {
+//     to: expoPushToken,
+//     sound: 'default',
+//     title: 'Original Title',
+//     body: 'And here is the body!',
+//     data: { data: 'goes here' },
+//   };
 
-  await fetch('https://exp.host/--/api/v2/push/send', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Accept-encoding': 'gzip, deflate',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(message),
-  });
-}
+//   await fetch('https://exp.host/--/api/v2/push/send', {
+//     method: 'POST',
+//     headers: {
+//       Accept: 'application/json',
+//       'Accept-encoding': 'gzip, deflate',
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(message),
+//   });
+// }
 
 // get permission for push notifications and set token
 async function registerForPushNotificationsAsync() {
@@ -274,7 +284,7 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
     return;
   }
   if (data) {
-    console.log('location update');
+    console.log('data', data);
     const { locations } = data as any;
     let lat = locations[0].coords.latitude;
     let long = locations[0].coords.longitude;
