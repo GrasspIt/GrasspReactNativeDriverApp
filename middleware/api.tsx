@@ -82,6 +82,14 @@ const userSchema = new schema.Entity(
   }
 );
 
+const pushTokenSchema = new schema.Entity(
+  'pushToken',
+  {},
+  {
+    idAttribute: (token) => token.id,
+  }
+);
+
 const searchUserSchema = new schema.Entity(
   'searchUsers',
   {},
@@ -313,6 +321,8 @@ const dsprDriverServiceAreaVertexSchema = new schema.Entity(
   }
 );
 
+pushTokenSchema.define({});
+
 dsprDriverServiceAreaSchema.define({
   dsprDriverServiceAreaVertices: [dsprDriverServiceAreaVertexSchema],
   dspr: dsprSchema,
@@ -459,6 +469,7 @@ userSchema.define({
 
 // Schemas for Grassp API responses.
 export const Schemas = {
+  PUSH_TOKEN: pushTokenSchema,
   USER: userSchema,
   USER_ARRAY: [userSchema],
   UNVERIFIED_USER: unverifiedUserSchema,

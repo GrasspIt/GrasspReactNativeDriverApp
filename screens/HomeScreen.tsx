@@ -1,14 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Alert,
-  FlatList,
-  ActivityIndicator,
-  Platform,
-  Button,
-} from 'react-native';
+import { StyleSheet, Text, View, Alert, FlatList, ActivityIndicator, Platform } from 'react-native';
 import Colors from '../constants/Colors';
 
 import Constants from 'expo-constants';
@@ -19,7 +10,7 @@ import * as Permissions from 'expo-permissions';
 
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
-
+import { sendPushToken } from '../actions/userActions';
 import { refreshDSPRDriver, getDSPRDriver, setDriverLocation } from '../actions/driverActions';
 import { useDispatch, connect } from 'react-redux';
 import { store } from '../store/store';
@@ -34,7 +25,6 @@ import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriver
 import { getLoggedInUser } from '../selectors/userSelectors';
 import { Divider } from 'react-native-elements';
 import InProcessOrderItem from '../components/InProcessOrderItem';
-import CurrentLocation from '../components/CurrentLocation';
 
 // handler for push notifications
 Notifications.setNotificationHandler({
@@ -62,7 +52,6 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
 
   const [isTracking, setIsTracking] = useState(false);
   const [error, setError] = useState('');
-  const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
 
   // polling data from API while logged in
@@ -77,7 +66,7 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
 
   // push notifications
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
+    registerForPushNotificationsAsync().then((token) => dispatch(sendPushToken(token)));
     // listen for when a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       setNotification(notification);
@@ -139,15 +128,8 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
         </View>
       ) : (
         <View style={styles.body}>
-          {/* <Button
-              title="Press to Send Notification"
-              onPress={async () => {
-                await sendPushNotification(expoPushToken);
-              }}
-            /> */}
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           <OnCallSwitch dsprDriver={dsprDriver} />
-          {/* <CurrentLocation location={dsprDriver.currentLocation} /> */}
 
           <Divider style={{ height: 2 }} />
           <Text style={styles.listTitle}>In Process Order</Text>

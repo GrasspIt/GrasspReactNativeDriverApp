@@ -561,3 +561,24 @@ const unhideNote = (id: number) => {
 export const unhideUserNote = (noteId: number) => (dispatch) => {
   return dispatch(unhideNote(noteId));
 };
+
+export const SEND_PUSH_TOKEN = 'SEND_PUSH_TOKEN';
+export const SEND_PUSH_TOKEN_SUCCESS = 'SEND_PUSH_TOKEN_SUCCESS';
+export const SEND_PUSH_TOKEN_FAILURE = 'SEND_PUSH_TOKEN_FAILURE';
+
+const expoPushTokenSender = (pushToken) => {
+  const tokenBody = { token: pushToken };
+  return {
+    [CALL_API]: {
+      httpAction: 'POST',
+      types: [SEND_PUSH_TOKEN, SEND_PUSH_TOKEN_SUCCESS, SEND_PUSH_TOKEN_FAILURE],
+      endPoint: `user/expo-push-token`,
+      schema: Schemas.PUSH_TOKEN,
+      body: tokenBody,
+    },
+  };
+};
+
+export const sendPushToken = (pushToken) => (dispatch) => {
+  return dispatch(expoPushTokenSender(pushToken));
+};

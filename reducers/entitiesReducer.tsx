@@ -17,6 +17,7 @@ import {
   SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS,
   HIDE_USER_NOTE_SUCCESS,
   UNHIDE_USER_NOTE_SUCCESS,
+  SEND_PUSH_TOKEN_SUCCESS,
   ADMIN_CHANGES_USER_DETAILS_SUCCESS,
   HIDE_USER_DOCUMENT_SUCCESS,
   UNHIDE_USER_DOCUMENT_SUCCESS,
@@ -78,6 +79,7 @@ import {
 
 export const initialState = {
   users: {},
+  pushToken: {},
   unverifiedUsers: {},
   searchUsers: {},
   deliveryServiceProviders: {},
@@ -201,6 +203,7 @@ export default (state = initialState, action) => {
     case UNHIDE_USER_NOTE_SUCCESS:
     case HIDE_USER_DOCUMENT_SUCCESS:
     case UNHIDE_USER_DOCUMENT_SUCCESS:
+    case SEND_PUSH_TOKEN_SUCCESS:
       // case ADMIN_CHANGES_USER_DETAILS_SUCCESS:
       // case GET_PRODUCT_CATEGORIES_FOR_DSP_SUCCESS:
       // case CREATE_DSPR_PROMOTION_FOR_PRODUCT_CATEGORY_SUCCESS:
