@@ -128,7 +128,7 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
         </View>
       ) : (
         <View style={styles.body}>
-          <Text style={styles.dsprTitle}>{dspr.name}</Text>
+          <Text style={styles.dsprTitle}>Hi {dspr.name}</Text>
           <OnCallSwitch dsprDriver={dsprDriver} />
 
           <Divider style={{ height: 2 }} />
