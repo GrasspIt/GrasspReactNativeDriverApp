@@ -4,7 +4,7 @@ import { ListItem } from 'react-native-elements';
 import { Button, Card, Title } from 'react-native-paper';
 import { useSelector, useDispatch, shallowEqual, connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
-import { getUserNotesFromProps } from '../selectors/userSelectors';
+import { getUserFromProps, getUserNotesFromProps } from '../selectors/userSelectors';
 import {
   getUserIdDocumentFromPropsWithOrder,
   getUserMedicalRecommendations,
@@ -13,13 +13,22 @@ import OrderDetailListItem from '../components/OrderDetailListItem';
 import Colors from '../constants/Colors';
 import Moment from 'moment';
 
-import { IdDocument, State, MedicalRecommendation } from '../store/reduxStoreState';
+import {
+  IdDocument,
+  State,
+  MedicalRecommendation,
+  Order,
+  User,
+  Address,
+} from '../store/reduxStoreState';
 import { formatPhone } from '../hooks/util';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
 import OrderButtons from '../components/OrderButtons';
 import { Divider } from 'react-native-paper';
+import { getOrderFromProps } from '../selectors/orderSelectors';
+import { getAddressFromProps } from '../selectors/addressSelectors';
 
 type DetailsScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Details'>;
 
@@ -31,10 +40,23 @@ type Props = {
 const OrderDetails = ({ route, navigation, isLoading }: Props) => {
   const dispatch = useDispatch();
 
-  const { order } = route.params;
-  const user = order && order.user;
-  const address = order && order.address;
+  const { orderId } = route.params; //change to orderId
   const [error, setError] = useState('');
+
+  const order = useSelector<State, Order>(
+    (state) => getOrderFromProps(state, { orderId }),
+    shallowEqual
+  );
+  const user = useSelector<State, User>(
+    (state) => getUserFromProps(state, { userId: order.user }),
+    shallowEqual
+  );
+  const address = useSelector<State, Address>(
+    (state) => getAddressFromProps(state, { addressId: order.address }),
+    shallowEqual
+  );
+  // const user = order && order.user;
+  // const address = order && order.address;
 
   const userNotes = useSelector<State, any[]>(
     (state) => getUserNotesFromProps(state, { userId: user.id }),
@@ -62,8 +84,8 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
     medicalRecommendations[order.userMedicalRecommendation];
 
   useEffect(() => {
-    dispatch(getOrderDetailsWithId(order.id));
-  }, [order.id]);
+    dispatch(getOrderDetailsWithId(orderId));
+  }, [orderId]);
 
   const handleManageNotes = () => {
     navigation.navigate('Notes', { userId: user.id, dsprDriverId: order.dsprDriver, userNotes });
@@ -97,7 +119,9 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
                 ) : null
               )
             ) : (
-              <Text>No Notes</Text>
+              <View style={styles.empty}>
+                <Text>No Notes</Text>
+              </View>
             )}
             <Button
               mode="contained"
@@ -246,11 +270,7 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
               </ListItem.Content>
             </ListItem>
           </ScrollView>
-          <OrderButtons
-            navigation={navigation}
-            orderId={order.id}
-            orderStatus={order.orderStatus}
-          />
+          <OrderButtons navigation={navigation} orderId={orderId} orderStatus={order.orderStatus} />
         </>
       )}
     </>
@@ -273,6 +293,11 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     padding: 10,
+  },
+  empty: {
+    backgroundColor: Colors.light,
+    justifyContent: 'center',
+    padding: 14,
   },
 });
 

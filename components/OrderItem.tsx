@@ -13,7 +13,7 @@ const OrderItem = ({ orderInfo, navigation }) => {
   };
 
   const handleNavigate = () => {
-    navigation.navigate('Details', { order: orderInfo });
+    navigation.navigate('Details', { order: orderInfo, orderId: orderInfo.id });
   };
 
   return (

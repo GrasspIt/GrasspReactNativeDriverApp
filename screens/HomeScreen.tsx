@@ -1,5 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Alert, FlatList, ActivityIndicator, Platform } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  FlatList,
+  ActivityIndicator,
+  Platform,
+  Button,
+} from 'react-native';
 import Colors from '../constants/Colors';
 
 import Constants from 'expo-constants';
@@ -43,9 +52,18 @@ type Props = {
   driverId;
   dsprDriver;
   isLoading;
+  pushToken;
 };
 
-const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLoading }: Props) => {
+const HomeScreen = ({
+  navigation,
+  driverId,
+  loggedInUser,
+  dspr,
+  dsprDriver,
+  isLoading,
+  pushToken,
+}: Props) => {
   const dispatch = useDispatch();
   const notificationListener = useRef();
   const responseListener = useRef();
@@ -53,6 +71,7 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
   const [isTracking, setIsTracking] = useState(false);
   const [error, setError] = useState('');
   const [notification, setNotification] = useState(false);
+  const [expoPushToken, setExpoPushToken] = useState('');
 
   // polling data from API while logged in
   const getDriverData = () => {
@@ -66,7 +85,13 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
 
   // push notifications
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => dispatch(sendPushToken(token)));
+    // get push token if none is stored
+    if (!pushToken || !pushToken.isCurrent) {
+      registerForPushNotificationsAsync().then((token) => {
+        setExpoPushToken(token);
+        dispatch(sendPushToken(token));
+      });
+    }
     // listen for when a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       setNotification(notification);
@@ -74,6 +99,9 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
     // listen for when a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
       console.log(response);
+      navigation.navigate('Details', {
+        orderId: response.notification.request.content.data.body.orderId,
+      });
     });
     // listener cleanup
     return () => {
@@ -128,7 +156,26 @@ const HomeScreen = ({ navigation, driverId, loggedInUser, dspr, dsprDriver, isLo
         </View>
       ) : (
         <View style={styles.body}>
-          <Text style={styles.dsprTitle}>Hi {dspr.name}</Text>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'space-around',
+            }}
+          >
+            <Text>Your expo push token: {expoPushToken}</Text>
+            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+              <Text>Title: {notification && notification.request.content.title} </Text>
+              <Text>Body: {notification && notification.request.content.body}</Text>
+              <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
+            </View>
+            <Button
+              title="Press to Send Notification"
+              onPress={async () => {
+                await sendPushNotification(expoPushToken);
+              }}
+            />
+          </View>
+          <Text style={styles.dsprTitle}>{dspr.name}</Text>
           <OnCallSwitch dsprDriver={dsprDriver} />
 
           <Divider style={{ height: 2 }} />
@@ -204,25 +251,25 @@ const styles = StyleSheet.create({
 });
 
 // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/dashboard/notifications
-// async function sendPushNotification(expoPushToken) {
-//   const message = {
-//     to: expoPushToken,
-//     sound: 'default',
-//     title: 'Original Title',
-//     body: 'And here is the body!',
-//     data: { data: 'goes here' },
-//   };
+async function sendPushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: 'Original Title',
+    body: 'And here is the body!',
+    data: { orderId: 77571 },
+  };
 
-//   await fetch('https://exp.host/--/api/v2/push/send', {
-//     method: 'POST',
-//     headers: {
-//       Accept: 'application/json',
-//       'Accept-encoding': 'gzip, deflate',
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify(message),
-//   });
-// }
+  await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  });
+}
 
 // get permission for push notifications and set token
 async function registerForPushNotificationsAsync() {
@@ -280,12 +327,14 @@ const mapStateToProps = (state) => {
   const dsprDriver = getDSPRDriverWithUserAndOrdersFromProps(state, { dsprDriverId: driverId });
   const dspr = dsprDriver ? getDSPRFromProps(state, { dsprId: dsprDriver.dspr }) : undefined;
   const isLoading = state.api.isLoading;
+  const pushToken = state.api.entities.pushToken;
   return {
     loggedInUser: getLoggedInUser(state),
     driverId,
     dspr,
     dsprDriver,
     isLoading,
+    pushToken,
   };
 };
 
