@@ -6,7 +6,6 @@ import * as Linking from 'expo-linking';
 
 const InProcessOrderItem = ({ orderInfo, navigation }) => {
   const handleNavigate = () => {
-    // navigation.navigate('Details', { order: orderInfo });
     navigation.navigate('Details', { orderId: orderInfo.id });
   };
 

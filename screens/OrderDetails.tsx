@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import { Button, Card, Title } from 'react-native-paper';
+import { Button, Title } from 'react-native-paper';
 import { useSelector, useDispatch, shallowEqual, connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { getUserFromProps, getUserNotesFromProps } from '../selectors/userSelectors';
@@ -55,8 +55,6 @@ const OrderDetails = ({ route, navigation, isLoading }: Props) => {
     (state) => getAddressFromProps(state, { addressId: order.address }),
     shallowEqual
   );
-  // const user = order && order.user;
-  // const address = order && order.address;
 
   const userNotes = useSelector<State, any[]>(
     (state) => getUserNotesFromProps(state, { userId: user.id }),

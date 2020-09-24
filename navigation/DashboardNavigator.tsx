@@ -16,7 +16,7 @@ type Props = {
 
 export type DashboardStackParamsList = {
   Home: { driverId: number };
-  Details: { orderInfo: Order };
+  Details: { orderId: number };
   Notes: any;
 };
 
