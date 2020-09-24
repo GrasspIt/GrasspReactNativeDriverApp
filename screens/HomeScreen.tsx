@@ -71,7 +71,7 @@ const HomeScreen = ({
   const [isTracking, setIsTracking] = useState(false);
   const [error, setError] = useState('');
   const [notification, setNotification] = useState(false);
-  const [expoPushToken, setExpoPushToken] = useState('');
+  // const [expoPushToken, setExpoPushToken] = useState('');
 
   // polling data from API while logged in
   const getDriverData = () => {
@@ -88,7 +88,7 @@ const HomeScreen = ({
     // get push token if none is stored
     if (!pushToken || !pushToken.isCurrent) {
       registerForPushNotificationsAsync().then((token) => {
-        setExpoPushToken(token);
+        // setExpoPushToken(token);
         dispatch(sendPushToken(token));
       });
     }
@@ -156,7 +156,7 @@ const HomeScreen = ({
         </View>
       ) : (
         <View style={styles.body}>
-          <View
+          {/* <View
             style={{
               alignItems: 'center',
               justifyContent: 'space-around',
@@ -168,7 +168,7 @@ const HomeScreen = ({
                 await sendPushNotification(expoPushToken);
               }}
             />
-          </View>
+          </View> */}
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           <OnCallSwitch dsprDriver={dsprDriver} />
 
@@ -245,25 +245,25 @@ const styles = StyleSheet.create({
 });
 
 // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/dashboard/notifications
-async function sendPushNotification(expoPushToken) {
-  const message = {
-    to: expoPushToken,
-    sound: 'default',
-    title: 'Original Title',
-    body: 'And here is the body!',
-    data: { orderId: 77571 },
-  };
+// async function sendPushNotification(expoPushToken) {
+//   const message = {
+//     to: expoPushToken,
+//     sound: 'default',
+//     title: 'Original Title',
+//     body: 'And here is the body!',
+//     data: { orderId: 77571 },
+//   };
 
-  await fetch('https://exp.host/--/api/v2/push/send', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Accept-encoding': 'gzip, deflate',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(message),
-  });
-}
+//   await fetch('https://exp.host/--/api/v2/push/send', {
+//     method: 'POST',
+//     headers: {
+//       Accept: 'application/json',
+//       'Accept-encoding': 'gzip, deflate',
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(message),
+//   });
+// }
 
 // get permission for push notifications and set token
 async function registerForPushNotificationsAsync() {
