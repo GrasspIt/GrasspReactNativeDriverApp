@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Switch, View } from 'react-native';
+import { Text, Switch, View, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { setDriverOnCallState } from '../actions/driverActions';
 import { DsprDriver } from '../store/reduxStoreState';
@@ -14,6 +14,10 @@ const OnCallSwitch = ({ dsprDriver }: SwitchProps) => {
 
   const toggleSwitch = () => {
     if (dsprDriver && dsprDriver.onCall !== null) {
+      if (!dsprDriver.currentInventoryPeriod) {
+        Alert.alert('You need an inventory period to go on call.');
+        return;
+      }
       let onCallString = !dsprDriver.onCall ? 'on' : null;
       dispatch(setDriverOnCallState(dsprDriver.id, onCallString));
       setIsOnCall(!isOnCall);
