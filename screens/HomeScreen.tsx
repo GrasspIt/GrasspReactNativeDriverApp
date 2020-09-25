@@ -124,7 +124,7 @@ const HomeScreen = ({
           console.log('start location updates');
           setIsTracking(true);
           await Location.startLocationUpdatesAsync('location-tracking', {
-            timeInterval: 30000,
+            timeInterval: 60000,
             distanceInterval: 0,
             foregroundService: {
               notificationTitle: 'Location Updates',
