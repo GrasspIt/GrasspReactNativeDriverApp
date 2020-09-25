@@ -9,6 +9,7 @@ import {
   Platform,
   Button,
 } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import Colors from '../constants/Colors';
 
 import Constants from 'expo-constants';
@@ -145,6 +146,7 @@ const HomeScreen = ({
 
   return loggedInUser && dsprDriver ? (
     <>
+      <StatusBar style="dark" />
       <TopNavBar dsprName={dspr.name} navigation={navigation} />
       {isLoading ? (
         <View style={styles.container}>
