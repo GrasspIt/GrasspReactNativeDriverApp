@@ -7,6 +7,7 @@ import {
   View,
   StyleSheet,
   Image,
+  Text,
 } from 'react-native';
 import { Input, Button, Card } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';

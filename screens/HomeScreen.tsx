@@ -33,7 +33,7 @@ import OrderItem from '../components/OrderItem';
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
-import { Divider } from 'react-native-elements';
+import { Divider } from 'react-native-paper';
 import InProcessOrderItem from '../components/InProcessOrderItem';
 
 // handler for push notifications

@@ -14,10 +14,6 @@ const OnCallSwitch = ({ dsprDriver }: SwitchProps) => {
 
   const toggleSwitch = () => {
     if (dsprDriver && dsprDriver.onCall !== null) {
-      if (!dsprDriver.currentInventoryPeriod) {
-        Alert.alert('You need an inventory period to go on call.');
-        return;
-      }
       let onCallString = !dsprDriver.onCall ? 'on' : null;
       dispatch(setDriverOnCallState(dsprDriver.id, onCallString));
       setIsOnCall(!isOnCall);
@@ -36,6 +32,7 @@ const OnCallSwitch = ({ dsprDriver }: SwitchProps) => {
         ios_backgroundColor="#3e3e3e"
         onValueChange={toggleSwitch}
         value={isOnCall}
+        disabled={!dsprDriver.currentInventoryPeriod ? true : false}
       />
       <Text>{isOnCall ? 'On Call' : 'Not on Call'}</Text>
     </View>
