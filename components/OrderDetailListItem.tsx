@@ -15,7 +15,7 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
 
   return (
     <>
-      {orderDetail ? (
+      {orderDetail && product ? (
         <>
           <ListItem topDivider>
             <ListItem.Content>

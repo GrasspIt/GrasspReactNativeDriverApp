@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Switch, View, Alert } from 'react-native';
+import { Text, Switch, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { setDriverOnCallState } from '../actions/driverActions';
 import { DsprDriver } from '../store/reduxStoreState';

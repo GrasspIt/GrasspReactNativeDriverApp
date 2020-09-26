@@ -1,14 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Alert,
-  FlatList,
-  ActivityIndicator,
-  Platform,
-  Button,
-} from 'react-native';
+import { StyleSheet, Text, View, Alert, FlatList, ActivityIndicator, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import Colors from '../constants/Colors';
 
@@ -22,7 +13,7 @@ import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { sendPushToken } from '../actions/userActions';
 import { refreshDSPRDriver, getDSPRDriver, setDriverLocation } from '../actions/driverActions';
-import { useDispatch, connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { store } from '../store/store';
 import { useInterval } from '../hooks/useInterval';
 
@@ -54,6 +45,9 @@ type Props = {
   dsprDriver;
   isLoading;
   pushToken;
+  refreshDSPRDriver;
+  getDSPRDriver;
+  sendPushToken;
 };
 
 const HomeScreen = ({
@@ -64,24 +58,25 @@ const HomeScreen = ({
   dsprDriver,
   isLoading,
   pushToken,
+  refreshDSPRDriver,
+  getDSPRDriver,
+  sendPushToken,
 }: Props) => {
-  const dispatch = useDispatch();
-  const notificationListener = useRef();
-  const responseListener = useRef();
+  const notificationListener: any = useRef();
+  const responseListener: any = useRef();
 
   const [isTracking, setIsTracking] = useState(false);
   const [error, setError] = useState('');
-  const [notification, setNotification] = useState(false);
-  // const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState<any>(false);
 
   // polling data from API while logged in
   const getDriverData = () => {
-    if (loggedInUser) dispatch(refreshDSPRDriver(driverId));
+    if (loggedInUser) refreshDSPRDriver(driverId);
   };
   useInterval(getDriverData, 60000);
 
   useEffect(() => {
-    dispatch(getDSPRDriver(driverId));
+    getDSPRDriver(driverId);
   }, [driverId]);
 
   // push notifications
@@ -89,8 +84,7 @@ const HomeScreen = ({
     // get push token if none is stored
     if (!pushToken || !pushToken.isCurrent) {
       registerForPushNotificationsAsync().then((token) => {
-        // setExpoPushToken(token);
-        dispatch(sendPushToken(token));
+        sendPushToken(token);
       });
     }
     // listen for when a notification is received while the app is foregrounded
@@ -98,12 +92,14 @@ const HomeScreen = ({
       setNotification(notification);
     });
     // listen for when a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
-      navigation.navigate('Details', {
-        orderId: response.notification.request.content.data.body.orderId,
-      });
-    });
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(
+      (response: { notification: any }) => {
+        console.log(response);
+        navigation.navigate('Details', {
+          orderId: response.notification.request.content.data.body.orderId,
+        });
+      }
+    );
     // listener cleanup
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
@@ -158,19 +154,6 @@ const HomeScreen = ({
         </View>
       ) : (
         <View style={styles.body}>
-          {/* <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'space-around',
-            }}
-          >
-            <Button
-              title="Press to Send Notification"
-              onPress={async () => {
-                await sendPushNotification(expoPushToken);
-              }}
-            />
-          </View> */}
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           <OnCallSwitch dsprDriver={dsprDriver} />
 
@@ -246,27 +229,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/dashboard/notifications
-// async function sendPushNotification(expoPushToken) {
-//   const message = {
-//     to: expoPushToken,
-//     sound: 'default',
-//     title: 'Original Title',
-//     body: 'And here is the body!',
-//     data: { orderId: 77571 },
-//   };
-
-//   await fetch('https://exp.host/--/api/v2/push/send', {
-//     method: 'POST',
-//     headers: {
-//       Accept: 'application/json',
-//       'Accept-encoding': 'gzip, deflate',
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify(message),
-//   });
-// }
-
 // get permission for push notifications and set token
 async function registerForPushNotificationsAsync() {
   let token;
@@ -282,7 +244,6 @@ async function registerForPushNotificationsAsync() {
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    // set token in Redux state
     console.log(token);
   } else {
     alert('Must use physical device for Push Notifications');
@@ -314,7 +275,7 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
     let lat = locations[0].coords.latitude;
     let long = locations[0].coords.longitude;
     //dispatch location to api
-    store.dispatch(setDriverLocation(movingDsprDriver.dspr, lat, long));
+    store.dispatch<any>(setDriverLocation(movingDsprDriver.dspr, lat, long));
   }
 });
 
@@ -334,6 +295,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { refreshDSPRDriver, getDSPRDriver, sendPushToken };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
