@@ -2,8 +2,10 @@ import * as _ from 'lodash';
 
 import {
   LOGGED_IN_USER_INFO_SUCCESS,
+  LOGGED_IN_USER_INFO_FAILURE,
   PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE,
   GET_APP_ACCESS_TOKEN_SUCCESS,
+  LOGIN_PENDING,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
   LOGOUT,
@@ -114,11 +116,13 @@ export default (state = initialState, action) => {
       let loggedInUserId = Object.keys(usersFromResponse)[0];
       return _.merge({}, state, {
         loggedInUserId,
-        errorMessage: '',
+        isLoading: false,
         entities: entitiesReducer(state.entities, action),
       });
+    case LOGGED_IN_USER_INFO_FAILURE:
+      return { ...state, isLoading: false, errorMessage: 'Failed to fetch user info.' };
     case LOGIN_FAILURE:
-      return { ...state, errorMessage: 'Login failed.' };
+      return { ...state, isLoading: false, errorMessage: 'Invalid email or password.' };
     case SET_DSPR_DRIVER_ID:
       return { ...state, dsprDriverId: action.payload };
     //     case CREATE_DSP_PRODUCT_FAILURE:
@@ -199,7 +203,7 @@ export default (state = initialState, action) => {
       //     case GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS:
       //     case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
       //     case UPDATE_DSPR_MENU_MECHANISM_SUCCESS:
-      const newState = { ...state, isLoading: false };
+      const newState = { ...state, errorMessage: '', isLoading: false };
       return merge({}, newState, {
         entities: entitiesReducer(state.entities, action),
       });
@@ -216,9 +220,10 @@ export default (state = initialState, action) => {
       return merge({}, newStateWithoutMedicalRecommendations, {
         entities: entitiesReducer(newStateWithoutMedicalRecommendations.entities, action),
       });
+    case LOGIN_PENDING:
     case DRIVER_DATA_PENDING:
     case ORDER_DETAILS_PENDING:
-      return { ...state, isLoading: true };
+      return { ...state, errorMessage: '', isLoading: true };
     case CLEAR_API_ERROR_MESSAGE:
       return { ...state, errorMessage: '' };
     // case MODIFY_ORDER_SUCCESS:

@@ -18,6 +18,7 @@ type Props = {
   logout;
   setDsprDriverId;
   attemptLogin;
+  isLoading;
 };
 
 const LoginScreen = ({
@@ -28,11 +29,12 @@ const LoginScreen = ({
   logout,
   setDsprDriverId,
   attemptLogin,
+  isLoading,
 }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = (username: string, password: string) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     attemptLogin(username, password);
   };
 
@@ -47,16 +49,16 @@ const LoginScreen = ({
 
   useEffect(() => {
     if (!loggedInUser && errorMessage) {
-      setIsLoading(false);
+      // setIsLoading(false);
       Alert.alert(errorMessage);
     }
     if (loggedInUser && loggedInUser.dsprDrivers && !driverId) {
       if (loggedInUser.dsprDrivers.length > 0) {
-        setIsLoading(false);
+        // setIsLoading(false);
         handleNavigate();
       } else {
         logout();
-        setIsLoading(false);
+        // setIsLoading(false);
         Alert.alert(
           'You must be a DSPR driver to use this app. You can sign up on the Grassp website.'
         );
@@ -70,10 +72,12 @@ const LoginScreen = ({
 const mapStateToProps = (state) => {
   const driverId = state.api.dsprDriverId;
   const errorMessage = state.api.errorMessage;
+  const isLoading = state.api.isLoading;
   return {
     loggedInUser: getLoggedInUser(state),
     errorMessage,
     driverId,
+    isLoading,
   };
 };
 

@@ -140,6 +140,7 @@ const getLoggedInUser = () => ({
 export const LOGIN = 'LOGIN';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+export const LOGIN_PENDING = 'LOGIN_PENDING';
 
 const login = (email, password) => {
   return callOnFetchAccessToken(
@@ -155,6 +156,7 @@ const login = (email, password) => {
 };
 
 export const attemptLogin = (email, password) => (dispatch) => {
+  dispatch({ type: LOGIN_PENDING });
   dispatch(login(email, password)).then((response) => {
     if (!response.error) {
       dispatch(getLoggedInUser());
