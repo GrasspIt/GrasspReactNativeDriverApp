@@ -59,6 +59,7 @@ import {
   GET_ALL_DRIVERS_FOR_DSPR_SUCCESS,
   SET_DSPR_DRIVER_ID,
   DRIVER_DATA_PENDING,
+  GET_DSPR_DRIVER_FAILURE,
 } from '../actions/driverActions';
 // import {
 //     CREATE_DSP_PRODUCT_SUCCESS, GET_PRODUCT_SUCCESS, GET_ALL_PRODUCTS_FOR_DSP_SUCCESS, CREATE_NEW_CATEGORY_SUCCESS,
@@ -123,6 +124,8 @@ export default (state = initialState, action) => {
       return { ...state, isLoading: false, errorMessage: 'Failed to fetch user info.' };
     case LOGIN_FAILURE:
       return { ...state, isLoading: false, errorMessage: 'Invalid email or password.' };
+    case GET_DSPR_DRIVER_FAILURE:
+      return { ...state, isLoading: false, errorMessage: 'Failed to get driver data.' };
     case SET_DSPR_DRIVER_ID:
       return { ...state, dsprDriverId: action.payload };
     //     case CREATE_DSP_PRODUCT_FAILURE:

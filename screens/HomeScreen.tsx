@@ -1,5 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Alert, FlatList, ActivityIndicator, Platform } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  FlatList,
+  ActivityIndicator,
+  Platform,
+  Button,
+} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import Colors from '../constants/Colors';
 
@@ -48,6 +57,7 @@ type Props = {
   refreshDSPRDriver;
   getDSPRDriver;
   sendPushToken;
+  error;
 };
 
 const HomeScreen = ({
@@ -55,6 +65,7 @@ const HomeScreen = ({
   driverId,
   loggedInUser,
   dspr,
+  error,
   dsprDriver,
   isLoading,
   pushToken,
@@ -66,7 +77,6 @@ const HomeScreen = ({
   const responseListener: any = useRef();
 
   const [isTracking, setIsTracking] = useState(false);
-  const [error, setError] = useState('');
   const [notification, setNotification] = useState<any>(false);
 
   // polling data from API while logged in
@@ -151,12 +161,12 @@ const HomeScreen = ({
       ) : error ? (
         <View style={styles.container}>
           <Text>{error}</Text>
+          <Button title="Try Again" onPress={() => getDSPRDriver(driverId)} />
         </View>
       ) : (
         <View style={styles.body}>
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
-          <OnCallSwitch dsprDriver={dsprDriver} />
-
+          {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
           <Divider style={{ height: 2 }} />
           <Text style={styles.listTitle}>In Process Order</Text>
           <Divider style={{ height: 1, marginHorizontal: 10 }} />
@@ -285,12 +295,14 @@ const mapStateToProps = (state) => {
   const dspr = dsprDriver ? getDSPRFromProps(state, { dsprId: dsprDriver.dspr }) : undefined;
   const isLoading = state.api.isLoading;
   const pushToken = state.api.entities.pushToken;
+  const error = state.api.errorMessage;
   return {
     loggedInUser: getLoggedInUser(state),
     driverId,
     dspr,
     dsprDriver,
     isLoading,
+    error,
     pushToken,
   };
 };

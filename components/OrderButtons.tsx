@@ -47,8 +47,10 @@ const OrderButtons = ({ orderId, navigation, orderStatus }) => {
   return (
     <View style={styles.buttonContainer}>
       <Button
+        icon="cancel"
         mode="contained"
         color={Colors.red}
+        style={styles.buttons}
         labelStyle={{ color: Colors.light }}
         onPress={handleCancelOrder}
       >
@@ -56,8 +58,10 @@ const OrderButtons = ({ orderId, navigation, orderStatus }) => {
       </Button>
       {orderStatus == 'in_process' ? (
         <Button
+          icon="check"
           mode="contained"
           color={Colors.primary}
+          style={styles.buttons}
           labelStyle={{ color: Colors.light }}
           onPress={handleCompleteOrder}
         >
@@ -66,7 +70,9 @@ const OrderButtons = ({ orderId, navigation, orderStatus }) => {
       ) : (
         <Button
           mode="contained"
+          icon="autorenew"
           color={Colors.primary}
+          style={styles.buttons}
           labelStyle={{ color: Colors.light }}
           onPress={handleProcessOrder}
         >
@@ -81,9 +87,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: Colors.light,
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 5,
     bottom: 0,
+  },
+  buttons: {
+    flex: 1,
+    margin: 4,
   },
 });
 
