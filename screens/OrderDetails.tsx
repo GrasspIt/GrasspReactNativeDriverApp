@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { Button, Title } from 'react-native-paper';
-import { useSelector, useDispatch, shallowEqual, connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { getUserFromProps, getUserNotesFromProps } from '../selectors/userSelectors';
 import {
@@ -12,15 +12,6 @@ import {
 import OrderDetailListItem from '../components/OrderDetailListItem';
 import Colors from '../constants/Colors';
 import Moment from 'moment';
-
-import {
-  IdDocument,
-  State,
-  MedicalRecommendation,
-  Order,
-  User,
-  Address,
-} from '../store/reduxStoreState';
 import { formatPhone } from '../hooks/util';
 
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -34,55 +25,35 @@ type DetailsScreenNavigationProp = StackNavigationProp<DashboardStackParamsList,
 
 type Props = {
   navigation: DetailsScreenNavigationProp;
-  route;
+  order;
+  orderId;
+  user;
+  address;
+  userNotes;
+  idDocument;
+  medicalRecommendation;
   isLoading;
+  getOrderDetailsWithId;
 };
-const OrderDetails = ({ route, navigation, isLoading }: Props) => {
-  const dispatch = useDispatch();
-
-  const { orderId } = route.params; //change to orderId
+const OrderDetails = ({
+  navigation,
+  isLoading,
+  order,
+  orderId,
+  user,
+  address,
+  userNotes,
+  idDocument,
+  medicalRecommendation,
+  getOrderDetailsWithId,
+}: Props) => {
   const [error, setError] = useState('');
-
-  const order = useSelector<State, Order>(
-    (state) => getOrderFromProps(state, { orderId }),
-    shallowEqual
-  );
-  const user = useSelector<State, User>(
-    (state) => getUserFromProps(state, { userId: order.user }),
-    shallowEqual
-  );
-  const address = useSelector<State, Address>(
-    (state) => getAddressFromProps(state, { addressId: order.address }),
-    shallowEqual
-  );
-
-  const userNotes = useSelector<State, any[]>(
-    (state) => getUserNotesFromProps(state, { userId: user.id }),
-    shallowEqual
-  );
-  const idDocument = useSelector<State, IdDocument | null>(
-    (state) =>
-      getUserIdDocumentFromPropsWithOrder(state, {
-        userId: user.id,
-        order: order,
-      }),
-    shallowEqual
-  );
-  const medicalRecommendations = useSelector<State, { [key: number]: MedicalRecommendation }>(
-    (state) => getUserMedicalRecommendations(state),
-    shallowEqual
-  );
 
   const orderDate = Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
-  const medicalRecommendation =
-    order &&
-    order.userMedicalRecommendation &&
-    medicalRecommendations[order.userMedicalRecommendation];
-
   useEffect(() => {
-    dispatch(getOrderDetailsWithId(orderId));
+    getOrderDetailsWithId(orderId);
   }, [orderId]);
 
   const handleManageNotes = () => {
@@ -299,16 +270,33 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
-  // const driverId = state.api.dsprDriverId;
-  // const dsprDriver = getDSPRDriverWithUserAndOrdersFromProps(state, { dsprDriverId: driverId });
-  // const dspr = dsprDriver ? getDSPRFromProps(state, { dsprId: dsprDriver.dspr }) : undefined;
+const mapStateToProps = (state, route) => {
+  const { orderId } = route.route.params;
+  const order = getOrderFromProps(state, { orderId });
+  const user = order && getUserFromProps(state, { userId: order.user });
+  const address = order && getAddressFromProps(state, { addressId: order.address });
+  const userNotes = user && getUserNotesFromProps(state, { userId: user.id });
+  const idDocument =
+    user &&
+    getUserIdDocumentFromPropsWithOrder(state, {
+      userId: user.id,
+      order: order,
+    });
+  const medicalRecommendations = getUserMedicalRecommendations(state);
+  const medicalRecommendation = order && medicalRecommendations[order.userMedicalRecommendation];
   const isLoading = state.api.isLoading;
   return {
+    order,
+    orderId,
+    user,
+    address,
+    userNotes,
+    idDocument,
+    medicalRecommendation,
     isLoading,
   };
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { getOrderDetailsWithId };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderDetails);
