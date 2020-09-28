@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, ActivityIndicator, Clipboard } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import { Button, Title } from 'react-native-paper';
+import { Button, Title, IconButton } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { getUserFromProps, getUserNotesFromProps } from '../selectors/userSelectors';
@@ -145,7 +145,10 @@ const OrderDetails = ({
             {idDocument ? (
               <View>
                 <ListItem>
-                  <ListItem.Title>Identification Document: {idDocument.idNumber}</ListItem.Title>
+                  <ListItem.Content>
+                    <ListItem.Title>Identification Document:</ListItem.Title>
+                    <ListItem.Subtitle>{idDocument.idNumber}</ListItem.Subtitle>
+                  </ListItem.Content>
                 </ListItem>
                 <ListItem>
                   <ListItem.Title>
@@ -158,7 +161,16 @@ const OrderDetails = ({
 
             {medicalRecommendation ? (
               <ListItem>
-                <ListItem.Title>Medical ID: {medicalRecommendation.idNumber} </ListItem.Title>
+                <ListItem.Content>
+                  <ListItem.Title>Medical ID:</ListItem.Title>
+                  <ListItem.Subtitle>{medicalRecommendation.idNumber}</ListItem.Subtitle>
+                </ListItem.Content>
+                <IconButton
+                  icon="content-copy"
+                  color={Colors.primary}
+                  size={20}
+                  onPress={() => Clipboard.setString(medicalRecommendation.idNumber)}
+                />
               </ListItem>
             ) : null}
 

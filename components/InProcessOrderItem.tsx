@@ -3,6 +3,7 @@ import { ListItem, Button } from 'react-native-elements';
 import { Alert, Text, Platform } from 'react-native';
 import { formatPhone } from '../hooks/util';
 import * as Linking from 'expo-linking';
+import Colors from '../constants/Colors';
 
 const InProcessOrderItem = ({ orderInfo, navigation }) => {
   const handleNavigate = () => {
@@ -52,7 +53,7 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
             onPress={handlePhone}
           />
         </ListItem.Content>
-        <ListItem.Chevron />
+        <ListItem.Chevron color={Colors.medium} size={18} />
       </ListItem>
     )
   );

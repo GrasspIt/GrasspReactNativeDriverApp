@@ -131,8 +131,10 @@ const HomeScreen = ({
           console.log('start location updates');
           setIsTracking(true);
           await Location.startLocationUpdatesAsync('location-tracking', {
+            accuracy: Location.Accuracy.High,
             timeInterval: 60000,
             distanceInterval: 0,
+            showsBackgroundLocationIndicator: true,
             foregroundService: {
               notificationTitle: 'Location Updates',
               notificationBody: 'Grassp Health Driver App is tracking your current location.',

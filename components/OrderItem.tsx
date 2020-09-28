@@ -38,7 +38,7 @@ const OrderItem = ({ orderInfo, navigation }) => {
             {orderInfo.address.street} {orderInfo.address.zipCode}
           </ListItem.Subtitle>
         </ListItem.Content>
-        <ListItem.Chevron />
+        <ListItem.Chevron color={Colors.medium} size={18} />
       </ListItem>
     )
   );
