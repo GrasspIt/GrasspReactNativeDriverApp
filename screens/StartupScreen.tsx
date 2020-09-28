@@ -3,31 +3,37 @@ import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import Colors from '../constants/Colors';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/AuthNavigator';
-import { useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { preloadAccessTokenFromLocalStorage, logout } from '../actions/oauthActions';
-import { State, User } from '../store/reduxStoreState';
 import { setDsprDriverId } from '../actions/driverActions';
+import { getLoggedInUser } from '../selectors/userSelectors';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Startup'>;
 type Props = {
   navigation: LoginScreenNavigationProp;
+  loggedInUser;
+  driverId;
+  preloadAccessTokenFromLocalStorage;
+  logout;
+  setDsprDriverId;
 };
 
-const Startup = ({ navigation }: Props) => {
-  const dispatch = useDispatch();
-
-  const userId = useSelector<State, string>((state) => state.api.loggedInUserId);
-  const dsprDriver = useSelector<State, string>((state) => state.api.dsprDriverId);
-  const loggedInUser = useSelector<State, User>((state) => state.api.entities.users[userId]);
-
+const Startup = ({
+  navigation,
+  loggedInUser,
+  driverId,
+  preloadAccessTokenFromLocalStorage,
+  logout,
+  setDsprDriverId,
+}: Props) => {
   // if a valid token is stored, login automatically
   useEffect(() => {
-    dispatch(preloadAccessTokenFromLocalStorage());
+    preloadAccessTokenFromLocalStorage();
   }, []);
 
   const handleNavigate = () => {
     if (loggedInUser && loggedInUser.dsprDrivers && loggedInUser.dsprDrivers.length === 1) {
-      dispatch(setDsprDriverId(loggedInUser.dsprDrivers[0]));
+      setDsprDriverId(loggedInUser.dsprDrivers[0]);
     }
     if (loggedInUser && loggedInUser.dsprDrivers && loggedInUser.dsprDrivers.length > 1) {
       navigation.navigate('Main', { screen: 'DSPRs' });
@@ -35,11 +41,11 @@ const Startup = ({ navigation }: Props) => {
   };
 
   useEffect(() => {
-    if (loggedInUser && loggedInUser.dsprDrivers && !dsprDriver) {
+    if (loggedInUser && loggedInUser.dsprDrivers && !driverId) {
       if (loggedInUser.dsprDrivers.length > 0) {
         handleNavigate();
       } else {
-        dispatch(logout());
+        logout();
         navigation.navigate('Login');
       }
     }
@@ -60,4 +66,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Startup;
+const mapStateToProps = (state) => {
+  const driverId = state.api.dsprDriverId;
+  return {
+    loggedInUser: getLoggedInUser(state),
+    driverId,
+  };
+};
+
+const mapDispatchToProps = { preloadAccessTokenFromLocalStorage, logout, setDsprDriverId };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Startup);
