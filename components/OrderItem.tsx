@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { ListItem, Button } from 'react-native-elements';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Colors from '../constants/Colors';
 import { markOrderInProcess } from '../actions/orderActions';
 
