@@ -27,9 +27,12 @@ const orderCompleter = (orderId) => {
 export const completeOrder = (orderId) => (dispatch, getState) => {
   return dispatch(orderCompleter(orderId)).then((response) => {
     const order = getOrderFromProps(getState(), { orderId });
-    return dispatch(getDSPRDriver(order.dsprDriver)).then(() => {
-      return response; //Wait until getDSPRDriver finishes to return that the order has been fully completed
-    });
+    return (
+      order &&
+      dispatch(getDSPRDriver(order.dsprDriver)).then(() => {
+        return response;
+      })
+    );
   });
 };
 
@@ -52,9 +55,12 @@ const orderCanceler = (orderId) => {
 export const cancelOrder = (orderId) => (dispatch, getState) => {
   return dispatch(orderCanceler(orderId)).then((response) => {
     const order = getOrderFromProps(getState(), { orderId });
-    return dispatch(getDSPRDriver(order.dsprDriver)).then(() => {
-      return response;
-    });
+    return (
+      order &&
+      dispatch(getDSPRDriver(order.dsprDriver)).then(() => {
+        return response;
+      })
+    );
   });
 };
 
@@ -77,9 +83,12 @@ const orderInProcessMarker = (orderId) => {
 export const markOrderInProcess = (orderId) => (dispatch, getState) => {
   return dispatch(orderInProcessMarker(orderId)).then((response) => {
     const order = getOrderFromProps(getState(), { orderId });
-    return dispatch(getDSPRDriver(order.dsprDriver)).then(() => {
-      return response;
-    });
+    return (
+      order &&
+      dispatch(getDSPRDriver(order.dsprDriver)).then(() => {
+        return response;
+      })
+    );
   });
 };
 

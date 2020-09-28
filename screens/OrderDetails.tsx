@@ -33,11 +33,13 @@ type Props = {
   idDocument;
   medicalRecommendation;
   isLoading;
+  error;
   getOrderDetailsWithId;
 };
 const OrderDetails = ({
   navigation,
   isLoading,
+  error,
   order,
   orderId,
   user,
@@ -47,8 +49,6 @@ const OrderDetails = ({
   medicalRecommendation,
   getOrderDetailsWithId,
 }: Props) => {
-  const [error, setError] = useState('');
-
   const orderDate = Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
@@ -69,6 +69,7 @@ const OrderDetails = ({
       ) : error ? (
         <View style={styles.fillScreen}>
           <Text>{error}</Text>
+          <Button onPress={() => getOrderDetailsWithId(orderId)}>Try Again</Button>
         </View>
       ) : (
         <>
@@ -285,6 +286,7 @@ const mapStateToProps = (state, route) => {
   const medicalRecommendations = getUserMedicalRecommendations(state);
   const medicalRecommendation = order && medicalRecommendations[order.userMedicalRecommendation];
   const isLoading = state.api.isLoading;
+  const error = state.api.errorMessage;
   return {
     order,
     orderId,
@@ -293,6 +295,7 @@ const mapStateToProps = (state, route) => {
     userNotes,
     idDocument,
     medicalRecommendation,
+    error,
     isLoading,
   };
 };

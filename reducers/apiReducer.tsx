@@ -87,6 +87,7 @@ import {
   CANCEL_ORDER_SUCCESS,
   MODIFY_ORDER_SUCCESS,
   GET_ORDER_DETAILS_WITH_ID_SUCCESS,
+  GET_ORDER_DETAILS_WITH_ID_FAILURE,
   ORDER_DETAILS_PENDING,
 } from '../actions/orderActions';
 // import { SEND_TEXT_BLAST_SUCCESS } from '../actions/marketingActions';
@@ -106,6 +107,25 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    // actions pending
+    case LOGIN_PENDING:
+    case DRIVER_DATA_PENDING:
+    case ORDER_DETAILS_PENDING:
+      return { ...state, errorMessage: '', isLoading: true };
+
+    // actions failed
+    case LOGGED_IN_USER_INFO_FAILURE:
+      return { ...state, isLoading: false, errorMessage: 'Failed to fetch user info.' };
+    case LOGIN_FAILURE:
+      return { ...state, isLoading: false, errorMessage: 'Invalid email or password.' };
+    case GET_DSPR_DRIVER_FAILURE:
+      return { ...state, isLoading: false, errorMessage: 'Failed to get driver data.' };
+    case GET_ORDER_DETAILS_WITH_ID_FAILURE:
+      return { ...state, isLoading: false, errorMessage: 'Failed to get order details.' };
+    case SET_DSPR_DRIVER_ID:
+      return { ...state, dsprDriverId: action.payload };
+
+    // actions succeeded
     case GET_APP_ACCESS_TOKEN_SUCCESS:
     case UPDATE_ACCESS_TOKEN:
     case LOGIN_SUCCESS:
@@ -120,16 +140,6 @@ export default (state = initialState, action) => {
         isLoading: false,
         entities: entitiesReducer(state.entities, action),
       });
-    case LOGGED_IN_USER_INFO_FAILURE:
-      return { ...state, isLoading: false, errorMessage: 'Failed to fetch user info.' };
-    case LOGIN_FAILURE:
-      return { ...state, isLoading: false, errorMessage: 'Invalid email or password.' };
-    case GET_DSPR_DRIVER_FAILURE:
-      return { ...state, isLoading: false, errorMessage: 'Failed to get driver data.' };
-    case SET_DSPR_DRIVER_ID:
-      return { ...state, dsprDriverId: action.payload };
-    //     case CREATE_DSP_PRODUCT_FAILURE:
-    //         return { ...state, errorMessage: action.error };
     //     case GET_USERS_BY_SEARCH_SUCCESS:
     //     case GET_ALL_USERS_SUCCESS:
     //     case CREATE_DSP_SUCCESS:
@@ -223,10 +233,6 @@ export default (state = initialState, action) => {
       return merge({}, newStateWithoutMedicalRecommendations, {
         entities: entitiesReducer(newStateWithoutMedicalRecommendations.entities, action),
       });
-    case LOGIN_PENDING:
-    case DRIVER_DATA_PENDING:
-    case ORDER_DETAILS_PENDING:
-      return { ...state, errorMessage: '', isLoading: true };
     case CLEAR_API_ERROR_MESSAGE:
       return { ...state, errorMessage: '' };
     // case MODIFY_ORDER_SUCCESS:
