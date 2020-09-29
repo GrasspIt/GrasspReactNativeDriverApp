@@ -1,5 +1,8 @@
 import { getAddresses } from './addressSelectors';
 import { State } from '../store/reduxStoreState';
+import { createSelector } from 'reselect';
+import { getUserMedicalRecommendations, getUserIdDocuments } from './userDocumentsSelector';
+import { getUsers } from './userSelectors';
 
 export const getOrders = (state: State) =>
   state.api && state.api.entities ? state.api.entities.orders : undefined;
@@ -23,3 +26,58 @@ export const getOrdersForUser = (state: State, props) => {
         })
     : null;
 };
+
+export const getOrdersWithAddresses = createSelector(
+  [getOrders, getAddresses],
+  (orders, addresses) => {
+    let ordersMap = {};
+    orders
+      ? addresses
+        ? Object.values(orders).forEach((order) => {
+            ordersMap[order.id] = { ...order, address: addresses[order.address] };
+          })
+        : (ordersMap = orders)
+      : ordersMap;
+
+    return ordersMap;
+  }
+);
+
+const mapAddressIntoOrder = (orderId, orders, addresses, users, medRecs, idDocs) => {
+  if (!orderId) return null;
+  let order = orders[orderId];
+  let user = users[order.user] || order.user;
+  const returnOrder = { ...order, address: addresses[order.address], user };
+  if (order.userMedicalRecommendation)
+    returnOrder['medicalRecommendation'] = medRecs[order.userMedicalRecommendation];
+  if (order.userIdentificationDocument)
+    returnOrder['userIdentificationDocument'] = idDocs[order.userIdentificationDocument];
+  return returnOrder;
+};
+
+export const getOrdersWithAddressesAndUsers = createSelector(
+  [getOrders, getUsers, getAddresses, getUserMedicalRecommendations, getUserIdDocuments],
+  (orders, users, addresses, medicalRecs, idDocs) => {
+    let ordersWithAddressesAndUsers: any = {};
+
+    if (orders) {
+      if (users && addresses && medicalRecs && idDocs) {
+        Object.values(orders).forEach((order) => {
+          ordersWithAddressesAndUsers[order.id] = mapAddressIntoOrder(
+            order.id,
+            orders,
+            addresses,
+            users,
+            medicalRecs,
+            idDocs
+          );
+        });
+      } else {
+        ordersWithAddressesAndUsers = orders;
+      }
+    } else {
+      ordersWithAddressesAndUsers = undefined;
+    }
+    return ordersWithAddressesAndUsers;
+  }
+);
