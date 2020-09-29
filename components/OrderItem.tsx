@@ -18,23 +18,25 @@ const OrderItem = ({ orderInfo, navigation }) => {
 
   return (
     orderInfo && (
-      <ListItem bottomDivider onPress={handleNavigate}>
+      <ListItem bottomDivider containerStyle={{ padding: 10 }} onPress={handleNavigate}>
         <Button
           title="Set In Process"
-          titleStyle={{ fontSize: 16 }}
+          titleStyle={{ fontSize: 14 }}
           buttonStyle={{
             width: 80,
-            height: 70,
+            height: 60,
+            borderRadius: 0,
             backgroundColor: Colors.primary,
           }}
+          containerStyle={{ borderRadius: 0 }}
           onPress={handleProcessOrder}
         />
         <ListItem.Content>
-          <ListItem.Title>
+          <ListItem.Title style={{ fontSize: 16 }}>
             {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}
             <Text style={{ fontSize: 14 }}>${orderInfo.cashTotal}</Text>
           </ListItem.Title>
-          <ListItem.Subtitle>
+          <ListItem.Subtitle style={{ fontSize: 14 }}>
             {orderInfo.address.street} {orderInfo.address.zipCode}
           </ListItem.Subtitle>
         </ListItem.Content>

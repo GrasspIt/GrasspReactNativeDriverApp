@@ -321,6 +321,73 @@ const dsprDriverServiceAreaVertexSchema = new schema.Entity(
   }
 );
 
+const dsprDriverRouteSchema = new schema.Entity(
+  'dsprDriverRoutes',
+  {},
+  {
+    idAttribute: (dsprDriverRoute) => dsprDriverRoute.id,
+  }
+);
+
+const dsprDriverRouteLegSchema = new schema.Entity(
+  'dsprDriverRouteLegs',
+  {},
+  {
+    idAttribute: (dsprDriverRouteLeg) => dsprDriverRouteLeg.id,
+  }
+);
+
+const dsprDriverRouteLegDirectionSchema = new schema.Entity(
+  'dsprDriverRouteLegDirections',
+  {},
+  {
+    idAttribute: (dsprDriverRouteLegDirection) => dsprDriverRouteLegDirection.id,
+  }
+);
+
+const routeLocationSchema = new schema.Entity(
+  'dsprDriverRouteLocations',
+  {},
+  {
+    idAttribute: (routeLocation) => routeLocation.id,
+  }
+);
+
+const routeMetricSchema = new schema.Entity(
+  'dsprDriverRouteMetrics',
+  {},
+  {
+    idAttribute: (routeMetric) => routeMetric.id,
+  }
+);
+
+dsprDriverRouteSchema.define({
+  dsprDriver: dsprDriverSchema,
+  startLocation: routeLocationSchema,
+  endLocation: routeLocationSchema,
+  metrics: routeMetricSchema,
+  initialDriverLocation: dsprDriverLocationSchema,
+  finalOrder: orderSchema,
+  legs: [dsprDriverRouteLegSchema],
+  polylineContainingCoordinates: [routeLocationSchema],
+});
+
+dsprDriverRouteLegSchema.define({
+  route: dsprDriverRouteSchema,
+  startLocation: routeLocationSchema,
+  endLocation: routeLocationSchema,
+  metrics: routeMetricSchema,
+  order: orderSchema,
+  routeLegDirections: [dsprDriverRouteLegDirectionSchema],
+});
+
+dsprDriverRouteLegDirectionSchema.define({
+  routeLeg: dsprDriverRouteLegSchema,
+  startLocation: routeLocationSchema,
+  endLocation: routeLocationSchema,
+  metrics: routeMetricSchema,
+});
+
 pushTokenSchema.define({});
 
 dsprDriverServiceAreaSchema.define({
@@ -428,6 +495,8 @@ dsprDriverSchema.define({
   currentInventoryPeriod: dsprDriverInventoryPeriodSchema,
   currentInProcessOrder: orderSchema,
   queuedOrders: [orderSchema],
+  serviceAreas: [dsprDriverServiceAreaSchema],
+  currentRoute: dsprDriverRouteSchema,
 });
 
 dsprManagerSchema.define({
@@ -525,6 +594,12 @@ export const Schemas = {
   DSPR_DRIVER_SERVICE_AREA_ARRAY: [dsprDriverServiceAreaSchema],
   DSPR_DRIVER_SERVICE_AREA_VERTEX: dsprDriverServiceAreaVertexSchema,
   DSPR_DRIVER_SERVICE_AREA_VERTEX_ARRAY: [dsprDriverServiceAreaVertexSchema],
+  DSPR_DRIVER_ROUTE: dsprDriverRouteSchema,
+  DSPR_DRIVER_ROUTE_ARRAY: [dsprDriverRouteSchema],
+  DSPR_DRIVER_ROUTE_LEG: dsprDriverRouteLegSchema,
+  DSPR_DRIVER_ROUTE_LEG_ARRAY: [dsprDriverRouteLegSchema],
+  DSPR_DRIVER_ROUTE_LEG_DIRECTION: dsprDriverRouteLegDirectionSchema,
+  DSPR_DRIVER_ROUTE_LEG_DIRECTION_ARRAY: [dsprDriverRouteLegDirectionSchema],
   EMPTY: [], // <-- newly added to satisfy TypeScript. Might cause errors, need to investigate
 };
 

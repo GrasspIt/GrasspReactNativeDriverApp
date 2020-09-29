@@ -219,3 +219,67 @@ const driverInformationSetter = (dsprDriverId, values) => {
 export const setUpdateDriverInformation = (dsprDriverId, values) => (dispatch, getState) => {
   return dispatch(driverInformationSetter(dsprDriverId, values));
 };
+
+export const CREATE_NEW_DSPR_DRIVER_ROUTE = 'CREATE_NEW_DSPR_DRIVER_ROUTE';
+export const CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS = 'CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS';
+export const CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE = 'CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE';
+
+const createNewRoute = (
+  driverId: number,
+  waypoints,
+  finalDestination,
+  usingFinalDestinationInRoute: Boolean
+) => {
+  const route = {
+    dsprDriver: { id: driverId },
+    waypoints,
+    finalDestination,
+    usingFinalDestinationInRoute,
+  };
+
+  return {
+    [CALL_API]: {
+      httpAction: 'POST',
+      types: [
+        CREATE_NEW_DSPR_DRIVER_ROUTE,
+        CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS,
+        CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE,
+      ],
+      endPoint: 'dspr/driver/route',
+      schema: Schemas.DSPR_DRIVER_ROUTE,
+      body: route,
+    },
+  };
+};
+export const createDSPRDriverRoute = (
+  driverId: number,
+  waypoints,
+  finalDestination,
+  usingFinalDestinationInRoute: Boolean
+) => (dispatch) => {
+  return dispatch(
+    createNewRoute(driverId, waypoints, finalDestination, usingFinalDestinationInRoute)
+  );
+};
+
+export const PROGRESS_DSPR_DRIVER_ROUTE = 'PROGRESS_DSPR_DRIVER_ROUTE';
+export const PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS = 'PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS';
+export const PROGRESS_DSPR_DRIVER_ROUTE_FAILURE = 'PROGRESS_DSPR_DRIVER_ROUTE_FAILURE';
+
+const progressDriverRoute = (routeId: number) => {
+  return {
+    [CALL_API]: {
+      httpAction: 'GET',
+      types: [
+        PROGRESS_DSPR_DRIVER_ROUTE,
+        PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS,
+        PROGRESS_DSPR_DRIVER_ROUTE_FAILURE,
+      ],
+      endPoint: `dspr/driver/route/progress/${routeId}`,
+      schema: Schemas.DSPR_DRIVER_ROUTE,
+    },
+  };
+};
+export const progressDSPRDriverRoute = (routeId: number) => (dispatch) => {
+  return dispatch(progressDriverRoute(routeId));
+};

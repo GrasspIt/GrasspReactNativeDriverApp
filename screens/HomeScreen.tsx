@@ -152,6 +152,10 @@ const HomeScreen = ({
     })();
   }, [dsprDriver, isTracking]);
 
+  const handleCreateRoute = () => {
+    navigation.navigate('Routing');
+  };
+
   return loggedInUser && dsprDriver ? (
     <>
       <StatusBar style="dark" />
@@ -170,7 +174,7 @@ const HomeScreen = ({
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
 
-          <Button title="Go to Routing" onPress={() => navigation.navigate('Routing')} />
+          <Button title="Create Route" onPress={handleCreateRoute} />
 
           <Divider style={{ height: 2 }} />
           <Text style={styles.listTitle}>In Process Order</Text>

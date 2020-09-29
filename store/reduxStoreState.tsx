@@ -83,6 +83,11 @@ export interface Entities {
   };
   dsprDriverServiceAreas: { [key: number]: DSPRDriverServiceArea };
   dsprDriverServiceAreaVertices: { [key: number]: DSPRDriverServiceAreaVertex };
+  dsprDriverRoutes: { [key: number]: Route };
+  dsprDriverRouteLegs: { [key: number]: RouteLeg };
+  dsprDriverRouteLegDirections: { [key: number]: RouteLegDirection };
+  dsprDriverRouteLocations: { [key: number]: RouteLocation };
+  dsprDriverRouteMetrics: { [key: number]: RouteMetrics };
   metrics: {
     usersMetrics: UsersMetrics;
   };
@@ -152,6 +157,7 @@ export interface DSPR {
   zipCodes?: number[];
   imageLocation?: string;
   menuMechanism?: MenuMechanism;
+  numberOrdersPerRoute?: number;
   dsprAwayMessage?: {
     id: number;
     dsprManager: { id: number };
@@ -208,6 +214,8 @@ export interface DsprDriver {
   vehicleDescriptiveName?: string;
   vehicleLicensePlateNumber?: string;
   employeeIDExpirationDate?: number;
+  currentRoute: number;
+  serviceAreas: number[];
 }
 
 export interface DsprDriverLocation {
@@ -438,6 +446,7 @@ interface DSPRDriverServiceArea {
   dspr: number;
   active: boolean;
   dsprDriverServiceAreaVertices: number[];
+  numberOrdersPerRoute?: number;
 }
 
 interface DSPRDriverServiceAreaVertex {
@@ -448,3 +457,59 @@ interface DSPRDriverServiceAreaVertex {
   dspr?: number;
   vertexOrder: number;
 }
+
+interface Route {
+  id: number;
+  active: boolean;
+  numberLegs: number;
+  legs: number[];
+  dsprDriver: number;
+  startLocation: number;
+  endLocation: number;
+  metrics: number;
+  initialDriverLocation: number;
+  finalOrder: number;
+  overviewPolyline: number[];
+  polylineContainingCoordinates: number[];
+}
+
+interface RouteLeg {
+  id: number;
+  legOrder: number;
+  routeLegDirections: number[];
+  route: number;
+  startLocation: number;
+  endLocation: number;
+  metrics: number;
+  order: number;
+}
+
+interface RouteLegDirection {
+  id: number;
+  htmlDirections: string;
+  routeLeg: number;
+  startLocation: number;
+  endLocation: number;
+  metrics: number;
+  overviewPolyline: number[];
+  polyLineContainingCoordinates: number[];
+}
+
+interface RouteLocation {
+  id: number;
+  latitude: number;
+  longitude: number;
+}
+
+interface RouteMetrics {
+  id: number;
+  distanceText: string;
+  distanceValue: number;
+  durationText: string;
+  durationValue: number;
+}
+
+export type OrderWithAddressAndUser = Omit<Omit<Order, 'address'>, 'user'> & {
+  address: Address;
+  user: User;
+};
