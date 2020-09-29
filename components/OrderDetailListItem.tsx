@@ -12,7 +12,18 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
   const { orderDetail } = props;
   const { product } = orderDetail;
   const unit = orderDetail && orderDetail.unit ? orderDetail.unit + ' oz of' : ' x ';
-
+  const productColor =
+    product?.flowerType == 'hybrid'
+      ? '#fc952a'
+      : product?.flowerType == 'sativa_hybrid'
+      ? '#67cb33'
+      : product?.flowerType == 'indica'
+      ? '#cc99ff'
+      : product?.flowerType == 'cbd'
+      ? '#3075e5'
+      : product?.flowerType == 'vaporizer'
+      ? '#ddd'
+      : Colors.primary;
   return (
     <>
       {orderDetail && product ? (
@@ -22,7 +33,7 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
               <ListItem.Title>{`${orderDetail.quantity} ${unit} ${product.name}`}</ListItem.Title>
               <View style={styles.subtitle}>
                 <View>
-                  <Text style={{ color: Colors.primary, fontWeight: 'bold' }}>
+                  <Text style={{ color: productColor, fontWeight: 'bold' }}>
                     {product.flowerType.replace('_', ' ').toUpperCase()}
                   </Text>
                 </View>

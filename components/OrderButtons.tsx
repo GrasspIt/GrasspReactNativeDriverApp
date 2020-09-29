@@ -54,7 +54,7 @@ const OrderButtons = ({ orderId, navigation, orderStatus }) => {
         labelStyle={{ color: Colors.light }}
         onPress={handleCancelOrder}
       >
-        Cancel
+        Cancel Order
       </Button>
       {orderStatus == 'in_process' ? (
         <Button
@@ -65,7 +65,7 @@ const OrderButtons = ({ orderId, navigation, orderStatus }) => {
           labelStyle={{ color: Colors.light }}
           onPress={handleCompleteOrder}
         >
-          Complete
+          Complete Order
         </Button>
       ) : (
         <Button
@@ -76,7 +76,7 @@ const OrderButtons = ({ orderId, navigation, orderStatus }) => {
           labelStyle={{ color: Colors.light }}
           onPress={handleProcessOrder}
         >
-          Process
+          Set In Process
         </Button>
       )}
     </View>

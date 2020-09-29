@@ -75,9 +75,10 @@ const OrderDetails = ({
         <>
           <ScrollView style={styles.scroll}>
             <Title>Notes</Title>
-            {userNotes ? (
-              userNotes.map((userNote) =>
-                userNote.isVisible ? (
+            {userNotes && userNotes.some((note) => note.isVisible) ? (
+              userNotes
+                .filter((note) => note.isVisible)
+                .map((userNote) => (
                   <ListItem key={userNote.id}>
                     <ListItem.Content>
                       <ListItem.Title>{userNote.note}</ListItem.Title>
@@ -86,11 +87,10 @@ const OrderDetails = ({
                       </ListItem.Subtitle>
                     </ListItem.Content>
                   </ListItem>
-                ) : null
-              )
+                ))
             ) : (
               <View style={styles.empty}>
-                <Text>No Notes</Text>
+                <Text style={{ fontSize: 16 }}>No active notes.</Text>
               </View>
             )}
             <Button

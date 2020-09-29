@@ -133,7 +133,7 @@ const HomeScreen = ({
           await Location.startLocationUpdatesAsync('location-tracking', {
             accuracy: Location.Accuracy.High,
             timeInterval: 60000,
-            distanceInterval: 0,
+            distanceInterval: 300,
             showsBackgroundLocationIndicator: true,
             foregroundService: {
               notificationTitle: 'Location Updates',
