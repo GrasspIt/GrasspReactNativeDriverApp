@@ -47,6 +47,8 @@ const LoginForm: React.FC<LoginProps> = (props) => {
     }
     Keyboard.dismiss();
     handleLogin(email, password);
+    setEmail('');
+    setPassword('');
   };
 
   return (
