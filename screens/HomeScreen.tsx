@@ -169,6 +169,9 @@ const HomeScreen = ({
         <View style={styles.body}>
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
+
+          <Button title="Go to Routing" onPress={() => navigation.navigate('Routing')} />
+
           <Divider style={{ height: 2 }} />
           <Text style={styles.listTitle}>In Process Order</Text>
           <Divider style={{ height: 1, marginHorizontal: 10 }} />
@@ -228,14 +231,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   dsprTitle: {
-    fontSize: 22,
+    fontSize: 20,
     textAlign: 'center',
-    paddingTop: 20,
+    paddingTop: 10,
   },
   listTitle: {
     fontSize: 16,
     paddingLeft: 10,
-    paddingVertical: 10,
+    paddingVertical: 8,
     fontWeight: 'bold',
     textAlign: 'center',
   },

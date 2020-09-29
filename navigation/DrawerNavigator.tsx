@@ -75,18 +75,8 @@ const DrawerNavigator = ({ navigation, route }: Props) => {
         );
       }}
     >
-      {dsprDrivers.length > 1 ? (
-        <>
-          <Drawer.Screen name="DSPRs" component={DSPRScreen} />
-          <Drawer.Screen name="Dashboard" component={DashboardNavigator} />
-        </>
-      ) : (
-        <Drawer.Screen
-          name="Dashboard"
-          component={DashboardNavigator}
-          initialParams={{ driverId: dsprDrivers[0] }}
-        />
-      )}
+      {dsprDrivers.length > 1 ? <Drawer.Screen name="DSPRs" component={DSPRScreen} /> : null}
+      <Drawer.Screen name="Dashboard" component={DashboardNavigator} />
     </Drawer.Navigator>
   );
 };

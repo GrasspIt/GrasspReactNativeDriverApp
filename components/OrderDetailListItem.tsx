@@ -13,9 +13,9 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
   const { product } = orderDetail;
   const unit = orderDetail && orderDetail.unit ? orderDetail.unit + ' oz of' : ' x ';
   const productColor =
-    product?.flowerType == 'hybrid'
+    product?.flowerType == 'hybrid' || 'sativa_hybrid' || 'indica_hybrid'
       ? '#fc952a'
-      : product?.flowerType == 'sativa_hybrid'
+      : product?.flowerType == 'sativa'
       ? '#67cb33'
       : product?.flowerType == 'indica'
       ? '#cc99ff'

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, ActivityIndicator, Clipboard } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { ListItem, Divider } from 'react-native-elements';
 import { Button, Title, IconButton } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
@@ -17,7 +17,6 @@ import { formatPhone } from '../hooks/util';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
 import OrderButtons from '../components/OrderButtons';
-import { Divider } from 'react-native-paper';
 import { getOrderFromProps } from '../selectors/orderSelectors';
 import { getAddressFromProps } from '../selectors/addressSelectors';
 
