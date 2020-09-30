@@ -19,6 +19,7 @@ import {
 } from '../store/reduxStoreState';
 import { createDSPRDriverRoute, progressDSPRDriverRoute } from '../actions/driverActions';
 import TopNavBar from '../components/TopNavBar';
+import RoutingButtons from '../components/RoutingButtons';
 // import DriverRoutePage from '../components/DriverRoutePage';
 
 type RoutingScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Routing'>;
@@ -55,7 +56,6 @@ const RoutingScreen = ({
   driver,
   dspr,
   completeOrder,
-  modifyOrder,
   loggedInUserIsDriver,
   dsprDriverIdForOrderDetails,
   handleMapOrderClick,
@@ -86,7 +86,6 @@ const RoutingScreen = ({
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TopNavBar navigation={navigation} />
       <View style={styles.container}>
         {/* <DriverRoutePage
       driver={driver}
@@ -95,12 +94,12 @@ const RoutingScreen = ({
       handleMapOrderClick={handleMapOrderClick}
       completeOrder={completeOrder}
       progressRoute={progressRoute}
-      modifyOrder={modifyOrder}
       loggedInUserIsDriver={loggedInUserIsDriver}
       dsprDriverIdForOrderDetails={dsprDriverIdForOrderDetails}
     /> */}
         <MapView style={styles.mapStyle} />
       </View>
+      <RoutingButtons />
     </SafeAreaView>
   );
 };
@@ -109,7 +108,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light,
-    paddingTop: 80,
     alignItems: 'center',
     justifyContent: 'center',
   },

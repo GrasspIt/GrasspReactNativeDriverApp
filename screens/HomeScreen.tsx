@@ -1,14 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Alert,
-  FlatList,
-  ActivityIndicator,
-  Platform,
-  Button,
-} from 'react-native';
+import { StyleSheet, Text, View, Alert, FlatList, ActivityIndicator, Platform } from 'react-native';
+import { Button } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import Colors from '../constants/Colors';
 
@@ -168,14 +160,21 @@ const HomeScreen = ({
       ) : error ? (
         <View style={styles.container}>
           <Text>{error}</Text>
-          <Button title="Try Again" onPress={() => getDSPRDriver(driverId)} />
+          <Button onPress={() => getDSPRDriver(driverId)}>Try Again</Button>
         </View>
       ) : (
         <View style={styles.body}>
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
 
-          <Button title="Create Route" onPress={handleCreateRoute} />
+          <Button
+            mode="contained"
+            style={{ marginHorizontal: 10, marginBottom: 10 }}
+            labelStyle={{ color: Colors.light }}
+            onPress={handleCreateRoute}
+          >
+            Create New Route
+          </Button>
 
           <Divider style={{ height: 2 }} />
           <Text style={styles.listTitle}>In Process Order</Text>
@@ -236,7 +235,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   dsprTitle: {
-    fontSize: 20,
+    fontSize: 22,
     textAlign: 'center',
     paddingTop: 10,
   },

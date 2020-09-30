@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Image,
   Text,
+  SafeAreaView,
 } from 'react-native';
 import { Input, Button, Card } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
@@ -52,60 +53,62 @@ const LoginForm: React.FC<LoginProps> = (props) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.screen}
-      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-          <Image source={require('../assets/grassp_health.png')} style={styles.image} />
-          <Card containerStyle={styles.card}>
-            <Card.Title>LOGIN</Card.Title>
-            <Card.Divider />
-            <Input
-              containerStyle={styles.input}
-              placeholder="Email"
-              label="Email"
-              labelStyle={{ color: Colors.black }}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              leftIcon={{
-                type: 'font-awesome',
-                color: Colors.black,
-                name: 'envelope',
-              }}
-              errorStyle={{ color: 'red' }}
-              errorMessage={emailInvalid ? 'ENTER EMAIL' : undefined}
-              onChangeText={(text) => handleEmailChange(text)}
-              value={email}
-            />
-            <Input
-              containerStyle={styles.input}
-              placeholder="Password"
-              label="Password"
-              labelStyle={{ color: Colors.black }}
-              autoCapitalize="none"
-              leftIcon={{
-                type: 'font-awesome',
-                color: Colors.black,
-                name: 'lock',
-              }}
-              secureTextEntry={true}
-              errorStyle={{ color: 'red' }}
-              errorMessage={passwordInvalid ? 'ENTER PASSWORD' : undefined}
-              onChangeText={(text) => handlePasswordChange(text)}
-              value={password}
-            />
-            {isLoading ? (
-              <Button buttonStyle={styles.button} loading />
-            ) : (
-              <Button buttonStyle={styles.button} title="Login" onPress={handleSubmit} />
-            )}
-          </Card>
-        </View>
-      </TouchableWithoutFeedback>
-      <StatusBar style="dark" />
-    </KeyboardAvoidingView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={styles.screen}
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+            <Image source={require('../assets/grassp_health.png')} style={styles.image} />
+            <Card containerStyle={styles.card}>
+              <Card.Title>LOGIN</Card.Title>
+              <Card.Divider />
+              <Input
+                containerStyle={styles.input}
+                placeholder="Email"
+                label="Email"
+                labelStyle={{ color: Colors.black }}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                leftIcon={{
+                  type: 'font-awesome',
+                  color: Colors.black,
+                  name: 'envelope',
+                }}
+                errorStyle={{ color: 'red' }}
+                errorMessage={emailInvalid ? 'ENTER EMAIL' : undefined}
+                onChangeText={(text) => handleEmailChange(text)}
+                value={email}
+              />
+              <Input
+                containerStyle={styles.input}
+                placeholder="Password"
+                label="Password"
+                labelStyle={{ color: Colors.black }}
+                autoCapitalize="none"
+                leftIcon={{
+                  type: 'font-awesome',
+                  color: Colors.black,
+                  name: 'lock',
+                }}
+                secureTextEntry={true}
+                errorStyle={{ color: 'red' }}
+                errorMessage={passwordInvalid ? 'ENTER PASSWORD' : undefined}
+                onChangeText={(text) => handlePasswordChange(text)}
+                value={password}
+              />
+              {isLoading ? (
+                <Button buttonStyle={styles.button} loading />
+              ) : (
+                <Button buttonStyle={styles.button} title="Login" onPress={handleSubmit} />
+              )}
+            </Card>
+          </View>
+        </TouchableWithoutFeedback>
+        <StatusBar style="dark" />
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
