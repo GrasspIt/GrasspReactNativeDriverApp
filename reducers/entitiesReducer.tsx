@@ -26,18 +26,23 @@ import {
 //     CREATE_DSP_SUCCESS, TOGGLE_DSP_MANAGER_ACTIVE_STATUS_SUCCESS, ASSIGN_DSP_MANAGER_SUCCESS,
 //     GET_ALL_DSPS_SUCCESS, GET_DSP_SUCCESS
 // } from '../actions/dspActions';
-// import {
-//     CREATE_DSPR_SUCCESS, TOGGLE_DSPR_MANAGER_ACTIVE_STATUS_SUCCESS, ASSIGN_DSPR_MANAGER_SUCCESS,
-//     GET_ALL_ON_CALL_DRIVERS_FOR_DSPR_SUCCESS, GET_ALL_DSPRS_FOR_DSP_SUCCESS, GET_DSPR_SUCCESS,
-//     TOGGLE_DSPR_MANAGER_ORDER_NOTIFICATION_STATUS_SUCCESS, GET_ORDER_HISTORY_FOR_DSPR_SUCCESS,
-//     GET_ANALYTICS_FOR_DSPR_SUCCESS,
-//     CREATE_DSPR_PROMOTION_FOR_PRODUCT_CATEGORY_SUCCESS,
-//     GET_DSPR_PROMOTION_FOR_PRODUCT_CATEGORIES_SUCCESS,
-//     HIDE_DSPR_PRODUCT_CATEGORY_PROMOTION_SUCCESS,
-//     GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS,
-//     CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS,
-//     UPDATE_DSPR_MENU_MECHANISM_SUCCESS
-// } from '../actions/dsprActions';
+import {
+  CREATE_DSPR_SUCCESS,
+  TOGGLE_DSPR_MANAGER_ACTIVE_STATUS_SUCCESS,
+  ASSIGN_DSPR_MANAGER_SUCCESS,
+  GET_ALL_ON_CALL_DRIVERS_FOR_DSPR_SUCCESS,
+  GET_ALL_DSPRS_FOR_DSP_SUCCESS,
+  GET_DSPR_SUCCESS,
+  TOGGLE_DSPR_MANAGER_ORDER_NOTIFICATION_STATUS_SUCCESS,
+  GET_ORDER_HISTORY_FOR_DSPR_SUCCESS,
+  GET_ANALYTICS_FOR_DSPR_SUCCESS,
+  CREATE_DSPR_PROMOTION_FOR_PRODUCT_CATEGORY_SUCCESS,
+  GET_DSPR_PROMOTION_FOR_PRODUCT_CATEGORIES_SUCCESS,
+  HIDE_DSPR_PRODUCT_CATEGORY_PROMOTION_SUCCESS,
+  GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS,
+  CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS,
+  UPDATE_DSPR_MENU_MECHANISM_SUCCESS,
+} from '../actions/dsprActions';
 import {
   ASSIGN_DSPR_DRIVER_SUCCESS,
   TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS,
@@ -46,6 +51,8 @@ import {
   GET_DSPR_DRIVER_SUCCESS,
   SET_DRIVER_INFORMATION_SUCCESS,
   GET_ALL_DRIVERS_FOR_DSPR_SUCCESS,
+  CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS,
+  PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS,
 } from '../actions/driverActions';
 // import {
 //     CREATE_DSP_PRODUCT_SUCCESS, GET_PRODUCT_SUCCESS, GET_ALL_PRODUCTS_FOR_DSP_SUCCESS, POST_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS,
@@ -108,6 +115,11 @@ export const initialState = {
   dsprDriverServiceAreas: {},
   dsprDriverServiceAreaVertices: {},
   metrics: {},
+  dsprDriverRoutes: {},
+  dsprDriverRouteLegs: {},
+  dsprDriverRouteLegDirections: {},
+  dsprDriverRouteLocations: {},
+  dsprDriverRouteMetrics: {},
 };
 
 const overwriteArray = (objValue, srcValue) => {
@@ -161,7 +173,7 @@ export default (state = initialState, action) => {
     // case TOGGLE_DSPR_MANAGER_ACTIVE_STATUS_SUCCESS:
     // case ASSIGN_DSPR_MANAGER_SUCCESS:
     // case ASSIGN_DSPR_DRIVER_SUCCESS:
-    // case TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS:
+    case TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS:
     // case GET_ALL_ON_CALL_DRIVERS_FOR_DSPR_SUCCESS:
     // case GET_ALL_DSPS_SUCCESS:
     // case GET_DSP_SUCCESS:
@@ -196,9 +208,9 @@ export default (state = initialState, action) => {
     // case SEND_TEXT_BLAST_SUCCESS:
     // case TRANSFER_INVENTORY_PERIOD_SUCCESS:
     // case GET_ANALYTICS_FOR_DSPR_SUCCESS:
-    // case CREATE_USER_NOTE_SUCCESS:
-    // case SET_DRIVER_INFORMATION_SUCCESS:
-    // case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
+    case CREATE_USER_NOTE_SUCCESS:
+    case SET_DRIVER_INFORMATION_SUCCESS:
+    case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
     case HIDE_USER_NOTE_SUCCESS:
     case UNHIDE_USER_NOTE_SUCCESS:
     case HIDE_USER_DOCUMENT_SUCCESS:
@@ -219,23 +231,33 @@ export default (state = initialState, action) => {
     // case GET_ORDER_HISTORY_FOR_USER_SUCCESS:
     case GET_ALL_USER_ID_DOCUMENTS_SUCCESS:
     case GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS:
-      // case GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS:
-      // case UPDATE_DSPR_MENU_MECHANISM_SUCCESS:
-      // case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
+    case GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS:
+    // case UPDATE_DSPR_MENU_MECHANISM_SUCCESS:
+    case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
+    case PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS:
+    case CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS:
       return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
 
-    // case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
-    //     const dsprServiceAreaFromResponse:any = responseEntities && responseEntities.dsprDriverServiceAreas ? Object.values(responseEntities.dsprDriverServiceAreas)[0]: undefined;
-    //     const stateWithoutDSPRDriverServiceArea = dsprServiceAreaFromResponse ? {
-    //         ...state,
-    //         dsprDriverServiceAreas: {
-    //             ...state.dsprDriverServiceAreas,
-    //             [dsprServiceAreaFromResponse.id]: {
-    //                 ...dsprServiceAreaFromResponse
-    //             }
-    //         }
-    //     } : state
-    //     return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(stateWithoutDSPRDriverServiceArea, responseEntities);
+    case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
+      const dsprServiceAreaFromResponse: any =
+        responseEntities && responseEntities.dsprDriverServiceAreas
+          ? Object.values(responseEntities.dsprDriverServiceAreas)[0]
+          : undefined;
+      const stateWithoutDSPRDriverServiceArea = dsprServiceAreaFromResponse
+        ? {
+            ...state,
+            dsprDriverServiceAreas: {
+              ...state.dsprDriverServiceAreas,
+              [dsprServiceAreaFromResponse.id]: {
+                ...dsprServiceAreaFromResponse,
+              },
+            },
+          }
+        : state;
+      return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(
+        stateWithoutDSPRDriverServiceArea,
+        responseEntities
+      );
 
     // case GET_ALL_DRIVERS_FOR_DSPR_SUCCESS:
     //     const dsprFromResponse = responseEntities && responseEntities.DSPRs ? Object.values(responseEntities.DSPRs)[0] as { id: number } : undefined;

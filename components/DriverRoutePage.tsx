@@ -1,4 +1,5 @@
 import React, { useState, Fragment, useEffect } from 'react';
+import { View, Text } from 'react-native';
 import {
   DsprDriver,
   User,
@@ -11,26 +12,15 @@ import {
   RouteLegDirection,
   RouteMetrics,
 } from '../store/reduxStoreState';
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  ListItem,
-  ListItemText,
-  List,
-  DialogActions,
-  Card,
-} from 'react-native-paper';
-import { GoogleMap, Marker, InfoWindow, Polyline } from '@react-google-maps/api';
-import { NoteOutlined } from '@material-ui/icons';
+import { Button, Dialog, Card } from 'react-native-paper';
+import { ListItem } from 'react-native-elements';
+import MapView, { Callout, Marker, Polyline } from 'react-native-maps';
+
 import { COMPLETE_ORDER_SUCCESS, MARK_IN_PROCESS_FAILURE } from '../actions/orderActions';
-import OrderWithDetailsAndPrices from '../containers/OrderWithDetailsAndPrices';
 import {
   CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS,
   PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS,
 } from '../actions/driverActions';
-import SweetAlert from 'react-bootstrap-sweetalert';
 
 export const markerColors = {
   yellow: { url: '/assets/images/yellow_marker.svg', labelOrigin: { x: 14, y: 15 } },
@@ -46,21 +36,20 @@ interface GettingStartedGoogleMapProps {
   orderPolyline: any;
   overviewPolyline: google.maps.LatLng[];
   currentlyActiveRouteLegIndex: number;
-  toggleInfoWindow?: any;
+  toggleCallout?: any;
   handleMapOrderClick?: (order: any) => any;
-  showInfoWindow?: () => any;
+  showCallout?: () => any;
 }
 
 const GettingStartedGoogleMap: React.FC<GettingStartedGoogleMapProps> = (props) => {
   const {
     driver,
-    icons,
     orderPolyline,
     overviewPolyline,
     currentlyActiveRouteLegIndex,
-    toggleInfoWindow,
+    toggleCallout,
     handleMapOrderClick,
-    showInfoWindow,
+    showCallout,
   } = props;
   //TODO: Will need to be set based on whether currentInProcessOrder exists or not
   const [onOverview, setOnOverview] = useState(true);
@@ -85,26 +74,25 @@ const GettingStartedGoogleMap: React.FC<GettingStartedGoogleMapProps> = (props) 
 
   const driverMarker = driver && driver.currentLocation && (
     <Marker
-      onClick={toggleInfoWindow}
-      icon={icons['green']}
-      label={initials}
-      position={{ lat: driver.currentLocation.latitude, lng: driver.currentLocation.longitude }}
+      onPress={toggleCallout}
+      pinColor="green"
+      title={initials}
+      coordinate={{
+        latitude: driver.currentLocation.latitude,
+        longitude: driver.currentLocation.longitude,
+      }}
     >
-      {showInfoWindow && (
-        <InfoWindow
-          onCloseClick={toggleInfoWindow}
-          position={{ lat: driver.currentLocation.latitude, lng: driver.currentLocation.longitude }}
-          options={{ pixelOffset: new google.maps.Size(0, -42) }} // this positions the info window on the top of the marker, not covering it
-        >
-          <p>
+      {showCallout && (
+        <Callout onPress={toggleCallout}>
+          <Text>
             {name}
             <br />
             Outstanding Orders:{' '}
             {driver.currentInProcessOrder
               ? driver.queuedOrders.length + 1
               : driver.queuedOrders.length}
-          </p>
-        </InfoWindow>
+          </Text>
+        </Callout>
       )}
     </Marker>
   );
@@ -132,11 +120,14 @@ const GettingStartedGoogleMap: React.FC<GettingStartedGoogleMapProps> = (props) 
           if (!orderForLeg || !orderForLeg.address) return null;
           return (
             <Marker
-              position={{ lat: orderForLeg.address.latitude, lng: orderForLeg.address.longitude }}
+              coordinate={{
+                latitude: orderForLeg.address.latitude,
+                longitude: orderForLeg.address.longitude,
+              }}
               {...orderForLeg}
-              icon={icons['red']}
-              label={userInitials || (++index).toString()}
-              onClick={() => handleOrderClick(orderForLeg)}
+              pinColor="red"
+              title={userInitials || (++index).toString()}
+              onPress={() => handleOrderClick(orderForLeg)}
               key={orderForLeg.address.id}
             />
           );
@@ -253,7 +244,7 @@ const GettingStartedGoogleMap: React.FC<GettingStartedGoogleMapProps> = (props) 
       : null;
   const polyLineCenter = driver && orderPolyline ? findPolylineCenter() : null;
   return (
-    <GoogleMap
+    <MapView
       zoom={(map && map.getZoom()) || 20}
       center={
         polyLineCenter
@@ -293,7 +284,7 @@ const GettingStartedGoogleMap: React.FC<GettingStartedGoogleMapProps> = (props) 
           : mapOverviewPolyline
         : mapOverviewPolyline}
       {markers && markers.length > 0 ? markers : undefined}
-    </GoogleMap>
+    </MapView>
   );
 };
 
@@ -320,55 +311,44 @@ const QueuedOrder: React.FC<QueuedOrderProps> = (props) => {
 
   return (
     <Fragment>
-      <ListItem
-        className={orderIdsInRoute && orderIdsInRoute.includes(order.id) ? 'order-in-route' : ''}
-      >
-        <ListItemText
-          primary={
-            <Fragment>
-              <span>
-                {index ? `${index}. ` : null} {order.user.firstName} {order.user.lastName}{' '}
-                {order.userFirstTimeOrderWithDSPR && '- FTP'}
-              </span>
-              <span className="queued-order-total">
-                , ${order.cashTotal}{' '}
-                {order.user.userNotes && order.user.userNotes.length > 0 ? (
-                  <span>
-                    {' '}
-                    - <NoteOutlined className="note-Icon" />
-                  </span>
-                ) : (
-                  ''
-                )}
-              </span>
-            </Fragment>
-          }
-          secondary={`${order.address.street} ${order.address.zipCode}`}
-        />
+      <ListItem>
+        <ListItem.Content>
+          <ListItem.Title>
+            <Text>
+              {index ? `${index}. ` : null} {order.user.firstName} {order.user.lastName}{' '}
+              {order.userFirstTimeOrderWithDSPR && '- FTP'}
+            </Text>
+            <Text>
+              , ${order.cashTotal}{' '}
+              {order.user.userNotes && order.user.userNotes.length > 0 ? (
+                <Text> {/* - <NoteOutlined /> */}</Text>
+              ) : (
+                ''
+              )}
+            </Text>
+          </ListItem.Title>
+          <ListItem.Subtitle>
+            {order.address.street} {order.address.zipCode}
+          </ListItem.Subtitle>
+        </ListItem.Content>
         {OrderDetails && (
-          <Button variant="contained" color="primary" onClick={() => setShowOrderDetails(true)}>
+          <Button mode="contained" onPress={() => setShowOrderDetails(true)}>
             Details
           </Button>
         )}
         {markOrderInProcess && (
           <Button
-            variant="contained"
-            color="primary"
+            mode="contained"
             disabled={disableInProcessButton}
-            onClick={() => handleMarkOrderAsInProcess(order.id)}
+            onPress={() => handleMarkOrderAsInProcess(order.id)}
           >
             Make In Process
           </Button>
         )}
       </ListItem>
-      <Dialog
-        title="Order Details"
-        open={showOrderDetails}
-        onClose={() => setShowOrderDetails(false)}
-      >
-        <Card className="driver-page-order-detail-popup-card">
-          {showOrderDetails && OrderDetails}
-        </Card>
+      <Dialog visible={showOrderDetails} onDismiss={() => setShowOrderDetails(false)}>
+        <Dialog.Title>Order Details</Dialog.Title>
+        <Card>{showOrderDetails && OrderDetails}</Card>
       </Dialog>
     </Fragment>
   );
@@ -388,21 +368,19 @@ const OrderRouteLegDirectionRow: React.FC<OrderRouteLegDirectionRowProps> = (pro
   return (
     <Fragment>
       <ListItem>
-        <ListItemText
-          primary={
-            <Fragment>
-              <span>
-                {index ? index + '. ' : null}
-                <span dangerouslySetInnerHTML={{ __html: routeLegDirection.htmlDirections }}></span>
-              </span>
-              <span className="queued-order-total">
-                {' '}
-                - {routeLegDirection.metrics.distanceText}
-              </span>
-            </Fragment>
-          }
-          //secondary={`${order.address.street} ${order.address.zipCode}`}
-        />
+        <ListItem.Content>
+          <ListItem.Title>
+            {' '}
+            <Text>
+              {index ? index + '. ' : null}
+              <Text dangerouslySetInnerHTML={{ __html: routeLegDirection.htmlDirections }}></Text>
+            </Text>
+            <Text> - {routeLegDirection.metrics.distanceText}</Text>
+          </ListItem.Title>
+          <ListItem.Subtitle>
+            {order.address.street} {order.address.zipCode}
+          </ListItem.Subtitle>
+        </ListItem.Content>
       </ListItem>
     </Fragment>
   );
@@ -436,8 +414,6 @@ interface DriverRoutePageProps {
     usingFinalDestinationInRoute: Boolean
   ) => any;
   progressRoute: (routeId: number) => any;
-  modifyOrder: any;
-  loggedInUserIsDriver: boolean;
   dsprDriverIdForOrderDetails: number;
   handleMapOrderClick: (order: any) => any;
 }
@@ -457,26 +433,24 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
   //For creating new Route
   const [proposedOrderIdsInRoute, setProposedOrderIdsInRoute] = useState([]);
   const [orderSelectionModalOpen, setOrderSelectionModalOpen] = useState(false);
-  const [numberOrdersPerRoute, setNumberOrdersPerRoute] = useState(undefined);
+  const [numberOrdersPerRoute, setNumberOrdersPerRoute] = useState();
   const [ordersForRoute, setOrdersForRoute] = useState([]);
-  const [finalOrderForRoute, setFinalOrderForRoute] = useState(undefined);
+  const [finalOrderForRoute, setFinalOrderForRoute] = useState();
   const [useFinalOrderInRoute, setUseFinalOrderInRoute] = useState(false);
 
-  const [ordersCurrentlyInRoute, setOrdersCurrentlyInRoute] = useState(undefined);
-  const [currentInProcessOrderInActiveRoute, setCurrentInProcessOrderInActiveRoute] = useState(
-    undefined
-  );
-  const [currentlyActiveRouteLegIndex, setCurrentlyActiveRouteLegIndex] = useState(undefined);
+  const [ordersCurrentlyInRoute, setOrdersCurrentlyInRoute] = useState();
+  const [currentInProcessOrderInActiveRoute, setCurrentInProcessOrderInActiveRoute] = useState();
+  const [currentlyActiveRouteLegIndex, setCurrentlyActiveRouteLegIndex] = useState();
 
-  const [routeError, setRouteError] = useState(undefined);
+  const [routeError, setRouteError] = useState();
   const [polylineForMap, setPolylineForMap] = useState(null);
   const [overviewPolyline, setOverviewPolyline] = useState(null);
 
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [showWarningModal, setShowWarningModal] = useState(false);
-  const [modalPrimaryText, setModalPrimaryText] = useState(null);
-  const [modalSecondaryText, setModalSecondaryText] = useState(null);
+  // const [showSuccessModal, setShowSuccessModal] = useState(false);
+  // const [showErrorModal, setShowErrorModal] = useState(false);
+  // const [showWarningModal, setShowWarningModal] = useState(false);
+  // const [modalPrimaryText, setModalPrimaryText] = useState(null);
+  // const [modalSecondaryText, setModalSecondaryText] = useState(null);
   const [routeButtonDisabled, setRouteButtonDisabled] = useState(false);
 
   const handleOpenOrderSelectionModal = () => {
@@ -578,6 +552,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
 
   useEffect(() => {
     if (
+      driver &&
       driver.serviceAreas &&
       driver.serviceAreas[0] &&
       driver.serviceAreas[0].numberOrdersPerRoute
@@ -676,14 +651,14 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
   }, [ordersForRoute]);
 
   return (
-    <div className="driver-route-page">
+    <View>
       {driver && (!driver.currentRoute || (driver.currentRoute && !driver.currentRoute.active)) && (
-        <Button color="primary" variant="contained" onClick={() => handleOpenOrderSelectionModal()}>
+        <Button mode="contained" onPress={() => handleOpenOrderSelectionModal()}>
           Create New Route
         </Button>
       )}
       {driver.currentRoute && driver.currentRoute.active && (
-        <div>
+        <View>
           {
             <GettingStartedGoogleMap
               driver={driver}
@@ -694,27 +669,23 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
               handleMapOrderClick={handleMapOrderClick}
             />
           }
-          <div className="buttons-container">
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => handleRouteActionButtonPressed()}
-            >
+          <View>
+            <Button mode="contained" onPress={() => handleRouteActionButtonPressed()}>
               {!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
             </Button>
             {/* { TODO: Make a note here that any in-process orders should be completed before a route is started } */}
             <Button
               color="secondary"
-              variant="contained"
-              onClick={() => handleOpenOrderSelectionModal()}
+              mode="contained"
+              onPress={() => handleOpenOrderSelectionModal()}
             >
               Create New Route
             </Button>
-          </div>
-          {currentInProcessOrderInActiveRoute &&
+          </View>
+          {/* {currentInProcessOrderInActiveRoute &&
             currentlyActiveRouteLegIndex !== undefined &&
             driver.currentInProcessOrder && (
-              <List className="queued-driver-route-page-orders-list">
+              <List>
                 <QueuedOrder
                   key={driver.currentInProcessOrder.id}
                   order={driver.currentInProcessOrder}
@@ -729,11 +700,11 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
                   }
                 />
               </List>
-            )}
+            )} */}
 
           {currentInProcessOrderInActiveRoute && currentlyActiveRouteLegIndex !== undefined && (
-            <div>
-              <h4>Directions: </h4>
+            <View>
+              <Text>Directions: </Text>
               {driver.currentRoute.legs[currentlyActiveRouteLegIndex].routeLegDirections.map(
                 (routeLegDirection: any, index) => (
                   <OrderRouteLegDirectionRow
@@ -743,11 +714,11 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
                   />
                 )
               )}
-            </div>
+            </View>
           )}
-          <div>
-            <h4>Orders In Route:</h4>
-            <List className="queued-driver-route-page-orders-list">
+          <View>
+            <Text>Orders In Route:</Text>
+            {/* <List>
               {driver.currentRoute.legs.map(
                 (leg, index) =>
                   leg.order && (
@@ -767,38 +738,33 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
                     />
                   )
               )}
-            </List>
-          </div>
-        </div>
+            </List> */}
+          </View>
+        </View>
       )}
 
-      <Dialog
-        open={orderSelectionModalOpen}
-        onClose={() => handleCloseOrderSelectionModal()}
-        className="new-route-dialog"
-      >
-        <DialogTitle>Order Selection</DialogTitle>
-        <DialogContent>
-          <p>
-            Selected Orders: <strong>{ordersForRoute.length || 0}</strong>/
-            <strong>{numberOrdersPerRoute}</strong>
-          </p>
+      <Dialog visible={orderSelectionModalOpen} onDismiss={() => handleCloseOrderSelectionModal()}>
+        <Dialog.Title>Order Selection</Dialog.Title>
+        <Dialog.Content>
+          <Text>
+            Selected Orders: {ordersForRoute.length || 0}/{numberOrdersPerRoute}
+          </Text>
           {driver && driver.currentInProcessOrder && (
             <Fragment>
-              <h5>In Process Order</h5>
-              <List className="queued-driver-route-page-orders-selection-list">
+              <Text>In Process Order</Text>
+              {/* <List>
                 <QueuedOrder
                   key={driver.currentInProcessOrder.id}
                   order={driver.currentInProcessOrder as OrderWithAddressAndUser}
                   orderIdsInRoute={proposedOrderIdsInRoute}
                 />
-              </List>
+              </List> */}
             </Fragment>
           )}
           {driver && driver.queuedOrders && driver.queuedOrders.length > 0 && (
             <Fragment>
-              <h5>Queued Orders</h5>
-              <List className="queued-driver-route-page-orders-selection-list">
+              <Text>Queued Orders</Text>
+              {/* <List>
                 {(driver.queuedOrders as OrderWithAddressAndUser[]).map((order) => (
                   <QueuedOrder
                     key={order.id}
@@ -806,26 +772,25 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
                     orderIdsInRoute={proposedOrderIdsInRoute}
                   />
                 ))}
-              </List>
+              </List> */}
             </Fragment>
           )}
-          {routeError && <p className="error">{routeError}</p>}
-        </DialogContent>
-        <DialogActions>
-          <Button variant="text" color="primary" onClick={() => handleCloseOrderSelectionModal()}>
+          {routeError && <p>{routeError}</p>}
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button mode="text" onPress={() => handleCloseOrderSelectionModal()}>
             Cancel
           </Button>
           <Button
-            variant="contained"
-            color="primary"
+            mode="contained"
             disabled={routeButtonDisabled}
-            onClick={() => handleRouteCreationSubmission()}
+            onPress={() => handleRouteCreationSubmission()}
           >
             Create Route
           </Button>
-        </DialogActions>
+        </Dialog.Actions>
       </Dialog>
-      {showSuccessModal && (
+      {/* {showSuccessModal && (
         <SweetAlert
           success
           timeout={2000}
@@ -860,8 +825,8 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
         >
           {'Due to some order changes, your route has been modified'}
         </SweetAlert>
-      )}
-    </div>
+      )} */}
+    </View>
   );
 };
 

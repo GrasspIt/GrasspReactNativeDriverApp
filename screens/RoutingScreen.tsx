@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
-import MapView, { Marker, Polyline } from 'react-native-maps';
-import { useDispatch } from 'react-redux';
-import Colors from '../constants/Colors';
+
+import { connect } from 'react-redux';
 import {
   DsprDriver,
   User,
@@ -17,10 +16,13 @@ import {
   RouteMetrics,
   RouteLegDirection,
 } from '../store/reduxStoreState';
+import { getDSPRFromProps } from '../selectors/dsprSelectors';
+import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriverSelector';
 import { createDSPRDriverRoute, progressDSPRDriverRoute } from '../actions/driverActions';
-import TopNavBar from '../components/TopNavBar';
+
+import DriverRoutePage from '../components/DriverRoutePage';
 import RoutingButtons from '../components/RoutingButtons';
-// import DriverRoutePage from '../components/DriverRoutePage';
+import Colors from '../constants/Colors';
 
 type RoutingScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Routing'>;
 type Props = {
@@ -56,12 +58,9 @@ const RoutingScreen = ({
   driver,
   dspr,
   completeOrder,
-  loggedInUserIsDriver,
   dsprDriverIdForOrderDetails,
   handleMapOrderClick,
 }: Props) => {
-  const dispatch = useDispatch();
-
   const createNewRoute = (
     driverId: number,
     waypoints: OrderWithAddressAndUser[],
@@ -75,31 +74,27 @@ const RoutingScreen = ({
     } else {
       finalDestination = { id: finalDestination.id };
     }
-    return dispatch(
-      createDSPRDriverRoute(driverId, orderIds, finalDestination, usingFinalDestinationInRoute)
-    );
+    createDSPRDriverRoute(driverId, orderIds, finalDestination, usingFinalDestinationInRoute);
   };
 
   const progressRoute = (routeId: number) => {
-    return dispatch(progressDSPRDriverRoute(routeId));
+    progressDSPRDriverRoute(routeId);
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        {/* <DriverRoutePage
-      driver={driver}
-      dspr={dspr}
-      createRoute={createNewRoute}
-      handleMapOrderClick={handleMapOrderClick}
-      completeOrder={completeOrder}
-      progressRoute={progressRoute}
-      loggedInUserIsDriver={loggedInUserIsDriver}
-      dsprDriverIdForOrderDetails={dsprDriverIdForOrderDetails}
-    /> */}
-        <MapView style={styles.mapStyle} />
+        <DriverRoutePage
+          driver={driver}
+          dspr={dspr}
+          createRoute={createNewRoute}
+          handleMapOrderClick={handleMapOrderClick}
+          completeOrder={completeOrder}
+          progressRoute={progressRoute}
+          dsprDriverIdForOrderDetails={dsprDriverIdForOrderDetails}
+        />
       </View>
-      <RoutingButtons />
+      {/* <RoutingButtons /> */}
     </SafeAreaView>
   );
 };
@@ -117,4 +112,23 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RoutingScreen;
+const mapStateToProps = (state) => {
+  const dsprDriverIdForOrderDetails = state.api.dsprDriverId;
+  const driver = getDSPRDriverWithUserAndOrdersFromProps(state, {
+    dsprDriverId: dsprDriverIdForOrderDetails,
+  });
+  const dspr = driver ? getDSPRFromProps(state, { dsprId: driver.dspr }) : undefined;
+  const isLoading = state.api.isLoading;
+  const error = state.api.errorMessage;
+  return {
+    dsprDriverIdForOrderDetails,
+    dspr,
+    driver,
+    isLoading,
+    error,
+  };
+};
+
+const mapDispatchToProps = { createDSPRDriverRoute, progressDSPRDriverRoute };
+
+export default connect(mapStateToProps, mapDispatchToProps)(RoutingScreen);

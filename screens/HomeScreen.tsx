@@ -169,11 +169,12 @@ const HomeScreen = ({
 
           <Button
             mode="contained"
-            style={{ marginHorizontal: 10, marginBottom: 10 }}
+            icon="map"
+            style={{ marginHorizontal: 10, marginBottom: 10, width: 'auto' }}
             labelStyle={{ color: Colors.light }}
             onPress={handleCreateRoute}
           >
-            Create New Route
+            Go to Routing
           </Button>
 
           <Divider style={{ height: 2 }} />
