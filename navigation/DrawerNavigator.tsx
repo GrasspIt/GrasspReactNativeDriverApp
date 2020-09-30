@@ -18,6 +18,7 @@ import Colors from '../constants/Colors';
 import DashboardNavigator from './DashboardNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/AuthNavigator';
+import RoutingScreen from '../screens/RoutingScreen';
 
 type MainScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Main'>;
 
@@ -29,6 +30,7 @@ type Props = {
 export type DrawerStackParamsList = {
   DSPRs: any;
   Dashboard: any;
+  Routing: any;
 };
 
 const Drawer = createDrawerNavigator<DrawerStackParamsList>();
@@ -77,6 +79,7 @@ const DrawerNavigator = ({ navigation, route }: Props) => {
     >
       {dsprDrivers.length > 1 ? <Drawer.Screen name="DSPRs" component={DSPRScreen} /> : null}
       <Drawer.Screen name="Dashboard" component={DashboardNavigator} />
+      <Drawer.Screen name="Routing" component={RoutingScreen} />
     </Drawer.Navigator>
   );
 };

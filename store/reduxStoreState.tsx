@@ -5,22 +5,22 @@ export interface State {
   api: Api;
 }
 
-interface Form {
+export interface Form {
   SearchForm?: GeneralForm;
   DSPProductForm?: GeneralForm;
   DSPProductCategoryForm?: GeneralForm;
 }
 
-interface GeneralForm {
+export interface GeneralForm {
   syncErrors: any;
   registeredFields: any;
 }
 
-interface Routing {
+export interface Routing {
   locationBeforeTransitions: RoutingInfo;
 }
 
-interface RoutingInfo {
+export interface RoutingInfo {
   pathname: string;
   search: string;
   hash: string;
@@ -29,16 +29,16 @@ interface RoutingInfo {
   query: any;
 }
 
-interface ComponentState {
+export interface ComponentState {
   dsprMenuManagementContainer: DSPRMenuManagementContainer;
   dsprServiceAreaManagementContainer: DSPRServiceAreaManagementContainer;
 }
 
-interface DSPRServiceAreaManagementContainer {
+export interface DSPRServiceAreaManagementContainer {
   dsprServiceAreas: { [key: number]: DSPRDriverServiceArea };
   dsprServiceAreaVertices: { [key: number]: DSPRDriverServiceAreaVertex };
 }
-interface DSPRMenuManagementContainer {
+export interface DSPRMenuManagementContainer {
   dspProductCategories: { [key: number]: DspProductCategory };
 }
 
@@ -119,12 +119,12 @@ export interface User {
   userDSPRDetails?: any[];
 }
 
-interface UnverifiedUser extends User {
+export interface UnverifiedUser extends User {
   medicalRecommendation?: number;
   identificationDocument?: number;
 }
 
-interface DeliveryServiceProvider {
+export interface DeliveryServiceProvider {
   id: number;
   name: string;
   managers: number[];
@@ -132,7 +132,7 @@ interface DeliveryServiceProvider {
   productCategories: number[];
 }
 
-interface DspManager {
+export interface DspManager {
   id: number;
   deliveryServiceProvider?: number;
   managerUser?: number;
@@ -174,7 +174,7 @@ export interface DSPR {
   };
 }
 
-interface Analytic {
+export interface Analytic {
   beginDate: string;
   cashReceivedTotal: number;
   taxesTotal: number;
@@ -266,7 +266,7 @@ export interface DsprCurrentInventoryItem {
   costOfReturnedInventory: number;
 }
 
-interface DsprZipCode {
+export interface DsprZipCode {
   id: number;
   zipCode: string;
   dspr: number;
@@ -274,7 +274,7 @@ interface DsprZipCode {
   minimumOrderSizeOverride?: number;
 }
 
-interface DsprProductCategoryPromotion {
+export interface DsprProductCategoryPromotion {
   id: number;
   dspr: number;
   productCategory: number;
@@ -390,7 +390,7 @@ export interface OrderTaxDetail {
   rate: number;
 }
 
-interface DsprOrderHistory {
+export interface DsprOrderHistory {
   dspr: number;
   orders: number[];
   beginTimestamp: string;
@@ -434,13 +434,13 @@ export interface DspProduct {
   id: number;
 }
 
-interface UsersMetrics {
+export interface UsersMetrics {
   metric: string;
   newUsersSinceTimestamp: number;
   totalUsers: number;
 }
 
-interface DSPRDriverServiceArea {
+export interface DSPRDriverServiceArea {
   id: number;
   currentDriver: DsprDriver;
   dspr: number;
@@ -449,7 +449,7 @@ interface DSPRDriverServiceArea {
   numberOrdersPerRoute?: number;
 }
 
-interface DSPRDriverServiceAreaVertex {
+export interface DSPRDriverServiceAreaVertex {
   id: number;
   latitude: number;
   longitude: number;
@@ -458,7 +458,7 @@ interface DSPRDriverServiceAreaVertex {
   vertexOrder: number;
 }
 
-interface Route {
+export interface Route {
   id: number;
   active: boolean;
   numberLegs: number;
@@ -473,7 +473,7 @@ interface Route {
   polylineContainingCoordinates: number[];
 }
 
-interface RouteLeg {
+export interface RouteLeg {
   id: number;
   legOrder: number;
   routeLegDirections: number[];
@@ -484,7 +484,7 @@ interface RouteLeg {
   order: number;
 }
 
-interface RouteLegDirection {
+export interface RouteLegDirection {
   id: number;
   htmlDirections: string;
   routeLeg: number;
@@ -495,13 +495,13 @@ interface RouteLegDirection {
   polyLineContainingCoordinates: number[];
 }
 
-interface RouteLocation {
+export interface RouteLocation {
   id: number;
   latitude: number;
   longitude: number;
 }
 
-interface RouteMetrics {
+export interface RouteMetrics {
   id: number;
   distanceText: string;
   distanceValue: number;

@@ -35,6 +35,7 @@ import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriver
 import { getLoggedInUser } from '../selectors/userSelectors';
 import { Divider } from 'react-native-paper';
 import InProcessOrderItem from '../components/InProcessOrderItem';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // handler for push notifications
 Notifications.setNotificationHandler({
@@ -157,9 +158,9 @@ const HomeScreen = ({
   };
 
   return loggedInUser && dsprDriver ? (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar style="dark" />
-      <TopNavBar dsprName={dspr.name} navigation={navigation} />
+      <TopNavBar navigation={navigation} />
       {isLoading ? (
         <View style={styles.container}>
           <ActivityIndicator size="large" color={Colors.primary} />
@@ -210,7 +211,7 @@ const HomeScreen = ({
           />
         </View>
       )}
-    </>
+    </SafeAreaView>
   ) : null;
 };
 

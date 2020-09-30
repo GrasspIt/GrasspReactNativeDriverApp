@@ -3,7 +3,7 @@ import { StyleSheet, Image } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import Colors from '../constants/Colors';
 
-const TopNavBar = ({ navigation, dsprName }) => {
+const TopNavBar = ({ navigation }) => {
   return (
     <Appbar.Header style={styles.header}>
       <Appbar.Action icon="menu" onPress={() => navigation.toggleDrawer()} />
@@ -25,10 +25,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  image: {
-    height: 30,
-    width: 150,
-  },
+  // image: {
+  //   height: 30,
+  //   width: 150,
+  // },
 });
 
 export default TopNavBar;
