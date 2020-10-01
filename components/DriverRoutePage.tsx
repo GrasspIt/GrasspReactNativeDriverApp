@@ -1,5 +1,5 @@
-import React, { useState, Fragment, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Alert, StyleSheet, FlatList } from 'react-native';
 import {
   DsprDriver,
   User,
@@ -13,22 +13,16 @@ import {
   RouteMetrics,
 } from '../store/reduxStoreState';
 import { Button, Dialog, Card } from 'react-native-paper';
-import { ListItem } from 'react-native-elements';
+import { ListItem, Divider } from 'react-native-elements';
 import MapView, { Callout, Marker, Polyline } from 'react-native-maps';
+import Colors from '../constants/Colors';
+import OrderItemBasic from './OrderItemBasic';
 
 import { COMPLETE_ORDER_SUCCESS, MARK_IN_PROCESS_FAILURE } from '../actions/orderActions';
 import {
   CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS,
   PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS,
 } from '../actions/driverActions';
-
-export const markerColors = {
-  yellow: { url: '/assets/images/yellow_marker.svg', labelOrigin: { x: 14, y: 15 } },
-  orange: { url: '/assets/images/orange_marker.svg', labelOrigin: { x: 14, y: 15 } },
-  red: { url: '/assets/images/red_marker.svg', labelOrigin: { x: 14, y: 15 } },
-  blue: { url: '/assets/images/blue_marker.svg', labelOrigin: { x: 14, y: 15 } },
-  green: { url: '/assets/images/green_marker.svg', labelOrigin: { x: 14, y: 15 } },
-};
 
 interface GettingStartedGoogleMapProps {
   driver: any;
@@ -72,6 +66,7 @@ const GettingStartedGoogleMap: React.FC<GettingStartedGoogleMapProps> = (props) 
     driver.lastName &&
     driver.user.firstName.substring(0, 1) + driver.user.lastName.substring(0, 1);
 
+  // marker for current location of driver
   const driverMarker = driver && driver.currentLocation && (
     <Marker
       onPress={toggleCallout}
@@ -84,9 +79,8 @@ const GettingStartedGoogleMap: React.FC<GettingStartedGoogleMapProps> = (props) 
     >
       {showCallout && (
         <Callout onPress={toggleCallout}>
+          <Text>{name}</Text>
           <Text>
-            {name}
-            <br />
             Outstanding Orders:{' '}
             {driver.currentInProcessOrder
               ? driver.queuedOrders.length + 1
@@ -97,7 +91,8 @@ const GettingStartedGoogleMap: React.FC<GettingStartedGoogleMapProps> = (props) 
     </Marker>
   );
 
-  const markers =
+  // markers for orders in route
+  const orderMarkers =
     driver &&
     driver.currentRoute &&
     driver.currentRoute.legs.length > 0 &&
@@ -283,7 +278,7 @@ const GettingStartedGoogleMap: React.FC<GettingStartedGoogleMapProps> = (props) 
           ? mapOrderPolyline
           : mapOverviewPolyline
         : mapOverviewPolyline}
-      {markers && markers.length > 0 ? markers : undefined}
+      {orderMarkers && orderMarkers.length > 0 ? orderMarkers : undefined}
     </MapView>
   );
 };
@@ -310,7 +305,7 @@ const QueuedOrder: React.FC<QueuedOrderProps> = (props) => {
   };
 
   return (
-    <Fragment>
+    <>
       <ListItem>
         <ListItem.Content>
           <ListItem.Title>
@@ -350,7 +345,7 @@ const QueuedOrder: React.FC<QueuedOrderProps> = (props) => {
         <Dialog.Title>Order Details</Dialog.Title>
         <Card>{showOrderDetails && OrderDetails}</Card>
       </Dialog>
-    </Fragment>
+    </>
   );
 };
 
@@ -366,7 +361,7 @@ const OrderRouteLegDirectionRow: React.FC<OrderRouteLegDirectionRowProps> = (pro
   const { routeLegDirection, index } = props;
 
   return (
-    <Fragment>
+    <>
       <ListItem>
         <ListItem.Content>
           <ListItem.Title>
@@ -382,7 +377,7 @@ const OrderRouteLegDirectionRow: React.FC<OrderRouteLegDirectionRowProps> = (pro
           </ListItem.Subtitle>
         </ListItem.Content>
       </ListItem>
-    </Fragment>
+    </>
   );
 };
 
@@ -465,13 +460,17 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
     let resetRoute: boolean = true;
     setRouteButtonDisabled(true);
     if (driver.currentRoute && driver.currentRoute.active) {
-      resetRoute = window.confirm(
-        'The driver is currently in the middle of a route. Are you sure you want to override their current route?'
+      Alert.alert(
+        'Override Route?',
+        'The driver is currently in the middle of a route. Are you sure you want to override their current route?',
+        [
+          { text: 'No', style: 'cancel' },
+          { text: 'Yes', onPress: () => (resetRoute = true) },
+        ]
       );
     }
-
     if (resetRoute) {
-      if (ordersForRoute.length !== 0) {
+      if (ordersForRoute.length > 0) {
         if (!routeError) {
           createRoute(driver.id, ordersForRoute, finalOrderForRoute, useFinalOrderInRoute).then(
             (response) => {
@@ -619,7 +618,6 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
     } else {
       setPolylineForMap(null);
     }
-    // eslint-disable-next-line
   }, [currentlyActiveRouteLegIndex]);
 
   //Temporarily autofilling orders into route
@@ -651,9 +649,13 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
   }, [ordersForRoute]);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       {driver && (!driver.currentRoute || (driver.currentRoute && !driver.currentRoute.active)) && (
-        <Button mode="contained" onPress={() => handleOpenOrderSelectionModal()}>
+        <Button
+          mode="contained"
+          labelStyle={{ color: Colors.light }}
+          onPress={() => handleOpenOrderSelectionModal()}
+        >
           Create New Route
         </Button>
       )}
@@ -662,7 +664,6 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
           {
             <GettingStartedGoogleMap
               driver={driver}
-              icons={markerColors}
               orderPolyline={polylineForMap}
               overviewPolyline={overviewPolyline}
               currentlyActiveRouteLegIndex={currentlyActiveRouteLegIndex}
@@ -670,13 +671,17 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
             />
           }
           <View>
-            <Button mode="contained" onPress={() => handleRouteActionButtonPressed()}>
+            <Button
+              mode="contained"
+              labelStyle={{ color: Colors.light }}
+              onPress={() => handleRouteActionButtonPressed()}
+            >
               {!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
             </Button>
             {/* { TODO: Make a note here that any in-process orders should be completed before a route is started } */}
             <Button
-              color="secondary"
               mode="contained"
+              labelStyle={{ color: Colors.light }}
               onPress={() => handleOpenOrderSelectionModal()}
             >
               Create New Route
@@ -718,6 +723,17 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
           )}
           <View>
             <Text>Orders In Route:</Text>
+            {/* <FlatList
+              ListEmptyComponent={
+                <View style={styles.empty}>
+                  <Text>No orders.</Text>
+                </View>
+              }
+              data={driver.currentRoute.legs}
+              renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
+              keyExtractor={(item: any) => item.id.toString()}
+              style={styles.orders}
+            /> */}
             {/* <List>
               {driver.currentRoute.legs.map(
                 (leg, index) =>
@@ -746,34 +762,33 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
       <Dialog visible={orderSelectionModalOpen} onDismiss={() => handleCloseOrderSelectionModal()}>
         <Dialog.Title>Order Selection</Dialog.Title>
         <Dialog.Content>
-          <Text>
+          <Text style={styles.listTitle}>
             Selected Orders: {ordersForRoute.length || 0}/{numberOrdersPerRoute}
           </Text>
+          <Divider />
           {driver && driver.currentInProcessOrder && (
-            <Fragment>
-              <Text>In Process Order</Text>
-              {/* <List>
-                <QueuedOrder
-                  key={driver.currentInProcessOrder.id}
-                  order={driver.currentInProcessOrder as OrderWithAddressAndUser}
-                  orderIdsInRoute={proposedOrderIdsInRoute}
-                />
-              </List> */}
-            </Fragment>
+            <>
+              <Text style={styles.listTitle}>In Process Order</Text>
+              <Divider />
+              <OrderItemBasic orderInfo={driver.currentInProcessOrder} />
+            </>
           )}
           {driver && driver.queuedOrders && driver.queuedOrders.length > 0 && (
-            <Fragment>
-              <Text>Queued Orders</Text>
-              {/* <List>
-                {(driver.queuedOrders as OrderWithAddressAndUser[]).map((order) => (
-                  <QueuedOrder
-                    key={order.id}
-                    order={order}
-                    orderIdsInRoute={proposedOrderIdsInRoute}
-                  />
-                ))}
-              </List> */}
-            </Fragment>
+            <>
+              <Text style={styles.listTitle}>Queued Orders</Text>
+              <Divider />
+              <FlatList
+                ListEmptyComponent={
+                  <View style={styles.empty}>
+                    <Text>No orders.</Text>
+                  </View>
+                }
+                data={driver.queuedOrders}
+                renderItem={(item) => <OrderItemBasic orderInfo={item.item} />}
+                keyExtractor={(item: any) => item.id.toString()}
+                style={styles.orders}
+              />
+            </>
           )}
           {routeError && <p>{routeError}</p>}
         </Dialog.Content>
@@ -783,6 +798,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
           </Button>
           <Button
             mode="contained"
+            labelStyle={{ color: Colors.light }}
             disabled={routeButtonDisabled}
             onPress={() => handleRouteCreationSubmission()}
           >
@@ -829,5 +845,39 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.light,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  empty: {
+    backgroundColor: Colors.light,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  body: {
+    flex: 1,
+    backgroundColor: Colors.light,
+  },
+  orders: {
+    paddingHorizontal: 10,
+  },
+  dsprTitle: {
+    fontSize: 22,
+    textAlign: 'center',
+    paddingTop: 10,
+  },
+  listTitle: {
+    fontSize: 16,
+    paddingLeft: 10,
+    paddingVertical: 8,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+});
 
 export default DriverRoutePage;
