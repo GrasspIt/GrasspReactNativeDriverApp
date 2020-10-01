@@ -11,7 +11,7 @@ const TopNavBar = ({ navigation }) => {
         // title={<Image style={styles.image} source={require('../assets/grassp_health.png')} />}
         color={Colors.dark}
         title="GrasspHealth"
-        titleStyle={{ fontSize: 22 }}
+        titleStyle={{ fontSize: 22, color: Colors.secondary, fontWeight: 'bold' }}
       />
     </Appbar.Header>
   );

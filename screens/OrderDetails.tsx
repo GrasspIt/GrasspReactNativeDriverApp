@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Text, StyleSheet, ActivityIndicator, Clipboard } from 'react-native';
+import {
+  View,
+  ScrollView,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  Clipboard,
+  Alert,
+} from 'react-native';
 import { ListItem, Divider } from 'react-native-elements';
 import { Button, Title, IconButton } from 'react-native-paper';
 import { connect } from 'react-redux';
@@ -55,6 +63,10 @@ const OrderDetails = ({
     getOrderDetailsWithId(orderId);
   }, [orderId]);
 
+  useEffect(() => {
+    if (error) Alert.alert('ERROR', error);
+  }, [error]);
+
   const handleManageNotes = () => {
     navigation.navigate('Notes', { userId: user.id, dsprDriverId: order.dsprDriver, userNotes });
   };
@@ -65,15 +77,20 @@ const OrderDetails = ({
         <View style={styles.fillScreen}>
           <ActivityIndicator size="large" color={Colors.primary} />
         </View>
-      ) : error ? (
-        <View style={styles.fillScreen}>
-          <Text>{error}</Text>
-          <Button onPress={() => getOrderDetailsWithId(orderId)}>Try Again</Button>
-        </View>
       ) : (
         <>
           <ScrollView style={styles.scroll}>
-            <Title>Notes</Title>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Title>Notes</Title>
+              <Button
+                mode="text"
+                onPress={handleManageNotes}
+                color={Colors.primary}
+                labelStyle={{ color: Colors.primary }}
+              >
+                Manage Notes
+              </Button>
+            </View>
             {userNotes && userNotes.some((note) => note.isVisible) ? (
               userNotes
                 .filter((note) => note.isVisible)
@@ -92,14 +109,8 @@ const OrderDetails = ({
                 <Text style={{ fontSize: 16 }}>No active notes.</Text>
               </View>
             )}
-            <Button
-              mode="contained"
-              onPress={handleManageNotes}
-              color={Colors.primary}
-              labelStyle={{ color: Colors.light }}
-            >
-              Manage Notes
-            </Button>
+            <Divider />
+
             {order && order.specialInstructions ? (
               <ListItem>
                 <ListItem.Content>
@@ -251,7 +262,7 @@ const OrderDetails = ({
               </ListItem.Content>
             </ListItem>
           </ScrollView>
-          <OrderButtons navigation={navigation} orderId={orderId} orderStatus={order.orderStatus} />
+          <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />
         </>
       )}
     </>

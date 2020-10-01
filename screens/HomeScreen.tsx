@@ -82,6 +82,10 @@ const HomeScreen = ({
     getDSPRDriver(driverId);
   }, [driverId]);
 
+  useEffect(() => {
+    if (error) Alert.alert('ERROR', error);
+  }, [error]);
+
   // push notifications
   useEffect(() => {
     // get push token if none is stored

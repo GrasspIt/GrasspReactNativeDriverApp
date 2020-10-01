@@ -18,7 +18,7 @@ const OrderItem = ({ orderInfo, navigation }) => {
 
   return (
     orderInfo && (
-      <ListItem bottomDivider containerStyle={{ padding: 10 }} onPress={handleNavigate}>
+      <ListItem bottomDivider containerStyle={{ padding: 0 }} onPress={handleNavigate}>
         <Button
           title="Set In Process"
           titleStyle={{ fontSize: 14 }}

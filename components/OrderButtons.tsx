@@ -5,42 +5,27 @@ import Colors from '../constants/Colors';
 import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
 
-const OrderButtons = ({ orderId, navigation, orderStatus }) => {
+const OrderButtons = ({ orderId, orderStatus }) => {
   const dispatch = useDispatch();
-
-  const cancelAndReturn = () => {
-    dispatch(cancelOrder(orderId));
-    navigation.navigate('Home');
-  };
 
   const handleCancelOrder = () => {
     Alert.alert('Cancel Order', 'Are you sure you want to cancel this order?', [
       { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => cancelAndReturn() },
+      { text: 'Yes', onPress: () => dispatch(cancelOrder(orderId)) },
     ]);
-  };
-
-  const completeAndReturn = () => {
-    dispatch(completeOrder(orderId));
-    navigation.navigate('Home');
   };
 
   const handleCompleteOrder = () => {
     Alert.alert('Complete Order', 'Are you ready to complete this order?', [
       { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => completeAndReturn() },
+      { text: 'Yes', onPress: () => dispatch(completeOrder(orderId)) },
     ]);
-  };
-
-  const processAndReturn = () => {
-    dispatch(markOrderInProcess(orderId));
-    navigation.navigate('Home');
   };
 
   const handleProcessOrder = () => {
     Alert.alert('Process Order', 'Mark this order as in-process?', [
       { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => processAndReturn() },
+      { text: 'Yes', onPress: () => dispatch(markOrderInProcess(orderId)) },
     ]);
   };
 
@@ -91,7 +76,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flex: 1,
-    margin: 4,
+    borderRadius: 0,
   },
 });
 

@@ -134,6 +134,7 @@ export const toggleDSPRDriverActiveStatus = (dsprDriverId) => (dispatch, getStat
   );
 };
 
+export const SET_ON_CALL_STATE_FOR_DRIVER_PENDING = 'SET_ON_CALL_STATE_FOR_DRIVER_PENDING';
 export const SET_ON_CALL_STATE_FOR_DRIVER = 'SET_ON_CALL_STATE_FOR_DRIVER';
 export const SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS = 'SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS';
 export const SET_ON_CALL_STATE_FOR_DRIVER_FAILURE = 'SET_ON_CALL_STATE_FOR_DRIVER_FAILURE';
@@ -142,9 +143,7 @@ const driverOnCallStateSetter = (dsprDriverId, onCallString) => {
   const dsprDriver = {
     id: dsprDriverId,
   };
-
   const endpointString = onCallString === 'on' ? 'oncall' : 'notoncall';
-
   return {
     [CALL_API]: {
       httpAction: 'POST',
@@ -161,6 +160,7 @@ const driverOnCallStateSetter = (dsprDriverId, onCallString) => {
 };
 
 export const setDriverOnCallState = (dsprDriverId, isOnCall) => (dispatch, getState) => {
+  dispatch({ type: SET_ON_CALL_STATE_FOR_DRIVER_PENDING });
   return dispatch(driverOnCallStateSetter(dsprDriverId, isOnCall));
 };
 

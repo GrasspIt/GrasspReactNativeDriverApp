@@ -53,6 +53,7 @@ import {
   ASSIGN_DSPR_DRIVER_SUCCESS,
   TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS,
   SET_DRIVER_LOCATION_SUCCESS,
+  SET_ON_CALL_STATE_FOR_DRIVER_PENDING,
   SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS,
   GET_DSPR_DRIVER_SUCCESS,
   SET_DRIVER_INFORMATION_SUCCESS,
@@ -86,11 +87,17 @@ import { CLEAR_API_ERROR_MESSAGE } from '../actions/apiUIHelperActions';
 // } from '../actions/couponActions';
 import {
   COMPLETE_ORDER_SUCCESS,
+  COMPLETE_ORDER_FAILURE,
+  COMPLETE_ORDER_PENDING,
   CANCEL_ORDER_SUCCESS,
+  CANCEL_ORDER_FAILURE,
+  CANCEL_ORDER_PENDING,
   MODIFY_ORDER_SUCCESS,
   GET_ORDER_DETAILS_WITH_ID_SUCCESS,
   GET_ORDER_DETAILS_WITH_ID_FAILURE,
   ORDER_DETAILS_PENDING,
+  MARK_IN_PROCESS_FAILURE,
+  MARK_IN_PROCESS_PENDING,
 } from '../actions/orderActions';
 // import { SEND_TEXT_BLAST_SUCCESS } from '../actions/marketingActions';
 // import { GET_METRICS_FOR_USERS_SUCCESS } from '../actions/metricsActions'
@@ -113,6 +120,10 @@ export default (state = initialState, action) => {
     case LOGIN_PENDING:
     case DRIVER_DATA_PENDING:
     case ORDER_DETAILS_PENDING:
+    case COMPLETE_ORDER_PENDING:
+    case CANCEL_ORDER_PENDING:
+    case MARK_IN_PROCESS_PENDING:
+    case SET_ON_CALL_STATE_FOR_DRIVER_PENDING:
       return { ...state, errorMessage: '', isLoading: true };
 
     // actions failed
@@ -124,10 +135,16 @@ export default (state = initialState, action) => {
       return { ...state, isLoading: false, errorMessage: 'Failed to get driver data.' };
     case GET_ORDER_DETAILS_WITH_ID_FAILURE:
       return { ...state, isLoading: false, errorMessage: 'Failed to get order details.' };
-    case SET_DSPR_DRIVER_ID:
-      return { ...state, dsprDriverId: action.payload };
+    case COMPLETE_ORDER_FAILURE:
+      return { ...state, isLoading: false, errorMessage: 'Failed to complete order.' };
+    case CANCEL_ORDER_FAILURE:
+      return { ...state, isLoading: false, errorMessage: 'Failed to cancel order.' };
+    case MARK_IN_PROCESS_FAILURE:
+      return { ...state, isLoading: false, errorMessage: 'Failed to mark order in process.' };
 
     // actions succeeded
+    case SET_DSPR_DRIVER_ID:
+      return { ...state, dsprDriverId: action.payload };
     case GET_APP_ACCESS_TOKEN_SUCCESS:
     case UPDATE_ACCESS_TOKEN:
     case LOGIN_SUCCESS:
