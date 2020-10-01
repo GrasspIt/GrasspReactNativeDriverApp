@@ -6,10 +6,6 @@ import * as Linking from 'expo-linking';
 import Colors from '../constants/Colors';
 
 const InProcessOrderItem = ({ orderInfo, navigation }) => {
-  const handleNavigate = () => {
-    navigation.navigate('Details', { orderId: orderInfo.id });
-  };
-
   const handleMap = () => {
     let daddr = encodeURIComponent(`${orderInfo.address.street} ${orderInfo.address.zipCode}`);
     if (Platform.OS === 'ios') {
@@ -32,7 +28,7 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
 
   return (
     orderInfo && (
-      <ListItem onPress={handleNavigate}>
+      <ListItem onPress={() => navigation.navigate('Details', { orderId: orderInfo.id })}>
         <ListItem.Content>
           <ListItem.Title style={{ fontSize: 18, paddingLeft: 10, paddingBottom: 2 }}>
             {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}

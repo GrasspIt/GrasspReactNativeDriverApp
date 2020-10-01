@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, Alert } from 'react-native';
 import { ListItem, Button } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
 import Colors from '../constants/Colors';
@@ -9,16 +9,19 @@ const OrderItem = ({ orderInfo, navigation }) => {
   const dispatch = useDispatch();
 
   const handleProcessOrder = () => {
-    dispatch(markOrderInProcess(orderInfo.id));
-  };
-
-  const handleNavigate = () => {
-    navigation.navigate('Details', { orderId: orderInfo.id });
+    Alert.alert('Process Order', 'Are you sure you want to set this order in-process?', [
+      { text: 'No', style: 'cancel' },
+      { text: 'Yes', onPress: () => dispatch(markOrderInProcess(orderInfo.id)) },
+    ]);
   };
 
   return (
     orderInfo && (
-      <ListItem bottomDivider containerStyle={{ padding: 0 }} onPress={handleNavigate}>
+      <ListItem
+        bottomDivider
+        containerStyle={{ padding: 2 }}
+        onPress={() => navigation.navigate('Details', { orderId: orderInfo.id })}
+      >
         <Button
           title="Set In Process"
           titleStyle={{ fontSize: 14 }}
