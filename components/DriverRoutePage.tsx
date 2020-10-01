@@ -298,10 +298,7 @@ const QueuedOrder: React.FC<QueuedOrderProps> = (props) => {
   const [showOrderDetails, setShowOrderDetails] = useState(false);
 
   const handleMarkOrderAsInProcess = (orderId: number) => {
-    setDisableInProcessButton(true);
-    markOrderInProcess(orderId).then((response) => {
-      if (response.type === MARK_IN_PROCESS_FAILURE) setDisableInProcessButton(false);
-    });
+    markOrderInProcess(orderId);
   };
 
   return (
@@ -420,7 +417,6 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
     createRoute,
     completeOrder,
     progressRoute,
-    modifyOrder,
     dsprDriverIdForOrderDetails,
     handleMapOrderClick,
   } = props;
@@ -472,23 +468,9 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
     if (resetRoute) {
       if (ordersForRoute.length > 0) {
         if (!routeError) {
-          createRoute(driver.id, ordersForRoute, finalOrderForRoute, useFinalOrderInRoute).then(
-            (response) => {
-              setRouteButtonDisabled(false);
-              if (response.type === CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS) {
-                setModalPrimaryText('Route Created');
-                setFinalOrderForRoute(undefined);
-                setUseFinalOrderInRoute(false);
-                setModalSecondaryText('Your route has been created!');
-                setShowSuccessModal(true);
-              } else {
-                setModalPrimaryText('Error Creating Route!');
-                setModalSecondaryText(response.error || 'No error message provided');
-                setShowErrorModal(true);
-              }
-              handleCloseOrderSelectionModal();
-            }
-          );
+          createRoute(driver.id, ordersForRoute, finalOrderForRoute, useFinalOrderInRoute);
+          setRouteButtonDisabled(false);
+          handleCloseOrderSelectionModal();
         } else {
           setRouteButtonDisabled(false);
         }
@@ -516,39 +498,22 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
           if (completeInProcessOrder) {
             completeOrder(driver.currentInProcessOrder.id).then((response) => {
               if (response.type === COMPLETE_ORDER_SUCCESS) {
-                progressRoute(driver.currentRoute.id).then((response) => {
-                  if (response.type === PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS) {
-                    if (response.response.result !== currentRouteId) {
-                      setShowWarningModal(true);
-                    }
-                  }
-                });
+                progressRoute(driver.currentRoute.id);
               }
             });
           } else {
-            progressRoute(driver.currentRoute.id).then((response) => {
-              if (response.type === PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS) {
-                if (response.response.result !== currentRouteId) {
-                  setShowWarningModal(true);
-                }
-              }
-            });
+            progressRoute(driver.currentRoute.id);
           }
         } else {
           completeOrder(driver.currentInProcessOrder.id);
         }
       } else {
-        progressRoute(driver.currentRoute.id).then((response) => {
-          if (response.type === PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS) {
-            if (response.response.result !== currentRouteId) {
-              setShowWarningModal(true);
-            }
-          }
-        });
+        progressRoute(driver.currentRoute.id);
       }
     }
   };
 
+  // set number orders per route
   useEffect(() => {
     if (
       driver &&
@@ -573,6 +538,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
         setOverviewPolyline(driver.currentRoute.overviewPolyline);
       }
 
+      // create an object with the ids of orders in route
       const ordersInRoute = {};
       if (driver && driver.queuedOrders && driver.currentRoute && driver.currentRoute.legs) {
         driver.currentRoute.legs.forEach((leg: any) => {
@@ -581,19 +547,20 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
         setOrdersCurrentlyInRoute(ordersInRoute);
       }
 
-      if (driver && Object.keys(ordersInRoute).length > 0) {
-        if (driver.currentInProcessOrder && ordersInRoute) {
-          if (Object.keys(ordersInRoute).includes(driver.currentInProcessOrder.id.toString())) {
-            setCurrentInProcessOrderInActiveRoute(true);
-            setCurrentlyActiveRouteLegIndex(
-              driver.currentRoute.legs.findIndex(
-                (leg: any) => leg.legOrder === ordersInRoute[driver.currentInProcessOrder.id]
-              )
-            );
-          } else {
-            setCurrentInProcessOrderInActiveRoute(false);
-            setCurrentlyActiveRouteLegIndex(undefined);
-          }
+      // if there is an in-process order, set it to the active leg of the route
+      if (
+        driver &&
+        ordersInRoute &&
+        Object.keys(ordersInRoute).length > 0 &&
+        driver.currentInProcessOrder
+      ) {
+        if (Object.keys(ordersInRoute).includes(driver.currentInProcessOrder.id.toString())) {
+          setCurrentInProcessOrderInActiveRoute(true);
+          setCurrentlyActiveRouteLegIndex(
+            driver.currentRoute.legs.findIndex(
+              (leg: any) => leg.legOrder === ordersInRoute[driver.currentInProcessOrder.id]
+            )
+          );
         } else {
           setCurrentInProcessOrderInActiveRoute(false);
           setCurrentlyActiveRouteLegIndex(undefined);
@@ -642,11 +609,8 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
       }
     }
     setOrdersForRoute(orders);
+    setProposedOrderIdsInRoute(orders.map((order) => order.id));
   }, [driver, numberOrdersPerRoute]);
-
-  useEffect(() => {
-    setProposedOrderIdsInRoute(ordersForRoute.map((order) => order.id));
-  }, [ordersForRoute]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -866,17 +830,11 @@ const styles = StyleSheet.create({
   orders: {
     paddingHorizontal: 10,
   },
-  dsprTitle: {
-    fontSize: 22,
-    textAlign: 'center',
-    paddingTop: 10,
-  },
   listTitle: {
     fontSize: 16,
     paddingLeft: 10,
     paddingVertical: 8,
     fontWeight: 'bold',
-    textAlign: 'center',
   },
 });
 

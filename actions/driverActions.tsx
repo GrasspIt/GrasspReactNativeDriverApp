@@ -236,7 +236,6 @@ const createNewRoute = (
     finalDestination,
     usingFinalDestinationInRoute,
   };
-
   return {
     [CALL_API]: {
       httpAction: 'POST',

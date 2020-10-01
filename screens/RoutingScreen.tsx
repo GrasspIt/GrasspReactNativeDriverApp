@@ -50,6 +50,8 @@ type Props = {
   modifyOrder: any;
   loggedInUserIsDriver: boolean;
   dsprDriverIdForOrderDetails: number;
+  createDSPRDriverRoute: any;
+  progressDSPRDriverRoute: any;
   handleMapOrderClick: (order: any) => any;
 };
 
@@ -60,6 +62,8 @@ const RoutingScreen = ({
   completeOrder,
   dsprDriverIdForOrderDetails,
   handleMapOrderClick,
+  createDSPRDriverRoute,
+  progressDSPRDriverRoute,
 }: Props) => {
   const createNewRoute = (
     driverId: number,
