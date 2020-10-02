@@ -40,7 +40,7 @@ type Props = {
             {
               metrics: RouteMetrics;
             }[];
-          overviewPolyline: google.maps.LatLng[];
+          overviewPolyline: any;
         }[];
     };
     serviceAreas?: DSPRDriverServiceArea[];

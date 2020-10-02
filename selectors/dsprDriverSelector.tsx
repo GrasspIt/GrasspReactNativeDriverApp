@@ -6,6 +6,8 @@ import { getLocations } from './dsprDriverLocationSelectors';
 import { getOrders } from './orderSelectors';
 import { getAddresses } from './addressSelectors';
 import { getUserMedicalRecommendations, getUserIdDocuments } from './userDocumentsSelector';
+import { getDSPRDriverServiceAreasFromProps } from './dsprDriverServiceAreaSelectors';
+import { getRoutesWithMetricsAndLocationsAndRouteLegsAndRouteLegDirections } from './dsprDriverRouteSelectors';
 import { State } from '../store/reduxStoreState';
 
 export const getDSPRDrivers = (state: State, props) => state.api.entities.dsprDrivers;
@@ -23,6 +25,73 @@ const mapAddressIntoOrder = (orderId, orders, addresses, users, medRecs, idDocs)
     returnOrder['userIdentificationDocument'] = idDocs[order.userIdentificationDocument];
   return returnOrder;
 };
+
+export const getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps = createSelector(
+  [
+    getDSPRDriverFromProps,
+    getUsers,
+    getLocations,
+    getOrders,
+    getAddresses,
+    getUserMedicalRecommendations,
+    getUserIdDocuments,
+    getDSPRDriverServiceAreasFromProps,
+    getRoutesWithMetricsAndLocationsAndRouteLegsAndRouteLegDirections,
+  ],
+  (driver, users, locations, orders, addresses, medicalRecs, idDocs, serviceAreas, routes) => {
+    const completeDriver: any = driver
+      ? users
+        ? locations
+          ? orders
+            ? addresses
+              ? driver.queuedOrders
+                ? {
+                    ...driver,
+                    user: users[driver.user],
+                    currentLocation: locations[driver.currentLocation],
+                    queuedOrders: driver.queuedOrders.map((orderId) =>
+                      mapAddressIntoOrder(orderId, orders, addresses, users, medicalRecs, idDocs)
+                    ),
+                    currentInProcessOrder: mapAddressIntoOrder(
+                      driver.currentInProcessOrder,
+                      orders,
+                      addresses,
+                      users,
+                      medicalRecs,
+                      idDocs
+                    ),
+                  }
+                : {
+                    ...driver,
+                    user: users[driver.user],
+                    currentLocation: locations[driver.currentLocation],
+                  }
+              : {
+                  ...driver,
+                  user: users[driver.user],
+                  currentLocation: locations[driver.currentLocation],
+                }
+            : {
+                ...driver,
+                user: users[driver.user],
+                currentLocation: locations[driver.currentLocation],
+              }
+          : { ...driver, user: users[driver.user] }
+        : driver
+      : null;
+
+    if (driver.serviceAreas) {
+      completeDriver.serviceAreas = driver.serviceAreas.map(
+        (serviceAreaId) => serviceAreas[serviceAreaId]
+      );
+    }
+    if (driver.currentRoute) {
+      completeDriver.currentRoute = routes[driver.currentRoute];
+    }
+
+    return completeDriver;
+  }
+);
 
 export const getDSPRDriverWithUserAndOrdersFromProps = createSelector(
   [

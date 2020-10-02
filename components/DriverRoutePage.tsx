@@ -34,7 +34,7 @@ interface DriverRoutePageProps {
             {
               metrics: RouteMetrics;
             }[];
-          overviewPolyline: google.maps.LatLng[];
+          overviewPolyline: any;
         }[];
     };
     serviceAreas?: DSPRDriverServiceArea[];
@@ -96,50 +96,44 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
         'Override Route?',
         'The driver is currently in the middle of a route. Are you sure you want to override their current route?',
         [
-          { text: 'No', style: 'cancel' },
+          { text: 'No', style: 'cancel', onPress: () => (resetRoute = false) },
           { text: 'Yes', onPress: () => (resetRoute = true) },
         ]
       );
     }
     if (resetRoute) {
-      if (ordersForRoute.length > 0) {
-        if (!routeError) {
-          createRoute(driver.id, ordersForRoute, finalOrderForRoute, useFinalOrderInRoute);
-          setRouteButtonDisabled(false);
-          setOrderSelectionModalOpen(false);
-        } else {
-          setRouteButtonDisabled(false);
-        }
-      } else {
-        setRouteError('A route must contain at least 1 order.');
-        setRouteButtonDisabled(false);
+      if (ordersForRoute.length === 0) setRouteError('A route must contain at least 1 order.');
+      if (!routeError) {
+        createRoute(driver.id, ordersForRoute, finalOrderForRoute, useFinalOrderInRoute);
+        setOrderSelectionModalOpen(false);
       }
-    } else {
       setRouteButtonDisabled(false);
     }
   };
 
+  const handleCompleteInProcessOrder = () => {
+    completeOrder(driver.currentInProcessOrder.id).then((response) => {
+      if (response.type === COMPLETE_ORDER_SUCCESS) {
+        progressRoute(driver.currentRoute.id);
+      }
+    });
+  };
+
+  // determine whether to complete order or progress route
   const handleRouteActionButtonPressed = () => {
-    let currentRouteId = driver.currentRoute && driver.currentRoute.id;
     if (ordersCurrentlyInRoute) {
       if (driver.currentInProcessOrder) {
         if (
           !Object.keys(ordersCurrentlyInRoute).includes(driver.currentInProcessOrder.id.toString())
         ) {
-          // The current in-process order is not an order in the route, so it shouldn't assume to be completed before the next order is started
-          // Confirmation page asking whether the current order they are doing should be completed or not
-          const completeInProcessOrder = window.confirm(
-            'You currently have an in-process order that is not part of the route. Would you like to mark this order as complete and continue with your route?'
+          Alert.alert(
+            'Warning',
+            'You currently have an in-process order that is not part of the route. Would you like to mark this order as complete and continue with your route?',
+            [
+              { text: 'No', style: 'cancel', onPress: () => progressRoute(driver.currentRoute.id) },
+              { text: 'Yes', onPress: handleCompleteInProcessOrder },
+            ]
           );
-          if (completeInProcessOrder) {
-            completeOrder(driver.currentInProcessOrder.id).then((response) => {
-              if (response.type === COMPLETE_ORDER_SUCCESS) {
-                progressRoute(driver.currentRoute.id);
-              }
-            });
-          } else {
-            progressRoute(driver.currentRoute.id);
-          }
         } else {
           completeOrder(driver.currentInProcessOrder.id);
         }
@@ -164,48 +158,53 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
   }, [dspr.numberOrdersPerRoute, driver.serviceAreas]);
 
   useEffect(() => {
-    if (driver && driver.currentRoute && !driver.currentRoute.active) {
-      setOverviewPolyline(undefined);
-      setCurrentInProcessOrderInActiveRoute(false);
-      setCurrentlyActiveRouteLegIndex(undefined);
-      setPolylineForMap(undefined);
-    } else {
-      if (driver && driver.currentRoute && driver.currentRoute.overviewPolyline) {
-        setOverviewPolyline(driver.currentRoute.overviewPolyline);
-      }
+    if (driver && driver.currentRoute) {
+      console.log('driver.currentRoute', driver.currentRoute);
+      console.log('driver.currentRoute.overviewPolyline', driver.currentRoute.overviewPolyline);
+      if (!driver.currentRoute.active) {
+        setOverviewPolyline(undefined);
+        setCurrentInProcessOrderInActiveRoute(false);
+        setCurrentlyActiveRouteLegIndex(undefined);
+        setPolylineForMap(undefined);
+      } else {
+        if (driver.currentRoute.overviewPolyline) {
+          setOverviewPolyline(driver.currentRoute.overviewPolyline);
+        }
 
-      // create an object with the ids of orders in route
-      const ordersInRoute = {};
-      if (driver && driver.queuedOrders && driver.currentRoute && driver.currentRoute.legs) {
-        driver.currentRoute.legs.forEach((leg: any) => {
-          if (leg.order) ordersInRoute[leg.order.id] = leg.legOrder;
-        });
-        setOrdersCurrentlyInRoute(ordersInRoute);
-      }
-
-      // if there is an in-process order, set it to the active leg of the route
-      if (
-        driver &&
-        ordersInRoute &&
-        Object.keys(ordersInRoute).length > 0 &&
-        driver.currentInProcessOrder
-      ) {
-        if (Object.keys(ordersInRoute).includes(driver.currentInProcessOrder.id.toString())) {
-          setCurrentInProcessOrderInActiveRoute(true);
-          setCurrentlyActiveRouteLegIndex(
-            driver.currentRoute.legs.findIndex(
-              (leg: any) => leg.legOrder === ordersInRoute[driver.currentInProcessOrder.id]
-            )
-          );
-        } else {
-          setCurrentInProcessOrderInActiveRoute(false);
-          setCurrentlyActiveRouteLegIndex(undefined);
+        // create an object with the ids of orders in route
+        const ordersInRoute = {};
+        if (driver.queuedOrders && driver.currentRoute.legs) {
+          driver.currentRoute.legs.forEach((leg: any) => {
+            if (leg.order) ordersInRoute[leg.order.id] = leg.legOrder;
+          });
+          setOrdersCurrentlyInRoute(ordersInRoute);
+        }
+        console.log('ordersInRoute', ordersInRoute);
+        // if there is an in-process order, set it to the active leg of the route
+        if (
+          ordersInRoute &&
+          Object.keys(ordersInRoute).length > 0 &&
+          driver.currentInProcessOrder
+        ) {
+          if (Object.keys(ordersInRoute).includes(driver.currentInProcessOrder.id.toString())) {
+            setCurrentInProcessOrderInActiveRoute(true);
+            setCurrentlyActiveRouteLegIndex(
+              driver.currentRoute.legs.findIndex(
+                (leg: any) => leg.legOrder === ordersInRoute[driver.currentInProcessOrder.id]
+              )
+            );
+          } else {
+            setCurrentInProcessOrderInActiveRoute(false);
+            setCurrentlyActiveRouteLegIndex(undefined);
+          }
         }
       }
     }
   }, [driver]);
 
+  // create polylines for map
   useEffect(() => {
+    console.log('currentlyActiveRouteLegIndex', currentlyActiveRouteLegIndex);
     if (
       currentlyActiveRouteLegIndex !== undefined &&
       driver.currentRoute &&

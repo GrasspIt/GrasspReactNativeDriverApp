@@ -6,7 +6,7 @@ import { OrderWithAddressAndUser, RouteLeg } from '../store/reduxStoreState';
 interface GettingStartedMapProps {
   driver: any;
   orderPolyline: any;
-  overviewPolyline: google.maps.LatLng[];
+  overviewPolyline: any;
   currentlyActiveRouteLegIndex: number;
   toggleCallout?: any;
   handleMapOrderClick: (order: any) => any;
@@ -183,14 +183,12 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
     } else {
       toggleOnOverview(true);
     }
-    // eslint-disable-next-line
   }, [orderPolyline]);
 
   useEffect(() => {
     if (currentlyActiveRouteLegIndex) {
       toggleOnOverview(false);
     }
-    // eslint-disable-next-line
   }, [currentlyActiveRouteLegIndex]);
 
   // Use Longitude and Latitude of DSPR to set the location of the map if the driver's location isn't known
@@ -209,6 +207,12 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
         latitudeDelta: 0.1,
         longitudeDelta: 0.1,
       }}
+      // center={
+      //   polyLineCenter ? onOverview ? routeCenter : polyLineCenter
+      //     : onOverview
+      //     ? routeCenter
+      //     : routeCenter || null
+      // }
       //   onMapReady={(map) => setCurrentMap(map)}
       //   onUnmount={(map) => setCurrentMap(undefined)}
       //   onZoomChanged={() =>
@@ -228,11 +232,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       //   }}
     >
       {driverMarker}
-      {mapOrderPolyline
-        ? !onOverview
-          ? mapOrderPolyline
-          : mapOverviewPolyline
-        : mapOverviewPolyline}
+      {mapOrderPolyline && !onOverview ? mapOrderPolyline : mapOverviewPolyline}
       {orderMarkers && orderMarkers.length > 0 ? orderMarkers : undefined}
     </MapView>
   );

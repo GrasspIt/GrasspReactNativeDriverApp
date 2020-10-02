@@ -23,7 +23,7 @@ import TopNavBar from '../components/TopNavBar';
 import OrderItem from '../components/OrderItem';
 
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
-import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriverSelector';
+import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
 import { Divider } from 'react-native-paper';
 import InProcessOrderItem from '../components/InProcessOrderItem';
@@ -305,7 +305,9 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
 
 const mapStateToProps = (state) => {
   const driverId = state.api.dsprDriverId;
-  const dsprDriver = getDSPRDriverWithUserAndOrdersFromProps(state, { dsprDriverId: driverId });
+  const dsprDriver = getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps(state, {
+    dsprDriverId: driverId,
+  });
   const dspr = dsprDriver ? getDSPRFromProps(state, { dsprId: dsprDriver.dspr }) : undefined;
   const isLoading = state.api.isLoading;
   const pushToken = state.api.entities.pushToken;

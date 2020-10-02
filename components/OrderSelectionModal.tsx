@@ -44,7 +44,6 @@ const OrderSelectionModal = ({
               data={driver.queuedOrders}
               renderItem={(item) => <OrderItemBasic orderInfo={item.item} />}
               keyExtractor={(item: any) => item.id.toString()}
-              style={styles.orders}
             />
           </>
         )}
@@ -67,24 +66,11 @@ const OrderSelectionModal = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   empty: {
     backgroundColor: Colors.light,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-  },
-  body: {
-    flex: 1,
-    backgroundColor: Colors.light,
-  },
-  orders: {
-    paddingHorizontal: 10,
   },
   listTitle: {
     fontSize: 16,
