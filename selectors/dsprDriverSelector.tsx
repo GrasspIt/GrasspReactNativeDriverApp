@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import { getDSPRFromProps } from './dsprSelectors';
 import { getUsers, getLoggedInUser } from './userSelectors';
 import { getLocations } from './dsprDriverLocationSelectors';
-// import { getDSPProducts } from './dspProductSelector';
+import { getDSPProducts } from './dspProductSelector';
 import { getOrders } from './orderSelectors';
 import { getAddresses } from './addressSelectors';
 import { getUserMedicalRecommendations, getUserIdDocuments } from './userDocumentsSelector';
@@ -41,36 +41,24 @@ export const getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromPro
   (driver, users, locations, orders, addresses, medicalRecs, idDocs, serviceAreas, routes) => {
     const completeDriver: any = driver
       ? users
-        ? locations
-          ? orders
-            ? addresses
-              ? driver.queuedOrders
-                ? {
-                    ...driver,
-                    user: users[driver.user],
-                    currentLocation: locations[driver.currentLocation],
-                    queuedOrders: driver.queuedOrders.map((orderId) =>
-                      mapAddressIntoOrder(orderId, orders, addresses, users, medicalRecs, idDocs)
-                    ),
-                    currentInProcessOrder: mapAddressIntoOrder(
-                      driver.currentInProcessOrder,
-                      orders,
-                      addresses,
-                      users,
-                      medicalRecs,
-                      idDocs
-                    ),
-                  }
-                : {
-                    ...driver,
-                    user: users[driver.user],
-                    currentLocation: locations[driver.currentLocation],
-                  }
-              : {
-                  ...driver,
-                  user: users[driver.user],
-                  currentLocation: locations[driver.currentLocation],
-                }
+        ? locations && orders && addresses
+          ? driver.queuedOrders
+            ? {
+                ...driver,
+                user: users[driver.user],
+                currentLocation: locations[driver.currentLocation],
+                queuedOrders: driver.queuedOrders.map((orderId) =>
+                  mapAddressIntoOrder(orderId, orders, addresses, users, medicalRecs, idDocs)
+                ),
+                currentInProcessOrder: mapAddressIntoOrder(
+                  driver.currentInProcessOrder,
+                  orders,
+                  addresses,
+                  users,
+                  medicalRecs,
+                  idDocs
+                ),
+              }
             : {
                 ...driver,
                 user: users[driver.user],
@@ -152,20 +140,27 @@ export const getDriversForDSPR = createSelector(
   }
 );
 
-// export const getOnCallDriversForDSPR = createSelector(
-//     [getDSPRFromProps, getDSPRDrivers, getUsers, getLocations], (dspr, dsprDrivers, users, locations) => {
-//         return dspr ?
-//             dspr.drivers ?
-//                 dsprDrivers ?
-//                     dspr.drivers.map(driverId => dsprDrivers[driverId]).filter(driver => driver.onCall)
-//                         .map(driver => {
-//                             return { ...driver, user: users[driver.user], location: locations[driver.currentLocation] }
-//                         })
-//                     : []
-//                 : []
-//             : undefined;
-//     }
-// );
+export const getOnCallDriversForDSPR = createSelector(
+  [getDSPRFromProps, getDSPRDrivers, getUsers, getLocations],
+  (dspr, dsprDrivers, users, locations) => {
+    return dspr
+      ? dspr.drivers
+        ? dsprDrivers
+          ? dspr.drivers
+              .map((driverId) => dsprDrivers[driverId])
+              .filter((driver) => driver.onCall)
+              .map((driver) => {
+                return {
+                  ...driver,
+                  user: users[driver.user],
+                  location: locations[driver.currentLocation],
+                };
+              })
+          : []
+        : []
+      : undefined;
+  }
+);
 
 export const getDrivers = (state: State) => {
   return state.api.entities.dsprDrivers;
@@ -190,27 +185,30 @@ export const getDriverForLoggedInUserGivenDSPR = createSelector(
   }
 );
 
-// const getDriverInventoryPeriods = (state: State) => state.api.entities.dsprDriverInventoryPeriods;
-// const getDriverInventoryItems = (state: State) => state.api.entities.dsprDriverInventoryItems;
+const getDriverInventoryPeriods = (state: State) => state.api.entities.dsprDriverInventoryPeriods;
+const getDriverInventoryItems = (state: State) => state.api.entities.dsprDriverInventoryItems;
 
-// export const getDriverInventoryPeriodFromProps = (state: State,props) =>
-//     state.api.entities.dsprDriverInventoryPeriods[props.dsprDriverInventoryPeriodId];
+export const getDriverInventoryPeriodFromProps = (state: State, props) =>
+  state.api.entities.dsprDriverInventoryPeriods[props.dsprDriverInventoryPeriodId];
 
-// export const getCurrentDriverInventoryPeriodForDriverFromProps = createSelector(
-//     [getDriverInventoryPeriods, getDSPRDriverFromProps, getDriverInventoryItems,
-//         getDSPProducts],
-//     (inventoryPeriods, driver, inventoryItems, products) => {
-//         const inventoryPeriod = driver ?
-//             inventoryPeriods ?
-//                 inventoryPeriods[driver.currentInventoryPeriod]
-//                 : undefined
-//             : undefined;
-//         const items = inventoryPeriod ?
-//             inventoryPeriod.dsprDriverInventoryItems.map(itemId => {
-//                 const item = inventoryItems[itemId];
-//                 return { ...item, product: products[item.product] }
-//             })
-//             : undefined;
-//         return inventoryPeriod ? items ? { ...inventoryPeriod, dsprDriverInventoryItems: items } : inventoryPeriod : undefined;
-//     }
-// );
+export const getCurrentDriverInventoryPeriodForDriverFromProps = createSelector(
+  [getDriverInventoryPeriods, getDSPRDriverFromProps, getDriverInventoryItems, getDSPProducts],
+  (inventoryPeriods, driver, inventoryItems, products) => {
+    const inventoryPeriod = driver
+      ? inventoryPeriods
+        ? inventoryPeriods[driver.currentInventoryPeriod]
+        : undefined
+      : undefined;
+    const items = inventoryPeriod
+      ? inventoryPeriod.dsprDriverInventoryItems.map((itemId) => {
+          const item = inventoryItems[itemId];
+          return { ...item, product: products[item.product] };
+        })
+      : undefined;
+    return inventoryPeriod
+      ? items
+        ? { ...inventoryPeriod, dsprDriverInventoryItems: items }
+        : inventoryPeriod
+      : undefined;
+  }
+);

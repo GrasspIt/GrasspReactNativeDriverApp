@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flex: 1,
-    borderRadius: 0,
+    margin: 4,
   },
 });
 

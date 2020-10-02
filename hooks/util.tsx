@@ -28,3 +28,6 @@ export const parseDate = (date) => {
 
   throw new Error(`Invalid Date : ${date}`);
 };
+
+export const getMySQLDateStringFromTimestamp = (timestamp) =>
+  timestamp.toISOString().slice(0, 19).replace('T', ' ');
