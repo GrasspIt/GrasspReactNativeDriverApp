@@ -143,10 +143,8 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       const centerLong =
         orderPolyline[orderPolyline.length - 1].lng +
         (orderPolyline[0].lng - orderPolyline[orderPolyline.length - 1].lng) / 2;
-
       return { lat: centerLat, lng: centerLong };
     }
-
     return null;
   };
 
@@ -199,13 +197,15 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       ? { lat: driver.currentLocation.latitude, lng: driver.currentLocation.longitude }
       : null;
   const polyLineCenter = driver && orderPolyline && findPolylineCenter();
+
   return (
     <MapView
+    style={{flex: 1}}
       region={{
         latitude: polyLineCenter?.lat,
         longitude: polyLineCenter?.lng,
-        latitudeDelta: 0.1,
-        longitudeDelta: 0.1,
+        latitudeDelta: 0.2,
+        longitudeDelta: 0.2,
       }}
       // center={
       //   polyLineCenter ? onOverview ? routeCenter : polyLineCenter

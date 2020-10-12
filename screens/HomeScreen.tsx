@@ -268,7 +268,6 @@ async function registerForPushNotificationsAsync() {
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
   } else {
     alert('Must use physical device for Push Notifications');
   }
@@ -294,7 +293,6 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
     return;
   }
   if (data) {
-    console.log('data', data);
     const { locations } = data as any;
     let lat = locations[0].coords.latitude;
     let long = locations[0].coords.longitude;

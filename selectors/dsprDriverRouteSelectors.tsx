@@ -180,9 +180,9 @@ export const getRouteLegDirectionsWithMetricsAndLocations = createSelector(
               metrics: metrics[legDirection.metrics],
               startLocation: locations[legDirection.startLocation],
               endLocation: locations[legDirection.endLocation],
-              overviewPolyline: legDirection.overviewPolyline.map(
-                (location) => locations[location]
-              ),
+              // overviewPolyline: legDirection.overviewPolyline.map(
+              //   (location) => locations[location]
+              // ),
             };
           });
           return filledLegDirections;

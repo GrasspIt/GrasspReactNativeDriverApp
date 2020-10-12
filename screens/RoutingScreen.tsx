@@ -17,7 +17,7 @@ import {
   RouteLegDirection,
 } from '../store/reduxStoreState';
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
-import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriverSelector';
+import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
 import { createDSPRDriverRoute, progressDSPRDriverRoute } from '../actions/driverActions';
 
 import DriverRoutePage from '../components/DriverRoutePage';
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   const dsprDriverIdForOrderDetails = state.api.dsprDriverId;
-  const driver = getDSPRDriverWithUserAndOrdersFromProps(state, {
+  const driver = getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps(state, {
     dsprDriverId: dsprDriverIdForOrderDetails,
   });
   const dspr = driver ? getDSPRFromProps(state, { dsprId: driver.dspr }) : undefined;
@@ -127,7 +127,7 @@ const mapStateToProps = (state) => {
     dspr,
     driver,
     isLoading,
-    error,
+    error
   };
 };
 

@@ -88,6 +88,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
   // const [modalSecondaryText, setModalSecondaryText] = useState(null);
   const [routeButtonDisabled, setRouteButtonDisabled] = useState(false);
 
+  // function to create a new route
   const handleRouteCreationSubmission = () => {
     let resetRoute: boolean = true;
     setRouteButtonDisabled(true);
@@ -145,22 +146,21 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
 
   // set number orders per route
   useEffect(() => {
+    
     if (
       driver &&
       driver.serviceAreas &&
       driver.serviceAreas[0] &&
       driver.serviceAreas[0].numberOrdersPerRoute
-    ) {
-      setNumberOrdersPerRoute(driver.serviceAreas[0].numberOrdersPerRoute);
-    } else {
-      setNumberOrdersPerRoute(dspr.numberOrdersPerRoute);
-    }
-  }, [dspr.numberOrdersPerRoute, driver.serviceAreas]);
-
-  useEffect(() => {
-    if (driver && driver.currentRoute) {
-      console.log('driver.currentRoute', driver.currentRoute);
-      console.log('driver.currentRoute.overviewPolyline', driver.currentRoute.overviewPolyline);
+      ) {
+        setNumberOrdersPerRoute(driver.serviceAreas[0].numberOrdersPerRoute);
+      } else {
+        setNumberOrdersPerRoute(dspr.numberOrdersPerRoute);
+      }
+    }, [dspr.numberOrdersPerRoute, driver.serviceAreas]);
+    
+    useEffect(() => {
+      if (driver && driver.currentRoute) {
       if (!driver.currentRoute.active) {
         setOverviewPolyline(undefined);
         setCurrentInProcessOrderInActiveRoute(false);
@@ -179,7 +179,6 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
           });
           setOrdersCurrentlyInRoute(ordersInRoute);
         }
-        console.log('ordersInRoute', ordersInRoute);
         // if there is an in-process order, set it to the active leg of the route
         if (
           ordersInRoute &&
@@ -204,7 +203,6 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
 
   // create polylines for map
   useEffect(() => {
-    console.log('currentlyActiveRouteLegIndex', currentlyActiveRouteLegIndex);
     if (
       currentlyActiveRouteLegIndex !== undefined &&
       driver.currentRoute &&
@@ -259,7 +257,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
         </Button>
       )}
       {driver.currentRoute && driver.currentRoute.active && (
-        <View>
+        <View style={{flex: 1}}>
           {
             <GettingStartedMap
               driver={driver}
