@@ -27,13 +27,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
   const [onOverview, setOnOverview] = useState(true);
   const [mapZoomCalibrationStarted, setMapZoomCalibrationStarted] = useState(false);
   const [mapZoomCalibrationCompleted, setMapZoomCalibrationCompleted] = useState(false);
-  const [hasClickedMarker, setHasClickedMarker] = useState(false);
   const [currentMap, setCurrentMap] = useState<any>();
-
-  const handleOrderClick = (order) => {
-    if (!hasClickedMarker) setHasClickedMarker(true);
-    handleMapOrderClick(order);
-  };
 
   const name = driver && driver.user && driver.user.firstName + ' ' + driver.user.lastName;
 
@@ -100,7 +94,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
               {...orderForLeg}
               pinColor="red"
               title={userInitials || (++index).toString()}
-              onPress={() => handleOrderClick(orderForLeg)}
+              onPress={() => handleMapOrderClick(orderForLeg)}
               key={orderForLeg.address.id}
             />
           );
@@ -108,13 +102,28 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       )
       .filter((marker) => marker != null);
 
+  // change polyline keys from lat/lng into latitude/longitude
+  let orderPolylineCoordinates = orderPolyline.map(coordinate => {
+    return {
+      latitude: coordinate.lat,
+      longitude: coordinate.lng
+    }
+  })
+
+  let overviewPolylineCoordinates = overviewPolyline.map(coordinate => {
+    return {
+      latitude: coordinate.lat,
+      longitude: coordinate.lng
+    }
+  })
+
   const mapOrderPolyline = orderPolyline && (
-    <Polyline coordinates={orderPolyline} geodesic={true} strokeColor="#03adfc" strokeWidth={5} />
+    <Polyline coordinates={orderPolylineCoordinates} geodesic={true} strokeColor="#03adfc" strokeWidth={5} />
   );
 
   const mapOverviewPolyline = overviewPolyline && (
     <Polyline
-      coordinates={overviewPolyline}
+      coordinates={overviewPolylineCoordinates}
       geodesic={true}
       strokeColor="#03adfc"
       strokeWidth={5}
@@ -137,6 +146,8 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
 
   const findPolylineCenter = () => {
     if (orderPolyline) {
+      console.log('orderPolyline', orderPolyline)
+      console.log('overviewPolyline', overviewPolyline)
       const centerLat =
         orderPolyline[orderPolyline.length - 1].lat +
         (orderPolyline[0].lat - orderPolyline[orderPolyline.length - 1].lat) / 2;
@@ -204,32 +215,9 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       region={{
         latitude: polyLineCenter?.lat,
         longitude: polyLineCenter?.lng,
-        latitudeDelta: 0.2,
-        longitudeDelta: 0.2,
+        latitudeDelta: 0.5,
+        longitudeDelta: 0.5,
       }}
-      // center={
-      //   polyLineCenter ? onOverview ? routeCenter : polyLineCenter
-      //     : onOverview
-      //     ? routeCenter
-      //     : routeCenter || null
-      // }
-      //   onMapReady={(map) => setCurrentMap(map)}
-      //   onUnmount={(map) => setCurrentMap(undefined)}
-      //   onZoomChanged={() =>
-      //     onOverview && !mapZoomCalibrationCompleted
-      //       ? findZoom(driver.currentRoute.polylineContainingCoordinates)
-      //       : !onOverview && !mapZoomCalibrationCompleted
-      //       ? findZoom([orderPolyline[0], orderPolyline[orderPolyline.length - 1]])
-      //       : null
-      //   }
-      //   onBoundsChanged={() => {
-      //     if (!mapZoomCalibrationStarted && onOverview)
-      //       driver.currentRoute && findZoom(driver.currentRoute.polylineContainingCoordinates);
-      //     else if (!mapZoomCalibrationStarted && !onOverview)
-      //       orderPolyline && findZoom([orderPolyline[0], orderPolyline[orderPolyline.length - 1]]);
-      //     else if (!mapZoomCalibrationStarted && currentMap && currentMap.getZoom() === 20)
-      //       findZoom(driver.currentRoute.polylineContainingCoordinates);
-      //   }}
     >
       {driverMarker}
       {mapOrderPolyline && !onOverview ? mapOrderPolyline : mapOverviewPolyline}
