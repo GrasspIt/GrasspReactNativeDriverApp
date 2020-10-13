@@ -113,7 +113,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
   };
 
   const handleCompleteInProcessOrder = () => {
-    completeOrder(driver.currentInProcessOrder.id).then((response) => {
+    driver && driver.currentInProcessOrder && completeOrder(driver.currentInProcessOrder.id).then((response) => {
       if (response.type === COMPLETE_ORDER_SUCCESS) {
         progressRoute(driver.currentRoute.id);
       }
@@ -146,7 +146,6 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
 
   // set number orders per route
   useEffect(() => {
-    
     if (
       driver &&
       driver.serviceAreas &&
@@ -159,8 +158,8 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
       }
     }, [dspr.numberOrdersPerRoute, driver.serviceAreas]);
     
-    useEffect(() => {
-      if (driver && driver.currentRoute) {
+  useEffect(() => {
+    if (driver && driver.currentRoute) {
       if (!driver.currentRoute.active) {
         setOverviewPolyline(undefined);
         setCurrentInProcessOrderInActiveRoute(false);
@@ -170,7 +169,6 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
         if (driver.currentRoute.overviewPolyline) {
           setOverviewPolyline(driver.currentRoute.overviewPolyline);
         }
-
         // create an object with the ids of orders in route
         const ordersInRoute = {};
         if (driver.queuedOrders && driver.currentRoute.legs) {
@@ -258,7 +256,6 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
       )}
       {driver.currentRoute && driver.currentRoute.active && (
         <View style={{flex: 1}}>
-          {
             <GettingStartedMap
               driver={driver}
               orderPolyline={polylineForMap}
@@ -266,8 +263,8 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
               currentlyActiveRouteLegIndex={currentlyActiveRouteLegIndex}
               handleMapOrderClick={handleMapOrderClick}
             />
-          }
           <View>
+
             <Button
               mode="contained"
               labelStyle={{ color: Colors.light }}
@@ -286,6 +283,19 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
           </View>
         </View>
       )}
+      {/* <Dialog title="Order Details"
+    open={state.showOrderDetails}
+    onClose={() => setState({ showOrderDetails: false })}>
+    <Card className="driver-page-order-detail-popup-card">
+        {state.showOrderDetails &&
+            <OrderWithDetailsAndPrices
+                hideNote
+                order={state.order}
+                user={state.order.user}
+                address={state.order.address}
+            />}
+    </Card>
+</Dialog> */}
       <OrderSelectionModal
         orderSelectionModalOpen={orderSelectionModalOpen}
         setOrderSelectionModalOpen={setOrderSelectionModalOpen}

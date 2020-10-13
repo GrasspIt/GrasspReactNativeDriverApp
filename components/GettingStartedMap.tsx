@@ -103,14 +103,14 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       .filter((marker) => marker != null);
 
   // change polyline keys from lat/lng into latitude/longitude
-  let orderPolylineCoordinates = orderPolyline.map(coordinate => {
+  let orderPolylineCoordinates = orderPolyline && orderPolyline.map(coordinate => {
     return {
       latitude: coordinate.lat,
       longitude: coordinate.lng
     }
   })
 
-  let overviewPolylineCoordinates = overviewPolyline.map(coordinate => {
+  let overviewPolylineCoordinates = overviewPolyline && overviewPolyline.map(coordinate => {
     return {
       latitude: coordinate.lat,
       longitude: coordinate.lng
@@ -146,8 +146,6 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
 
   const findPolylineCenter = () => {
     if (orderPolyline) {
-      console.log('orderPolyline', orderPolyline)
-      console.log('overviewPolyline', overviewPolyline)
       const centerLat =
         orderPolyline[orderPolyline.length - 1].lat +
         (orderPolyline[0].lat - orderPolyline[orderPolyline.length - 1].lat) / 2;
@@ -210,19 +208,24 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
   const polyLineCenter = driver && orderPolyline && findPolylineCenter();
 
   return (
-    <MapView
-    style={{flex: 1}}
-      region={{
-        latitude: polyLineCenter?.lat,
-        longitude: polyLineCenter?.lng,
-        latitudeDelta: 0.5,
-        longitudeDelta: 0.5,
-      }}
-    >
-      {driverMarker}
-      {mapOrderPolyline && !onOverview ? mapOrderPolyline : mapOverviewPolyline}
-      {orderMarkers && orderMarkers.length > 0 ? orderMarkers : undefined}
-    </MapView>
+    <>
+    {polyLineCenter && (
+      <MapView
+      style={{flex: 1}}
+        region={{
+          latitude: polyLineCenter.lat,
+          longitude: polyLineCenter.lng,
+          latitudeDelta: 0.5,
+          longitudeDelta: 0.5,
+        }}
+      >
+        {driverMarker}
+        {mapOrderPolyline && !onOverview ? mapOrderPolyline : mapOverviewPolyline}
+        {orderMarkers && orderMarkers.length > 0 ? orderMarkers : undefined}
+      </MapView>
+
+    )}
+    </>
   );
 };
 

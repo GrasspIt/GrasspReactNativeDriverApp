@@ -23,6 +23,7 @@ import { createDSPRDriverRoute, progressDSPRDriverRoute } from '../actions/drive
 import DriverRoutePage from '../components/DriverRoutePage';
 import RoutingButtons from '../components/RoutingButtons';
 import Colors from '../constants/Colors';
+import TopNavBar from '../components/TopNavBar';
 
 type RoutingScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Routing'>;
 type Props = {
@@ -88,6 +89,7 @@ const RoutingScreen = ({
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
+        <TopNavBar title="Routing" navigation={navigation}/>
         <DriverRoutePage
           driver={driver}
           dspr={dspr}

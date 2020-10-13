@@ -156,7 +156,7 @@ const HomeScreen = ({
   return loggedInUser && dsprDriver ? (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar style="dark" />
-      <TopNavBar navigation={navigation} />
+      <TopNavBar navigation={navigation} title="Dashboard"/>
       {isLoading ? (
         <View style={styles.container}>
           <ActivityIndicator size="large" color={Colors.primary} />
@@ -170,16 +170,6 @@ const HomeScreen = ({
         <View style={styles.body}>
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
-
-          <Button
-            mode="contained"
-            icon="map"
-            style={{ marginHorizontal: 10, marginBottom: 10, width: 'auto' }}
-            labelStyle={{ color: Colors.light }}
-            onPress={handleCreateRoute}
-          >
-            Go to Routing
-          </Button>
 
           <Divider style={{ height: 2 }} />
           <Text style={styles.listTitle}>In Process Order</Text>
