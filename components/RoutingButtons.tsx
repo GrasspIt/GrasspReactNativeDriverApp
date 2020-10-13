@@ -2,83 +2,73 @@ import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import Colors from '../constants/Colors';
-import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/orderActions';
+import { completeOrder } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
+import { COMPLETE_ORDER_SUCCESS } from '../actions/orderActions';
+import { progressDSPRDriverRoute } from '../actions/driverActions';
 
-const RoutingButtons = ({ orderId, navigation, orderStatus }) => {
+const RoutingButtons = ({ driver, currentInProcessOrderInActiveRoute, ordersCurrentlyInRoute }) => {
   const dispatch = useDispatch();
 
-  const cancelAndReturn = () => {
-    dispatch(cancelOrder(orderId));
-    navigation.navigate('Home');
-  };
-
-  const handleCancelOrder = () => {
-    Alert.alert('Cancel Order', 'Are you sure you want to cancel this order?', [
-      { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => cancelAndReturn() },
-    ]);
-  };
-
-  const completeAndReturn = () => {
-    dispatch(completeOrder(orderId));
-    navigation.navigate('Home');
-  };
-
-  const handleCompleteOrder = () => {
+  const handleCompleteOrder = (orderId) => {
     Alert.alert('Complete Order', 'Are you ready to complete this order?', [
       { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => completeAndReturn() },
+      { text: 'Yes', onPress: () => dispatch(completeOrder(orderId)) },
     ]);
   };
 
-  const processAndReturn = () => {
-    dispatch(markOrderInProcess(orderId));
-    navigation.navigate('Home');
+  const handleCompleteInProcessOrder = () => {
+    if (driver && driver.currentInProcessOrder) {
+        dispatch(completeOrder(driver.currentInProcessOrder.id)).then((response) => {
+      if (response.type === COMPLETE_ORDER_SUCCESS) {
+        dispatch(progressDSPRDriverRoute(driver.currentRoute.id));
+      }
+    });
+    }
   };
 
-  const handleProcessOrder = () => {
-    Alert.alert('Process Order', 'Mark this order as in-process?', [
-      { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => processAndReturn() },
-    ]);
+  // determine whether to complete order or progress route
+  const handleRouteActionButtonPressed = () => {
+    if (driver && ordersCurrentlyInRoute) {
+      if (driver.currentInProcessOrder) {
+        if (
+          !Object.keys(ordersCurrentlyInRoute).includes(driver.currentInProcessOrder.id.toString())
+        ) {
+          Alert.alert(
+            'Warning',
+            'You currently have an in-process order that is not part of the route. Would you like to mark this order as complete and continue with your route?',
+            [
+              { text: 'No', style: 'cancel', onPress: () => dispatch(progressDSPRDriverRoute(driver.currentRoute.id)) },
+              { text: 'Yes', onPress: handleCompleteInProcessOrder },
+            ]
+          );
+        } else {
+          handleCompleteOrder(driver.currentInProcessOrder.id);
+        }
+      } else {
+        dispatch(progressDSPRDriverRoute(driver.currentRoute.id));
+      }
+    }
   };
 
   return (
     <View style={styles.buttonContainer}>
-      <Button
-        icon="cancel"
-        mode="contained"
-        color={Colors.red}
-        style={styles.buttons}
-        labelStyle={{ color: Colors.light }}
-        onPress={handleCancelOrder}
-      >
-        Cancel Order
-      </Button>
-      {orderStatus == 'in_process' ? (
-        <Button
-          icon="check"
-          mode="contained"
-          color={Colors.primary}
-          style={styles.buttons}
-          labelStyle={{ color: Colors.light }}
-          onPress={handleCompleteOrder}
-        >
-          Complete Order
-        </Button>
-      ) : (
-        <Button
-          mode="contained"
-          icon="autorenew"
-          color={Colors.primary}
-          style={styles.buttons}
-          labelStyle={{ color: Colors.light }}
-          onPress={handleProcessOrder}
-        >
-          Start New Leg
-        </Button>
-      )}
+            <Button
+              mode="contained"
+              style={styles.buttons}
+              labelStyle={{ color: Colors.light }}
+              onPress={() => handleRouteActionButtonPressed()}
+            >
+              {!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
+            </Button>
+            <Button
+              mode="contained"
+              style={styles.buttons}
+              labelStyle={{ color: Colors.light }}
+              onPress={() => console.log('order details')}
+            >
+              Order Details
+            </Button>
     </View>
   );
 };
@@ -92,6 +82,7 @@ const styles = StyleSheet.create({
   buttons: {
     flex: 1,
     borderRadius: 0,
+    margin: 1
   },
 });
 

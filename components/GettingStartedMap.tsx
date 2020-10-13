@@ -131,7 +131,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
   );
 
   const findCenterPoint = () => {
-    if (driver.currentRoute.polylineContainingCoordinates) {
+    if (driver && driver.currentRoute.polylineContainingCoordinates) {
       const containingCoords = driver.currentRoute.polylineContainingCoordinates;
       const centerLat =
         containingCoords[1].latitude +
@@ -218,10 +218,24 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
           latitudeDelta: 0.5,
           longitudeDelta: 0.5,
         }}
+        // zoom={(map && map.getZoom()) || 20}
+        // center={ polyLineCenter ? onOverview ? routeCenter : polyLineCenter : onOverview ? routeCenter : routeCenter || null}
+        // mapContainerStyle={{
+        //     height: '500px',
+        //     width: '100%',
+        // }}
+        // onLoad={(map) => setMap(map)}
+        // onUnmount={(map) => setMap(undefined)}
+        // onZoomChanged={() => onOverview && !mapZoomCalibrationCompleted ? findZoom(driver.currentRoute.polylineContainingCoordinates) : !onOverview && !mapZoomCalibrationCompleted ? findZoom([orderPolyline[0],orderPolyline[orderPolyline.length -1]]): null}
+        // onBoundsChanged={()=> {
+        //     if((!mapZoomCalibrationStarted && onOverview)) driver.currentRoute && findZoom(driver.currentRoute.polylineContainingCoordinates)
+        //     else if(!mapZoomCalibrationStarted && !onOverview) orderPolyline && findZoom([orderPolyline[0],orderPolyline[orderPolyline.length -1]])
+        //     else if(!mapZoomCalibrationStarted && map && map.getZoom() === 20) findZoom(driver.currentRoute.polylineContainingCoordinates)
+        // }}
       >
         {driverMarker}
         {mapOrderPolyline && !onOverview ? mapOrderPolyline : mapOverviewPolyline}
-        {orderMarkers && orderMarkers.length > 0 ? orderMarkers : undefined}
+        {orderMarkers && orderMarkers.length > 0 && orderMarkers}
       </MapView>
 
     )}

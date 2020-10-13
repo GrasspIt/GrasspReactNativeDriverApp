@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Alert, StyleSheet } from 'react-native';
 import { Button, Dialog, Card } from 'react-native-paper';
 import Colors from '../constants/Colors';
+import RoutingButtons from './RoutingButtons';
 
 import {
   DsprDriver,
@@ -16,7 +17,6 @@ import {
   RouteMetrics,
 } from '../store/reduxStoreState';
 
-import { COMPLETE_ORDER_SUCCESS } from '../actions/orderActions';
 import OrderSelectionModal from './OrderSelectionModal';
 import GettingStartedMap from './GettingStartedMap';
 
@@ -40,14 +40,12 @@ interface DriverRoutePageProps {
     serviceAreas?: DSPRDriverServiceArea[];
   };
   dspr: DSPR;
-  completeOrder: (orderId: number) => any;
   createRoute: (
     driverId: number,
     waypoints: OrderWithAddressAndUser[],
     finalDestination: OrderWithAddressAndUser,
     usingFinalDestinationInRoute: Boolean
   ) => any;
-  progressRoute: (routeId: number) => any;
   dsprDriverIdForOrderDetails: number;
   handleMapOrderClick: (order: any) => any;
 }
@@ -57,8 +55,6 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
     driver,
     dspr,
     createRoute,
-    completeOrder,
-    progressRoute,
     dsprDriverIdForOrderDetails,
     handleMapOrderClick,
   } = props;
@@ -92,7 +88,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
   const handleRouteCreationSubmission = () => {
     let resetRoute: boolean = true;
     setRouteButtonDisabled(true);
-    if (driver.currentRoute && driver.currentRoute.active) {
+    if (driver && driver.currentRoute && driver.currentRoute.active) {
       Alert.alert(
         'Override Route?',
         'The driver is currently in the middle of a route. Are you sure you want to override their current route?',
@@ -112,51 +108,21 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
     }
   };
 
-  const handleCompleteInProcessOrder = () => {
-    driver && driver.currentInProcessOrder && completeOrder(driver.currentInProcessOrder.id).then((response) => {
-      if (response.type === COMPLETE_ORDER_SUCCESS) {
-        progressRoute(driver.currentRoute.id);
-      }
-    });
-  };
-
-  // determine whether to complete order or progress route
-  const handleRouteActionButtonPressed = () => {
-    if (ordersCurrentlyInRoute) {
-      if (driver.currentInProcessOrder) {
-        if (
-          !Object.keys(ordersCurrentlyInRoute).includes(driver.currentInProcessOrder.id.toString())
-        ) {
-          Alert.alert(
-            'Warning',
-            'You currently have an in-process order that is not part of the route. Would you like to mark this order as complete and continue with your route?',
-            [
-              { text: 'No', style: 'cancel', onPress: () => progressRoute(driver.currentRoute.id) },
-              { text: 'Yes', onPress: handleCompleteInProcessOrder },
-            ]
-          );
-        } else {
-          completeOrder(driver.currentInProcessOrder.id);
-        }
-      } else {
-        progressRoute(driver.currentRoute.id);
-      }
-    }
-  };
-
   // set number orders per route
   useEffect(() => {
-    if (
-      driver &&
-      driver.serviceAreas &&
-      driver.serviceAreas[0] &&
-      driver.serviceAreas[0].numberOrdersPerRoute
-      ) {
-        setNumberOrdersPerRoute(driver.serviceAreas[0].numberOrdersPerRoute);
+    if (dspr && dspr.numberOrdersPerRoute) {
+      if (
+        driver &&
+        driver.serviceAreas &&
+        driver.serviceAreas[0] &&
+        driver.serviceAreas[0].numberOrdersPerRoute
+        ) {
+          setNumberOrdersPerRoute(driver.serviceAreas[0].numberOrdersPerRoute);
       } else {
         setNumberOrdersPerRoute(dspr.numberOrdersPerRoute);
       }
-    }, [dspr.numberOrdersPerRoute, driver.serviceAreas]);
+    }
+  }, [dspr.numberOrdersPerRoute, driver.serviceAreas]);
     
   useEffect(() => {
     if (driver && driver.currentRoute) {
@@ -245,42 +211,27 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {driver && (!driver.currentRoute || (driver.currentRoute && !driver.currentRoute.active)) && (
-        <Button
-          mode="contained"
-          labelStyle={{ color: Colors.light }}
-          onPress={() => setOrderSelectionModalOpen(true)}
-        >
-          Create New Route
-        </Button>
-      )}
-      {driver.currentRoute && driver.currentRoute.active && (
+      <Button
+        mode="contained"
+        labelStyle={{ color: Colors.light }}
+        onPress={() => setOrderSelectionModalOpen(true)}
+      >
+        Create New Route
+      </Button>
+      {driver && driver.currentRoute && driver.currentRoute.active && (
         <View style={{flex: 1}}>
-            <GettingStartedMap
-              driver={driver}
-              orderPolyline={polylineForMap}
-              overviewPolyline={overviewPolyline}
-              currentlyActiveRouteLegIndex={currentlyActiveRouteLegIndex}
-              handleMapOrderClick={handleMapOrderClick}
+          <GettingStartedMap
+            driver={driver}
+            orderPolyline={polylineForMap}
+            overviewPolyline={overviewPolyline}
+            currentlyActiveRouteLegIndex={currentlyActiveRouteLegIndex}
+            handleMapOrderClick={handleMapOrderClick}
+          />
+          <RoutingButtons
+            driver={driver}
+            ordersCurrentlyInRoute={ordersCurrentlyInRoute}
+            currentInProcessOrderInActiveRoute={currentInProcessOrderInActiveRoute}
             />
-          <View>
-
-            <Button
-              mode="contained"
-              labelStyle={{ color: Colors.light }}
-              onPress={() => handleRouteActionButtonPressed()}
-            >
-              {!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
-            </Button>
-            {/* { TODO: Make a note here that any in-process orders should be completed before a route is started } */}
-            <Button
-              mode="contained"
-              labelStyle={{ color: Colors.light }}
-              onPress={() => setOrderSelectionModalOpen(true)}
-            >
-              Create New Route
-            </Button>
-          </View>
         </View>
       )}
       {/* <Dialog title="Order Details"

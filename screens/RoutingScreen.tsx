@@ -18,10 +18,9 @@ import {
 } from '../store/reduxStoreState';
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
-import { createDSPRDriverRoute, progressDSPRDriverRoute } from '../actions/driverActions';
+import { createDSPRDriverRoute } from '../actions/driverActions';
 
 import DriverRoutePage from '../components/DriverRoutePage';
-import RoutingButtons from '../components/RoutingButtons';
 import Colors from '../constants/Colors';
 import TopNavBar from '../components/TopNavBar';
 
@@ -46,13 +45,9 @@ type Props = {
     };
     serviceAreas?: DSPRDriverServiceArea[];
   };
-  completeOrder: (orderId: number) => any;
   dspr: DSPR;
-  modifyOrder: any;
-  loggedInUserIsDriver: boolean;
   dsprDriverIdForOrderDetails: number;
   createDSPRDriverRoute: any;
-  progressDSPRDriverRoute: any;
   handleMapOrderClick: (order: any) => any;
 };
 
@@ -60,11 +55,9 @@ const RoutingScreen = ({
   navigation,
   driver,
   dspr,
-  completeOrder,
   dsprDriverIdForOrderDetails,
   handleMapOrderClick,
   createDSPRDriverRoute,
-  progressDSPRDriverRoute,
 }: Props) => {
   const createNewRoute = (
     driverId: number,
@@ -82,10 +75,6 @@ const RoutingScreen = ({
     createDSPRDriverRoute(driverId, orderIds, finalDestination, usingFinalDestinationInRoute);
   };
 
-  const progressRoute = (routeId: number) => {
-    progressDSPRDriverRoute(routeId);
-  };
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -95,12 +84,9 @@ const RoutingScreen = ({
           dspr={dspr}
           createRoute={createNewRoute}
           handleMapOrderClick={handleMapOrderClick}
-          completeOrder={completeOrder}
-          progressRoute={progressRoute}
           dsprDriverIdForOrderDetails={dsprDriverIdForOrderDetails}
         />
       </View>
-      {/* <RoutingButtons /> */}
     </SafeAreaView>
   );
 };
@@ -133,6 +119,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = { createDSPRDriverRoute, progressDSPRDriverRoute };
+const mapDispatchToProps = { createDSPRDriverRoute };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoutingScreen);

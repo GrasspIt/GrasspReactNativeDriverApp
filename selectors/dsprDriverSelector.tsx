@@ -41,7 +41,7 @@ export const getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromPro
   (driver, users, locations, orders, addresses, medicalRecs, idDocs, serviceAreas, routes) => {
     const completeDriver: any = driver
       ? users
-        ? locations && orders && addresses
+        ? locations && orders && addresses && driver.currentLocation
           ? driver.queuedOrders
             ? {
                 ...driver,
@@ -68,12 +68,12 @@ export const getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromPro
         : driver
       : null;
 
-    if (driver.serviceAreas) {
+    if (driver && driver.serviceAreas) {
       completeDriver.serviceAreas = driver.serviceAreas.map(
         (serviceAreaId) => serviceAreas[serviceAreaId]
       );
     }
-    if (driver.currentRoute) {
+    if (routes && driver && driver.currentRoute) {
       completeDriver.currentRoute = routes[driver.currentRoute];
     }
 
@@ -94,7 +94,7 @@ export const getDSPRDriverWithUserAndOrdersFromProps = createSelector(
   (driver, users, locations, orders, addresses, medicalRecs, idDocs) => {
     return driver
       ? users
-        ? locations
+        ? locations && driver.currentLocation
           ? orders && addresses && driver.queuedOrders
             ? {
                 ...driver,
