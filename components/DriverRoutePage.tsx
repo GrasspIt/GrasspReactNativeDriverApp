@@ -74,7 +74,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
   const [currentlyActiveRouteLegIndex, setCurrentlyActiveRouteLegIndex] = useState<any>();
 
   const [routeError, setRouteError] = useState('');
-  const [polylineForMap, setPolylineForMap] = useState<any>();
+  const [orderPolyline, setOrderPolyline] = useState<any>();
   const [overviewPolyline, setOverviewPolyline] = useState<any>();
 
   // const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -130,7 +130,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
         setOverviewPolyline(undefined);
         setCurrentInProcessOrderInActiveRoute(false);
         setCurrentlyActiveRouteLegIndex(undefined);
-        setPolylineForMap(undefined);
+        setOrderPolyline(undefined);
       } else {
         if (driver.currentRoute.overviewPolyline) {
           setOverviewPolyline(driver.currentRoute.overviewPolyline);
@@ -165,7 +165,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
     }
   }, [driver]);
 
-  // create polylines for map
+  // create order leg polyline for map
   useEffect(() => {
     if (
       currentlyActiveRouteLegIndex !== undefined &&
@@ -178,16 +178,16 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
         currentlyActiveRouteLegIndex
       ].routeLegDirections.map((routeLegDirection: any) => routeLegDirection.overviewPolyline);
       const finishedArray = legPolyline.concat(...legDirectionPolylines);
-      setPolylineForMap(finishedArray);
+      setOrderPolyline(finishedArray);
     } else {
-      setPolylineForMap(null);
+      setOrderPolyline(null);
     }
   }, [currentlyActiveRouteLegIndex]);
 
-  //Temporarily autofilling orders into route
+  // Temporarily autofilling orders into route
   useEffect(() => {
     const orders: any = [];
-    //if modal not open, then continue with this, however we need to skip the prefill when the modal is open
+    // if modal not open, then continue with this, however we need to skip the prefill when the modal is open
     if (numberOrdersPerRoute) {
       if (driver.currentInProcessOrder) orders.push(driver.currentInProcessOrder);
       if (driver.queuedOrders) {
@@ -222,7 +222,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
         <View style={{flex: 1}}>
           <GettingStartedMap
             driver={driver}
-            orderPolyline={polylineForMap}
+            orderPolyline={orderPolyline}
             overviewPolyline={overviewPolyline}
             currentlyActiveRouteLegIndex={currentlyActiveRouteLegIndex}
             handleMapOrderClick={handleMapOrderClick}

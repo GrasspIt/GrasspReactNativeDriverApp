@@ -130,7 +130,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
     />
   );
 
-  const findCenterPoint = () => {
+  const findOverviewPolylineCenter = () => {
     if (driver && driver.currentRoute.polylineContainingCoordinates) {
       const containingCoords = driver.currentRoute.polylineContainingCoordinates;
       const centerLat =
@@ -144,7 +144,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
     }
   };
 
-  const findPolylineCenter = () => {
+  const findOrderPolylineCenter = () => {
     if (orderPolyline) {
       const centerLat =
         orderPolyline[orderPolyline.length - 1].lat +
@@ -155,26 +155,6 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       return { lat: centerLat, lng: centerLong };
     }
     return null;
-  };
-
-  const findZoom = (containingCoords: any) => {
-    const latLngCoords = containingCoords.map((coords) => {
-      return {
-        lat: coords.latitude || coords.lat,
-        lng: coords.longitude || coords.lng,
-      };
-    });
-    let zoom = (currentMap && currentMap.getZoom()) || 20;
-    if (currentMap && currentMap.getBounds() && containingCoords && latLngCoords) {
-      const bounds = currentMap.getBounds();
-      if (!(bounds.contains(latLngCoords[0]) && bounds.contains(latLngCoords[1]))) {
-        --zoom;
-        setMapZoomCalibrationStarted(true);
-        currentMap && currentMap.setZoom(zoom);
-      } else {
-        setMapZoomCalibrationCompleted(true);
-      }
-    }
   };
 
   const toggleOnOverview = (setValue: boolean) => {
@@ -201,11 +181,15 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
   // Use Longitude and Latitude of DSPR to set the location of the map if the driver's location isn't known
   const routeCenter =
     driver && driver.currentRoute
-      ? findCenterPoint()
+      ? findOverviewPolylineCenter()
       : driver && driver.currentLocation
       ? { lat: driver.currentLocation.latitude, lng: driver.currentLocation.longitude }
       : null;
-  const polyLineCenter = driver && orderPolyline && findPolylineCenter();
+
+  const polyLineCenter = driver && orderPolyline && findOrderPolylineCenter();
+
+  const initialLat = polyLineCenter && onOverview ? routeCenter.lat : polyLineCenter.lat;
+  const initialLng = polyLineCenter && onOverview ? routeCenter.lng : polyLineCenter.lng;
 
   return (
     <>
@@ -213,25 +197,11 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       <MapView
       style={{flex: 1}}
         region={{
-          latitude: polyLineCenter.lat,
-          longitude: polyLineCenter.lng,
-          latitudeDelta: 0.5,
-          longitudeDelta: 0.5,
+          latitude: initialLat,
+          longitude: initialLng,
+          latitudeDelta: 0.3,
+          longitudeDelta: 0.3,
         }}
-        // zoom={(map && map.getZoom()) || 20}
-        // center={ polyLineCenter ? onOverview ? routeCenter : polyLineCenter : onOverview ? routeCenter : routeCenter || null}
-        // mapContainerStyle={{
-        //     height: '500px',
-        //     width: '100%',
-        // }}
-        // onLoad={(map) => setMap(map)}
-        // onUnmount={(map) => setMap(undefined)}
-        // onZoomChanged={() => onOverview && !mapZoomCalibrationCompleted ? findZoom(driver.currentRoute.polylineContainingCoordinates) : !onOverview && !mapZoomCalibrationCompleted ? findZoom([orderPolyline[0],orderPolyline[orderPolyline.length -1]]): null}
-        // onBoundsChanged={()=> {
-        //     if((!mapZoomCalibrationStarted && onOverview)) driver.currentRoute && findZoom(driver.currentRoute.polylineContainingCoordinates)
-        //     else if(!mapZoomCalibrationStarted && !onOverview) orderPolyline && findZoom([orderPolyline[0],orderPolyline[orderPolyline.length -1]])
-        //     else if(!mapZoomCalibrationStarted && map && map.getZoom() === 20) findZoom(driver.currentRoute.polylineContainingCoordinates)
-        // }}
       >
         {driverMarker}
         {mapOrderPolyline && !onOverview ? mapOrderPolyline : mapOverviewPolyline}
