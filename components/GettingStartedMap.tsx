@@ -8,9 +8,7 @@ interface GettingStartedMapProps {
   orderPolyline: any;
   overviewPolyline: any;
   currentlyActiveRouteLegIndex: number;
-  toggleCallout?: any;
   handleMapOrderClick: (order: any) => any;
-  showCallout?: () => any;
 }
 
 const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
@@ -19,9 +17,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
     orderPolyline,
     overviewPolyline,
     currentlyActiveRouteLegIndex,
-    toggleCallout,
     handleMapOrderClick,
-    showCallout,
   } = props;
 
   const [onOverview, setOnOverview] = useState(true);
@@ -47,8 +43,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
         (
           leg: Omit<RouteLeg, 'order'> & {
             order: OrderWithAddressAndUser;
-          },
-          index
+          }
         ) => {
           const orderForLeg = leg.order;
           if (!orderForLeg || !orderForLeg.address) return null;
@@ -60,9 +55,13 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
               }}
               {...orderForLeg}
               pinColor='red'
-              onPress={() => handleMapOrderClick(orderForLeg)}
               key={orderForLeg.address.id}
-            />
+            >
+              <Callout>
+                <Text>{orderForLeg.user.firstName + ' ' + orderForLeg.user.lastName}</Text>
+                <Text>Details</Text>
+              </Callout>
+            </Marker>
           );
         }
       )
@@ -128,7 +127,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       {polylineCenter && (
         <MapView
           style={{ flex: 1 }}
-          region={
+          initialRegion={
             polylineCenter && routeCenter && onOverview
               ? {
                   latitude: routeCenter.lat,
@@ -146,24 +145,21 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
         >
           {driver && driver.currentLocation && (
             <Marker
-              onPress={toggleCallout}
               pinColor='green'
               coordinate={{
                 latitude: driver.currentLocation.latitude,
                 longitude: driver.currentLocation.longitude,
               }}
             >
-              {showCallout && (
-                <Callout onPress={toggleCallout}>
-                  <Text>{name}</Text>
-                  <Text>
-                    Outstanding Orders:{' '}
-                    {driver.currentInProcessOrder
-                      ? driver.queuedOrders.length + 1
-                      : driver.queuedOrders.length}
-                  </Text>
-                </Callout>
-              )}
+              <Callout>
+                <Text>{name}</Text>
+                <Text>
+                  Outstanding Orders:{' '}
+                  {driver.currentInProcessOrder
+                    ? driver.queuedOrders.length + 1
+                    : driver.queuedOrders.length}
+                </Text>
+              </Callout>
             </Marker>
           )}
           {!onOverview ? (
