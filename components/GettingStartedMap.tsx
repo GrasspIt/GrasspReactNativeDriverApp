@@ -23,45 +23,18 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
     handleMapOrderClick,
     showCallout,
   } = props;
-  //TODO: Will need to be set based on whether currentInProcessOrder exists or not
+
   const [onOverview, setOnOverview] = useState(true);
-  const [mapZoomCalibrationStarted, setMapZoomCalibrationStarted] = useState(false);
-  const [mapZoomCalibrationCompleted, setMapZoomCalibrationCompleted] = useState(false);
-  const [currentMap, setCurrentMap] = useState<any>();
+
+  useEffect(() => {
+    if (orderPolyline || currentlyActiveRouteLegIndex) {
+      setOnOverview(false);
+    } else {
+      setOnOverview(true);
+    }
+  }, [orderPolyline, currentlyActiveRouteLegIndex]);
 
   const name = driver && driver.user && driver.user.firstName + ' ' + driver.user.lastName;
-
-  const initials =
-    driver &&
-    driver.user &&
-    driver.firstName &&
-    driver.lastName &&
-    driver.user.firstName.substring(0, 1) + driver.user.lastName.substring(0, 1);
-
-  // marker for current location of driver
-  const driverMarker = driver && driver.currentLocation && (
-    <Marker
-      onPress={toggleCallout}
-      pinColor='green'
-      title={initials}
-      coordinate={{
-        latitude: driver.currentLocation.latitude,
-        longitude: driver.currentLocation.longitude,
-      }}
-    >
-      {showCallout && (
-        <Callout onPress={toggleCallout}>
-          <Text>{name}</Text>
-          <Text>
-            Outstanding Orders:{' '}
-            {driver.currentInProcessOrder
-              ? driver.queuedOrders.length + 1
-              : driver.queuedOrders.length}
-          </Text>
-        </Callout>
-      )}
-    </Marker>
-  );
 
   // markers for orders in route
   const orderMarkers =
@@ -78,12 +51,6 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
           index
         ) => {
           const orderForLeg = leg.order;
-          const userInitials =
-            orderForLeg &&
-            orderForLeg.user &&
-            orderForLeg.user.firstName &&
-            orderForLeg.user.lastName &&
-            orderForLeg.user.firstName.substring(0, 1) + orderForLeg.user.lastName.substring(0, 1);
           if (!orderForLeg || !orderForLeg.address) return null;
           return (
             <Marker
@@ -93,7 +60,6 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
               }}
               {...orderForLeg}
               pinColor='red'
-              title={userInitials || (++index).toString()}
               onPress={() => handleMapOrderClick(orderForLeg)}
               key={orderForLeg.address.id}
             />
@@ -121,24 +87,6 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       };
     });
 
-  const mapOrderPolyline = orderPolyline && (
-    <Polyline
-      coordinates={orderPolylineCoordinates}
-      geodesic={true}
-      strokeColor='#03adfc'
-      strokeWidth={5}
-    />
-  );
-
-  const mapOverviewPolyline = overviewPolyline && (
-    <Polyline
-      coordinates={overviewPolylineCoordinates}
-      geodesic={true}
-      strokeColor='#03adfc'
-      strokeWidth={5}
-    />
-  );
-
   const findOverviewPolylineCenter = () => {
     if (driver && driver.currentRoute.polylineContainingCoordinates) {
       const containingCoords = driver.currentRoute.polylineContainingCoordinates;
@@ -164,28 +112,6 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       return { lat: centerLat, lng: centerLong };
     }
   };
-
-  const toggleOnOverview = (setValue: boolean) => {
-    setOnOverview(setValue);
-    setMapZoomCalibrationStarted(false);
-    setMapZoomCalibrationCompleted(false);
-    currentMap && currentMap.setZoom(20);
-  };
-
-  useEffect(() => {
-    console.log('orderPolyline', orderPolyline);
-    if (orderPolyline) {
-      toggleOnOverview(false);
-    } else {
-      toggleOnOverview(true);
-    }
-  }, [orderPolyline]);
-
-  useEffect(() => {
-    if (currentlyActiveRouteLegIndex) {
-      toggleOnOverview(false);
-    }
-  }, [currentlyActiveRouteLegIndex]);
 
   // find center of route based on current route or based on the driver's current location
   const routeCenter =
@@ -218,8 +144,43 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
                 }
           }
         >
-          {driverMarker}
-          {mapOrderPolyline && !onOverview ? mapOrderPolyline : mapOverviewPolyline}
+          {driver && driver.currentLocation && (
+            <Marker
+              onPress={toggleCallout}
+              pinColor='green'
+              coordinate={{
+                latitude: driver.currentLocation.latitude,
+                longitude: driver.currentLocation.longitude,
+              }}
+            >
+              {showCallout && (
+                <Callout onPress={toggleCallout}>
+                  <Text>{name}</Text>
+                  <Text>
+                    Outstanding Orders:{' '}
+                    {driver.currentInProcessOrder
+                      ? driver.queuedOrders.length + 1
+                      : driver.queuedOrders.length}
+                  </Text>
+                </Callout>
+              )}
+            </Marker>
+          )}
+          {!onOverview ? (
+            <Polyline
+              coordinates={orderPolylineCoordinates}
+              geodesic={true}
+              strokeColor='#03adfc'
+              strokeWidth={5}
+            />
+          ) : (
+            <Polyline
+              coordinates={overviewPolylineCoordinates}
+              geodesic={true}
+              strokeColor='#03adfc'
+              strokeWidth={5}
+            />
+          )}
           {orderMarkers && orderMarkers.length > 0 && orderMarkers}
         </MapView>
       )}
