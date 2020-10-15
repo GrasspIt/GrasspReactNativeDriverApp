@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text } from 'react-native';
 import MapView, { Callout, Marker, Polyline } from 'react-native-maps';
+import { Button } from 'react-native-elements';
 import { OrderWithAddressAndUser, RouteLeg } from '../store/reduxStoreState';
 
 interface GettingStartedMapProps {
@@ -59,7 +60,13 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
             >
               <Callout>
                 <Text>{orderForLeg.user.firstName + ' ' + orderForLeg.user.lastName}</Text>
-                <Text>Details</Text>
+                <Button
+                  title='Order Details'
+                  type='clear'
+                  onPress={() => handleMapOrderClick(orderForLeg)}
+                  titleStyle={{ fontSize: 14 }}
+                  buttonStyle={{ padding: 0 }}
+                />
               </Callout>
             </Marker>
           );

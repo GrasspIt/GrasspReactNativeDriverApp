@@ -102,8 +102,8 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
     }
   };
 
-  // set number orders per route
   useEffect(() => {
+    // set number orders per route
     if (dspr && dspr.numberOrdersPerRoute) {
       if (
         driver &&
@@ -116,9 +116,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
         setNumberOrdersPerRoute(dspr.numberOrdersPerRoute);
       }
     }
-  }, [dspr.numberOrdersPerRoute, driver.serviceAreas]);
-
-  useEffect(() => {
+    // set polylines and orders in route
     if (driver && driver.currentRoute) {
       if (!driver.currentRoute.active) {
         setOverviewPolyline(undefined);
@@ -157,12 +155,14 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
         }
       }
     }
-  }, [driver]);
+    return;
+  }, [dspr, driver]);
 
   // create order leg polyline for map
   useEffect(() => {
     if (
       currentlyActiveRouteLegIndex !== undefined &&
+      driver &&
       driver.currentRoute &&
       driver.currentRoute.active &&
       driver.currentRoute.legs
@@ -176,13 +176,12 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
     } else {
       setOrderPolyline(null);
     }
-  }, [currentlyActiveRouteLegIndex]);
+  }, [driver, currentlyActiveRouteLegIndex]);
 
   // Temporarily autofilling orders into route
   useEffect(() => {
     const orders: any = [];
-    // if modal not open, then continue with this, however we need to skip the prefill when the modal is open
-    if (numberOrdersPerRoute) {
+    if (driver && numberOrdersPerRoute) {
       if (driver.currentInProcessOrder) orders.push(driver.currentInProcessOrder);
       if (driver.queuedOrders) {
         for (
