@@ -42,7 +42,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
   const driverMarker = driver && driver.currentLocation && (
     <Marker
       onPress={toggleCallout}
-      pinColor="green"
+      pinColor='green'
       title={initials}
       coordinate={{
         latitude: driver.currentLocation.latitude,
@@ -92,7 +92,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
                 longitude: orderForLeg.address.longitude,
               }}
               {...orderForLeg}
-              pinColor="red"
+              pinColor='red'
               title={userInitials || (++index).toString()}
               onPress={() => handleMapOrderClick(orderForLeg)}
               key={orderForLeg.address.id}
@@ -103,29 +103,38 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       .filter((marker) => marker != null);
 
   // change polyline keys from lat/lng into latitude/longitude
-  let orderPolylineCoordinates = orderPolyline && orderPolyline.map(coordinate => {
-    return {
-      latitude: coordinate.lat,
-      longitude: coordinate.lng
-    }
-  })
+  let orderPolylineCoordinates =
+    orderPolyline &&
+    orderPolyline.map((coordinate) => {
+      return {
+        latitude: coordinate.lat,
+        longitude: coordinate.lng,
+      };
+    });
 
-  let overviewPolylineCoordinates = overviewPolyline && overviewPolyline.map(coordinate => {
-    return {
-      latitude: coordinate.lat,
-      longitude: coordinate.lng
-    }
-  })
+  let overviewPolylineCoordinates =
+    overviewPolyline &&
+    overviewPolyline.map((coordinate) => {
+      return {
+        latitude: coordinate.lat,
+        longitude: coordinate.lng,
+      };
+    });
 
   const mapOrderPolyline = orderPolyline && (
-    <Polyline coordinates={orderPolylineCoordinates} geodesic={true} strokeColor="#03adfc" strokeWidth={5} />
+    <Polyline
+      coordinates={orderPolylineCoordinates}
+      geodesic={true}
+      strokeColor='#03adfc'
+      strokeWidth={5}
+    />
   );
 
   const mapOverviewPolyline = overviewPolyline && (
     <Polyline
       coordinates={overviewPolylineCoordinates}
       geodesic={true}
-      strokeColor="#03adfc"
+      strokeColor='#03adfc'
       strokeWidth={5}
     />
   );
@@ -154,7 +163,6 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
         (orderPolyline[0].lng - orderPolyline[orderPolyline.length - 1].lng) / 2;
       return { lat: centerLat, lng: centerLong };
     }
-    return null;
   };
 
   const toggleOnOverview = (setValue: boolean) => {
@@ -165,6 +173,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
   };
 
   useEffect(() => {
+    console.log('orderPolyline', orderPolyline);
     if (orderPolyline) {
       toggleOnOverview(false);
     } else {
@@ -178,7 +187,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
     }
   }, [currentlyActiveRouteLegIndex]);
 
-  // Use Longitude and Latitude of DSPR to set the location of the map if the driver's location isn't known
+  // find center of route based on current route or based on the driver's current location
   const routeCenter =
     driver && driver.currentRoute
       ? findOverviewPolylineCenter()
@@ -186,29 +195,34 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
       ? { lat: driver.currentLocation.latitude, lng: driver.currentLocation.longitude }
       : null;
 
-  const polyLineCenter = driver && orderPolyline && findOrderPolylineCenter();
-
-  const initialLat = polyLineCenter && onOverview ? routeCenter.lat : polyLineCenter.lat;
-  const initialLng = polyLineCenter && onOverview ? routeCenter.lng : polyLineCenter.lng;
+  const polylineCenter = driver && orderPolyline && findOrderPolylineCenter();
 
   return (
     <>
-    {polyLineCenter && (
-      <MapView
-      style={{flex: 1}}
-        region={{
-          latitude: initialLat,
-          longitude: initialLng,
-          latitudeDelta: 0.3,
-          longitudeDelta: 0.3,
-        }}
-      >
-        {driverMarker}
-        {mapOrderPolyline && !onOverview ? mapOrderPolyline : mapOverviewPolyline}
-        {orderMarkers && orderMarkers.length > 0 && orderMarkers}
-      </MapView>
-
-    )}
+      {polylineCenter && (
+        <MapView
+          style={{ flex: 1 }}
+          region={
+            polylineCenter && routeCenter && onOverview
+              ? {
+                  latitude: routeCenter.lat,
+                  longitude: routeCenter.lng,
+                  latitudeDelta: 0.5,
+                  longitudeDelta: 0.5,
+                }
+              : {
+                  latitude: polylineCenter.lat,
+                  longitude: polylineCenter.lng,
+                  latitudeDelta: 0.5,
+                  longitudeDelta: 0.5,
+                }
+          }
+        >
+          {driverMarker}
+          {mapOrderPolyline && !onOverview ? mapOrderPolyline : mapOverviewPolyline}
+          {orderMarkers && orderMarkers.length > 0 && orderMarkers}
+        </MapView>
+      )}
     </>
   );
 };

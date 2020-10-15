@@ -51,13 +51,7 @@ interface DriverRoutePageProps {
 }
 
 const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
-  const {
-    driver,
-    dspr,
-    createRoute,
-    dsprDriverIdForOrderDetails,
-    handleMapOrderClick,
-  } = props;
+  const { driver, dspr, createRoute, dsprDriverIdForOrderDetails, handleMapOrderClick } = props;
 
   //For creating new Route
   const [proposedOrderIdsInRoute, setProposedOrderIdsInRoute] = useState([]);
@@ -116,14 +110,14 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
         driver.serviceAreas &&
         driver.serviceAreas[0] &&
         driver.serviceAreas[0].numberOrdersPerRoute
-        ) {
-          setNumberOrdersPerRoute(driver.serviceAreas[0].numberOrdersPerRoute);
+      ) {
+        setNumberOrdersPerRoute(driver.serviceAreas[0].numberOrdersPerRoute);
       } else {
         setNumberOrdersPerRoute(dspr.numberOrdersPerRoute);
       }
     }
   }, [dspr.numberOrdersPerRoute, driver.serviceAreas]);
-    
+
   useEffect(() => {
     if (driver && driver.currentRoute) {
       if (!driver.currentRoute.active) {
@@ -212,14 +206,14 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
   return (
     <View style={{ flex: 1 }}>
       <Button
-        mode="contained"
+        mode='contained'
         labelStyle={{ color: Colors.light }}
         onPress={() => setOrderSelectionModalOpen(true)}
       >
         Create New Route
       </Button>
       {driver && driver.currentRoute && driver.currentRoute.active && (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <GettingStartedMap
             driver={driver}
             orderPolyline={orderPolyline}
@@ -231,7 +225,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
             driver={driver}
             ordersCurrentlyInRoute={ordersCurrentlyInRoute}
             currentInProcessOrderInActiveRoute={currentInProcessOrderInActiveRoute}
-            />
+          />
         </View>
       )}
       {/* <Dialog title="Order Details"

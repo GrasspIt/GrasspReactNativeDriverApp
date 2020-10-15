@@ -78,7 +78,7 @@ const RoutingScreen = ({
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <TopNavBar title="Routing" navigation={navigation}/>
+        <TopNavBar title='Routing' navigation={navigation} />
         <DriverRoutePage
           driver={driver}
           dspr={dspr}
@@ -115,7 +115,7 @@ const mapStateToProps = (state) => {
     dspr,
     driver,
     isLoading,
-    error
+    error,
   };
 };
 
