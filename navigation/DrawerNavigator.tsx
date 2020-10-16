@@ -15,10 +15,12 @@ import { DrawerActions } from '@react-navigation/native';
 // import * as Linking from 'expo-linking';
 import * as RootNavigation from '../navigation/RootNavigation';
 import Colors from '../constants/Colors';
-import DashboardNavigator from './DashboardNavigator';
+
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/AuthNavigator';
-import RoutingScreen from '../screens/RoutingScreen';
+import DashboardNavigator from './DashboardNavigator';
+import RoutingNavigator from './RoutingNavigator';
+import OrderListNavigator from './OrderListNavigator';
 
 type MainScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Main'>;
 
@@ -31,6 +33,7 @@ export type DrawerStackParamsList = {
   DSPRs: any;
   Dashboard: any;
   Routing: any;
+  Orders: any;
 };
 
 const Drawer = createDrawerNavigator<DrawerStackParamsList>();
@@ -59,7 +62,7 @@ const DrawerNavigator = ({ navigation, route }: Props) => {
           <DrawerContentScrollView {...props}>
             <DrawerItemList {...props} />
             <DrawerItem
-              label="Logout"
+              label='Logout'
               labelStyle={{ fontSize: 16 }}
               onPress={() => handleLogout()}
             />
@@ -77,9 +80,10 @@ const DrawerNavigator = ({ navigation, route }: Props) => {
         );
       }}
     >
-      {dsprDrivers.length > 1 ? <Drawer.Screen name="DSPRs" component={DSPRScreen} /> : null}
-      <Drawer.Screen name="Dashboard" component={DashboardNavigator} />
-      <Drawer.Screen name="Routing" component={RoutingScreen} />
+      {dsprDrivers.length > 1 ? <Drawer.Screen name='DSPRs' component={DSPRScreen} /> : null}
+      <Drawer.Screen name='Dashboard' component={DashboardNavigator} />
+      <Drawer.Screen name='Orders' component={OrderListNavigator} />
+      <Drawer.Screen name='Routing' component={RoutingNavigator} />
     </Drawer.Navigator>
   );
 };

@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Text } from 'react-native';
 import MapView, { Callout, Marker, Polyline } from 'react-native-maps';
-import { Button } from 'react-native-elements';
 import { OrderWithAddressAndUser, RouteLeg } from '../store/reduxStoreState';
+import * as RootNavigation from '../navigation/RootNavigation';
 
 interface GettingStartedMapProps {
   driver: any;
   orderPolyline: any;
   overviewPolyline: any;
   currentlyActiveRouteLegIndex: number;
-  handleMapOrderClick: (order: any) => any;
 }
 
-const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
-  const {
-    driver,
-    orderPolyline,
-    overviewPolyline,
-    currentlyActiveRouteLegIndex,
-    handleMapOrderClick,
-  } = props;
-
+const GettingStartedMap: React.FC<GettingStartedMapProps> = ({
+  driver,
+  orderPolyline,
+  overviewPolyline,
+  currentlyActiveRouteLegIndex,
+}) => {
   const [onOverview, setOnOverview] = useState(true);
 
   useEffect(() => {
@@ -58,15 +54,12 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = (props) => {
               pinColor='red'
               key={orderForLeg.address.id}
             >
-              <Callout>
+              {/* RootNavigation.navigate('Details', orderForLeg.id) */}
+              <Callout
+                onPress={() => RootNavigation.navigate('Details', { orderId: orderForLeg.id })}
+              >
                 <Text>{orderForLeg.user.firstName + ' ' + orderForLeg.user.lastName}</Text>
-                <Button
-                  title='Order Details'
-                  type='clear'
-                  onPress={() => handleMapOrderClick(orderForLeg)}
-                  titleStyle={{ fontSize: 14 }}
-                  buttonStyle={{ padding: 0 }}
-                />
+                <Text style={{ color: '#2089dc' }}>Order Details</Text>
               </Callout>
             </Marker>
           );

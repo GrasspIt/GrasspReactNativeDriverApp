@@ -23,12 +23,12 @@ import Moment from 'moment';
 import { formatPhone } from '../hooks/util';
 
 import { StackNavigationProp } from '@react-navigation/stack';
-import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
+import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
 import OrderButtons from '../components/OrderButtons';
 import { getOrderFromProps } from '../selectors/orderSelectors';
 import { getAddressFromProps } from '../selectors/addressSelectors';
 
-type DetailsScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Details'>;
+type DetailsScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Details'>;
 
 type Props = {
   navigation: DetailsScreenNavigationProp;
@@ -56,7 +56,7 @@ const OrderDetails = ({
   medicalRecommendation,
   getOrderDetailsWithId,
 }: Props) => {
-  const orderDate = Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
+  const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
   useEffect(() => {
@@ -75,7 +75,7 @@ const OrderDetails = ({
     <>
       {isLoading ? (
         <View style={styles.fillScreen}>
-          <ActivityIndicator size="large" color={Colors.primary} />
+          <ActivityIndicator size='large' color={Colors.primary} />
         </View>
       ) : (
         <>
@@ -83,7 +83,7 @@ const OrderDetails = ({
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Title>Notes</Title>
               <Button
-                mode="text"
+                mode='text'
                 onPress={handleManageNotes}
                 color={Colors.primary}
                 labelStyle={{ color: Colors.primary }}
@@ -138,21 +138,21 @@ const OrderDetails = ({
               </ListItem>
             )}
 
-            {orderDate ? (
+            {orderDate && (
               <ListItem>
                 <ListItem.Title>{orderDate}</ListItem.Title>
               </ListItem>
-            ) : null}
+            )}
 
-            {user ? (
+            {user && (
               <ListItem>
                 <ListItem.Title>
                   {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
                 </ListItem.Title>
               </ListItem>
-            ) : null}
+            )}
 
-            {idDocument ? (
+            {idDocument && (
               <View>
                 <ListItem>
                   <ListItem.Content>
@@ -167,42 +167,42 @@ const OrderDetails = ({
                   </ListItem.Title>
                 </ListItem>
               </View>
-            ) : null}
+            )}
 
-            {medicalRecommendation ? (
+            {medicalRecommendation && (
               <ListItem>
                 <ListItem.Content>
                   <ListItem.Title>Medical ID:</ListItem.Title>
                   <ListItem.Subtitle>{medicalRecommendation.idNumber}</ListItem.Subtitle>
                 </ListItem.Content>
                 <IconButton
-                  icon="content-copy"
+                  icon='content-copy'
                   color={Colors.primary}
                   size={20}
                   onPress={() => Clipboard.setString(medicalRecommendation.idNumber)}
                 />
               </ListItem>
-            ) : null}
+            )}
 
-            {address ? (
+            {address && (
               <ListItem>
                 <ListItem.Title>
                   {address.street}, {address.zipCode}
                 </ListItem.Title>
               </ListItem>
-            ) : null}
+            )}
 
-            {order && order.orderDetails
-              ? order.orderDetails.map((detail) => (
-                  <OrderDetailListItem
-                    key={`${detail.product.id}-${detail.unit || '0'}`}
-                    orderDetail={detail}
-                  />
-                ))
-              : null}
+            {order &&
+              order.orderDetails &&
+              order.orderDetails.map((detail) => (
+                <OrderDetailListItem
+                  key={`${detail.product.id}-${detail.unit || '0'}`}
+                  orderDetail={detail}
+                />
+              ))}
             <Divider />
 
-            {order && order.coupon ? (
+            {order && order.coupon && (
               <>
                 <ListItem>
                   <ListItem.Content>
@@ -217,16 +217,18 @@ const OrderDetails = ({
                   </ListItem.Content>
                 </ListItem>
               </>
-            ) : null}
+            )}
 
-            <ListItem>
-              <ListItem.Content>
-                <ListItem.Title>Subtotal</ListItem.Title>
-                <ListItem.Subtitle>{`$${order.cashTotalPreTaxesAndFees.toFixed(
-                  2
-                )}`}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
+            {order && (
+              <ListItem>
+                <ListItem.Content>
+                  <ListItem.Title>Subtotal</ListItem.Title>
+                  <ListItem.Subtitle>{`$${order.cashTotalPreTaxesAndFees.toFixed(
+                    2
+                  )}`}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            )}
 
             {order && order.orderTaxDetails && order.orderTaxDetails.length !== 0 ? (
               order.orderTaxDetails
@@ -241,7 +243,7 @@ const OrderDetails = ({
                   </ListItem>
                 ))
             ) : (
-              <ListItem key="Tax0">
+              <ListItem key='Tax0'>
                 <ListItem.Content>
                   <ListItem.Title>Tax</ListItem.Title>
                   <ListItem.Subtitle>$0.00</ListItem.Subtitle>
@@ -249,20 +251,24 @@ const OrderDetails = ({
               </ListItem>
             )}
 
-            <ListItem>
-              <ListItem.Content>
-                <ListItem.Title>Delivery Fee</ListItem.Title>
-                <ListItem.Subtitle>{`$${order.deliveryFee.toFixed(2)}`}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
+            {order && (
+              <ListItem>
+                <ListItem.Content>
+                  <ListItem.Title>Delivery Fee</ListItem.Title>
+                  <ListItem.Subtitle>{`$${order.deliveryFee.toFixed(2)}`}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            )}
 
-            <ListItem>
-              <ListItem.Content>
-                <ListItem.Title>{`Total: $${order.cashTotal.toFixed(2)}`}</ListItem.Title>
-              </ListItem.Content>
-            </ListItem>
+            {order && (
+              <ListItem>
+                <ListItem.Content>
+                  <ListItem.Title>{`Total: $${order.cashTotal.toFixed(2)}`}</ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+            )}
           </ScrollView>
-          <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />
+          {order && <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />}
         </>
       )}
     </>
@@ -295,6 +301,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, route) => {
   const { orderId } = route.route.params;
+  console.log('orderId', orderId);
   const order = getOrderFromProps(state, { orderId });
   const user = order && getUserFromProps(state, { userId: order.user });
   const address = order && getAddressFromProps(state, { addressId: order.address });

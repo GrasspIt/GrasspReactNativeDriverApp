@@ -46,18 +46,18 @@ type Props = {
     serviceAreas?: DSPRDriverServiceArea[];
   };
   dspr: DSPR;
-  dsprDriverIdForOrderDetails: number;
   createDSPRDriverRoute: any;
-  handleMapOrderClick: (order: any) => any;
+  isLoading: Boolean;
+  error: any;
 };
 
 const RoutingScreen = ({
   navigation,
   driver,
   dspr,
-  dsprDriverIdForOrderDetails,
-  handleMapOrderClick,
   createDSPRDriverRoute,
+  isLoading,
+  error,
 }: Props) => {
   const createNewRoute = (
     driverId: number,
@@ -79,13 +79,7 @@ const RoutingScreen = ({
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <TopNavBar title='Routing' navigation={navigation} />
-        <DriverRoutePage
-          driver={driver}
-          dspr={dspr}
-          createRoute={createNewRoute}
-          handleMapOrderClick={handleMapOrderClick}
-          dsprDriverIdForOrderDetails={dsprDriverIdForOrderDetails}
-        />
+        <DriverRoutePage driver={driver} dspr={dspr} createRoute={createNewRoute} />
       </View>
     </SafeAreaView>
   );
@@ -111,7 +105,6 @@ const mapStateToProps = (state) => {
   const isLoading = state.api.isLoading;
   const error = state.api.errorMessage;
   return {
-    dsprDriverIdForOrderDetails,
     dspr,
     driver,
     isLoading,

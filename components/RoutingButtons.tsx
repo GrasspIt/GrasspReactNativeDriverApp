@@ -13,17 +13,21 @@ const RoutingButtons = ({ driver, currentInProcessOrderInActiveRoute, ordersCurr
   const handleCompleteOrder = (orderId) => {
     Alert.alert('Complete Order', 'Are you ready to complete this order?', [
       { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => dispatch(completeOrder(orderId)) },
+      {
+        text: 'Yes',
+        onPress: () =>
+          dispatch(completeOrder(orderId)).then((response) => {
+            if (response.type === COMPLETE_ORDER_SUCCESS) {
+              dispatch(progressDSPRDriverRoute(driver.currentRoute.id));
+            }
+          }),
+      },
     ]);
   };
 
   const handleCompleteInProcessOrder = () => {
     if (driver && driver.currentInProcessOrder) {
-        dispatch(completeOrder(driver.currentInProcessOrder.id)).then((response) => {
-      if (response.type === COMPLETE_ORDER_SUCCESS) {
-        dispatch(progressDSPRDriverRoute(driver.currentRoute.id));
-      }
-    });
+      handleCompleteOrder(driver.currentInProcessOrder.id);
     }
   };
 
@@ -38,7 +42,11 @@ const RoutingButtons = ({ driver, currentInProcessOrderInActiveRoute, ordersCurr
             'Warning',
             'You currently have an in-process order that is not part of the route. Would you like to mark this order as complete and continue with your route?',
             [
-              { text: 'No', style: 'cancel', onPress: () => dispatch(progressDSPRDriverRoute(driver.currentRoute.id)) },
+              {
+                text: 'No',
+                style: 'cancel',
+                onPress: () => dispatch(progressDSPRDriverRoute(driver.currentRoute.id)),
+              },
               { text: 'Yes', onPress: handleCompleteInProcessOrder },
             ]
           );
@@ -53,22 +61,22 @@ const RoutingButtons = ({ driver, currentInProcessOrderInActiveRoute, ordersCurr
 
   return (
     <View style={styles.buttonContainer}>
-            <Button
-              mode="contained"
-              style={styles.buttons}
-              labelStyle={{ color: Colors.light }}
-              onPress={() => handleRouteActionButtonPressed()}
-            >
-              {!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
-            </Button>
-            <Button
-              mode="contained"
-              style={styles.buttons}
-              labelStyle={{ color: Colors.light }}
-              onPress={() => console.log('order details')}
-            >
-              Order Details
-            </Button>
+      <Button
+        mode='contained'
+        style={styles.buttons}
+        labelStyle={{ color: Colors.light }}
+        onPress={() => handleRouteActionButtonPressed()}
+      >
+        {!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
+      </Button>
+      <Button
+        mode='contained'
+        style={styles.buttons}
+        labelStyle={{ color: Colors.light }}
+        onPress={() => console.log('order details')}
+      >
+        Current Order Details
+      </Button>
     </View>
   );
 };
@@ -82,7 +90,7 @@ const styles = StyleSheet.create({
   buttons: {
     flex: 1,
     borderRadius: 0,
-    margin: 1
+    margin: 1,
   },
 });
 

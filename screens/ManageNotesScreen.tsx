@@ -5,7 +5,7 @@ import { Button, Portal } from 'react-native-paper';
 import { ListItem } from 'react-native-elements';
 import NewUserNoteForm from '../components/NewUserNoteForm';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
+import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { State } from '../store/reduxStoreState';
 import { getUserNotesFromProps } from '../selectors/userSelectors';
@@ -19,7 +19,7 @@ import {
 } from '../actions/userActions';
 import Colors from '../constants/Colors';
 
-type ManageNotesScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Notes'>;
+type ManageNotesScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Notes'>;
 
 type Props = {
   navigation: ManageNotesScreenNavigationProp;
@@ -82,7 +82,7 @@ const ManageNotes = ({ navigation, route }: Props) => {
       )}
       <View style={styles.buttonContainer}>
         <Button
-          mode="contained"
+          mode='contained'
           color={Colors.primary}
           labelStyle={{ color: Colors.light }}
           onPress={() => setShowNotes(true)}

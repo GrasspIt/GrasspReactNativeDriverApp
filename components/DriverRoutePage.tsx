@@ -46,12 +46,10 @@ interface DriverRoutePageProps {
     finalDestination: OrderWithAddressAndUser,
     usingFinalDestinationInRoute: Boolean
   ) => any;
-  dsprDriverIdForOrderDetails: number;
-  handleMapOrderClick: (order: any) => any;
 }
 
 const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
-  const { driver, dspr, createRoute, dsprDriverIdForOrderDetails, handleMapOrderClick } = props;
+  const { driver, dspr, createRoute } = props;
 
   //For creating new Route
   const [proposedOrderIdsInRoute, setProposedOrderIdsInRoute] = useState([]);
@@ -218,7 +216,6 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
             orderPolyline={orderPolyline}
             overviewPolyline={overviewPolyline}
             currentlyActiveRouteLegIndex={currentlyActiveRouteLegIndex}
-            handleMapOrderClick={handleMapOrderClick}
           />
           <RoutingButtons
             driver={driver}

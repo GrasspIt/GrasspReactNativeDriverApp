@@ -1,5 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Alert, FlatList, ActivityIndicator, Platform } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  ActivityIndicator,
+  Platform,
+  SafeAreaView,
+} from 'react-native';
 import { Button } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import Colors from '../constants/Colors';
@@ -9,6 +17,7 @@ import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
+import * as RootNavigation from '../navigation/RootNavigation';
 
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -20,14 +29,10 @@ import { useInterval } from '../hooks/useInterval';
 
 import OnCallSwitch from '../components/OnCallSwitch';
 import TopNavBar from '../components/TopNavBar';
-import OrderItem from '../components/OrderItem';
 
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
-import { Divider } from 'react-native-paper';
-import InProcessOrderItem from '../components/InProcessOrderItem';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 // handler for push notifications
 Notifications.setNotificationHandler({
@@ -102,8 +107,14 @@ const HomeScreen = ({
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       (response: { notification: any }) => {
         console.log(response);
-        navigation.navigate('Details', {
-          orderId: response.notification.request.content.data.body.orderId,
+        RootNavigation.navigate('Main', {
+          screen: 'Orders',
+          params: {
+            screen: 'Details',
+            params: {
+              orderId: response.notification.request.content.data.body.orderId,
+            },
+          },
         });
       }
     );
@@ -149,17 +160,13 @@ const HomeScreen = ({
     })();
   }, [dsprDriver, isTracking]);
 
-  const handleCreateRoute = () => {
-    navigation.navigate('Routing');
-  };
-
   return loggedInUser && dsprDriver ? (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar style="dark" />
-      <TopNavBar navigation={navigation} title="Dashboard"/>
+      <StatusBar style='dark' />
+      <TopNavBar navigation={navigation} title='Dashboard' />
       {isLoading ? (
         <View style={styles.container}>
-          <ActivityIndicator size="large" color={Colors.primary} />
+          <ActivityIndicator size='large' color={Colors.primary} />
         </View>
       ) : error ? (
         <View style={styles.container}>
@@ -170,39 +177,6 @@ const HomeScreen = ({
         <View style={styles.body}>
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
-
-          <Divider style={{ height: 2 }} />
-          <Text style={styles.listTitle}>In Process Order</Text>
-          <Divider style={{ height: 1, marginHorizontal: 10 }} />
-
-          {dsprDriver.currentInProcessOrder ? (
-            <InProcessOrderItem
-              orderInfo={dsprDriver.currentInProcessOrder}
-              navigation={navigation}
-            />
-          ) : (
-            <View style={styles.empty}>
-              <Text>No order in process.</Text>
-            </View>
-          )}
-
-          <Divider style={{ height: 2 }} />
-          <Text style={styles.listTitle}>Queued Orders</Text>
-          <Divider style={{ height: 1, marginHorizontal: 10 }} />
-
-          <FlatList
-            ListEmptyComponent={
-              <View style={styles.empty}>
-                <Text>No orders.</Text>
-              </View>
-            }
-            onRefresh={() => getDriverData()}
-            refreshing={isLoading}
-            data={dsprDriver.queuedOrders}
-            renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
-            keyExtractor={(item: any) => item.id.toString()}
-            style={styles.orders}
-          />
         </View>
       )}
     </SafeAreaView>
@@ -216,30 +190,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  empty: {
-    backgroundColor: Colors.light,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
   body: {
     flex: 1,
     backgroundColor: Colors.light,
-  },
-  orders: {
-    paddingHorizontal: 10,
   },
   dsprTitle: {
     fontSize: 22,
     textAlign: 'center',
     paddingTop: 10,
-  },
-  listTitle: {
-    fontSize: 16,
-    paddingLeft: 10,
-    paddingVertical: 8,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
 });
 
