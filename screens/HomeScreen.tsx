@@ -9,7 +9,6 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
-import { StatusBar } from 'expo-status-bar';
 
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
@@ -160,30 +159,26 @@ const HomeScreen = ({
     })();
   }, [dsprDriver, isTracking]);
 
-  return (
-    loggedInUser &&
-    dsprDriver && (
-      <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar style='dark' />
-        <TopNavBar navigation={navigation} title='Dashboard' />
-        {isLoading ? (
-          <View style={[styles.container, { backgroundColor: colors.background }]}>
-            <ActivityIndicator size='large' color={colors.primary} />
-          </View>
-        ) : error ? (
-          <View style={[styles.container, { backgroundColor: colors.background }]}>
-            <Text>{error}</Text>
-            <Button onPress={() => getDSPRDriver(driverId)}>Try Again</Button>
-          </View>
-        ) : (
-          <View style={{ flex: 1, backgroundColor: colors.background }}>
-            <Text style={styles.dsprTitle}>{dspr.name}</Text>
-            {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
-          </View>
-        )}
-      </SafeAreaView>
-    )
-  );
+  return loggedInUser && dsprDriver ? (
+    <SafeAreaView style={{ flex: 1 }}>
+      <TopNavBar navigation={navigation} title='Dashboard' />
+      {isLoading ? (
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+          <ActivityIndicator size='large' color={colors.primary} />
+        </View>
+      ) : error ? (
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+          <Text>{error}</Text>
+          <Button onPress={() => getDSPRDriver(driverId)}>Try Again</Button>
+        </View>
+      ) : (
+        <View style={{ flex: 1, backgroundColor: colors.background }}>
+          <Text style={styles.dsprTitle}>{dspr.name}</Text>
+          {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
+        </View>
+      )}
+    </SafeAreaView>
+  ) : null;
 };
 
 const styles = StyleSheet.create({

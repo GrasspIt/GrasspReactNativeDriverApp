@@ -6,9 +6,8 @@ const TopNavBar = ({ navigation, title }) => {
   return (
     <Appbar.Header
       style={{
+        elevation: 2,
         backgroundColor: colors.surface,
-        borderBottomColor: colors.backdrop,
-        borderBottomWidth: 0.5,
       }}
     >
       <Appbar.Action icon='menu' onPress={() => navigation.toggleDrawer()} />

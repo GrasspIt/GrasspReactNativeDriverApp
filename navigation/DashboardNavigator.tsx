@@ -24,7 +24,6 @@ const DashboardNavigator = ({ route, navigation }: Props) => {
         name='Home'
         component={HomeScreen}
         options={{
-          headerTitle: 'Dashboard',
           headerShown: false,
         }}
       />

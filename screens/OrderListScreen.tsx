@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
 import TopNavBar from '../components/TopNavBar';
-import { Divider } from 'react-native-paper';
+import { Button, Divider, useTheme } from 'react-native-paper';
 import InProcessOrderItem from '../components/InProcessOrderItem';
 import OrderItem from '../components/OrderItem';
-import { useTheme } from 'react-native-paper';
-import { refreshDSPRDriver } from '../actions/driverActions';
+import { refreshDSPRDriver, getDSPRDriver } from '../actions/driverActions';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
 import { connect } from 'react-redux';
@@ -20,6 +19,7 @@ type Props = {
   dsprDriver;
   isLoading;
   refreshDSPRDriver;
+  getDSPRDriver;
   error;
 };
 
@@ -30,56 +30,69 @@ const OrderListScreen = ({
   dsprDriver,
   isLoading,
   refreshDSPRDriver,
+  getDSPRDriver,
   error,
 }: Props) => {
   const { colors } = useTheme();
   const getDriverData = () => {
     if (loggedInUser) refreshDSPRDriver(driverId);
   };
-  return (
+  return loggedInUser && dsprDriver ? (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <TopNavBar title='Orders' navigation={navigation} />
-        <Text style={styles.listTitle}>In Process Order</Text>
-        <Divider style={{ height: 1, marginHorizontal: 10 }} />
+      <TopNavBar title='Orders' navigation={navigation} />
+      {isLoading ? (
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+          <ActivityIndicator size='large' color={colors.primary} />
+        </View>
+      ) : error ? (
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+          <Text>{error}</Text>
+          <Button onPress={() => getDSPRDriver(driverId)}>Try Again</Button>
+        </View>
+      ) : (
+        <View style={{ flex: 1 }}>
+          <Text style={styles.listTitle}>In Process Order</Text>
+          <Divider />
 
-        {dsprDriver.currentInProcessOrder ? (
-          <InProcessOrderItem
-            orderInfo={dsprDriver.currentInProcessOrder}
-            navigation={navigation}
-          />
-        ) : (
-          <View style={[styles.empty, { backgroundColor: colors.background }]}>
-            <Text>No order in process.</Text>
-          </View>
-        )}
-
-        <Divider style={{ height: 2 }} />
-        <Text style={styles.listTitle}>Queued Orders</Text>
-        <Divider style={{ height: 1, marginHorizontal: 10 }} />
-
-        <FlatList
-          ListEmptyComponent={
+          {dsprDriver.currentInProcessOrder ? (
+            <InProcessOrderItem
+              orderInfo={dsprDriver.currentInProcessOrder}
+              navigation={navigation}
+            />
+          ) : (
             <View style={[styles.empty, { backgroundColor: colors.background }]}>
-              <Text>No orders.</Text>
+              <Text>No order in process.</Text>
             </View>
-          }
-          onRefresh={() => getDriverData()}
-          refreshing={isLoading}
-          data={dsprDriver.queuedOrders}
-          renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
-          keyExtractor={(item: any) => item.id.toString()}
-          style={{ paddingHorizontal: 10 }}
-        />
-      </View>
+          )}
+
+          <Divider />
+          <Text style={styles.listTitle}>Queued Orders</Text>
+          <Divider />
+
+          <FlatList
+            ListEmptyComponent={
+              <View style={[styles.empty, { backgroundColor: colors.background }]}>
+                <Text>No orders.</Text>
+              </View>
+            }
+            onRefresh={() => getDriverData()}
+            refreshing={isLoading}
+            data={dsprDriver.queuedOrders}
+            renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
+            keyExtractor={(item: any) => item.id.toString()}
+            style={{ paddingHorizontal: 10 }}
+          />
+        </View>
+      )}
     </SafeAreaView>
-  );
+  ) : null;
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   empty: {
     justifyContent: 'center',
@@ -89,9 +102,8 @@ const styles = StyleSheet.create({
   listTitle: {
     fontSize: 16,
     paddingLeft: 10,
-    paddingVertical: 8,
+    paddingVertical: 10,
     fontWeight: 'bold',
-    textAlign: 'center',
   },
 });
 
@@ -111,6 +123,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = { refreshDSPRDriver };
+const mapDispatchToProps = { refreshDSPRDriver, getDSPRDriver };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderListScreen);

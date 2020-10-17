@@ -54,7 +54,7 @@ const DrawerNavigator = ({ navigation, route }: Props) => {
     <Drawer.Navigator
       drawerContentOptions={{
         labelStyle: { fontSize: 16 },
-        activeTintColor: colors.onSurface,
+        activeTintColor: colors.surface,
         activeBackgroundColor: colors.primary,
       }}
       drawerContent={(props) => {

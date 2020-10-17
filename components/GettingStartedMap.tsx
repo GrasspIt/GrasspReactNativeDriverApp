@@ -155,7 +155,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = ({
                 <Text>{name}</Text>
                 <Text>
                   Outstanding Orders:{' '}
-                  {driver.currentInProcessOrder
+                  {driver && driver.currentInProcessOrder
                     ? driver.queuedOrders.length + 1
                     : driver.queuedOrders.length}
                 </Text>

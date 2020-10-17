@@ -5,9 +5,7 @@ import {
   Platform,
   Keyboard,
   View,
-  StyleSheet,
   Image,
-  Text,
   SafeAreaView,
 } from 'react-native';
 import { Input, Button, Card } from 'react-native-elements';
@@ -59,7 +57,13 @@ const LoginForm: React.FC<LoginProps> = (props) => {
         behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.container}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: 1,
+            }}
+          >
             <Image
               source={require('../assets/grassp_health.png')}
               style={{
@@ -110,6 +114,7 @@ const LoginForm: React.FC<LoginProps> = (props) => {
                 <Button
                   buttonStyle={{ backgroundColor: colors.primary }}
                   title='Login'
+                  titleStyle={{ color: colors.surface }}
                   onPress={handleSubmit}
                 />
               )}
@@ -121,13 +126,5 @@ const LoginForm: React.FC<LoginProps> = (props) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-});
 
 export default LoginForm;
