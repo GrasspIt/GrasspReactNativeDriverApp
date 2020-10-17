@@ -14,7 +14,7 @@ import { State } from '../store/reduxStoreState';
 import { DrawerActions } from '@react-navigation/native';
 // import * as Linking from 'expo-linking';
 import * as RootNavigation from '../navigation/RootNavigation';
-import Colors from '../constants/Colors';
+import { useTheme } from 'react-native-paper';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/AuthNavigator';
@@ -40,7 +40,7 @@ const Drawer = createDrawerNavigator<DrawerStackParamsList>();
 
 const DrawerNavigator = ({ navigation, route }: Props) => {
   const dispatch = useDispatch();
-
+  const { colors } = useTheme();
   const dsprDriversObj = useSelector<State, any>((state) => state.api.entities.dsprDrivers);
   const dsprDrivers = Object.keys(dsprDriversObj);
 
@@ -54,8 +54,8 @@ const DrawerNavigator = ({ navigation, route }: Props) => {
     <Drawer.Navigator
       drawerContentOptions={{
         labelStyle: { fontSize: 16 },
-        activeTintColor: Colors.light,
-        activeBackgroundColor: Colors.primary,
+        activeTintColor: colors.onSurface,
+        activeBackgroundColor: colors.primary,
       }}
       drawerContent={(props) => {
         return (

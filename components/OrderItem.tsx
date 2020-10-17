@@ -1,12 +1,13 @@
 import React from 'react';
-import { Text, StyleSheet, Alert } from 'react-native';
+import { Text, Alert } from 'react-native';
 import { ListItem, Button } from 'react-native-elements';
+import { useTheme } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
-import Colors from '../constants/Colors';
 import { markOrderInProcess } from '../actions/orderActions';
 
 const OrderItem = ({ orderInfo, navigation }) => {
   const dispatch = useDispatch();
+  const { colors } = useTheme();
 
   const handleProcessOrder = () => {
     Alert.alert('Process Order', 'Are you sure you want to set this order in-process?', [
@@ -23,13 +24,13 @@ const OrderItem = ({ orderInfo, navigation }) => {
         onPress={() => navigation.navigate('Details', { orderId: orderInfo.id })}
       >
         <Button
-          title="Set In Process"
+          title='Set In Process'
           titleStyle={{ fontSize: 14 }}
           buttonStyle={{
             width: 80,
             height: 60,
             borderRadius: 0,
-            backgroundColor: Colors.primary,
+            backgroundColor: colors.primary,
           }}
           containerStyle={{ borderRadius: 0 }}
           onPress={handleProcessOrder}
@@ -43,12 +44,10 @@ const OrderItem = ({ orderInfo, navigation }) => {
             {orderInfo.address.street} {orderInfo.address.zipCode}
           </ListItem.Subtitle>
         </ListItem.Content>
-        <ListItem.Chevron color={Colors.medium} size={18} />
+        <ListItem.Chevron color={colors.onBackground} size={18} />
       </ListItem>
     )
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default OrderItem;

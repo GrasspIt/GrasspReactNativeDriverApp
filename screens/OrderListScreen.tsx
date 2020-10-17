@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, Text, Alert, StyleSheet, FlatList, SafeAreaView } from 'react-native';
-import Colors from '../constants/Colors';
+import { View, Text, StyleSheet, FlatList, SafeAreaView } from 'react-native';
 import TopNavBar from '../components/TopNavBar';
 import { Divider } from 'react-native-paper';
 import InProcessOrderItem from '../components/InProcessOrderItem';
 import OrderItem from '../components/OrderItem';
-
+import { useTheme } from 'react-native-paper';
 import { refreshDSPRDriver } from '../actions/driverActions';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
@@ -33,12 +32,13 @@ const OrderListScreen = ({
   refreshDSPRDriver,
   error,
 }: Props) => {
+  const { colors } = useTheme();
   const getDriverData = () => {
     if (loggedInUser) refreshDSPRDriver(driverId);
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         <TopNavBar title='Orders' navigation={navigation} />
         <Text style={styles.listTitle}>In Process Order</Text>
         <Divider style={{ height: 1, marginHorizontal: 10 }} />
@@ -49,7 +49,7 @@ const OrderListScreen = ({
             navigation={navigation}
           />
         ) : (
-          <View style={styles.empty}>
+          <View style={[styles.empty, { backgroundColor: colors.background }]}>
             <Text>No order in process.</Text>
           </View>
         )}
@@ -60,7 +60,7 @@ const OrderListScreen = ({
 
         <FlatList
           ListEmptyComponent={
-            <View style={styles.empty}>
+            <View style={[styles.empty, { backgroundColor: colors.background }]}>
               <Text>No orders.</Text>
             </View>
           }
@@ -69,7 +69,7 @@ const OrderListScreen = ({
           data={dsprDriver.queuedOrders}
           renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
           keyExtractor={(item: any) => item.id.toString()}
-          style={styles.orders}
+          style={{ paddingHorizontal: 10 }}
         />
       </View>
     </SafeAreaView>
@@ -79,22 +79,12 @@ const OrderListScreen = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light,
     justifyContent: 'center',
-    // alignItems: 'center',
   },
   empty: {
-    backgroundColor: Colors.light,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-  },
-  body: {
-    flex: 1,
-    backgroundColor: Colors.light,
-  },
-  orders: {
-    paddingHorizontal: 10,
   },
   listTitle: {
     fontSize: 16,

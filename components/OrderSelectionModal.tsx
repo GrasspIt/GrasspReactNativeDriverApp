@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { Button, Dialog } from 'react-native-paper';
+import { Button, Dialog, useTheme } from 'react-native-paper';
 import { Divider } from 'react-native-elements';
 import OrderItemBasic from './OrderItemBasic';
-import Colors from '../constants/Colors';
 
 const OrderSelectionModal = ({
   orderSelectionModalOpen,
@@ -15,6 +14,7 @@ const OrderSelectionModal = ({
   routeButtonDisabled,
   handleRouteCreationSubmission,
 }) => {
+  const { colors } = useTheme();
   return (
     <Dialog visible={orderSelectionModalOpen} onDismiss={() => setOrderSelectionModalOpen(false)}>
       <Dialog.Title>Order Selection</Dialog.Title>
@@ -37,7 +37,7 @@ const OrderSelectionModal = ({
             <Divider />
             <FlatList
               ListEmptyComponent={
-                <View style={styles.empty}>
+                <View style={[styles.empty, { backgroundColor: colors.background }]}>
                   <Text>No orders.</Text>
                 </View>
               }
@@ -49,12 +49,12 @@ const OrderSelectionModal = ({
         )}
       </Dialog.Content>
       <Dialog.Actions>
-        <Button mode="text" onPress={() => setOrderSelectionModalOpen(false)}>
+        <Button mode='text' onPress={() => setOrderSelectionModalOpen(false)}>
           Cancel
         </Button>
         <Button
-          mode="contained"
-          labelStyle={{ color: Colors.light }}
+          mode='contained'
+          labelStyle={{ color: colors.background }}
           disabled={routeButtonDisabled}
           onPress={() => handleRouteCreationSubmission()}
         >
@@ -67,7 +67,6 @@ const OrderSelectionModal = ({
 
 const styles = StyleSheet.create({
   empty: {
-    backgroundColor: Colors.light,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,

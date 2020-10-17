@@ -1,29 +1,23 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Appbar } from 'react-native-paper';
-import Colors from '../constants/Colors';
+import { Appbar, useTheme } from 'react-native-paper';
 
 const TopNavBar = ({ navigation, title }) => {
+  const { colors } = useTheme();
   return (
-    <Appbar.Header style={styles.header}>
-      <Appbar.Action icon="menu" onPress={() => navigation.toggleDrawer()} />
+    <Appbar.Header
+      style={{
+        backgroundColor: colors.surface,
+        borderBottomColor: colors.backdrop,
+        borderBottomWidth: 0.5,
+      }}
+    >
+      <Appbar.Action icon='menu' onPress={() => navigation.toggleDrawer()} />
       <Appbar.Content
-        color={Colors.dark}
         title={title}
-        titleStyle={{ fontSize: 20, color: Colors.secondary, fontWeight: 'bold' }}
+        titleStyle={{ fontSize: 20, color: colors.accent, fontWeight: 'bold' }}
       />
     </Appbar.Header>
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    backgroundColor: Colors.light,
-    borderBottomWidth: 0.5,
-    borderBottomColor: Colors.medium,
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-});
 
 export default TopNavBar;

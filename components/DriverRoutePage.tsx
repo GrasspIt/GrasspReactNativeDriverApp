@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, StyleSheet } from 'react-native';
-import { Button, Dialog, Card } from 'react-native-paper';
-import Colors from '../constants/Colors';
+import { View, Alert } from 'react-native';
+import { Button, useTheme } from 'react-native-paper';
 import RoutingButtons from './RoutingButtons';
 
 import {
@@ -50,7 +49,7 @@ interface DriverRoutePageProps {
 
 const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
   const { driver, dspr, createRoute } = props;
-
+  const { colors } = useTheme();
   //For creating new Route
   const [proposedOrderIdsInRoute, setProposedOrderIdsInRoute] = useState([]);
   const [orderSelectionModalOpen, setOrderSelectionModalOpen] = useState(false);
@@ -204,7 +203,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
     <View style={{ flex: 1 }}>
       <Button
         mode='contained'
-        labelStyle={{ color: Colors.light }}
+        labelStyle={{ color: colors.surface }}
         onPress={() => setOrderSelectionModalOpen(true)}
       >
         Create New Route
@@ -287,33 +286,5 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  empty: {
-    backgroundColor: Colors.light,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  body: {
-    flex: 1,
-    backgroundColor: Colors.light,
-  },
-  orders: {
-    paddingHorizontal: 10,
-  },
-  listTitle: {
-    fontSize: 16,
-    paddingLeft: 10,
-    paddingVertical: 8,
-    fontWeight: 'bold',
-  },
-});
 
 export default DriverRoutePage;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -9,7 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { ListItem, Divider } from 'react-native-elements';
-import { Button, Title, IconButton } from 'react-native-paper';
+import { Button, Title, IconButton, useTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { getUserFromProps, getUserNotesFromProps } from '../selectors/userSelectors';
@@ -18,7 +18,6 @@ import {
   getUserMedicalRecommendations,
 } from '../selectors/userDocumentsSelector';
 import OrderDetailListItem from '../components/OrderDetailListItem';
-import Colors from '../constants/Colors';
 import Moment from 'moment';
 import { formatPhone } from '../hooks/util';
 
@@ -56,6 +55,7 @@ const OrderDetails = ({
   medicalRecommendation,
   getOrderDetailsWithId,
 }: Props) => {
+  const { colors } = useTheme();
   const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
@@ -74,19 +74,19 @@ const OrderDetails = ({
   return (
     <>
       {isLoading ? (
-        <View style={styles.fillScreen}>
-          <ActivityIndicator size='large' color={Colors.primary} />
+        <View style={[styles.fillScreen, { backgroundColor: colors.background }]}>
+          <ActivityIndicator size='large' color={colors.primary} />
         </View>
       ) : (
         <>
-          <ScrollView style={styles.scroll}>
+          <ScrollView style={[styles.scroll, { backgroundColor: colors.background }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Title>Notes</Title>
               <Button
                 mode='text'
                 onPress={handleManageNotes}
-                color={Colors.primary}
-                labelStyle={{ color: Colors.primary }}
+                color={colors.primary}
+                labelStyle={{ color: colors.primary }}
               >
                 Manage Notes
               </Button>
@@ -105,7 +105,7 @@ const OrderDetails = ({
                   </ListItem>
                 ))
             ) : (
-              <View style={styles.empty}>
+              <View style={[styles.empty, { backgroundColor: colors.background }]}>
                 <Text style={{ fontSize: 16 }}>No active notes.</Text>
               </View>
             )}
@@ -177,7 +177,7 @@ const OrderDetails = ({
                 </ListItem.Content>
                 <IconButton
                   icon='content-copy'
-                  color={Colors.primary}
+                  color={colors.primary}
                   size={20}
                   onPress={() => Clipboard.setString(medicalRecommendation.idNumber)}
                 />
@@ -280,11 +280,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.light,
   },
   scroll: {
     flex: 1,
-    backgroundColor: Colors.light,
     paddingHorizontal: 10,
     paddingBottom: 30,
   },
@@ -293,7 +291,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   empty: {
-    backgroundColor: Colors.light,
     justifyContent: 'center',
     padding: 14,
   },

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { Button } from 'react-native-paper';
-import Colors from '../constants/Colors';
+import { Button, useTheme } from 'react-native-paper';
 import { completeOrder } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
 import { COMPLETE_ORDER_SUCCESS } from '../actions/orderActions';
@@ -9,6 +8,7 @@ import { progressDSPRDriverRoute } from '../actions/driverActions';
 
 const RoutingButtons = ({ driver, currentInProcessOrderInActiveRoute, ordersCurrentlyInRoute }) => {
   const dispatch = useDispatch();
+  const { colors } = useTheme();
 
   const handleCompleteOrder = (orderId) => {
     Alert.alert('Complete Order', 'Are you ready to complete this order?', [
@@ -60,11 +60,11 @@ const RoutingButtons = ({ driver, currentInProcessOrderInActiveRoute, ordersCurr
   };
 
   return (
-    <View style={styles.buttonContainer}>
+    <View style={{ flexDirection: 'row', bottom: 0, backgroundColor: colors.background }}>
       <Button
         mode='contained'
         style={styles.buttons}
-        labelStyle={{ color: Colors.light }}
+        labelStyle={{ color: colors.background }}
         onPress={() => handleRouteActionButtonPressed()}
       >
         {!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
@@ -72,7 +72,7 @@ const RoutingButtons = ({ driver, currentInProcessOrderInActiveRoute, ordersCurr
       <Button
         mode='contained'
         style={styles.buttons}
-        labelStyle={{ color: Colors.light }}
+        labelStyle={{ color: colors.background }}
         onPress={() => console.log('order details')}
       >
         Current Order Details
@@ -82,11 +82,6 @@ const RoutingButtons = ({ driver, currentInProcessOrderInActiveRoute, ordersCurr
 };
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    backgroundColor: Colors.light,
-    flexDirection: 'row',
-    bottom: 0,
-  },
   buttons: {
     flex: 1,
     borderRadius: 0,

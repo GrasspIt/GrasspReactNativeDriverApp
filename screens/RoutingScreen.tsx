@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
+import React from 'react';
+import { View, SafeAreaView } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
+import { RoutingStackParamsList } from '../navigation/RoutingNavigator';
 
 import { connect } from 'react-redux';
 import {
@@ -19,12 +19,11 @@ import {
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
 import { createDSPRDriverRoute } from '../actions/driverActions';
-
+import { useTheme } from 'react-native-paper';
 import DriverRoutePage from '../components/DriverRoutePage';
-import Colors from '../constants/Colors';
 import TopNavBar from '../components/TopNavBar';
 
-type RoutingScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Routing'>;
+type RoutingScreenNavigationProp = StackNavigationProp<RoutingStackParamsList, 'Routing'>;
 type Props = {
   navigation: RoutingScreenNavigationProp;
   driver: Omit<DsprDriver, 'user'> & {
@@ -59,6 +58,7 @@ const RoutingScreen = ({
   isLoading,
   error,
 }: Props) => {
+  const { colors } = useTheme();
   const createNewRoute = (
     driverId: number,
     waypoints: OrderWithAddressAndUser[],
@@ -77,24 +77,18 @@ const RoutingScreen = ({
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.background,
+        }}
+      >
         <TopNavBar title='Routing' navigation={navigation} />
         <DriverRoutePage driver={driver} dspr={dspr} createRoute={createNewRoute} />
       </View>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light,
-  },
-  mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-});
 
 const mapStateToProps = (state) => {
   const dsprDriverIdForOrderDetails = state.api.dsprDriverId;

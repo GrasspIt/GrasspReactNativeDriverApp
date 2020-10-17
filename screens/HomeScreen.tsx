@@ -8,9 +8,8 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
-import Colors from '../constants/Colors';
 
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
@@ -73,6 +72,7 @@ const HomeScreen = ({
 }: Props) => {
   const notificationListener: any = useRef();
   const responseListener: any = useRef();
+  const { colors } = useTheme();
 
   const [isTracking, setIsTracking] = useState(false);
   const [notification, setNotification] = useState<any>(false);
@@ -160,39 +160,37 @@ const HomeScreen = ({
     })();
   }, [dsprDriver, isTracking]);
 
-  return loggedInUser && dsprDriver ? (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar style='dark' />
-      <TopNavBar navigation={navigation} title='Dashboard' />
-      {isLoading ? (
-        <View style={styles.container}>
-          <ActivityIndicator size='large' color={Colors.primary} />
-        </View>
-      ) : error ? (
-        <View style={styles.container}>
-          <Text>{error}</Text>
-          <Button onPress={() => getDSPRDriver(driverId)}>Try Again</Button>
-        </View>
-      ) : (
-        <View style={styles.body}>
-          <Text style={styles.dsprTitle}>{dspr.name}</Text>
-          {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
-        </View>
-      )}
-    </SafeAreaView>
-  ) : null;
+  return (
+    loggedInUser &&
+    dsprDriver && (
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar style='dark' />
+        <TopNavBar navigation={navigation} title='Dashboard' />
+        {isLoading ? (
+          <View style={[styles.container, { backgroundColor: colors.background }]}>
+            <ActivityIndicator size='large' color={colors.primary} />
+          </View>
+        ) : error ? (
+          <View style={[styles.container, { backgroundColor: colors.background }]}>
+            <Text>{error}</Text>
+            <Button onPress={() => getDSPRDriver(driverId)}>Try Again</Button>
+          </View>
+        ) : (
+          <View style={{ flex: 1, backgroundColor: colors.background }}>
+            <Text style={styles.dsprTitle}>{dspr.name}</Text>
+            {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
+          </View>
+        )}
+      </SafeAreaView>
+    )
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  body: {
-    flex: 1,
-    backgroundColor: Colors.light,
   },
   dsprTitle: {
     fontSize: 22,

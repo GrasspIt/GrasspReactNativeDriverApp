@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { Button } from 'react-native-paper';
-import Colors from '../constants/Colors';
+import { Button, useTheme } from 'react-native-paper';
 import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
 
 const OrderButtons = ({ orderId, orderStatus }) => {
   const dispatch = useDispatch();
+  const { colors } = useTheme();
 
   const handleCancelOrder = () => {
     Alert.alert('Cancel Order', 'Are you sure you want to cancel this order?', [
@@ -30,35 +30,41 @@ const OrderButtons = ({ orderId, orderStatus }) => {
   };
 
   return (
-    <View style={styles.buttonContainer}>
+    <View
+      style={{
+        backgroundColor: colors.surface,
+        flexDirection: 'row',
+        bottom: 0,
+      }}
+    >
       <Button
-        icon="cancel"
-        mode="contained"
-        color={Colors.red}
+        icon='cancel'
+        mode='contained'
+        color={colors.error}
         style={styles.buttons}
-        labelStyle={{ color: Colors.light }}
+        labelStyle={{ color: colors.surface }}
         onPress={handleCancelOrder}
       >
         Cancel Order
       </Button>
       {orderStatus == 'in_process' ? (
         <Button
-          icon="check"
-          mode="contained"
-          color={Colors.primary}
+          icon='check'
+          mode='contained'
+          color={colors.primary}
           style={styles.buttons}
-          labelStyle={{ color: Colors.light }}
+          labelStyle={{ color: colors.surface }}
           onPress={handleCompleteOrder}
         >
           Complete Order
         </Button>
       ) : (
         <Button
-          mode="contained"
-          icon="autorenew"
-          color={Colors.primary}
+          mode='contained'
+          icon='autorenew'
+          color={colors.primary}
           style={styles.buttons}
-          labelStyle={{ color: Colors.light }}
+          labelStyle={{ color: colors.surface }}
           onPress={handleProcessOrder}
         >
           Set In Process
@@ -69,11 +75,6 @@ const OrderButtons = ({ orderId, orderStatus }) => {
 };
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    backgroundColor: Colors.light,
-    flexDirection: 'row',
-    bottom: 0,
-  },
   buttons: {
     flex: 1,
     margin: 4,

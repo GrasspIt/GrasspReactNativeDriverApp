@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Text } from 'react-native';
 import { Button, Dialog, Card } from 'react-native-paper';
 import { ListItem } from 'react-native-elements';
 import { OrderWithAddressAndUser } from '../store/reduxStoreState';
@@ -41,13 +41,13 @@ const QueuedOrder: React.FC<QueuedOrderProps> = (props) => {
           </ListItem.Subtitle>
         </ListItem.Content>
         {OrderDetails && (
-          <Button mode="contained" onPress={() => setShowOrderDetails(true)}>
+          <Button mode='contained' onPress={() => setShowOrderDetails(true)}>
             Details
           </Button>
         )}
         {markOrderInProcess && (
           <Button
-            mode="contained"
+            mode='contained'
             disabled={disableInProcessButton}
             onPress={() => markOrderInProcess(order.id)}
           >

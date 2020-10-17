@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions } from 'react-native';
-import Colors from '../constants/Colors';
+import { useTheme } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { getEnvVars } from '../environment';
 const { apiUrl } = getEnvVars();
@@ -11,6 +11,7 @@ type CardProps = {
 };
 
 const DsprCard = ({ dspr, handleSelect }: CardProps) => {
+  const { colors } = useTheme();
   // const image = dspr.imageLocation
   //   ? { uri: `https://api.grassp.it/${dspr.imageLocation}` }
   //   : require('../assets/grassp_health.png');
@@ -20,15 +21,15 @@ const DsprCard = ({ dspr, handleSelect }: CardProps) => {
 
   return (
     <TouchableOpacity style={styles.container} onPress={() => handleSelect(dspr.id)}>
-      <View style={styles.cardContainer}>
+      <View style={[styles.cardContainer, { backgroundColor: colors.surface }]}>
         <View style={styles.imageContainer}>
-          <Image resizeMode="contain" style={styles.image} source={image} />
+          <Image resizeMode='contain' style={styles.image} source={image} />
         </View>
-        <View style={styles.titleContainer}>
+        <View style={[styles.titleContainer, { backgroundColor: colors.onSurface }]}>
           <Text style={styles.title}>{dspr.name}</Text>
         </View>
       </View>
-      <StatusBar style="dark" />
+      <StatusBar style='dark' />
     </TouchableOpacity>
   );
 };
@@ -46,7 +47,6 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 5,
     overflow: 'hidden',
-    backgroundColor: Colors.light,
     maxWidth: 500,
     justifyContent: 'center',
     alignItems: 'center',
@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'absolute',
     bottom: 0,
-    backgroundColor: Colors.black,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',

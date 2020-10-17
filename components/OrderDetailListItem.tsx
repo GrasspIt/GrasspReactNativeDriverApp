@@ -1,14 +1,15 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { ListItem } from 'react-native-elements';
+import { useTheme } from 'react-native-paper';
 import { OrderDetail } from '../store/reduxStoreState';
-import Colors from '../constants/Colors';
 
 interface OrderDetailListItemProps {
   orderDetail: Partial<OrderDetail>;
 }
 
 const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
+  const { colors } = useTheme();
   const { orderDetail } = props;
   const { product } = orderDetail;
   const unit = orderDetail && orderDetail.unit ? orderDetail.unit + ' oz of' : ' x ';
@@ -23,10 +24,10 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
       ? '#3075e5'
       : product?.flowerType == 'vaporizer'
       ? '#ddd'
-      : Colors.primary;
+      : colors.primary;
   return (
     <>
-      {orderDetail && product ? (
+      {orderDetail && product && (
         <>
           <ListItem topDivider>
             <ListItem.Content>
@@ -44,7 +45,7 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
             </ListItem.Content>
           </ListItem>
         </>
-      ) : null}
+      )}
     </>
   );
 };
