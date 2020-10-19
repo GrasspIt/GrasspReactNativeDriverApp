@@ -60,10 +60,6 @@ const OrderDetails = ({
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
   useEffect(() => {
-    getOrderDetailsWithId(orderId);
-  }, [orderId]);
-
-  useEffect(() => {
     if (error) Alert.alert('ERROR', error);
   }, [error]);
 
@@ -298,7 +294,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, route) => {
   const { orderId } = route.route.params;
-  console.log('orderId', orderId);
   const order = getOrderFromProps(state, { orderId });
   const user = order && getUserFromProps(state, { userId: order.user });
   const address = order && getAddressFromProps(state, { addressId: order.address });

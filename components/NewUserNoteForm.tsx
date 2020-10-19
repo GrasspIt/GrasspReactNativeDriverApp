@@ -1,4 +1,5 @@
 import React from 'react';
+import { Modal } from 'react-native';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import { Button, TextInput, Dialog, useTheme } from 'react-native-paper';
 
@@ -41,7 +42,7 @@ const NewUserNoteForm = (
     />
   );
   return (
-    <Dialog visible={showNotes} onDismiss={closeDialog}>
+    <Modal animationType='slide' visible={showNotes} onRequestClose={closeDialog}>
       <Dialog.Title>New Note</Dialog.Title>
       <Dialog.Content>
         <Field
@@ -68,7 +69,7 @@ const NewUserNoteForm = (
           </Button>
         </Dialog.Actions>
       </Dialog.Content>
-    </Dialog>
+    </Modal>
   );
 };
 
