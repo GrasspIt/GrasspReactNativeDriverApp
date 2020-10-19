@@ -150,6 +150,8 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
             setCurrentInProcessOrderInActiveRoute(false);
             setCurrentlyActiveRouteLegIndex(undefined);
           }
+        } else {
+          setCurrentInProcessOrderInActiveRoute(false);
         }
       }
     }
@@ -158,7 +160,6 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
 
   // create order leg polyline for map
   useEffect(() => {
-    console.log('ordersCurrentlyInRoute', ordersCurrentlyInRoute);
     if (
       currentlyActiveRouteLegIndex !== undefined &&
       driver &&

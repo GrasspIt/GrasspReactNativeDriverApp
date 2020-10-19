@@ -16,7 +16,6 @@ type Props = {
 
 const RouteListView = ({ navigation, ordersForRoute, dsprDriver }: Props) => {
   const { colors } = useTheme();
-  console.log('ordersForRoute', ordersForRoute);
   return dsprDriver && ordersForRoute ? (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>

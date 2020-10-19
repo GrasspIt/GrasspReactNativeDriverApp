@@ -30,7 +30,6 @@ export const completeOrder = (orderId) => (dispatch, getState) => {
     if (response.type === COMPLETE_ORDER_SUCCESS) {
       const order = getOrderFromProps(getState(), { orderId });
       order && dispatch(getDSPRDriver(order.dsprDriver));
-      RootNavigation.navigate('Home', null);
     }
   });
 };
@@ -58,7 +57,6 @@ export const cancelOrder = (orderId) => (dispatch, getState) => {
     if (response.type === CANCEL_ORDER_SUCCESS) {
       const order = getOrderFromProps(getState(), { orderId });
       order && dispatch(getDSPRDriver(order.dsprDriver));
-      RootNavigation.navigate('Home', null);
     }
   });
 };
