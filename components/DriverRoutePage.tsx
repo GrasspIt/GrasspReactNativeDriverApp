@@ -17,9 +17,11 @@ import {
 } from '../store/reduxStoreState';
 
 import OrderSelectionModal from './OrderSelectionModal';
-import GettingStartedMap from './GettingStartedMap';
+import RouteMapView from './RouteMapView';
+import RouteListView from './RouteListView';
 
 interface DriverRoutePageProps {
+  navigation;
   driver: Omit<DsprDriver, 'user'> & {
     user: User;
     currentLocation?: DsprDriverLocation;
@@ -48,22 +50,21 @@ interface DriverRoutePageProps {
 }
 
 const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
-  const { driver, dspr, createRoute } = props;
+  const { navigation, driver, dspr, createRoute } = props;
   const { colors } = useTheme();
   //For creating new Route
   const [proposedOrderIdsInRoute, setProposedOrderIdsInRoute] = useState([]);
-  const [orderSelectionModalOpen, setOrderSelectionModalOpen] = useState(false);
   const [numberOrdersPerRoute, setNumberOrdersPerRoute] = useState<any>();
   const [ordersForRoute, setOrdersForRoute] = useState([]);
   const [finalOrderForRoute, setFinalOrderForRoute] = useState<any>();
   const [useFinalOrderInRoute, setUseFinalOrderInRoute] = useState(false);
-
   const [ordersCurrentlyInRoute, setOrdersCurrentlyInRoute] = useState<any>();
   const [currentInProcessOrderInActiveRoute, setCurrentInProcessOrderInActiveRoute] = useState<
     any
   >();
   const [currentlyActiveRouteLegIndex, setCurrentlyActiveRouteLegIndex] = useState<any>();
-
+  const [orderSelectionModalOpen, setOrderSelectionModalOpen] = useState(false);
+  const [showListView, setShowListView] = useState(false);
   const [routeError, setRouteError] = useState('');
   const [orderPolyline, setOrderPolyline] = useState<any>();
   const [overviewPolyline, setOverviewPolyline] = useState<any>();
@@ -157,6 +158,7 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
 
   // create order leg polyline for map
   useEffect(() => {
+    console.log('ordersCurrentlyInRoute', ordersCurrentlyInRoute);
     if (
       currentlyActiveRouteLegIndex !== undefined &&
       driver &&
@@ -210,32 +212,26 @@ const DriverRoutePage: React.FC<DriverRoutePageProps> = (props) => {
       </Button>
       {driver && driver.currentRoute && driver.currentRoute.active && (
         <View style={{ flex: 1 }}>
-          <GettingStartedMap
-            driver={driver}
-            orderPolyline={orderPolyline}
-            overviewPolyline={overviewPolyline}
-            currentlyActiveRouteLegIndex={currentlyActiveRouteLegIndex}
-          />
+          {showListView ? (
+            <RouteListView navigation={navigation} ordersForRoute={ordersForRoute} />
+          ) : (
+            <RouteMapView
+              navigation={navigation}
+              driver={driver}
+              orderPolyline={orderPolyline}
+              overviewPolyline={overviewPolyline}
+              currentlyActiveRouteLegIndex={currentlyActiveRouteLegIndex}
+            />
+          )}
           <RoutingButtons
+            setShowListView={setShowListView}
+            showListView={showListView}
             driver={driver}
             ordersCurrentlyInRoute={ordersCurrentlyInRoute}
             currentInProcessOrderInActiveRoute={currentInProcessOrderInActiveRoute}
           />
         </View>
       )}
-      {/* <Dialog title="Order Details"
-    open={state.showOrderDetails}
-    onClose={() => setState({ showOrderDetails: false })}>
-    <Card className="driver-page-order-detail-popup-card">
-        {state.showOrderDetails &&
-            <OrderWithDetailsAndPrices
-                hideNote
-                order={state.order}
-                user={state.order.user}
-                address={state.order.address}
-            />}
-    </Card>
-</Dialog> */}
       <OrderSelectionModal
         orderSelectionModalOpen={orderSelectionModalOpen}
         setOrderSelectionModalOpen={setOrderSelectionModalOpen}

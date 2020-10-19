@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Text } from 'react-native';
 import MapView, { Callout, Marker, Polyline } from 'react-native-maps';
 import { OrderWithAddressAndUser, RouteLeg } from '../store/reduxStoreState';
-import * as RootNavigation from '../navigation/RootNavigation';
 
-interface GettingStartedMapProps {
+interface RouteMapViewProps {
+  navigation;
   driver: any;
   orderPolyline: any;
   overviewPolyline: any;
   currentlyActiveRouteLegIndex: number;
 }
 
-const GettingStartedMap: React.FC<GettingStartedMapProps> = ({
+const RouteMapView: React.FC<RouteMapViewProps> = ({
+  navigation,
   driver,
   orderPolyline,
   overviewPolyline,
@@ -54,10 +55,7 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = ({
               pinColor='red'
               key={orderForLeg.address.id}
             >
-              {/* RootNavigation.navigate('Details', orderForLeg.id) */}
-              <Callout
-                onPress={() => RootNavigation.navigate('Details', { orderId: orderForLeg.id })}
-              >
+              <Callout onPress={() => navigation.navigate('Details', { orderId: orderForLeg.id })}>
                 <Text>{orderForLeg.user.firstName + ' ' + orderForLeg.user.lastName}</Text>
                 <Text style={{ color: '#2089dc' }}>Order Details</Text>
               </Callout>
@@ -184,4 +182,4 @@ const GettingStartedMap: React.FC<GettingStartedMapProps> = ({
   );
 };
 
-export default GettingStartedMap;
+export default RouteMapView;

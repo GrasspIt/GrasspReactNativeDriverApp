@@ -84,7 +84,12 @@ const RoutingScreen = ({
         }}
       >
         <TopNavBar title='Routing' navigation={navigation} />
-        <DriverRoutePage driver={driver} dspr={dspr} createRoute={createNewRoute} />
+        <DriverRoutePage
+          navigation={navigation}
+          driver={driver}
+          dspr={dspr}
+          createRoute={createNewRoute}
+        />
       </View>
     </SafeAreaView>
   );
