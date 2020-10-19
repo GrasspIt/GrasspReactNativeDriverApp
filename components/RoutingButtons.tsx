@@ -6,13 +6,7 @@ import { useDispatch } from 'react-redux';
 import { COMPLETE_ORDER_SUCCESS } from '../actions/orderActions';
 import { progressDSPRDriverRoute } from '../actions/driverActions';
 
-const RoutingButtons = ({
-  showListView,
-  setShowListView,
-  driver,
-  currentInProcessOrderInActiveRoute,
-  ordersCurrentlyInRoute,
-}) => {
+const RoutingButtons = ({ driver, currentInProcessOrderInActiveRoute, ordersCurrentlyInRoute }) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
 
@@ -76,15 +70,6 @@ const RoutingButtons = ({
       >
         {!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
       </Button>
-      <Button
-        icon={showListView ? 'map' : 'format-list-bulleted'}
-        mode='contained'
-        style={styles.buttons}
-        labelStyle={{ color: colors.background }}
-        onPress={() => setShowListView(!showListView)}
-      >
-        {showListView ? 'Map View' : 'List View'}
-      </Button>
     </View>
   );
 };
@@ -93,7 +78,6 @@ const styles = StyleSheet.create({
   buttons: {
     flex: 1,
     borderRadius: 0,
-    margin: 1,
   },
 });
 

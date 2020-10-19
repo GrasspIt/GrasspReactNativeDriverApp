@@ -25,6 +25,7 @@ import OrderSelectionModal from '../components/OrderSelectionModal';
 import RoutingButtons from '../components/RoutingButtons';
 import RouteMapView from '../components/RouteMapView';
 import RouteListView from '../components/RouteListView';
+import RouteViewButtons from '../components/RouteViewButtons';
 
 type RoutingScreenNavigationProp = StackNavigationProp<RoutingStackParamsList, 'Routing'>;
 type Props = {
@@ -75,7 +76,7 @@ const RoutingScreen = ({
     any
   >();
   const [currentlyActiveRouteLegIndex, setCurrentlyActiveRouteLegIndex] = useState<any>();
-  const [showListView, setShowListView] = useState(false);
+  const [routeView, setRouteView] = useState('map');
   const [routeError, setRouteError] = useState('');
   const [orderPolyline, setOrderPolyline] = useState<any>();
   const [overviewPolyline, setOverviewPolyline] = useState<any>();
@@ -229,6 +230,7 @@ const RoutingScreen = ({
         navigation={navigation}
         rightComponent={
           <Button
+            icon='plus'
             mode='text'
             labelStyle={{ color: colors.primary, fontWeight: 'bold' }}
             onPress={() => setOrderSelectionModalOpen(true)}
@@ -239,7 +241,8 @@ const RoutingScreen = ({
       />
       {driver && driver.currentRoute && driver.currentRoute.active ? (
         <View style={{ flex: 1 }}>
-          {showListView ? (
+          <RouteViewButtons routeView={routeView} setRouteView={setRouteView} />
+          {routeView === 'list' ? (
             <RouteListView navigation={navigation} ordersForRoute={ordersForRoute} />
           ) : (
             <RouteMapView
@@ -251,8 +254,8 @@ const RoutingScreen = ({
             />
           )}
           <RoutingButtons
-            setShowListView={setShowListView}
-            showListView={showListView}
+            setRouteView={setRouteView}
+            routeView={routeView}
             driver={driver}
             ordersCurrentlyInRoute={ordersCurrentlyInRoute}
             currentInProcessOrderInActiveRoute={currentInProcessOrderInActiveRoute}
