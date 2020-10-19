@@ -39,7 +39,7 @@ const OrderListScreen = ({
   };
   return loggedInUser && dsprDriver ? (
     <SafeAreaView style={{ flex: 1 }}>
-      <TopNavBar title='Orders' navigation={navigation} />
+      <TopNavBar title='Orders' navigation={navigation} rightComponent={null} />
       {isLoading ? (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
           <ActivityIndicator size='large' color={colors.primary} />

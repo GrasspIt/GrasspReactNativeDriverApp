@@ -161,7 +161,7 @@ const DashboardScreen = ({
 
   return loggedInUser && dsprDriver ? (
     <SafeAreaView style={{ flex: 1 }}>
-      <TopNavBar navigation={navigation} title='Dashboard' />
+      <TopNavBar navigation={navigation} title='Dashboard' rightComponent={null} />
       {isLoading ? (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
           <ActivityIndicator size='large' color={colors.primary} />

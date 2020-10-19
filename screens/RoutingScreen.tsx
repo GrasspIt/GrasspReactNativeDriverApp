@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, SafeAreaView, Alert } from 'react-native';
+import { View, Text, SafeAreaView, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RoutingStackParamsList } from '../navigation/RoutingNavigator';
 import { Button, useTheme } from 'react-native-paper';
@@ -224,15 +224,20 @@ const RoutingScreen = ({
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <TopNavBar title='Routing' navigation={navigation} />
-      <Button
-        mode='contained'
-        labelStyle={{ color: colors.surface }}
-        onPress={() => setOrderSelectionModalOpen(true)}
-      >
-        Create New Route
-      </Button>
-      {driver && driver.currentRoute && driver.currentRoute.active && (
+      <TopNavBar
+        title='Routing'
+        navigation={navigation}
+        rightComponent={
+          <Button
+            mode='text'
+            labelStyle={{ color: colors.primary, fontWeight: 'bold' }}
+            onPress={() => setOrderSelectionModalOpen(true)}
+          >
+            New Route
+          </Button>
+        }
+      />
+      {driver && driver.currentRoute && driver.currentRoute.active ? (
         <View style={{ flex: 1 }}>
           {showListView ? (
             <RouteListView navigation={navigation} ordersForRoute={ordersForRoute} />
@@ -252,6 +257,10 @@ const RoutingScreen = ({
             ordersCurrentlyInRoute={ordersCurrentlyInRoute}
             currentInProcessOrderInActiveRoute={currentInProcessOrderInActiveRoute}
           />
+        </View>
+      ) : (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text>No current active route. Create a new route to begin.</Text>
         </View>
       )}
       <OrderSelectionModal

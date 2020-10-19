@@ -1,7 +1,8 @@
 import React from 'react';
+import { Dimensions, Text, View } from 'react-native';
 import { Appbar, useTheme } from 'react-native-paper';
 
-const TopNavBar = ({ navigation, title }) => {
+const TopNavBar = ({ navigation, title, rightComponent }) => {
   const { colors } = useTheme();
   return (
     <Appbar.Header
@@ -11,10 +12,12 @@ const TopNavBar = ({ navigation, title }) => {
       }}
     >
       <Appbar.Action icon='menu' onPress={() => navigation.toggleDrawer()} />
-      <Appbar.Content
-        title={title}
-        titleStyle={{ fontSize: 20, color: colors.accent, fontWeight: 'bold' }}
-      />
+      <View style={{ flex: 1 }}>
+        <Text style={{ paddingLeft: 10, fontSize: 20, color: colors.accent, fontWeight: 'bold' }}>
+          {title}
+        </Text>
+      </View>
+      {rightComponent}
     </Appbar.Header>
   );
 };
