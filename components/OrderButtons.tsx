@@ -77,7 +77,8 @@ const OrderButtons = ({ orderId, orderStatus }) => {
 const styles = StyleSheet.create({
   buttons: {
     flex: 1,
-    margin: 4,
+    margin: 0,
+    borderRadius: 0,
   },
 });
 

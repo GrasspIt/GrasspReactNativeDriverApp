@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 
-import HomeScreen from '../screens/HomeScreen';
+import DashboardScreen from '../screens/DashboardScreen';
 
 type DashboardNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
@@ -12,17 +12,20 @@ type Props = {
 };
 
 export type DashboardStackParamsList = {
-  Home: any;
+  Dashboard: any;
 };
 
 const DashboardStack = createStackNavigator<DashboardStackParamsList>();
 
 const DashboardNavigator = ({ route, navigation }: Props) => {
   return (
-    <DashboardStack.Navigator initialRouteName='Home' screenOptions={{ gestureEnabled: false }}>
+    <DashboardStack.Navigator
+      initialRouteName='Dashboard'
+      screenOptions={{ gestureEnabled: false }}
+    >
       <DashboardStack.Screen
-        name='Home'
-        component={HomeScreen}
+        name='Dashboard'
+        component={DashboardScreen}
         options={{
           headerShown: false,
         }}

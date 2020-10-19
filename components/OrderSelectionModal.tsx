@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Modal } from 'react-native';
 import { Button, Dialog, useTheme } from 'react-native-paper';
 import { Divider } from 'react-native-elements';
 import OrderItemBasic from './OrderItemBasic';
@@ -16,7 +16,11 @@ const OrderSelectionModal = ({
 }) => {
   const { colors } = useTheme();
   return (
-    <Dialog visible={orderSelectionModalOpen} onDismiss={() => setOrderSelectionModalOpen(false)}>
+    <Modal
+      animationType='slide'
+      visible={orderSelectionModalOpen}
+      onRequestClose={() => setOrderSelectionModalOpen(false)}
+    >
       <Dialog.Title>Order Selection</Dialog.Title>
       {routeError ? <Text>{routeError}</Text> : null}
       <Dialog.Content>
@@ -36,6 +40,7 @@ const OrderSelectionModal = ({
             <Text style={styles.listTitle}>Queued Orders</Text>
             <Divider />
             <FlatList
+              style={{ height: '50%' }}
               ListEmptyComponent={
                 <View style={[styles.empty, { backgroundColor: colors.background }]}>
                   <Text>No orders.</Text>
@@ -61,7 +66,7 @@ const OrderSelectionModal = ({
           Create Route
         </Button>
       </Dialog.Actions>
-    </Dialog>
+    </Modal>
   );
 };
 

@@ -41,9 +41,9 @@ Notifications.setNotificationHandler({
   }),
 });
 
-type HomeScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Home'>;
+type DashboardScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Dashboard'>;
 type Props = {
-  navigation: HomeScreenNavigationProp;
+  navigation: DashboardScreenNavigationProp;
   loggedInUser;
   dspr;
   driverId;
@@ -56,7 +56,7 @@ type Props = {
   error;
 };
 
-const HomeScreen = ({
+const DashboardScreen = ({
   navigation,
   driverId,
   loggedInUser,
@@ -264,4 +264,4 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = { refreshDSPRDriver, getDSPRDriver, sendPushToken };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardScreen);
