@@ -10,8 +10,6 @@ const OrderSelectionModal = ({
   ordersForRoute,
   numberOrdersPerRoute,
   driver,
-  routeError,
-  routeButtonDisabled,
   handleRouteCreationSubmission,
 }) => {
   const { colors } = useTheme();
@@ -22,7 +20,6 @@ const OrderSelectionModal = ({
       onRequestClose={() => setOrderSelectionModalOpen(false)}
     >
       <Dialog.Title>Order Selection</Dialog.Title>
-      {routeError ? <Text>{routeError}</Text> : null}
       <Dialog.Content>
         <Text style={styles.listTitle}>
           Selected Orders: {ordersForRoute.length || 0}/{numberOrdersPerRoute}
@@ -60,7 +57,6 @@ const OrderSelectionModal = ({
         <Button
           mode='contained'
           labelStyle={{ color: colors.background }}
-          disabled={routeButtonDisabled}
           onPress={() => handleRouteCreationSubmission()}
         >
           Create Route

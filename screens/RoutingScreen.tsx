@@ -4,7 +4,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RoutingStackParamsList } from '../navigation/RoutingNavigator';
 import { Button, useTheme } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
-
 import { connect } from 'react-redux';
 import {
   DsprDriver,
@@ -65,7 +64,6 @@ const RoutingScreen = ({
   const { colors } = useTheme();
 
   const [orderSelectionModalOpen, setOrderSelectionModalOpen] = useState(false);
-  const [routeButtonDisabled, setRouteButtonDisabled] = useState(false);
   const [proposedOrderIdsInRoute, setProposedOrderIdsInRoute] = useState([]);
   const [numberOrdersPerRoute, setNumberOrdersPerRoute] = useState<any>();
   const [ordersForRoute, setOrdersForRoute] = useState([]);
@@ -77,7 +75,6 @@ const RoutingScreen = ({
   >();
   const [currentlyActiveRouteLegIndex, setCurrentlyActiveRouteLegIndex] = useState<any>();
   const [routeView, setRouteView] = useState('map');
-  const [routeError, setRouteError] = useState('');
   const [orderPolyline, setOrderPolyline] = useState<any>();
   const [overviewPolyline, setOverviewPolyline] = useState<any>();
 
@@ -100,7 +97,6 @@ const RoutingScreen = ({
   // function to create a new route
   const handleRouteCreationSubmission = () => {
     let resetRoute: boolean = true;
-    setRouteButtonDisabled(true);
     if (driver && driver.currentRoute && driver.currentRoute.active) {
       Alert.alert(
         'Override Route?',
@@ -112,12 +108,12 @@ const RoutingScreen = ({
       );
     }
     if (resetRoute) {
-      if (ordersForRoute.length === 0) setRouteError('A route must contain at least 1 order.');
-      if (!routeError) {
-        createNewRoute(driver.id, ordersForRoute, finalOrderForRoute, useFinalOrderInRoute);
-        setOrderSelectionModalOpen(false);
+      if (ordersForRoute.length === 0) {
+        Alert.alert('A route must contain at least 1 order.');
+        return;
       }
-      setRouteButtonDisabled(false);
+      createNewRoute(driver.id, ordersForRoute, finalOrderForRoute, useFinalOrderInRoute);
+      setOrderSelectionModalOpen(false);
     }
   };
 
@@ -224,19 +220,23 @@ const RoutingScreen = ({
   }, [driver, currentlyActiveRouteLegIndex]);
 
   // new route header button
+
   React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Button
-          mode='text'
-          labelStyle={{ color: colors.primary, fontSize: 14 }}
-          onPress={() => setOrderSelectionModalOpen(true)}
-        >
-          New Route
-        </Button>
-      ),
-    });
-  }, [navigation]);
+    driver &&
+      driver.currentRoute &&
+      driver.currentRoute.active &&
+      navigation.setOptions({
+        headerRight: () => (
+          <Button
+            mode='text'
+            labelStyle={{ color: colors.primary, fontSize: 14 }}
+            onPress={() => setOrderSelectionModalOpen(true)}
+          >
+            New Route
+          </Button>
+        ),
+      });
+  }, [navigation, driver]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -262,7 +262,14 @@ const RoutingScreen = ({
         </View>
       ) : (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>No current active route. Create a new route to begin.</Text>
+          <Text style={{ padding: 10 }}>No currently active route.</Text>
+          <Button
+            mode='contained'
+            labelStyle={{ color: colors.surface, fontSize: 14 }}
+            onPress={() => setOrderSelectionModalOpen(true)}
+          >
+            Create New Route
+          </Button>
         </View>
       )}
       <OrderSelectionModal
@@ -271,8 +278,6 @@ const RoutingScreen = ({
         ordersForRoute={ordersForRoute}
         numberOrdersPerRoute={numberOrdersPerRoute}
         driver={driver}
-        routeError={routeError}
-        routeButtonDisabled={routeButtonDisabled}
         handleRouteCreationSubmission={handleRouteCreationSubmission}
       />
       <StatusBar style='dark' />
