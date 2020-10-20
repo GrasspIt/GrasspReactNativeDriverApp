@@ -80,12 +80,12 @@ const OrderDetails = ({
         <>
           <ScrollView style={[styles.scroll, { backgroundColor: colors.background }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Title>Notes</Title>
+              <Title style={{ paddingTop: 4 }}>Notes</Title>
               <Button
                 mode='text'
                 onPress={handleManageNotes}
                 color={colors.primary}
-                labelStyle={{ color: colors.primary }}
+                labelStyle={{ paddingVertical: 4, color: colors.primary }}
               >
                 Manage Notes
               </Button>

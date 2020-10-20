@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   dsprTitle: {
     fontSize: 22,
     textAlign: 'center',
-    paddingTop: 10,
+    paddingTop: 20,
   },
 });
 

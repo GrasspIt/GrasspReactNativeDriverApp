@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, KeyboardAvoidingView, Platform } from 'react-native';
+import { ScrollView, View, Text } from 'react-native';
 
-import { Button, Portal, useTheme } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
 import { ListItem } from 'react-native-elements';
 import NewUserNoteForm from '../components/NewUserNoteForm';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -83,32 +83,21 @@ const ManageNotes = ({ navigation, route }: Props) => {
           <Text>No User Notes</Text>
         </View>
       )}
-      <View
-        style={{
-          backgroundColor: colors.background,
-          padding: 10,
-          bottom: 0,
-        }}
+      <Button
+        icon='plus'
+        mode='contained'
+        color={colors.primary}
+        labelStyle={{ paddingVertical: 4, color: colors.surface }}
+        onPress={() => setShowNotes(true)}
+        style={{ width: '100%', borderRadius: 0 }}
       >
-        <Button
-          mode='contained'
-          color={colors.primary}
-          labelStyle={{ color: colors.surface }}
-          onPress={() => setShowNotes(true)}
-          style={{ width: '100%' }}
-        >
-          Create Note
-        </Button>
-        <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
-          <Portal>
-            <NewUserNoteForm
-              showNotes={showNotes}
-              closeDialog={() => setShowNotes(false)}
-              onSubmit={handleNewNoteSubmit}
-            />
-          </Portal>
-        </KeyboardAvoidingView>
-      </View>
+        Create Note
+      </Button>
+      <NewUserNoteForm
+        showNotes={showNotes}
+        closeDialog={() => setShowNotes(false)}
+        onSubmit={handleNewNoteSubmit}
+      />
     </View>
   );
 };

@@ -1,12 +1,16 @@
 import React from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 import { completeOrder } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
 import { COMPLETE_ORDER_SUCCESS } from '../actions/orderActions';
 import { progressDSPRDriverRoute } from '../actions/driverActions';
 
-const RoutingButtons = ({ driver, currentInProcessOrderInActiveRoute, ordersCurrentlyInRoute }) => {
+const RouteActionButton = ({
+  driver,
+  currentInProcessOrderInActiveRoute,
+  ordersCurrentlyInRoute,
+}) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
 
@@ -64,8 +68,11 @@ const RoutingButtons = ({ driver, currentInProcessOrderInActiveRoute, ordersCurr
       <Button
         icon={!currentInProcessOrderInActiveRoute ? 'autorenew' : 'check'}
         mode='contained'
-        style={styles.buttons}
-        labelStyle={{ color: colors.background }}
+        style={{
+          flex: 1,
+          borderRadius: 0,
+        }}
+        labelStyle={{ paddingVertical: 4, color: colors.background }}
         onPress={() => handleRouteActionButtonPressed()}
       >
         {!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
@@ -74,11 +81,4 @@ const RoutingButtons = ({ driver, currentInProcessOrderInActiveRoute, ordersCurr
   );
 };
 
-const styles = StyleSheet.create({
-  buttons: {
-    flex: 1,
-    borderRadius: 0,
-  },
-});
-
-export default RoutingButtons;
+export default RouteActionButton;

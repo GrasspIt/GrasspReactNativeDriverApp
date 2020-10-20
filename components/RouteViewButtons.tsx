@@ -23,16 +23,16 @@ const RouteViewButtons = ({ routeView, setRouteView }) => {
         icon='map'
         mode='contained'
         style={routeView === 'map' ? activeStyle : inactiveStyle}
-        labelStyle={{ color: colors.background }}
+        labelStyle={{ paddingVertical: 4, color: colors.background }}
         onPress={() => setRouteView('map')}
       >
-        Map View'
+        Map View
       </Button>
       <Button
         icon='format-list-bulleted'
         mode='contained'
         style={routeView === 'list' ? activeStyle : inactiveStyle}
-        labelStyle={{ color: colors.background }}
+        labelStyle={{ paddingVertical: 4, color: colors.background }}
         onPress={() => setRouteView('list')}
       >
         List View

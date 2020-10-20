@@ -42,7 +42,7 @@ const OrderButtons = ({ orderId, orderStatus }) => {
         mode='contained'
         color={colors.error}
         style={styles.buttons}
-        labelStyle={{ color: colors.surface }}
+        labelStyle={{ paddingVertical: 4, color: colors.surface }}
         onPress={handleCancelOrder}
       >
         Cancel Order
@@ -53,7 +53,7 @@ const OrderButtons = ({ orderId, orderStatus }) => {
           mode='contained'
           color={colors.primary}
           style={styles.buttons}
-          labelStyle={{ color: colors.surface }}
+          labelStyle={{ paddingVertical: 4, color: colors.surface }}
           onPress={handleCompleteOrder}
         >
           Complete Order
@@ -64,7 +64,7 @@ const OrderButtons = ({ orderId, orderStatus }) => {
           icon='autorenew'
           color={colors.primary}
           style={styles.buttons}
-          labelStyle={{ color: colors.surface }}
+          labelStyle={{ paddingVertical: 4, color: colors.surface }}
           onPress={handleProcessOrder}
         >
           Set In Process

@@ -22,7 +22,7 @@ import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps }
 import { createDSPRDriverRoute } from '../actions/driverActions';
 import TopNavBar from '../components/TopNavBar';
 import OrderSelectionModal from '../components/OrderSelectionModal';
-import RoutingButtons from '../components/RoutingButtons';
+import RouteActionButton from '../components/RouteActionButton';
 import RouteMapView from '../components/RouteMapView';
 import RouteListView from '../components/RouteListView';
 import RouteViewButtons from '../components/RouteViewButtons';
@@ -253,9 +253,7 @@ const RoutingScreen = ({
               currentlyActiveRouteLegIndex={currentlyActiveRouteLegIndex}
             />
           )}
-          <RoutingButtons
-            setRouteView={setRouteView}
-            routeView={routeView}
+          <RouteActionButton
             driver={driver}
             ordersCurrentlyInRoute={ordersCurrentlyInRoute}
             currentInProcessOrderInActiveRoute={currentInProcessOrderInActiveRoute}
