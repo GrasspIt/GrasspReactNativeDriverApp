@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-
 import {
   LOGGED_IN_USER_INFO_SUCCESS,
   LOGGED_IN_USER_INFO_FAILURE,
@@ -63,6 +62,10 @@ import {
   GET_DSPR_DRIVER_FAILURE,
   CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS,
   PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS,
+  CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING,
+  PROGRESS_DSPR_DRIVER_ROUTE_PENDING,
+  CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE,
+  PROGRESS_DSPR_DRIVER_ROUTE_FAILURE,
 } from '../actions/driverActions';
 // import {
 //     CREATE_DSP_PRODUCT_SUCCESS, GET_PRODUCT_SUCCESS, GET_ALL_PRODUCTS_FOR_DSP_SUCCESS, CREATE_NEW_CATEGORY_SUCCESS,
@@ -127,6 +130,8 @@ export default (state = initialState, action) => {
     case CANCEL_ORDER_PENDING:
     case MARK_IN_PROCESS_PENDING:
     case SET_ON_CALL_STATE_FOR_DRIVER_PENDING:
+    case CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING:
+    case PROGRESS_DSPR_DRIVER_ROUTE_PENDING:
       return { ...state, errorMessage: '', isLoading: true };
 
     // actions failed
@@ -144,6 +149,10 @@ export default (state = initialState, action) => {
       return { ...state, isLoading: false, errorMessage: 'Failed to cancel order.' };
     case MARK_IN_PROCESS_FAILURE:
       return { ...state, isLoading: false, errorMessage: 'Failed to mark order in process.' };
+    case CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE:
+      return { ...state, isLoading: false, errorMessage: 'Failed to create new route.' };
+    case PROGRESS_DSPR_DRIVER_ROUTE_FAILURE:
+      return { ...state, isLoading: false, errorMessage: 'Failed to progress route.' };
 
     // actions succeeded
     case SET_DSPR_DRIVER_ID:

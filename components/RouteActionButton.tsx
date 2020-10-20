@@ -3,7 +3,6 @@ import { View, Alert } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 import { completeOrder } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
-import { COMPLETE_ORDER_SUCCESS } from '../actions/orderActions';
 import { progressDSPRDriverRoute } from '../actions/driverActions';
 
 const RouteActionButton = ({
@@ -14,25 +13,24 @@ const RouteActionButton = ({
   const dispatch = useDispatch();
   const { colors } = useTheme();
 
+  const handleProgressRoute = (routeId) => {
+    dispatch(progressDSPRDriverRoute(routeId));
+  };
+
   const handleCompleteOrder = (orderId) => {
-    Alert.alert('Complete Order', 'Are you ready to complete this order?', [
+    if (driver && driver.currentRoute) {
+      dispatch(completeOrder(orderId, driver.currentRoute.id));
+    }
+  };
+
+  const confirmCompleteOrder = (orderId) => {
+    Alert.alert('Complete Order', 'Are you sure you want to complete this order?', [
       { text: 'No', style: 'cancel' },
       {
         text: 'Yes',
-        onPress: () =>
-          dispatch(completeOrder(orderId)).then((response) => {
-            if (response.type === COMPLETE_ORDER_SUCCESS) {
-              dispatch(progressDSPRDriverRoute(driver.currentRoute.id));
-            }
-          }),
+        onPress: () => handleCompleteOrder(orderId),
       },
     ]);
-  };
-
-  const handleCompleteInProcessOrder = () => {
-    if (driver && driver.currentInProcessOrder) {
-      handleCompleteOrder(driver.currentInProcessOrder.id);
-    }
   };
 
   // determine whether to complete order or progress route
@@ -44,18 +42,22 @@ const RouteActionButton = ({
         ) {
           Alert.alert(
             'Warning',
-            'You currently have an in-process order that is not part of the route. Would you like to mark this order as complete and continue with your route?',
+            'You currently have an in-process order that is not part of the route. Would you like to complete this order before continuing route?',
             [
               {
-                text: 'No',
-                style: 'cancel',
-                onPress: () => dispatch(progressDSPRDriverRoute(driver.currentRoute.id)),
+                text: 'Complete Order and Continue',
+                onPress: () => confirmCompleteOrder(driver.currentInProcessOrder.id),
               },
-              { text: 'Yes', onPress: handleCompleteInProcessOrder },
+              {
+                text: 'Continue Without Completing',
+                style: 'cancel',
+                onPress: () => handleProgressRoute(driver.currentRoute.id),
+              },
+              { text: 'Cancel', style: 'cancel' },
             ]
           );
         } else {
-          handleCompleteOrder(driver.currentInProcessOrder.id);
+          confirmCompleteOrder(driver.currentInProcessOrder.id);
         }
       } else {
         dispatch(progressDSPRDriverRoute(driver.currentRoute.id));

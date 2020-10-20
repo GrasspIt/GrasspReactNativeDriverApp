@@ -165,11 +165,6 @@ const DashboardScreen = ({
         <View style={[styles.container, { backgroundColor: colors.background }]}>
           <ActivityIndicator size='large' color={colors.primary} />
         </View>
-      ) : error ? (
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
-          <Text>{error}</Text>
-          <Button onPress={() => getDSPRDriver(driverId)}>Try Again</Button>
-        </View>
       ) : (
         <View style={{ flex: 1, backgroundColor: colors.background }}>
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
@@ -178,7 +173,11 @@ const DashboardScreen = ({
       )}
       <StatusBar style='dark' />
     </SafeAreaView>
-  ) : null;
+  ) : (
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text>No driver data.</Text>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

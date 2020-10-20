@@ -1,7 +1,6 @@
 import { CALL_API, Schemas } from '../middleware/api';
 import { getOrderFromProps } from '../selectors/orderSelectors';
-import { getDSPRDriver } from './driverActions';
-import * as RootNavigation from '../navigation/RootNavigation';
+import { getDSPRDriver, progressDSPRDriverRoute } from './driverActions';
 
 export const COMPLETE_ORDER_PENDING = 'COMPLETE_ORDER_PENDING';
 export const COMPLETE_ORDER = 'COMPLETE_ORDER';
@@ -24,12 +23,13 @@ const orderCompleter = (orderId) => {
   };
 };
 
-export const completeOrder = (orderId) => (dispatch, getState) => {
+export const completeOrder = (orderId, routeId?) => (dispatch, getState) => {
   dispatch({ type: COMPLETE_ORDER_PENDING });
   dispatch(orderCompleter(orderId)).then((response) => {
     if (response.type === COMPLETE_ORDER_SUCCESS) {
       const order = getOrderFromProps(getState(), { orderId });
       order && dispatch(getDSPRDriver(order.dsprDriver));
+      if (routeId) dispatch(progressDSPRDriverRoute(routeId));
     }
   });
 };

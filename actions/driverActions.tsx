@@ -220,6 +220,7 @@ export const setUpdateDriverInformation = (dsprDriverId, values) => (dispatch, g
   return dispatch(driverInformationSetter(dsprDriverId, values));
 };
 
+export const CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING = 'CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING';
 export const CREATE_NEW_DSPR_DRIVER_ROUTE = 'CREATE_NEW_DSPR_DRIVER_ROUTE';
 export const CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS = 'CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS';
 export const CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE = 'CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE';
@@ -257,11 +258,13 @@ export const createDSPRDriverRoute = (
   finalDestination,
   usingFinalDestinationInRoute: Boolean
 ) => (dispatch) => {
+  dispatch({ type: CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING });
   return dispatch(
     createNewRoute(driverId, waypoints, finalDestination, usingFinalDestinationInRoute)
   );
 };
 
+export const PROGRESS_DSPR_DRIVER_ROUTE_PENDING = 'PROGRESS_DSPR_DRIVER_ROUTE_PENDING';
 export const PROGRESS_DSPR_DRIVER_ROUTE = 'PROGRESS_DSPR_DRIVER_ROUTE';
 export const PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS = 'PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS';
 export const PROGRESS_DSPR_DRIVER_ROUTE_FAILURE = 'PROGRESS_DSPR_DRIVER_ROUTE_FAILURE';
@@ -281,5 +284,6 @@ const progressDriverRoute = (routeId: number) => {
   };
 };
 export const progressDSPRDriverRoute = (routeId: number) => (dispatch) => {
+  dispatch({ type: PROGRESS_DSPR_DRIVER_ROUTE_PENDING });
   return dispatch(progressDriverRoute(routeId));
 };

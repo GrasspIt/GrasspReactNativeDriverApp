@@ -68,7 +68,6 @@ const RoutingScreen = ({
   const [numberOrdersPerRoute, setNumberOrdersPerRoute] = useState<any>();
   const [ordersForRoute, setOrdersForRoute] = useState([]);
   const [finalOrderForRoute, setFinalOrderForRoute] = useState<any>();
-  const [useFinalOrderInRoute, setUseFinalOrderInRoute] = useState(false);
   const [ordersCurrentlyInRoute, setOrdersCurrentlyInRoute] = useState<any>();
   const [currentInProcessOrderInActiveRoute, setCurrentInProcessOrderInActiveRoute] = useState<
     any
@@ -77,6 +76,10 @@ const RoutingScreen = ({
   const [routeView, setRouteView] = useState('map');
   const [orderPolyline, setOrderPolyline] = useState<any>();
   const [overviewPolyline, setOverviewPolyline] = useState<any>();
+
+  useEffect(() => {
+    if (error) Alert.alert('ERROR', error);
+  }, [error]);
 
   const createNewRoute = (
     driverId: number,
@@ -112,7 +115,7 @@ const RoutingScreen = ({
         Alert.alert('A route must contain at least 1 order.');
         return;
       }
-      createNewRoute(driver.id, ordersForRoute, finalOrderForRoute, useFinalOrderInRoute);
+      createNewRoute(driver.id, ordersForRoute, finalOrderForRoute, false);
       setOrderSelectionModalOpen(false);
     }
   };
@@ -188,7 +191,6 @@ const RoutingScreen = ({
         ) {
           if (orders.length === numberOrdersPerRoute) {
             setFinalOrderForRoute(driver.queuedOrders[i]);
-            setUseFinalOrderInRoute(false);
           } else {
             orders.push(driver.queuedOrders[i]);
           }

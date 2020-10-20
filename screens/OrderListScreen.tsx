@@ -1,6 +1,14 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
-import { Button, Divider, useTheme } from 'react-native-paper';
+import React, { useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
+import { Divider, useTheme } from 'react-native-paper';
 import InProcessOrderItem from '../components/InProcessOrderItem';
 import OrderItem from '../components/OrderItem';
 import { refreshDSPRDriver, getDSPRDriver } from '../actions/driverActions';
@@ -34,19 +42,20 @@ const OrderListScreen = ({
   error,
 }: Props) => {
   const { colors } = useTheme();
+
+  useEffect(() => {
+    if (error) Alert.alert('ERROR', error);
+  }, [error]);
+
   const getDriverData = () => {
     if (loggedInUser) refreshDSPRDriver(driverId);
   };
+
   return loggedInUser && dsprDriver ? (
     <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
           <ActivityIndicator size='large' color={colors.primary} />
-        </View>
-      ) : error ? (
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
-          <Text>{error}</Text>
-          <Button onPress={() => getDSPRDriver(driverId)}>Try Again</Button>
         </View>
       ) : (
         <View style={{ flex: 1 }}>
