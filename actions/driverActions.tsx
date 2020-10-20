@@ -283,7 +283,12 @@ const progressDriverRoute = (routeId: number) => {
     },
   };
 };
-export const progressDSPRDriverRoute = (routeId: number) => (dispatch) => {
+export const progressDSPRDriverRoute = (routeId: number) => (dispatch, getState) => {
   dispatch({ type: PROGRESS_DSPR_DRIVER_ROUTE_PENDING });
-  return dispatch(progressDriverRoute(routeId));
+  return dispatch(progressDriverRoute(routeId)).then((response) => {
+    if (response.type === PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS) {
+      const driverId = getState().api.dsprDriverId;
+      dispatch(getDSPRDriver(driverId));
+    }
+  });
 };
