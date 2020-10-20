@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
-import TopNavBar from '../components/TopNavBar';
 import { Button, Divider, useTheme } from 'react-native-paper';
 import InProcessOrderItem from '../components/InProcessOrderItem';
 import OrderItem from '../components/OrderItem';
@@ -10,6 +9,7 @@ import { getLoggedInUser } from '../selectors/userSelectors';
 import { connect } from 'react-redux';
 import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { StatusBar } from 'expo-status-bar';
 
 type OrderListScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Orders'>;
 type Props = {
@@ -39,7 +39,6 @@ const OrderListScreen = ({
   };
   return loggedInUser && dsprDriver ? (
     <SafeAreaView style={{ flex: 1 }}>
-      <TopNavBar title='Orders' navigation={navigation} rightComponent={null} />
       {isLoading ? (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
           <ActivityIndicator size='large' color={colors.primary} />
@@ -84,6 +83,7 @@ const OrderListScreen = ({
           />
         </View>
       )}
+      <StatusBar style='dark' />
     </SafeAreaView>
   ) : null;
 };

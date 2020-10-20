@@ -3,6 +3,7 @@ import { View, Text, SafeAreaView, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RoutingStackParamsList } from '../navigation/RoutingNavigator';
 import { Button, useTheme } from 'react-native-paper';
+import { StatusBar } from 'expo-status-bar';
 
 import { connect } from 'react-redux';
 import {
@@ -20,7 +21,6 @@ import {
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
 import { createDSPRDriverRoute } from '../actions/driverActions';
-import TopNavBar from '../components/TopNavBar';
 import OrderSelectionModal from '../components/OrderSelectionModal';
 import RouteActionButton from '../components/RouteActionButton';
 import RouteMapView from '../components/RouteMapView';
@@ -223,22 +223,23 @@ const RoutingScreen = ({
     }
   }, [driver, currentlyActiveRouteLegIndex]);
 
+  // new route header button
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          mode='text'
+          labelStyle={{ color: colors.primary, fontSize: 14 }}
+          onPress={() => setOrderSelectionModalOpen(true)}
+        >
+          New Route
+        </Button>
+      ),
+    });
+  }, [navigation]);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <TopNavBar
-        title='Routing'
-        navigation={navigation}
-        rightComponent={
-          <Button
-            icon='plus'
-            mode='text'
-            labelStyle={{ color: colors.primary, fontWeight: 'bold' }}
-            onPress={() => setOrderSelectionModalOpen(true)}
-          >
-            New Route
-          </Button>
-        }
-      />
       {driver && driver.currentRoute && driver.currentRoute.active ? (
         <View style={{ flex: 1 }}>
           <RouteViewButtons routeView={routeView} setRouteView={setRouteView} />
@@ -274,6 +275,7 @@ const RoutingScreen = ({
         routeButtonDisabled={routeButtonDisabled}
         handleRouteCreationSubmission={handleRouteCreationSubmission}
       />
+      <StatusBar style='dark' />
     </SafeAreaView>
   );
 };

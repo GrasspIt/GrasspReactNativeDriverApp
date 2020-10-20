@@ -2,8 +2,8 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
-
 import DashboardScreen from '../screens/DashboardScreen';
+import { Icon } from 'react-native-elements';
 
 type DashboardNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
@@ -21,13 +21,23 @@ const DashboardNavigator = ({ route, navigation }: Props) => {
   return (
     <DashboardStack.Navigator
       initialRouteName='Dashboard'
-      screenOptions={{ gestureEnabled: false }}
+      screenOptions={{
+        headerStyle: { height: 80 },
+        headerTitleStyle: { fontSize: 20 },
+        gestureEnabled: false,
+      }}
     >
       <DashboardStack.Screen
         name='Dashboard'
         component={DashboardScreen}
         options={{
-          headerShown: false,
+          headerLeft: () => (
+            <Icon
+              name='menu'
+              style={{ paddingLeft: 20 }}
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
         }}
       />
     </DashboardStack.Navigator>

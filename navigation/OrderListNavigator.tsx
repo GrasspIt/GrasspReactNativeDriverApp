@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
+import { Icon } from 'react-native-elements';
 
 import OrderDetails from '../screens/OrderDetails';
 import ManageNotes from '../screens/ManageNotesScreen';
@@ -23,12 +24,25 @@ const OrderListStack = createStackNavigator<OrderListStackParamsList>();
 
 const OrderListNavigator = ({ route, navigation }: Props) => {
   return (
-    <OrderListStack.Navigator initialRouteName='Orders' screenOptions={{ gestureEnabled: false }}>
+    <OrderListStack.Navigator
+      initialRouteName='Orders'
+      screenOptions={{
+        headerStyle: { height: 80 },
+        headerTitleStyle: { fontSize: 20 },
+        gestureEnabled: false,
+      }}
+    >
       <OrderListStack.Screen
         name='Orders'
         component={OrderListScreen}
         options={{
-          headerShown: false,
+          headerLeft: () => (
+            <Icon
+              name='menu'
+              style={{ paddingLeft: 20 }}
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
         }}
       />
       <OrderListStack.Screen

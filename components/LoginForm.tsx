@@ -123,6 +123,7 @@ const LoginForm: React.FC<LoginProps> = (props) => {
         </TouchableWithoutFeedback>
         <StatusBar style='dark' />
       </KeyboardAvoidingView>
+      <StatusBar style='dark' />
     </SafeAreaView>
   );
 };

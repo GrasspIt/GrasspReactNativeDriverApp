@@ -7,6 +7,7 @@ import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import { View, FlatList, Text } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import DsprCard from '../components/DsprCard';
+import { StatusBar } from 'expo-status-bar';
 
 type DSPRScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'DSPRs'>;
 type Props = { navigation: DSPRScreenNavigationProp };
@@ -43,7 +44,8 @@ const DSPRScreen = ({ navigation }: Props) => {
         <Text
           style={{
             fontSize: 20,
-            padding: 10,
+            padding: 20,
+            fontWeight: 'bold',
           }}
         >
           Choose a Dispensary
@@ -54,6 +56,7 @@ const DSPRScreen = ({ navigation }: Props) => {
         renderItem={(item) => <DsprCard handleSelect={handleSelectDspr} dspr={item.item} />}
         keyExtractor={(item: any) => item.id.toString()}
       />
+      <StatusBar style='dark' />
     </View>
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
+import { Icon } from 'react-native-elements';
 
 import OrderDetails from '../screens/OrderDetails';
 import ManageNotes from '../screens/ManageNotesScreen';
@@ -23,13 +24,25 @@ const RoutingStack = createStackNavigator<RoutingStackParamsList>();
 
 const RoutingNavigator = ({ route, navigation }: Props) => {
   return (
-    <RoutingStack.Navigator initialRouteName='Routing' screenOptions={{ gestureEnabled: false }}>
+    <RoutingStack.Navigator
+      initialRouteName='Routing'
+      screenOptions={{
+        headerStyle: { height: 80 },
+        headerTitleStyle: { fontSize: 20 },
+        gestureEnabled: false,
+      }}
+    >
       <RoutingStack.Screen
         name='Routing'
         component={RoutingScreen}
         options={{
-          headerTitle: 'Routing',
-          headerShown: false,
+          headerLeft: () => (
+            <Icon
+              name='menu'
+              style={{ paddingLeft: 20 }}
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
         }}
       />
       <RoutingStack.Screen

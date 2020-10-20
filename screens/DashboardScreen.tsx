@@ -9,6 +9,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
+import { StatusBar } from 'expo-status-bar';
 
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
@@ -26,7 +27,6 @@ import { store } from '../store/store';
 import { useInterval } from '../hooks/useInterval';
 
 import OnCallSwitch from '../components/OnCallSwitch';
-import TopNavBar from '../components/TopNavBar';
 
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
@@ -161,7 +161,6 @@ const DashboardScreen = ({
 
   return loggedInUser && dsprDriver ? (
     <SafeAreaView style={{ flex: 1 }}>
-      <TopNavBar navigation={navigation} title='Dashboard' rightComponent={null} />
       {isLoading ? (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
           <ActivityIndicator size='large' color={colors.primary} />
@@ -177,6 +176,7 @@ const DashboardScreen = ({
           {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
         </View>
       )}
+      <StatusBar style='dark' />
     </SafeAreaView>
   ) : null;
 };

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { preloadAccessTokenFromLocalStorage, logout } from '../actions/oauthActions';
 import { setDsprDriverId } from '../actions/driverActions';
 import { getLoggedInUser } from '../selectors/userSelectors';
+import { StatusBar } from 'expo-status-bar';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Startup'>;
 type Props = {
@@ -61,6 +62,7 @@ const Startup = ({
       }}
     >
       <ActivityIndicator size='large' color={colors.primary} />
+      <StatusBar style='dark' />
     </View>
   );
 };
