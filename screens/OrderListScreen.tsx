@@ -48,7 +48,7 @@ const OrderListScreen = ({
   }, [error]);
 
   const getDriverData = () => {
-    if (loggedInUser) refreshDSPRDriver(driverId);
+    if (loggedInUser) getDSPRDriver(driverId);
   };
 
   return loggedInUser && dsprDriver ? (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, Alert } from 'react-native';
+import { View, Text, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RoutingStackParamsList } from '../navigation/RoutingNavigator';
 import { Button, useTheme } from 'react-native-paper';
@@ -97,27 +97,29 @@ const RoutingScreen = ({
     createDSPRDriverRoute(driverId, orderIds, finalDestination, usingFinalDestinationInRoute);
   };
 
-  // function to create a new route
-  const handleRouteCreationSubmission = () => {
-    let resetRoute: boolean = true;
+  const confirmCreateRoute = () => {
     if (driver && driver.currentRoute && driver.currentRoute.active) {
       Alert.alert(
         'Override Route?',
         'The driver is currently in the middle of a route. Are you sure you want to override their current route?',
         [
-          { text: 'No', style: 'cancel', onPress: () => (resetRoute = false) },
-          { text: 'Yes', onPress: () => (resetRoute = true) },
+          { text: 'No', style: 'cancel' },
+          { text: 'Yes', onPress: () => handleRouteCreation() },
         ]
       );
+    } else {
+      handleRouteCreation();
     }
-    if (resetRoute) {
-      if (ordersForRoute.length === 0) {
-        Alert.alert('A route must contain at least 1 order.');
-        return;
-      }
-      createNewRoute(driver.id, ordersForRoute, finalOrderForRoute, false);
-      setOrderSelectionModalOpen(false);
+  };
+
+  // function to create a new route
+  const handleRouteCreation = () => {
+    if (ordersForRoute.length === 0) {
+      Alert.alert('A route must contain at least 1 order.');
+      return;
     }
+    createNewRoute(driver.id, ordersForRoute, finalOrderForRoute, false);
+    setOrderSelectionModalOpen(false);
   };
 
   useEffect(() => {
@@ -222,7 +224,6 @@ const RoutingScreen = ({
   }, [driver, currentlyActiveRouteLegIndex]);
 
   // new route header button
-
   React.useLayoutEffect(() => {
     driver &&
       driver.currentRoute &&
@@ -242,7 +243,17 @@ const RoutingScreen = ({
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      {driver && driver.currentRoute && driver.currentRoute.active ? (
+      {isLoading ? (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <ActivityIndicator size='large' color={colors.primary} />
+        </View>
+      ) : driver && driver.currentRoute && driver.currentRoute.active ? (
         <View style={{ flex: 1 }}>
           <RouteViewButtons routeView={routeView} setRouteView={setRouteView} />
           {routeView === 'list' ? (
@@ -280,7 +291,7 @@ const RoutingScreen = ({
         ordersForRoute={ordersForRoute}
         numberOrdersPerRoute={numberOrdersPerRoute}
         driver={driver}
-        handleRouteCreationSubmission={handleRouteCreationSubmission}
+        confirmCreateRoute={confirmCreateRoute}
       />
       <StatusBar style='dark' />
     </SafeAreaView>

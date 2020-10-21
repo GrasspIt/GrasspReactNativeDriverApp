@@ -10,7 +10,7 @@ const OrderSelectionModal = ({
   ordersForRoute,
   numberOrdersPerRoute,
   driver,
-  handleRouteCreationSubmission,
+  confirmCreateRoute,
 }) => {
   const { colors } = useTheme();
   return (
@@ -57,7 +57,7 @@ const OrderSelectionModal = ({
         <Button
           mode='contained'
           labelStyle={{ color: colors.background }}
-          onPress={() => handleRouteCreationSubmission()}
+          onPress={() => confirmCreateRoute()}
         >
           Create Route
         </Button>

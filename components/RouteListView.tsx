@@ -43,7 +43,7 @@ const RouteListView = ({ navigation, ordersForRoute, dsprDriver }: Props) => {
               <Text>No orders.</Text>
             </View>
           }
-          data={ordersForRoute.filter((order) => order.orderStatus == 'queued')}
+          data={ordersForRoute.filter((order) => order.orderStatus === 'queued')}
           renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
           keyExtractor={(item: any) => item.id.toString()}
           style={{ paddingHorizontal: 10 }}
