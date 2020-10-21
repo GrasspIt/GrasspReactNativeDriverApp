@@ -19,7 +19,7 @@ const RouteActionButton = ({
 
   const handleCompleteOrder = (orderId) => {
     if (driver && driver.currentRoute) {
-      dispatch(completeOrder(orderId, driver.currentRoute.id));
+      dispatch(completeOrder(orderId));
     }
   };
 

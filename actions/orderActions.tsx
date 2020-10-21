@@ -23,13 +23,12 @@ const orderCompleter = (orderId) => {
   };
 };
 
-export const completeOrder = (orderId, routeId?) => (dispatch, getState) => {
+export const completeOrder = (orderId) => (dispatch, getState) => {
   dispatch({ type: COMPLETE_ORDER_PENDING });
   dispatch(orderCompleter(orderId)).then((response) => {
     if (response.type === COMPLETE_ORDER_SUCCESS) {
       const order = getOrderFromProps(getState(), { orderId });
       order && dispatch(getDSPRDriver(order.dsprDriver));
-      if (routeId) dispatch(progressDSPRDriverRoute(routeId));
     }
   });
 };
