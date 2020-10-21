@@ -45,7 +45,7 @@ const RouteListView = ({ navigation, ordersForRoute, dsprDriver }: Props) => {
           }
           data={ordersForRoute.filter((order) => order.orderStatus === 'queued')}
           renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
-          keyExtractor={(item: any) => item.id.toString()}
+          keyExtractor={(item: any) => item.id.toString() + '-routeList'}
           style={{ paddingHorizontal: 10 }}
         />
       </View>
