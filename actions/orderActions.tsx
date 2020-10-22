@@ -1,6 +1,6 @@
 import { CALL_API, Schemas } from '../middleware/api';
 import { getOrderFromProps } from '../selectors/orderSelectors';
-import { getDSPRDriver, progressDSPRDriverRoute } from './driverActions';
+import { getDSPRDriver } from './driverActions';
 
 export const COMPLETE_ORDER_PENDING = 'COMPLETE_ORDER_PENDING';
 export const COMPLETE_ORDER = 'COMPLETE_ORDER';

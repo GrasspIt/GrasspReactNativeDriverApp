@@ -5,11 +5,7 @@ import { completeOrder } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
 import { progressDSPRDriverRoute } from '../actions/driverActions';
 
-const RouteActionButton = ({
-  driver,
-  currentInProcessOrderInActiveRoute,
-  ordersCurrentlyInRoute,
-}) => {
+const RouteActionButton = ({ driver, currentInProcessOrderInActiveRoute, ordersForRoute }) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
 
@@ -32,14 +28,11 @@ const RouteActionButton = ({
       },
     ]);
   };
-
   // determine whether to complete order or progress route
   const handleRouteActionButtonPressed = () => {
-    if (driver && ordersCurrentlyInRoute) {
+    if (driver && ordersForRoute) {
       if (driver.currentInProcessOrder) {
-        if (
-          !Object.keys(ordersCurrentlyInRoute).includes(driver.currentInProcessOrder.id.toString())
-        ) {
+        if (!ordersForRoute.includes(driver.currentInProcessOrder)) {
           Alert.alert(
             'Warning',
             'You currently have an in-process order that is not part of the route. Would you like to complete this order before continuing route?',

@@ -63,19 +63,18 @@ const RoutingScreen = ({
 }: Props) => {
   const { colors } = useTheme();
 
-  const [orderSelectionModalOpen, setOrderSelectionModalOpen] = useState(false);
-  const [proposedOrderIdsInRoute, setProposedOrderIdsInRoute] = useState([]);
-  const [numberOrdersPerRoute, setNumberOrdersPerRoute] = useState<any>();
   const [ordersForRoute, setOrdersForRoute] = useState([]);
   const [finalOrderForRoute, setFinalOrderForRoute] = useState<any>();
-  const [ordersCurrentlyInRoute, setOrdersCurrentlyInRoute] = useState<any>();
   const [currentInProcessOrderInActiveRoute, setCurrentInProcessOrderInActiveRoute] = useState<
     any
   >();
   const [currentlyActiveRouteLegIndex, setCurrentlyActiveRouteLegIndex] = useState<any>();
+  console.log('ordersForRoute', ordersForRoute);
+  const [orderSelectionModalOpen, setOrderSelectionModalOpen] = useState(false);
   const [routeView, setRouteView] = useState('map');
   const [orderPolyline, setOrderPolyline] = useState<any>();
   const [overviewPolyline, setOverviewPolyline] = useState<any>();
+  const [numberOrdersPerRoute, setNumberOrdersPerRoute] = useState<any>();
 
   useEffect(() => {
     if (error) Alert.alert('ERROR', error);
@@ -139,11 +138,13 @@ const RoutingScreen = ({
     // set polylines and orders in route
     if (driver && driver.currentRoute) {
       if (!driver.currentRoute.active) {
+        //if no active route
         setOverviewPolyline(undefined);
+        setOrderPolyline(undefined);
         setCurrentInProcessOrderInActiveRoute(false);
         setCurrentlyActiveRouteLegIndex(undefined);
-        setOrderPolyline(undefined);
       } else {
+        //if route is active
         if (driver.currentRoute.overviewPolyline) {
           setOverviewPolyline(driver.currentRoute.overviewPolyline);
         }
@@ -152,8 +153,9 @@ const RoutingScreen = ({
         if (driver.queuedOrders && driver.currentRoute.legs) {
           driver.currentRoute.legs.forEach((leg: any) => {
             if (leg.order) ordersInRoute[leg.order.id] = leg.legOrder;
+            console.log('leg', leg);
           });
-          setOrdersCurrentlyInRoute(ordersInRoute);
+          console.log('ordersInRoute', ordersInRoute);
         }
         // if there is an in-process order, set it to the active leg of the route
         if (
@@ -189,7 +191,7 @@ const RoutingScreen = ({
         for (
           let i = 0;
           i < driver.queuedOrders.length && orders.length <= numberOrdersPerRoute;
-          ++i
+          i++
         ) {
           if (orders.length === numberOrdersPerRoute) {
             setFinalOrderForRoute(driver.queuedOrders[i]);
@@ -200,7 +202,6 @@ const RoutingScreen = ({
       }
     }
     setOrdersForRoute(orders);
-    setProposedOrderIdsInRoute(orders.map((order) => order.id));
   }, [driver, numberOrdersPerRoute]);
 
   // create order leg polyline for map
@@ -269,7 +270,7 @@ const RoutingScreen = ({
           )}
           <RouteActionButton
             driver={driver}
-            ordersCurrentlyInRoute={ordersCurrentlyInRoute}
+            ordersForRoute={ordersForRoute}
             currentInProcessOrderInActiveRoute={currentInProcessOrderInActiveRoute}
           />
         </View>

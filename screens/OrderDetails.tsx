@@ -62,7 +62,6 @@ const OrderDetails = ({
   }, [error]);
 
   useEffect(() => {
-    console.log('order.orderStatus', order.orderStatus);
     if (order.orderStatus == 'completed' || order.orderStatus == 'canceled') navigation.goBack();
   }, [order.orderStatus]);
 

@@ -204,7 +204,6 @@ export default (state = initialState, action) => {
     // case CREATE_NEW_COUPON_SUCCESS:
     // case GET_DSPR_COUPONS_SUCCESS:
     // case TOGGLE_COUPON_ACTIVE_STATUS_SUCCESS:
-    case COMPLETE_ORDER_SUCCESS:
     case CANCEL_ORDER_SUCCESS:
     // case TOGGLE_DSPR_MANAGER_ORDER_NOTIFICATION_STATUS_SUCCESS:
     // case UPLOAD_USER_DOCUMENT_SUCCESS:
@@ -227,6 +226,7 @@ export default (state = initialState, action) => {
     // case GET_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS:
     // case POST_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS:
     case GET_METRICS_FOR_USERS_SUCCESS:
+    case COMPLETE_ORDER_SUCCESS:
       return appendAndUpdateEntitiesFromResponse(state, responseEntities);
     // case GET_DSPR_SUCCESS:
     case REMOVE_INVENTORY_ITEM_FROM_PERIOD_SUCCESS:

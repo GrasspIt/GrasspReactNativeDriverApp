@@ -48,8 +48,6 @@ const RouteMapView: React.FC<RouteMapViewProps> = ({
   };
 
   useEffect(() => {
-    console.log('orderPolyline', orderPolyline);
-    console.log('polylineCenter', polylineCenter);
     if (orderPolyline || currentlyActiveRouteLegIndex) {
       setOnOverview(false);
     } else {
@@ -105,7 +103,7 @@ const RouteMapView: React.FC<RouteMapViewProps> = ({
         }
       )
       .filter((marker) => marker != null);
-
+  console.log('driver.currentRoute.legs', driver.currentRoute.legs);
   // change polyline keys from lat/lng into latitude/longitude
   let orderPolylineCoordinates =
     orderPolyline &&
