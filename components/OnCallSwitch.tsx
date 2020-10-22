@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Switch, View, Alert } from 'react-native';
+import { Text, View, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { setDriverOnCallState } from '../actions/driverActions';
 import { DsprDriver } from '../store/reduxStoreState';
-import Colors from '../constants/Colors';
+import { useTheme, Switch } from 'react-native-paper';
 
 type SwitchProps = { dsprDriver: DsprDriver };
 
 const OnCallSwitch = ({ dsprDriver }: SwitchProps) => {
   const dispatch = useDispatch();
-
+  const { colors } = useTheme();
   const [isOnCall, setIsOnCall] = useState<boolean | undefined>(false);
 
   const toggleSwitch = () => {
@@ -30,13 +30,7 @@ const OnCallSwitch = ({ dsprDriver }: SwitchProps) => {
 
   return (
     <View style={{ alignItems: 'center', paddingVertical: 12 }}>
-      <Switch
-        trackColor={{ false: Colors.medium, true: Colors.green }}
-        thumbColor={isOnCall ? '#ffffff' : '#ffffff'}
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={toggleSwitch}
-        value={isOnCall}
-      />
+      <Switch color={colors.primary} onValueChange={toggleSwitch} value={isOnCall} />
       <Text>{isOnCall ? 'On Call' : 'Not on Call'}</Text>
     </View>
   );

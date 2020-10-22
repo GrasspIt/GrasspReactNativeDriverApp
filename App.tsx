@@ -20,15 +20,22 @@ const theme = {
   roundness: 4,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#32ba4d',
-    accent: '#03dac4',
-    background: '#f6f6f6',
+    primary: '#4caf50',
+    accent: '#357a38',
+    background: DefaultTheme.colors.background,
     surface: DefaultTheme.colors.surface,
-    error: '#B00020',
+    error: DefaultTheme.colors.error,
     text: DefaultTheme.colors.text,
-    onBackground: '#000000',
-    onSurface: '#000000',
+    onBackground: DefaultTheme.colors.onBackground,
+    onSurface: DefaultTheme.colors.onSurface,
     notification: DefaultTheme.colors.notification,
+    disabled: DefaultTheme.colors.disabled,
+    placeholder: DefaultTheme.colors.placeholder,
+    backdrop: DefaultTheme.colors.backdrop,
+  },
+  fonts: {
+    ...DefaultTheme.fonts,
+    regular: DefaultTheme.fonts.regular,
   },
 };
 

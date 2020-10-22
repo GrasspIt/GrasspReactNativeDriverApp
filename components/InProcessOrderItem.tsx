@@ -3,12 +3,10 @@ import { ListItem, Button } from 'react-native-elements';
 import { Alert, Text, Platform } from 'react-native';
 import { formatPhone } from '../hooks/util';
 import * as Linking from 'expo-linking';
-import Colors from '../constants/Colors';
+import { useTheme } from 'react-native-paper';
 
 const InProcessOrderItem = ({ orderInfo, navigation }) => {
-  const handleNavigate = () => {
-    navigation.navigate('Details', { orderId: orderInfo.id });
-  };
+  const { colors } = useTheme();
 
   const handleMap = () => {
     let daddr = encodeURIComponent(`${orderInfo.address.street} ${orderInfo.address.zipCode}`);
@@ -32,28 +30,28 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
 
   return (
     orderInfo && (
-      <ListItem onPress={handleNavigate}>
+      <ListItem onPress={() => navigation.navigate('Details', { orderId: orderInfo.id })}>
         <ListItem.Content>
           <ListItem.Title style={{ fontSize: 18, paddingLeft: 10, paddingBottom: 2 }}>
             {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}
             <Text style={{ fontSize: 16 }}>${orderInfo.cashTotal}</Text>
           </ListItem.Title>
           <Button
-            type="clear"
+            type='clear'
             title={`${orderInfo.address.street} ${orderInfo.address.zipCode}`}
             titleStyle={{ fontSize: 16 }}
             buttonStyle={{ padding: 2, paddingLeft: 10 }}
             onPress={handleMap}
           />
           <Button
-            type="clear"
+            type='clear'
             title={formatPhone(orderInfo.user.phoneNumber)}
             titleStyle={{ fontSize: 16 }}
             buttonStyle={{ padding: 2, paddingLeft: 10 }}
             onPress={handlePhone}
           />
         </ListItem.Content>
-        <ListItem.Chevron color={Colors.medium} size={18} />
+        <ListItem.Chevron color={colors.onSurface} size={18} />
       </ListItem>
     )
   );

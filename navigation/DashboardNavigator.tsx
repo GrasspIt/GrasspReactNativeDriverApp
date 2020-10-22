@@ -2,11 +2,8 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
-
-import HomeScreen from '../screens/HomeScreen';
-import OrderDetails from '../screens/OrderDetails';
-import ManageNotes from '../screens/ManageNotesScreen';
-import RoutingScreen from '../screens/RoutingScreen';
+import DashboardScreen from '../screens/DashboardScreen';
+import { Icon } from 'react-native-elements';
 
 type DashboardNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
@@ -15,43 +12,32 @@ type Props = {
 };
 
 export type DashboardStackParamsList = {
-  Home: any;
-  Details: { orderId: number };
-  Notes: any;
-  Routing: any;
+  Dashboard: any;
 };
 
 const DashboardStack = createStackNavigator<DashboardStackParamsList>();
 
 const DashboardNavigator = ({ route, navigation }: Props) => {
   return (
-    <DashboardStack.Navigator initialRouteName="Home" screenOptions={{ gestureEnabled: false }}>
+    <DashboardStack.Navigator
+      initialRouteName='Dashboard'
+      screenOptions={{
+        headerStyle: { height: 80 },
+        headerTitleStyle: { fontSize: 20 },
+        gestureEnabled: false,
+      }}
+    >
       <DashboardStack.Screen
-        name="Home"
-        component={HomeScreen}
+        name='Dashboard'
+        component={DashboardScreen}
         options={{
-          headerShown: false,
-        }}
-      />
-      <DashboardStack.Screen
-        name="Details"
-        component={OrderDetails}
-        options={{
-          headerShown: true,
-        }}
-      />
-      <DashboardStack.Screen
-        name="Notes"
-        component={ManageNotes}
-        options={{
-          headerShown: true,
-        }}
-      />
-      <DashboardStack.Screen
-        name="Routing"
-        component={RoutingScreen}
-        options={{
-          headerShown: true,
+          headerLeft: () => (
+            <Icon
+              name='menu'
+              style={{ paddingLeft: 20 }}
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
         }}
       />
     </DashboardStack.Navigator>

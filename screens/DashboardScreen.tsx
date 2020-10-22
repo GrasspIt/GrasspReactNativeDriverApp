@@ -4,19 +4,19 @@ import {
   Text,
   View,
   Alert,
-  FlatList,
   ActivityIndicator,
   Platform,
-  Button,
+  SafeAreaView,
 } from 'react-native';
+import { Button, useTheme } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
-import Colors from '../constants/Colors';
 
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
+import * as RootNavigation from '../navigation/RootNavigation';
 
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -27,14 +27,10 @@ import { store } from '../store/store';
 import { useInterval } from '../hooks/useInterval';
 
 import OnCallSwitch from '../components/OnCallSwitch';
-import TopNavBar from '../components/TopNavBar';
-import OrderItem from '../components/OrderItem';
 
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
-import { getDSPRDriverWithUserAndOrdersFromProps } from '../selectors/dsprDriverSelector';
+import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
-import { Divider } from 'react-native-paper';
-import InProcessOrderItem from '../components/InProcessOrderItem';
 
 // handler for push notifications
 Notifications.setNotificationHandler({
@@ -45,9 +41,9 @@ Notifications.setNotificationHandler({
   }),
 });
 
-type HomeScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Home'>;
+type DashboardScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Dashboard'>;
 type Props = {
-  navigation: HomeScreenNavigationProp;
+  navigation: DashboardScreenNavigationProp;
   loggedInUser;
   dspr;
   driverId;
@@ -60,7 +56,7 @@ type Props = {
   error;
 };
 
-const HomeScreen = ({
+const DashboardScreen = ({
   navigation,
   driverId,
   loggedInUser,
@@ -75,6 +71,7 @@ const HomeScreen = ({
 }: Props) => {
   const notificationListener: any = useRef();
   const responseListener: any = useRef();
+  const { colors } = useTheme();
 
   const [isTracking, setIsTracking] = useState(false);
   const [notification, setNotification] = useState<any>(false);
@@ -88,6 +85,10 @@ const HomeScreen = ({
   useEffect(() => {
     getDSPRDriver(driverId);
   }, [driverId]);
+
+  useEffect(() => {
+    if (error) Alert.alert('ERROR', error);
+  }, [error]);
 
   // push notifications
   useEffect(() => {
@@ -105,8 +106,14 @@ const HomeScreen = ({
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       (response: { notification: any }) => {
         console.log(response);
-        navigation.navigate('Details', {
-          orderId: response.notification.request.content.data.body.orderId,
+        RootNavigation.navigate('Main', {
+          screen: 'Orders',
+          params: {
+            screen: 'Details',
+            params: {
+              orderId: response.notification.request.content.data.body.orderId,
+            },
+          },
         });
       }
     );
@@ -127,7 +134,7 @@ const HomeScreen = ({
           Alert.alert('Permission to access location was denied.');
         }
         //start location updates if driver is on call
-        if (status === 'granted' && dsprDriver !== undefined && dsprDriver.onCall) {
+        if (status === 'granted' && dsprDriver && dsprDriver.onCall) {
           console.log('start location updates');
           setIsTracking(true);
           await Location.startLocationUpdatesAsync('location-tracking', {
@@ -152,99 +159,37 @@ const HomeScreen = ({
     })();
   }, [dsprDriver, isTracking]);
 
-  const handleCreateRoute = () => {
-    navigation.navigate('Routing');
-  };
-
   return loggedInUser && dsprDriver ? (
-    <>
-      <StatusBar style="dark" />
-      <TopNavBar dsprName={dspr.name} navigation={navigation} />
+    <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? (
-        <View style={styles.container}>
-          <ActivityIndicator size="large" color={Colors.primary} />
-        </View>
-      ) : error ? (
-        <View style={styles.container}>
-          <Text>{error}</Text>
-          <Button title="Try Again" onPress={() => getDSPRDriver(driverId)} />
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+          <ActivityIndicator size='large' color={colors.primary} />
         </View>
       ) : (
-        <View style={styles.body}>
+        <View style={{ flex: 1, backgroundColor: colors.background }}>
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
-
-          <Button title="Create Route" onPress={handleCreateRoute} />
-
-          <Divider style={{ height: 2 }} />
-          <Text style={styles.listTitle}>In Process Order</Text>
-          <Divider style={{ height: 1, marginHorizontal: 10 }} />
-
-          {dsprDriver.currentInProcessOrder ? (
-            <InProcessOrderItem
-              orderInfo={dsprDriver.currentInProcessOrder}
-              navigation={navigation}
-            />
-          ) : (
-            <View style={styles.empty}>
-              <Text>No order in process.</Text>
-            </View>
-          )}
-
-          <Divider style={{ height: 2 }} />
-          <Text style={styles.listTitle}>Queued Orders</Text>
-          <Divider style={{ height: 1, marginHorizontal: 10 }} />
-
-          <FlatList
-            ListEmptyComponent={
-              <View style={styles.empty}>
-                <Text>No orders.</Text>
-              </View>
-            }
-            onRefresh={() => getDriverData()}
-            refreshing={isLoading}
-            data={dsprDriver.queuedOrders}
-            renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
-            keyExtractor={(item: any) => item.id.toString()}
-            style={styles.orders}
-          />
         </View>
       )}
-    </>
-  ) : null;
+      <StatusBar style='dark' />
+    </SafeAreaView>
+  ) : (
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text>No driver data.</Text>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  empty: {
-    backgroundColor: Colors.light,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  body: {
-    flex: 1,
-    backgroundColor: Colors.light,
-  },
-  orders: {
-    paddingHorizontal: 10,
   },
   dsprTitle: {
-    fontSize: 20,
+    fontSize: 22,
     textAlign: 'center',
-    paddingTop: 10,
-  },
-  listTitle: {
-    fontSize: 16,
-    paddingLeft: 10,
-    paddingVertical: 8,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    paddingTop: 20,
   },
 });
 
@@ -263,7 +208,6 @@ async function registerForPushNotificationsAsync() {
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
   } else {
     alert('Must use physical device for Push Notifications');
   }
@@ -289,7 +233,6 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
     return;
   }
   if (data) {
-    console.log('data', data);
     const { locations } = data as any;
     let lat = locations[0].coords.latitude;
     let long = locations[0].coords.longitude;
@@ -300,7 +243,9 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
 
 const mapStateToProps = (state) => {
   const driverId = state.api.dsprDriverId;
-  const dsprDriver = getDSPRDriverWithUserAndOrdersFromProps(state, { dsprDriverId: driverId });
+  const dsprDriver = getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps(state, {
+    dsprDriverId: driverId,
+  });
   const dspr = dsprDriver ? getDSPRFromProps(state, { dsprId: dsprDriver.dspr }) : undefined;
   const isLoading = state.api.isLoading;
   const pushToken = state.api.entities.pushToken;
@@ -318,4 +263,4 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = { refreshDSPRDriver, getDSPRDriver, sendPushToken };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardScreen);

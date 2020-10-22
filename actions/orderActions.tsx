@@ -1,9 +1,8 @@
 import { CALL_API, Schemas } from '../middleware/api';
-
 import { getOrderFromProps } from '../selectors/orderSelectors';
-
 import { getDSPRDriver } from './driverActions';
 
+export const COMPLETE_ORDER_PENDING = 'COMPLETE_ORDER_PENDING';
 export const COMPLETE_ORDER = 'COMPLETE_ORDER';
 export const COMPLETE_ORDER_SUCCESS = 'COMPLETE_ORDER_SUCCESS';
 export const COMPLETE_ORDER_FAILURE = 'COMPLETE_ORDER_FAILURE';
@@ -25,17 +24,16 @@ const orderCompleter = (orderId) => {
 };
 
 export const completeOrder = (orderId) => (dispatch, getState) => {
-  return dispatch(orderCompleter(orderId)).then((response) => {
-    const order = getOrderFromProps(getState(), { orderId });
-    return (
-      order &&
-      dispatch(getDSPRDriver(order.dsprDriver)).then(() => {
-        return response;
-      })
-    );
+  dispatch({ type: COMPLETE_ORDER_PENDING });
+  dispatch(orderCompleter(orderId)).then((response) => {
+    if (response.type === COMPLETE_ORDER_SUCCESS) {
+      const order = getOrderFromProps(getState(), { orderId });
+      order && dispatch(getDSPRDriver(order.dsprDriver));
+    }
   });
 };
 
+export const CANCEL_ORDER_PENDING = 'CANCEL_ORDER_PENDING';
 export const CANCEL_ORDER = 'CANCEL_ORDER';
 export const CANCEL_ORDER_SUCCESS = 'CANCEL_ORDER_SUCCESS';
 export const CANCEL_ORDER_FAILURE = 'CANCEL_ORDER_FAILURE';
@@ -53,17 +51,16 @@ const orderCanceler = (orderId) => {
 };
 
 export const cancelOrder = (orderId) => (dispatch, getState) => {
-  return dispatch(orderCanceler(orderId)).then((response) => {
-    const order = getOrderFromProps(getState(), { orderId });
-    return (
-      order &&
-      dispatch(getDSPRDriver(order.dsprDriver)).then(() => {
-        return response;
-      })
-    );
+  dispatch({ type: CANCEL_ORDER_PENDING });
+  dispatch(orderCanceler(orderId)).then((response) => {
+    if (response.type === CANCEL_ORDER_SUCCESS) {
+      const order = getOrderFromProps(getState(), { orderId });
+      order && dispatch(getDSPRDriver(order.dsprDriver));
+    }
   });
 };
 
+export const MARK_IN_PROCESS_PENDING = 'MARK_IN_PROCESS_PENDING';
 export const MARK_IN_PROCESS = 'MARK_IN_PROCESS';
 export const MARK_IN_PROCESS_SUCCESS = 'MARK_IN_PROCESS_SUCCESS';
 export const MARK_IN_PROCESS_FAILURE = 'MARK_IN_PROCESS_FAILURE';
@@ -81,14 +78,12 @@ const orderInProcessMarker = (orderId) => {
 };
 
 export const markOrderInProcess = (orderId) => (dispatch, getState) => {
-  return dispatch(orderInProcessMarker(orderId)).then((response) => {
-    const order = getOrderFromProps(getState(), { orderId });
-    return (
-      order &&
-      dispatch(getDSPRDriver(order.dsprDriver)).then(() => {
-        return response;
-      })
-    );
+  dispatch({ type: MARK_IN_PROCESS_PENDING });
+  dispatch(orderInProcessMarker(orderId)).then((response) => {
+    if (response.type === MARK_IN_PROCESS_SUCCESS) {
+      const order = getOrderFromProps(getState(), { orderId });
+      order && dispatch(getDSPRDriver(order.dsprDriver));
+    }
   });
 };
 

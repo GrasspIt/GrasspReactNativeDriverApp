@@ -14,10 +14,13 @@ import { State } from '../store/reduxStoreState';
 import { DrawerActions } from '@react-navigation/native';
 // import * as Linking from 'expo-linking';
 import * as RootNavigation from '../navigation/RootNavigation';
-import Colors from '../constants/Colors';
-import DashboardNavigator from './DashboardNavigator';
+import { useTheme } from 'react-native-paper';
+
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/AuthNavigator';
+import DashboardNavigator from './DashboardNavigator';
+import RoutingNavigator from './RoutingNavigator';
+import OrderListNavigator from './OrderListNavigator';
 
 type MainScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Main'>;
 
@@ -29,13 +32,15 @@ type Props = {
 export type DrawerStackParamsList = {
   DSPRs: any;
   Dashboard: any;
+  Routing: any;
+  Orders: any;
 };
 
 const Drawer = createDrawerNavigator<DrawerStackParamsList>();
 
 const DrawerNavigator = ({ navigation, route }: Props) => {
   const dispatch = useDispatch();
-
+  const { colors } = useTheme();
   const dsprDriversObj = useSelector<State, any>((state) => state.api.entities.dsprDrivers);
   const dsprDrivers = Object.keys(dsprDriversObj);
 
@@ -49,15 +54,15 @@ const DrawerNavigator = ({ navigation, route }: Props) => {
     <Drawer.Navigator
       drawerContentOptions={{
         labelStyle: { fontSize: 16 },
-        activeTintColor: Colors.light,
-        activeBackgroundColor: Colors.primary,
+        activeTintColor: colors.surface,
+        activeBackgroundColor: colors.primary,
       }}
       drawerContent={(props) => {
         return (
           <DrawerContentScrollView {...props}>
             <DrawerItemList {...props} />
             <DrawerItem
-              label="Logout"
+              label='Logout'
               labelStyle={{ fontSize: 16 }}
               onPress={() => handleLogout()}
             />
@@ -75,8 +80,10 @@ const DrawerNavigator = ({ navigation, route }: Props) => {
         );
       }}
     >
-      {dsprDrivers.length > 1 ? <Drawer.Screen name="DSPRs" component={DSPRScreen} /> : null}
-      <Drawer.Screen name="Dashboard" component={DashboardNavigator} />
+      {dsprDrivers.length > 1 ? <Drawer.Screen name='DSPRs' component={DSPRScreen} /> : null}
+      <Drawer.Screen name='Dashboard' navigation={navigation} component={DashboardNavigator} />
+      <Drawer.Screen name='Orders' navigation={navigation} component={OrderListNavigator} />
+      <Drawer.Screen name='Routing' navigation={navigation} component={RoutingNavigator} />
     </Drawer.Navigator>
   );
 };

@@ -134,6 +134,7 @@ export const toggleDSPRDriverActiveStatus = (dsprDriverId) => (dispatch, getStat
   );
 };
 
+export const SET_ON_CALL_STATE_FOR_DRIVER_PENDING = 'SET_ON_CALL_STATE_FOR_DRIVER_PENDING';
 export const SET_ON_CALL_STATE_FOR_DRIVER = 'SET_ON_CALL_STATE_FOR_DRIVER';
 export const SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS = 'SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS';
 export const SET_ON_CALL_STATE_FOR_DRIVER_FAILURE = 'SET_ON_CALL_STATE_FOR_DRIVER_FAILURE';
@@ -142,9 +143,7 @@ const driverOnCallStateSetter = (dsprDriverId, onCallString) => {
   const dsprDriver = {
     id: dsprDriverId,
   };
-
   const endpointString = onCallString === 'on' ? 'oncall' : 'notoncall';
-
   return {
     [CALL_API]: {
       httpAction: 'POST',
@@ -161,6 +160,7 @@ const driverOnCallStateSetter = (dsprDriverId, onCallString) => {
 };
 
 export const setDriverOnCallState = (dsprDriverId, isOnCall) => (dispatch, getState) => {
+  dispatch({ type: SET_ON_CALL_STATE_FOR_DRIVER_PENDING });
   return dispatch(driverOnCallStateSetter(dsprDriverId, isOnCall));
 };
 
@@ -220,6 +220,7 @@ export const setUpdateDriverInformation = (dsprDriverId, values) => (dispatch, g
   return dispatch(driverInformationSetter(dsprDriverId, values));
 };
 
+export const CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING = 'CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING';
 export const CREATE_NEW_DSPR_DRIVER_ROUTE = 'CREATE_NEW_DSPR_DRIVER_ROUTE';
 export const CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS = 'CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS';
 export const CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE = 'CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE';
@@ -236,7 +237,6 @@ const createNewRoute = (
     finalDestination,
     usingFinalDestinationInRoute,
   };
-
   return {
     [CALL_API]: {
       httpAction: 'POST',
@@ -251,17 +251,20 @@ const createNewRoute = (
     },
   };
 };
+
 export const createDSPRDriverRoute = (
   driverId: number,
   waypoints,
   finalDestination,
   usingFinalDestinationInRoute: Boolean
 ) => (dispatch) => {
+  dispatch({ type: CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING });
   return dispatch(
     createNewRoute(driverId, waypoints, finalDestination, usingFinalDestinationInRoute)
   );
 };
 
+export const PROGRESS_DSPR_DRIVER_ROUTE_PENDING = 'PROGRESS_DSPR_DRIVER_ROUTE_PENDING';
 export const PROGRESS_DSPR_DRIVER_ROUTE = 'PROGRESS_DSPR_DRIVER_ROUTE';
 export const PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS = 'PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS';
 export const PROGRESS_DSPR_DRIVER_ROUTE_FAILURE = 'PROGRESS_DSPR_DRIVER_ROUTE_FAILURE';
@@ -280,6 +283,12 @@ const progressDriverRoute = (routeId: number) => {
     },
   };
 };
-export const progressDSPRDriverRoute = (routeId: number) => (dispatch) => {
-  return dispatch(progressDriverRoute(routeId));
+export const progressDSPRDriverRoute = (routeId: number) => (dispatch, getState) => {
+  dispatch({ type: PROGRESS_DSPR_DRIVER_ROUTE_PENDING });
+  return dispatch(progressDriverRoute(routeId)).then((response) => {
+    if (response.type === PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS) {
+      const driverId = getState().api.dsprDriverId;
+      dispatch(getDSPRDriver(driverId));
+    }
+  });
 };

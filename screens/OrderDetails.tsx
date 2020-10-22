@@ -1,7 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Text, StyleSheet, ActivityIndicator, Clipboard } from 'react-native';
+import React, { useEffect } from 'react';
+import {
+  View,
+  ScrollView,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  Clipboard,
+  Alert,
+} from 'react-native';
 import { ListItem, Divider } from 'react-native-elements';
-import { Button, Title, IconButton } from 'react-native-paper';
+import { Button, Title, IconButton, useTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { getUserFromProps, getUserNotesFromProps } from '../selectors/userSelectors';
@@ -10,17 +18,16 @@ import {
   getUserMedicalRecommendations,
 } from '../selectors/userDocumentsSelector';
 import OrderDetailListItem from '../components/OrderDetailListItem';
-import Colors from '../constants/Colors';
 import Moment from 'moment';
 import { formatPhone } from '../hooks/util';
 
 import { StackNavigationProp } from '@react-navigation/stack';
-import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
+import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
 import OrderButtons from '../components/OrderButtons';
 import { getOrderFromProps } from '../selectors/orderSelectors';
 import { getAddressFromProps } from '../selectors/addressSelectors';
 
-type DetailsScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Details'>;
+type DetailsScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Details'>;
 
 type Props = {
   navigation: DetailsScreenNavigationProp;
@@ -33,7 +40,6 @@ type Props = {
   medicalRecommendation;
   isLoading;
   error;
-  getOrderDetailsWithId;
 };
 const OrderDetails = ({
   navigation,
@@ -46,14 +52,18 @@ const OrderDetails = ({
   userNotes,
   idDocument,
   medicalRecommendation,
-  getOrderDetailsWithId,
 }: Props) => {
-  const orderDate = Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
+  const { colors } = useTheme();
+  const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
   useEffect(() => {
-    getOrderDetailsWithId(orderId);
-  }, [orderId]);
+    if (error) Alert.alert('ERROR', error);
+  }, [error]);
+
+  useEffect(() => {
+    if (order.orderStatus == 'completed' || order.orderStatus == 'canceled') navigation.goBack();
+  }, [order.orderStatus]);
 
   const handleManageNotes = () => {
     navigation.navigate('Notes', { userId: user.id, dsprDriverId: order.dsprDriver, userNotes });
@@ -62,18 +72,23 @@ const OrderDetails = ({
   return (
     <>
       {isLoading ? (
-        <View style={styles.fillScreen}>
-          <ActivityIndicator size="large" color={Colors.primary} />
-        </View>
-      ) : error ? (
-        <View style={styles.fillScreen}>
-          <Text>{error}</Text>
-          <Button onPress={() => getOrderDetailsWithId(orderId)}>Try Again</Button>
+        <View style={[styles.fillScreen, { backgroundColor: colors.background }]}>
+          <ActivityIndicator size='large' color={colors.primary} />
         </View>
       ) : (
         <>
-          <ScrollView style={styles.scroll}>
-            <Title>Notes</Title>
+          <ScrollView style={[styles.scroll, { backgroundColor: colors.background }]}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Title style={{ paddingTop: 4 }}>Notes</Title>
+              <Button
+                mode='text'
+                onPress={handleManageNotes}
+                color={colors.primary}
+                labelStyle={{ paddingVertical: 4, color: colors.primary }}
+              >
+                Manage Notes
+              </Button>
+            </View>
             {userNotes && userNotes.some((note) => note.isVisible) ? (
               userNotes
                 .filter((note) => note.isVisible)
@@ -88,18 +103,12 @@ const OrderDetails = ({
                   </ListItem>
                 ))
             ) : (
-              <View style={styles.empty}>
+              <View style={[styles.empty, { backgroundColor: colors.background }]}>
                 <Text style={{ fontSize: 16 }}>No active notes.</Text>
               </View>
             )}
-            <Button
-              mode="contained"
-              onPress={handleManageNotes}
-              color={Colors.primary}
-              labelStyle={{ color: Colors.light }}
-            >
-              Manage Notes
-            </Button>
+            <Divider />
+
             {order && order.specialInstructions ? (
               <ListItem>
                 <ListItem.Content>
@@ -127,21 +136,21 @@ const OrderDetails = ({
               </ListItem>
             )}
 
-            {orderDate ? (
+            {orderDate && (
               <ListItem>
                 <ListItem.Title>{orderDate}</ListItem.Title>
               </ListItem>
-            ) : null}
+            )}
 
-            {user ? (
+            {user && (
               <ListItem>
                 <ListItem.Title>
                   {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
                 </ListItem.Title>
               </ListItem>
-            ) : null}
+            )}
 
-            {idDocument ? (
+            {idDocument && (
               <View>
                 <ListItem>
                   <ListItem.Content>
@@ -156,42 +165,42 @@ const OrderDetails = ({
                   </ListItem.Title>
                 </ListItem>
               </View>
-            ) : null}
+            )}
 
-            {medicalRecommendation ? (
+            {medicalRecommendation && (
               <ListItem>
                 <ListItem.Content>
                   <ListItem.Title>Medical ID:</ListItem.Title>
                   <ListItem.Subtitle>{medicalRecommendation.idNumber}</ListItem.Subtitle>
                 </ListItem.Content>
                 <IconButton
-                  icon="content-copy"
-                  color={Colors.primary}
+                  icon='content-copy'
+                  color={colors.primary}
                   size={20}
                   onPress={() => Clipboard.setString(medicalRecommendation.idNumber)}
                 />
               </ListItem>
-            ) : null}
+            )}
 
-            {address ? (
+            {address && (
               <ListItem>
                 <ListItem.Title>
                   {address.street}, {address.zipCode}
                 </ListItem.Title>
               </ListItem>
-            ) : null}
+            )}
 
-            {order && order.orderDetails
-              ? order.orderDetails.map((detail) => (
-                  <OrderDetailListItem
-                    key={`${detail.product.id}-${detail.unit || '0'}`}
-                    orderDetail={detail}
-                  />
-                ))
-              : null}
+            {order &&
+              order.orderDetails &&
+              order.orderDetails.map((detail) => (
+                <OrderDetailListItem
+                  key={`${detail.product.id}-${detail.unit || '0'}`}
+                  orderDetail={detail}
+                />
+              ))}
             <Divider />
 
-            {order && order.coupon ? (
+            {order && order.coupon && (
               <>
                 <ListItem>
                   <ListItem.Content>
@@ -206,16 +215,18 @@ const OrderDetails = ({
                   </ListItem.Content>
                 </ListItem>
               </>
-            ) : null}
+            )}
 
-            <ListItem>
-              <ListItem.Content>
-                <ListItem.Title>Subtotal</ListItem.Title>
-                <ListItem.Subtitle>{`$${order.cashTotalPreTaxesAndFees.toFixed(
-                  2
-                )}`}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
+            {order && (
+              <ListItem>
+                <ListItem.Content>
+                  <ListItem.Title>Subtotal</ListItem.Title>
+                  <ListItem.Subtitle>{`$${order.cashTotalPreTaxesAndFees.toFixed(
+                    2
+                  )}`}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            )}
 
             {order && order.orderTaxDetails && order.orderTaxDetails.length !== 0 ? (
               order.orderTaxDetails
@@ -230,7 +241,7 @@ const OrderDetails = ({
                   </ListItem>
                 ))
             ) : (
-              <ListItem key="Tax0">
+              <ListItem key='Tax0'>
                 <ListItem.Content>
                   <ListItem.Title>Tax</ListItem.Title>
                   <ListItem.Subtitle>$0.00</ListItem.Subtitle>
@@ -238,20 +249,24 @@ const OrderDetails = ({
               </ListItem>
             )}
 
-            <ListItem>
-              <ListItem.Content>
-                <ListItem.Title>Delivery Fee</ListItem.Title>
-                <ListItem.Subtitle>{`$${order.deliveryFee.toFixed(2)}`}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
+            {order && (
+              <ListItem>
+                <ListItem.Content>
+                  <ListItem.Title>Delivery Fee</ListItem.Title>
+                  <ListItem.Subtitle>{`$${order.deliveryFee.toFixed(2)}`}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            )}
 
-            <ListItem>
-              <ListItem.Content>
-                <ListItem.Title>{`Total: $${order.cashTotal.toFixed(2)}`}</ListItem.Title>
-              </ListItem.Content>
-            </ListItem>
+            {order && (
+              <ListItem>
+                <ListItem.Content>
+                  <ListItem.Title>{`Total: $${order.cashTotal.toFixed(2)}`}</ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+            )}
           </ScrollView>
-          <OrderButtons navigation={navigation} orderId={orderId} orderStatus={order.orderStatus} />
+          {order && <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />}
         </>
       )}
     </>
@@ -263,11 +278,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.light,
   },
   scroll: {
     flex: 1,
-    backgroundColor: Colors.light,
     paddingHorizontal: 10,
     paddingBottom: 30,
   },
@@ -276,7 +289,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   empty: {
-    backgroundColor: Colors.light,
     justifyContent: 'center',
     padding: 14,
   },

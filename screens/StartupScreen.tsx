@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import Colors from '../constants/Colors';
+import { View, ActivityIndicator } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/AuthNavigator';
 import { connect } from 'react-redux';
 import { preloadAccessTokenFromLocalStorage, logout } from '../actions/oauthActions';
 import { setDsprDriverId } from '../actions/driverActions';
 import { getLoggedInUser } from '../selectors/userSelectors';
+import { StatusBar } from 'expo-status-bar';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Startup'>;
 type Props = {
@@ -26,6 +27,7 @@ const Startup = ({
   logout,
   setDsprDriverId,
 }: Props) => {
+  const { colors } = useTheme();
   // if a valid token is stored, login automatically
   useEffect(() => {
     preloadAccessTokenFromLocalStorage();
@@ -52,19 +54,18 @@ const Startup = ({
   }, [loggedInUser]);
 
   return (
-    <View style={styles.container}>
-      <ActivityIndicator size="large" color={Colors.primary} />
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <ActivityIndicator size='large' color={colors.primary} />
+      <StatusBar style='dark' />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 const mapStateToProps = (state) => {
   const driverId = state.api.dsprDriverId;

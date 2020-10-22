@@ -1,7 +1,7 @@
 import React from 'react';
+import { Modal } from 'react-native';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
-import { Button, TextInput, Dialog } from 'react-native-paper';
-import Colors from '../constants/Colors';
+import { Button, TextInput, Dialog, useTheme } from 'react-native-paper';
 
 // error if field is left empty
 const validate = (values) => {
@@ -12,26 +12,6 @@ const validate = (values) => {
   return errors;
 };
 
-const renderField = ({
-  input,
-  label,
-  type,
-  meta: { asyncValidating, touched, error },
-  ...custom
-}) => (
-  <TextInput
-    label={label}
-    type={type}
-    {...input}
-    {...custom}
-    multiline={true}
-    numberOfLines={3}
-    underlineColor={Colors.primary}
-    error={!!(touched && error)}
-    helperText={touched && error ? error : ''}
-  />
-);
-
 interface NewUserNoteFormProps {
   closeDialog: () => void;
 }
@@ -40,35 +20,56 @@ const NewUserNoteForm = (
   props: NewUserNoteFormProps & InjectedFormProps<{}, NewUserNoteFormProps>
 ) => {
   const { closeDialog, handleSubmit, showNotes } = props;
+  const { colors } = useTheme();
+
+  const renderField = ({
+    input,
+    label,
+    type,
+    meta: { asyncValidating, touched, error },
+    ...custom
+  }) => (
+    <TextInput
+      label={label}
+      type={type}
+      {...input}
+      {...custom}
+      multiline={true}
+      numberOfLines={3}
+      underlineColor={colors.primary}
+      error={!!(touched && error)}
+      helperText={touched && error ? error : ''}
+    />
+  );
   return (
-    <Dialog visible={showNotes} onDismiss={closeDialog}>
+    <Modal animationType='slide' visible={showNotes} onRequestClose={closeDialog}>
       <Dialog.Title>New Note</Dialog.Title>
       <Dialog.Content>
         <Field
-          name="note"
+          name='note'
           component={renderField}
           multiline
           rows={3}
-          mode="outlined"
-          label="Note"
-          className="field"
+          mode='outlined'
+          label='Note'
+          className='field'
         />
         <Dialog.Actions>
           <Button
-            mode="contained"
-            color={Colors.primary}
-            labelStyle={{ color: Colors.light }}
+            mode='contained'
+            color={colors.primary}
+            labelStyle={{ color: colors.surface }}
             style={{ flex: 1 }}
             onPress={handleSubmit}
           >
             Submit
           </Button>
-          <Button color={Colors.primary} style={{ flex: 1 }} onPress={closeDialog}>
+          <Button color={colors.primary} style={{ flex: 1 }} onPress={closeDialog}>
             Cancel
           </Button>
         </Dialog.Actions>
       </Dialog.Content>
-    </Dialog>
+    </Modal>
   );
 };
 
