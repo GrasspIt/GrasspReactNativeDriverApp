@@ -6,11 +6,10 @@ import OrderItem from '../components/OrderItem';
 
 type Props = {
   navigation;
-  ordersForRoute;
   driver;
 };
 
-const RouteListView = ({ navigation, driver, ordersForRoute }: Props) => {
+const RouteListView = ({ navigation, driver }: Props) => {
   const { colors } = useTheme();
 
   let queuedOrders = driver.currentRoute.legs.filter((leg) => leg.order.orderStatus === 'queued');
@@ -19,13 +18,13 @@ const RouteListView = ({ navigation, driver, ordersForRoute }: Props) => {
   );
   console.log('inProcessOrder', inProcessOrder);
 
-  return ordersForRoute ? (
+  return driver && driver.currentRoute && driver.currentRoute.legs ? (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <Text style={styles.listTitle}>In Process Order</Text>
         <Divider />
 
-        {ordersForRoute.some((order) => order.orderStatus === 'in_process') ? (
+        {driver.currentRoute.legs.some((order) => order.order.orderStatus === 'in_process') ? (
           <InProcessOrderItem orderInfo={inProcessOrder.order} navigation={navigation} />
         ) : (
           <View style={[styles.empty, { backgroundColor: colors.background }]}>

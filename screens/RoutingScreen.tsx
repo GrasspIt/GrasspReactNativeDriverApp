@@ -250,11 +250,7 @@ const RoutingScreen = ({
         <View style={{ flex: 1 }}>
           <RouteViewButtons routeView={routeView} setRouteView={setRouteView} />
           {routeView === 'list' ? (
-            <RouteListView
-              navigation={navigation}
-              driver={driver}
-              ordersForRoute={ordersForRoute}
-            />
+            <RouteListView navigation={navigation} driver={driver} />
           ) : (
             <RouteMapView
               navigation={navigation}
