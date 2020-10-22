@@ -1,32 +1,32 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
-import { Button, Divider, useTheme } from 'react-native-paper';
+import { View, Text, StyleSheet, FlatList, SafeAreaView } from 'react-native';
+import { Divider, useTheme } from 'react-native-paper';
 import InProcessOrderItem from '../components/InProcessOrderItem';
 import OrderItem from '../components/OrderItem';
-import { refreshDSPRDriver, getDSPRDriver } from '../actions/driverActions';
-import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
-import { getLoggedInUser } from '../selectors/userSelectors';
-import { connect } from 'react-redux';
 
 type Props = {
   navigation;
-  dsprDriver;
   ordersForRoute;
+  driver;
 };
 
-const RouteListView = ({ navigation, ordersForRoute, dsprDriver }: Props) => {
+const RouteListView = ({ navigation, driver, ordersForRoute }: Props) => {
   const { colors } = useTheme();
-  return dsprDriver && ordersForRoute ? (
+
+  let queuedOrders = driver.currentRoute.legs.filter((leg) => leg.order.orderStatus === 'queued');
+  let inProcessOrder = driver.currentRoute.legs.find(
+    (leg) => leg.order.orderStatus === 'in_process'
+  );
+  console.log('inProcessOrder', inProcessOrder);
+
+  return ordersForRoute ? (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <Text style={styles.listTitle}>In Process Order</Text>
         <Divider />
 
-        {dsprDriver.currentInProcessOrder ? (
-          <InProcessOrderItem
-            orderInfo={dsprDriver.currentInProcessOrder}
-            navigation={navigation}
-          />
+        {ordersForRoute.some((order) => order.orderStatus === 'in_process') ? (
+          <InProcessOrderItem orderInfo={inProcessOrder.order} navigation={navigation} />
         ) : (
           <View style={[styles.empty, { backgroundColor: colors.background }]}>
             <Text>No order in process.</Text>
@@ -43,8 +43,8 @@ const RouteListView = ({ navigation, ordersForRoute, dsprDriver }: Props) => {
               <Text>No orders.</Text>
             </View>
           }
-          data={ordersForRoute.filter((order) => order.orderStatus === 'queued')}
-          renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
+          data={queuedOrders}
+          renderItem={(item) => <OrderItem orderInfo={item.item.order} navigation={navigation} />}
           keyExtractor={(item: any) => item.id.toString() + '-routeList'}
           style={{ paddingHorizontal: 10 }}
         />
@@ -54,11 +54,6 @@ const RouteListView = ({ navigation, ordersForRoute, dsprDriver }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   empty: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -72,22 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
-  const driverId = state.api.dsprDriverId;
-  const dsprDriver = getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps(state, {
-    dsprDriverId: driverId,
-  });
-  const isLoading = state.api.isLoading;
-  const error = state.api.errorMessage;
-  return {
-    loggedInUser: getLoggedInUser(state),
-    driverId,
-    dsprDriver,
-    isLoading,
-    error,
-  };
-};
-
-const mapDispatchToProps = { refreshDSPRDriver, getDSPRDriver };
-
-export default connect(mapStateToProps, mapDispatchToProps)(RouteListView);
+export default RouteListView;

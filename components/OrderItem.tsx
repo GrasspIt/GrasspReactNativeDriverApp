@@ -8,7 +8,7 @@ import { markOrderInProcess } from '../actions/orderActions';
 const OrderItem = ({ orderInfo, navigation }) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
-
+  console.log('orderInfo', orderInfo);
   const handleProcessOrder = () => {
     Alert.alert('Process Order', 'Are you sure you want to set this order in-process?', [
       { text: 'No', style: 'cancel' },

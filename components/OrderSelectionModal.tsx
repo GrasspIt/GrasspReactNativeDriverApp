@@ -8,7 +8,7 @@ const OrderSelectionModal = ({
   orderSelectionModalOpen,
   setOrderSelectionModalOpen,
   ordersForRoute,
-  numberOrdersPerRoute,
+  maxOrdersPerRoute,
   driver,
   confirmCreateRoute,
 }) => {
@@ -22,7 +22,7 @@ const OrderSelectionModal = ({
       <Dialog.Title>Order Selection</Dialog.Title>
       <Dialog.Content>
         <Text style={styles.listTitle}>
-          Selected Orders: {ordersForRoute.length || 0}/{numberOrdersPerRoute}
+          Selected Orders: {(ordersForRoute && ordersForRoute.length) || 0}/{maxOrdersPerRoute}
         </Text>
         <Divider />
         {driver && driver.currentInProcessOrder && (

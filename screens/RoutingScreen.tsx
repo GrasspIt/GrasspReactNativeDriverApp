@@ -63,18 +63,17 @@ const RoutingScreen = ({
 }: Props) => {
   const { colors } = useTheme();
 
-  const [ordersForRoute, setOrdersForRoute] = useState([]);
+  const [ordersForRoute, setOrdersForRoute] = useState<any>();
   const [finalOrderForRoute, setFinalOrderForRoute] = useState<any>();
   const [currentInProcessOrderInActiveRoute, setCurrentInProcessOrderInActiveRoute] = useState<
     any
   >();
   const [currentlyActiveRouteLegIndex, setCurrentlyActiveRouteLegIndex] = useState<any>();
-  console.log('ordersForRoute', ordersForRoute);
   const [orderSelectionModalOpen, setOrderSelectionModalOpen] = useState(false);
   const [routeView, setRouteView] = useState('map');
   const [orderPolyline, setOrderPolyline] = useState<any>();
   const [overviewPolyline, setOverviewPolyline] = useState<any>();
-  const [numberOrdersPerRoute, setNumberOrdersPerRoute] = useState<any>();
+  const [maxOrdersPerRoute, setMaxOrdersPerRoute] = useState<any>();
 
   useEffect(() => {
     if (error) Alert.alert('ERROR', error);
@@ -96,6 +95,17 @@ const RoutingScreen = ({
     createDSPRDriverRoute(driverId, orderIds, finalDestination, usingFinalDestinationInRoute);
   };
 
+  // function to create a new route
+  const handleRouteCreation = () => {
+    if (ordersForRoute.length === 0) {
+      Alert.alert('A route must contain at least 1 order.');
+      return;
+    }
+    createNewRoute(driver.id, ordersForRoute, finalOrderForRoute, false);
+    setOrderSelectionModalOpen(false);
+  };
+
+  // check if there is already an active route
   const confirmCreateRoute = () => {
     if (driver && driver.currentRoute && driver.currentRoute.active) {
       Alert.alert(
@@ -111,16 +121,6 @@ const RoutingScreen = ({
     }
   };
 
-  // function to create a new route
-  const handleRouteCreation = () => {
-    if (ordersForRoute.length === 0) {
-      Alert.alert('A route must contain at least 1 order.');
-      return;
-    }
-    createNewRoute(driver.id, ordersForRoute, finalOrderForRoute, false);
-    setOrderSelectionModalOpen(false);
-  };
-
   useEffect(() => {
     // set number orders per route
     if (dspr && dspr.numberOrdersPerRoute) {
@@ -130,9 +130,9 @@ const RoutingScreen = ({
         driver.serviceAreas[0] &&
         driver.serviceAreas[0].numberOrdersPerRoute
       ) {
-        setNumberOrdersPerRoute(driver.serviceAreas[0].numberOrdersPerRoute);
+        setMaxOrdersPerRoute(driver.serviceAreas[0].numberOrdersPerRoute);
       } else {
-        setNumberOrdersPerRoute(dspr.numberOrdersPerRoute);
+        setMaxOrdersPerRoute(dspr.numberOrdersPerRoute);
       }
     }
     // set polylines and orders in route
@@ -153,9 +153,7 @@ const RoutingScreen = ({
         if (driver.queuedOrders && driver.currentRoute.legs) {
           driver.currentRoute.legs.forEach((leg: any) => {
             if (leg.order) ordersInRoute[leg.order.id] = leg.legOrder;
-            console.log('leg', leg);
           });
-          console.log('ordersInRoute', ordersInRoute);
         }
         // if there is an in-process order, set it to the active leg of the route
         if (
@@ -182,27 +180,23 @@ const RoutingScreen = ({
     return;
   }, [dspr, driver]);
 
-  // Temporarily autofilling orders into route
   useEffect(() => {
-    const orders: any = [];
-    if (driver && numberOrdersPerRoute) {
-      if (driver.currentInProcessOrder) orders.push(driver.currentInProcessOrder);
-      if (driver.queuedOrders) {
-        for (
-          let i = 0;
-          i < driver.queuedOrders.length && orders.length <= numberOrdersPerRoute;
-          i++
-        ) {
-          if (orders.length === numberOrdersPerRoute) {
-            setFinalOrderForRoute(driver.queuedOrders[i]);
-          } else {
-            orders.push(driver.queuedOrders[i]);
-          }
-        }
-      }
-    }
-    setOrdersForRoute(orders);
-  }, [driver, numberOrdersPerRoute]);
+    // create an array with in process order and all queued orders
+    const routeOrders =
+      driver && driver.currentInProcessOrder && driver.queuedOrders
+        ? [driver.currentInProcessOrder, ...driver.queuedOrders]
+        : driver && driver.currentInProcessOrder
+        ? [driver.currentInProcessOrder]
+        : driver && driver.queuedOrders
+        ? [...driver.queuedOrders]
+        : [];
+
+    // slice the array up to the max order length
+    const updatedOrdersForRoute = routeOrders.slice(0, maxOrdersPerRoute);
+
+    setFinalOrderForRoute(updatedOrdersForRoute[updatedOrdersForRoute.length - 1]);
+    setOrdersForRoute(updatedOrdersForRoute);
+  }, [driver, maxOrdersPerRoute]);
 
   // create order leg polyline for map
   useEffect(() => {
@@ -226,22 +220,20 @@ const RoutingScreen = ({
 
   // new route header button
   React.useLayoutEffect(() => {
-    driver &&
-      driver.currentRoute &&
-      driver.currentRoute.active &&
-      navigation.setOptions({
-        headerRight: () => (
-          <Button
-            mode='text'
-            labelStyle={{ color: colors.primary, fontSize: 14 }}
-            onPress={() => setOrderSelectionModalOpen(true)}
-          >
-            New Route
-          </Button>
-        ),
-      });
+    driver && driver.currentRoute && driver.currentRoute.active
+      ? navigation.setOptions({
+          headerRight: () => (
+            <Button
+              mode='text'
+              labelStyle={{ color: colors.primary, fontSize: 14 }}
+              onPress={() => setOrderSelectionModalOpen(true)}
+            >
+              New Route
+            </Button>
+          ),
+        })
+      : null;
   }, [navigation, driver]);
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       {isLoading ? (
@@ -258,7 +250,11 @@ const RoutingScreen = ({
         <View style={{ flex: 1 }}>
           <RouteViewButtons routeView={routeView} setRouteView={setRouteView} />
           {routeView === 'list' ? (
-            <RouteListView navigation={navigation} ordersForRoute={ordersForRoute} />
+            <RouteListView
+              navigation={navigation}
+              driver={driver}
+              ordersForRoute={ordersForRoute}
+            />
           ) : (
             <RouteMapView
               navigation={navigation}
@@ -290,7 +286,7 @@ const RoutingScreen = ({
         orderSelectionModalOpen={orderSelectionModalOpen}
         setOrderSelectionModalOpen={setOrderSelectionModalOpen}
         ordersForRoute={ordersForRoute}
-        numberOrdersPerRoute={numberOrdersPerRoute}
+        maxOrdersPerRoute={maxOrdersPerRoute}
         driver={driver}
         confirmCreateRoute={confirmCreateRoute}
       />
@@ -304,6 +300,7 @@ const mapStateToProps = (state) => {
   const driver = getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps(state, {
     dsprDriverId: dsprDriverIdForOrderDetails,
   });
+  console.log('driver', driver);
   const dspr = driver ? getDSPRFromProps(state, { dsprId: driver.dspr }) : undefined;
   const isLoading = state.api.isLoading;
   const error = state.api.errorMessage;

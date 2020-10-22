@@ -279,7 +279,7 @@ export const getRoutesWithMetricsAndLocationsAndRouteLegsAndRouteLegDirections =
           return filledRoutes;
         } else {
           const routeKeys = Object.keys(routes);
-          for (let i = 0; i < routeKeys.length; ++i) {
+          for (let i = 0; i < routeKeys.length; i++) {
             routes[routeKeys[i]].legs.map((legId) => legs[legId]);
           }
           return routes;

@@ -134,7 +134,7 @@ const DashboardScreen = ({
           Alert.alert('Permission to access location was denied.');
         }
         //start location updates if driver is on call
-        if (status === 'granted' && dsprDriver !== undefined && dsprDriver.onCall) {
+        if (status === 'granted' && dsprDriver && dsprDriver.onCall) {
           console.log('start location updates');
           setIsTracking(true);
           await Location.startLocationUpdatesAsync('location-tracking', {
