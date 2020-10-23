@@ -29,6 +29,7 @@ const OrderListNavigator = ({ route, navigation }: Props) => {
       screenOptions={{
         headerStyle: { height: 80 },
         headerTitleStyle: { fontSize: 20 },
+        headerLeftContainerStyle: { paddingLeft: 20 },
         gestureEnabled: false,
       }}
     >
@@ -36,13 +37,7 @@ const OrderListNavigator = ({ route, navigation }: Props) => {
         name='Orders'
         component={OrderListScreen}
         options={{
-          headerLeft: () => (
-            <Icon
-              name='menu'
-              style={{ paddingLeft: 20 }}
-              onPress={() => navigation.toggleDrawer()}
-            />
-          ),
+          headerLeft: () => <Icon name='menu' onPress={() => navigation.toggleDrawer()} />,
         }}
       />
       <OrderListStack.Screen
