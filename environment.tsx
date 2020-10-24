@@ -2,13 +2,13 @@ import Constants from 'expo-constants';
 
 const ENV = {
   dev: {
-    apiUrl: 'https://api.staging.grasspit.com/',
+    apiUrl: process.env.EXPO_STAGING_API_URL,
   },
   staging: {
-    apiUrl: 'https://api.staging.grasspit.com/',
+    apiUrl: process.env.EXPO_STAGING_API_URL,
   },
   prod: {
-    apiUrl: 'https://api.grassp.it/',
+    apiUrl: process.env.EXPO_PROD_API_URL,
   },
 };
 

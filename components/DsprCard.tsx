@@ -12,9 +12,6 @@ type CardProps = {
 
 const DsprCard = ({ dspr, handleSelect }: CardProps) => {
   const { colors } = useTheme();
-  // const image = dspr.imageLocation
-  //   ? { uri: `https://api.grassp.it/${dspr.imageLocation}` }
-  //   : require('../assets/grassp_health.png');
   const image = dspr.imageLocation
     ? { uri: `${apiUrl}${dspr.imageLocation}` }
     : require('../assets/grassp_health.png');
