@@ -1,10 +1,13 @@
-// WARNING THIS ISN'T VERSIONED
 import { ExpoConfig, ConfigContext } from '@expo/config';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: 'Grassp Driver App',
   slug: 'GrasspDriverApp',
+  extra: {
+    stagingURL: 'https://api.staging.grasspit.com/',
+    prodURL: 'https://api.grassp.it/',
+  },
   version: '1.0.0',
   sdkVersion: '38.0.0',
   platforms: ['ios', 'android'],
@@ -33,7 +36,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     googleServicesFile: './google-services.json',
     config: {
       googleMaps: {
-        apiKey: process.env.GOOGLE_MAPS_API_KEY,
+        apiKey: 'AIzaSyD9DqhXUVHI6Z9RlFK8EBW1kRFmzqlyW5c',
       },
     },
     versionCode: 1,

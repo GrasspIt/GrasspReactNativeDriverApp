@@ -2,13 +2,13 @@ import Constants from 'expo-constants';
 
 const ENV = {
   dev: {
-    apiUrl: process.env.EXPO_STAGING_API_URL,
+    apiUrl: Constants.manifest.extra.stagingURL,
   },
   staging: {
-    apiUrl: process.env.EXPO_STAGING_API_URL,
+    apiUrl: Constants.manifest.extra.stagingURL,
   },
   prod: {
-    apiUrl: process.env.EXPO_PROD_API_URL,
+    apiUrl: Constants.manifest.extra.prodURL,
   },
 };
 
