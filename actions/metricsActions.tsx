@@ -1,5 +1,5 @@
 import { CALL_API, Schemas } from '../middleware/api';
-import { getMySQLDateStringFromTimestamp } from '../hooks/util';
+import { getMySQLDateStringFromTimestamp } from '../utils/util';
 
 export const GET_METRICS_FOR_USERS = 'GET_METRICS_FOR_USERS';
 export const GET_METRICS_FOR_USERS_SUCCESS = 'GET_METRICS_FOR_USERS_SUCCESS';

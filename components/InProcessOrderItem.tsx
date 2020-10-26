@@ -1,7 +1,7 @@
 import React from 'react';
 import { ListItem, Button } from 'react-native-elements';
 import { Alert, Text, Platform } from 'react-native';
-import { formatPhone } from '../hooks/util';
+import { formatPhone } from '../utils/util';
 import * as Linking from 'expo-linking';
 import { useTheme } from 'react-native-paper';
 

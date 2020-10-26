@@ -19,7 +19,7 @@ import {
 } from '../selectors/userDocumentsSelector';
 import OrderDetailListItem from '../components/OrderDetailListItem';
 import Moment from 'moment';
-import { formatPhone } from '../hooks/util';
+import { formatPhone } from '../utils/util';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { OrderListStackParamsList } from '../navigation/OrderListNavigator';

@@ -24,7 +24,7 @@ import { sendPushToken } from '../actions/userActions';
 import { refreshDSPRDriver, getDSPRDriver, setDriverLocation } from '../actions/driverActions';
 import { connect } from 'react-redux';
 import { store } from '../store/store';
-import { useInterval } from '../hooks/useInterval';
+import { useInterval } from '../utils/useInterval';
 
 import OnCallSwitch from '../components/OnCallSwitch';
 

@@ -107,6 +107,10 @@ const RoutingScreen = ({
 
   // check if there is already an active route
   const confirmCreateRoute = () => {
+    if (!driver.onCall) {
+      Alert.alert('Not On Call', 'You must set your status to "on call" to create a new route.');
+      return;
+    }
     if (driver && driver.currentRoute && driver.currentRoute.active) {
       Alert.alert(
         'Override Route?',
