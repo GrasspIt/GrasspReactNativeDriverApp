@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, View, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import { attemptLogin, logout } from '../actions/oauthActions';
+import { attemptLogin, preloadAccessTokenFromLocalStorage, logout } from '../actions/oauthActions';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/AuthNavigator';
 import { setDsprDriverId } from '../actions/driverActions';
 import * as RootNavigation from '../navigation/RootNavigation';
 import LoginForm from '../components/LoginForm';
 import { getLoggedInUser } from '../selectors/userSelectors';
+import { useTheme } from 'react-native-paper';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Login'>;
 type Props = {
@@ -17,6 +18,7 @@ type Props = {
   driverId;
   logout;
   setDsprDriverId;
+  preloadAccessTokenFromLocalStorage;
   attemptLogin;
   isLoading;
 };
@@ -28,9 +30,12 @@ const LoginScreen = ({
   driverId,
   logout,
   setDsprDriverId,
+  preloadAccessTokenFromLocalStorage,
   attemptLogin,
   isLoading,
 }: Props) => {
+  const { colors } = useTheme();
+
   const handleLogin = (username: string, password: string) => {
     attemptLogin(username, password);
   };
@@ -45,6 +50,9 @@ const LoginScreen = ({
   };
 
   useEffect(() => {
+    if (!loggedInUser && !errorMessage) {
+      preloadAccessTokenFromLocalStorage();
+    }
     if (!loggedInUser && errorMessage) {
       Alert.alert(errorMessage);
     }
@@ -60,7 +68,20 @@ const LoginScreen = ({
     }
   }, [loggedInUser, errorMessage]);
 
-  return <LoginForm handleLogin={handleLogin} isLoading={isLoading} />;
+  return isLoading ? (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: colors.background,
+      }}
+    >
+      <ActivityIndicator size='large' color={colors.primary} />
+    </View>
+  ) : (
+    <LoginForm handleLogin={handleLogin} isLoading={isLoading} />
+  );
 };
 
 const mapStateToProps = (state) => {
@@ -75,6 +96,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = { logout, setDsprDriverId, attemptLogin };
+const mapDispatchToProps = {
+  preloadAccessTokenFromLocalStorage,
+  logout,
+  setDsprDriverId,
+  attemptLogin,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
