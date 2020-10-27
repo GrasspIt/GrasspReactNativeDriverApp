@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text } from 'react-native';
+import { Text, Image } from 'react-native';
 import MapView, { Callout, Marker, Polyline } from 'react-native-maps';
 import { OrderWithAddressAndUser, RouteLeg } from '../store/reduxStoreState';
 

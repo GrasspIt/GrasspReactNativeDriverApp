@@ -48,7 +48,6 @@ const Startup = ({
         handleNavigate();
       } else {
         logout();
-        navigation.navigate('Login');
       }
     }
   }, [loggedInUser]);
