@@ -44,9 +44,6 @@ const LoginScreen = ({
     if (loggedInUser && loggedInUser.dsprDrivers && loggedInUser.dsprDrivers.length === 1) {
       setDsprDriverId(loggedInUser.dsprDrivers[0]);
     }
-    if (loggedInUser && loggedInUser.dsprDrivers && loggedInUser.dsprDrivers.length > 1) {
-      RootNavigation.navigate('Main', { screen: 'DSPRs' });
-    }
   };
 
   useEffect(() => {
@@ -59,11 +56,6 @@ const LoginScreen = ({
     if (loggedInUser && loggedInUser.dsprDrivers && !driverId) {
       if (loggedInUser.dsprDrivers.length > 0) {
         handleNavigate();
-      } else {
-        logout();
-        Alert.alert(
-          'You must be a DSPR driver to use this app. You can sign up on the Grassp website.'
-        );
       }
     }
   }, [loggedInUser, errorMessage]);

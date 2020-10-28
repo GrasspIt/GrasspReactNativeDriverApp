@@ -83,7 +83,7 @@ const DashboardScreen = ({
   useInterval(getDriverData, 60000);
 
   useEffect(() => {
-    getDSPRDriver(driverId);
+    if (loggedInUser) getDSPRDriver(driverId);
   }, [driverId]);
 
   useEffect(() => {
