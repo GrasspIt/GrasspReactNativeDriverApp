@@ -8,8 +8,7 @@ import {
 
 import DSPRScreen from '../screens/DSPRScreen';
 import { logout } from '../actions/oauthActions';
-import { useDispatch, useSelector } from 'react-redux';
-import { State } from '../store/reduxStoreState';
+import { connect } from 'react-redux';
 
 import { DrawerActions } from '@react-navigation/native';
 // import * as Linking from 'expo-linking';
@@ -21,12 +20,15 @@ import { RootStackParamsList } from '../navigation/AuthNavigator';
 import DashboardNavigator from './DashboardNavigator';
 import RoutingNavigator from './RoutingNavigator';
 import OrderListNavigator from './OrderListNavigator';
+import { getDSPRDrivers } from '../selectors/dsprDriverSelector';
 
 type MainScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Main'>;
 
 type Props = {
   navigation: MainScreenNavigationProp;
   route;
+  dsprDrivers;
+  logout;
 };
 
 export type DrawerStackParamsList = {
@@ -38,16 +40,14 @@ export type DrawerStackParamsList = {
 
 const Drawer = createDrawerNavigator<DrawerStackParamsList>();
 
-const DrawerNavigator = ({ navigation, route }: Props) => {
-  const dispatch = useDispatch();
+const DrawerNavigator = ({ navigation, route, dsprDrivers, logout }: Props) => {
   const { colors } = useTheme();
-  const dsprDriversObj = useSelector<State, any>((state) => state.api.entities.dsprDrivers);
-  const dsprDrivers = Object.keys(dsprDriversObj);
+  const drivers = Object.keys(dsprDrivers);
 
   const handleLogout = () => {
     navigation.dispatch(DrawerActions.closeDrawer());
-    if (dsprDrivers.length > 1) RootNavigation.navigate('DSPRs', null);
-    dispatch(logout());
+    if (drivers.length > 1) RootNavigation.navigate('DSPRs', null);
+    logout();
   };
 
   return (
@@ -80,12 +80,19 @@ const DrawerNavigator = ({ navigation, route }: Props) => {
         );
       }}
     >
-      {dsprDrivers.length > 1 ? <Drawer.Screen name='DSPRs' component={DSPRScreen} /> : null}
+      {drivers.length > 1 ? <Drawer.Screen name='DSPRs' component={DSPRScreen} /> : null}
       <Drawer.Screen name='Dashboard' navigation={navigation} component={DashboardNavigator} />
       <Drawer.Screen name='Orders' navigation={navigation} component={OrderListNavigator} />
       <Drawer.Screen name='Routing' navigation={navigation} component={RoutingNavigator} />
     </Drawer.Navigator>
   );
 };
+const mapStateToProps = (state) => {
+  return {
+    dsprDrivers: getDSPRDrivers(state, null),
+  };
+};
 
-export default DrawerNavigator;
+const mapDispatchToProps = { logout };
+
+export default connect(mapStateToProps, mapDispatchToProps)(DrawerNavigator);
