@@ -1,0 +1,3 @@
+export EXPO_GOOGLE_MAPS_API_KEY=AIzaSyD9DqhXUVHI6Z9RlFK8EBW1kRFmzqlyW5c
+export EXPO_STAGING_API_URL=https://api.staging.grasspit.com/
+export EXPO_PROD_API_URL=https://api.grassp.it/

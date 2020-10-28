@@ -1,7 +1,7 @@
 import base64 from 'Base64';
 import qs from 'query-string';
 import * as SecureStore from 'expo-secure-store';
-import * as RootNavigation from '../navigation/RootNavigation';
+// import * as RootNavigation from '../navigation/RootNavigation';
 import { CALL_API, Schemas } from '../middleware/api';
 
 // import { updateLoggedInUserInfo } from './userActions';
@@ -25,7 +25,7 @@ export const preloadAccessTokenFromLocalStorage = () => {
   return async (dispatch) => {
     const accessToken = await SecureStore.getItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
     if (!accessToken) {
-      RootNavigation.navigate('Login', null);
+      // RootNavigation.navigate('Login', null);
       return;
     }
     dispatch({
@@ -63,7 +63,7 @@ export const LOGOUT = 'LOGOUT';
 export const logout = () => {
   SecureStore.deleteItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
   SecureStore.deleteItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_TYPE);
-  RootNavigation.navigate('Login', null);
+  // RootNavigation.navigate('Login', null);
   return { type: LOGOUT };
 };
 
