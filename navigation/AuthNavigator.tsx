@@ -2,6 +2,9 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { navigationRef } from './RootNavigation';
+import { connect } from 'react-redux';
+import { getLoggedInUser } from '../selectors/userSelectors';
+import * as SplashScreen from 'expo-splash-screen';
 
 import LoginScreen from '../screens/LoginScreen';
 import DrawerNavigator from './DrawerNavigator';
@@ -13,27 +16,38 @@ export type RootStackParamsList = {
 
 const RootStack = createStackNavigator<RootStackParamsList>();
 
-const AuthNavigator = () => {
+const AuthNavigator = ({ isLoading, loggedInUser }) => {
   return (
     <NavigationContainer ref={navigationRef}>
-      <RootStack.Navigator initialRouteName='Login' screenOptions={{ gestureEnabled: false }}>
-        <RootStack.Screen
-          name='Login'
-          component={LoginScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <RootStack.Screen
-          name='Main'
-          component={DrawerNavigator}
-          options={{
-            headerShown: false,
-          }}
-        />
+      <RootStack.Navigator screenOptions={{ gestureEnabled: false }}>
+        {!loggedInUser ? (
+          <RootStack.Screen
+            name='Login'
+            component={LoginScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+        ) : (
+          <RootStack.Screen
+            name='Main'
+            component={DrawerNavigator}
+            options={{
+              headerShown: false,
+            }}
+          />
+        )}
       </RootStack.Navigator>
     </NavigationContainer>
   );
 };
 
-export default AuthNavigator;
+const mapStateToProps = (state) => {
+  const isLoading = state.api.isLoading;
+  return {
+    loggedInUser: getLoggedInUser(state),
+    isLoading,
+  };
+};
+
+export default connect(mapStateToProps, null)(AuthNavigator);

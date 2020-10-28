@@ -68,20 +68,7 @@ const LoginScreen = ({
     }
   }, [loggedInUser, errorMessage]);
 
-  return isLoading ? (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: colors.background,
-      }}
-    >
-      <ActivityIndicator size='large' color={colors.primary} />
-    </View>
-  ) : (
-    <LoginForm handleLogin={handleLogin} isLoading={isLoading} />
-  );
+  return <LoginForm handleLogin={handleLogin} isLoading={isLoading} />;
 };
 
 const mapStateToProps = (state) => {
