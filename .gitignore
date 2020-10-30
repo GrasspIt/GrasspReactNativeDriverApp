@@ -1,0 +1,20 @@
+node_modules/**/*
+.expo/*
+.expo
+.vscode
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# macOS
+.DS_Store
+
+# api keys and certs
+app.config.ts
+GrasspDriverApp_upload_cert.pem
+google-services.json
