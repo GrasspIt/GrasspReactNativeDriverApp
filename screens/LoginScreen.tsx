@@ -40,25 +40,11 @@ const LoginScreen = ({
     attemptLogin(username, password);
   };
 
-  // const handleNavigate = () => {
-  //   if (loggedInUser && loggedInUser.dsprDrivers && loggedInUser.dsprDrivers.length === 1) {
-  //     setDsprDriverId(loggedInUser.dsprDrivers[0]);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (!loggedInUser && !errorMessage) {
-  //     preloadAccessTokenFromLocalStorage();
-  //   }
-  //   if (!loggedInUser && errorMessage) {
-  //     Alert.alert(errorMessage);
-  //   }
-  //   if (loggedInUser && loggedInUser.dsprDrivers && !driverId) {
-  //     if (loggedInUser.dsprDrivers.length > 0) {
-  //       handleNavigate();
-  //     }
-  //   }
-  // }, [loggedInUser, errorMessage]);
+  useEffect(() => {
+    if (!loggedInUser && errorMessage) {
+      Alert.alert(errorMessage);
+    }
+  }, [loggedInUser, errorMessage]);
 
   return <LoginForm handleLogin={handleLogin} isLoading={isLoading} />;
 };

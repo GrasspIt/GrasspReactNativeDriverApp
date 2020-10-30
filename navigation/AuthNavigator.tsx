@@ -26,19 +26,25 @@ const AuthNavigator = ({
   setDsprDriverId,
   preloadAccessTokenFromLocalStorage,
 }) => {
+  const [appReady, setAppReady] = useState(false);
+
+  const hideSplashScreen = async () => {
+    setAppReady(true);
+    console.log('hide splash screen');
+    await SplashScreen.hideAsync();
+  };
+
   const checkForToken = async () => {
-    try {
-      await SplashScreen.preventAutoHideAsync();
-    } catch (e) {
-      console.warn(e);
-    }
-    preloadAccessTokenFromLocalStorage();
+    await SplashScreen.preventAutoHideAsync();
+    await preloadAccessTokenFromLocalStorage();
+    hideSplashScreen();
   };
 
   useEffect(() => {
-    if (!loggedInUser) {
-      checkForToken();
-    }
+    checkForToken();
+  }, []);
+
+  useEffect(() => {
     if (loggedInUser) {
       if (!loggedInUser.dsprDrivers.length) {
         logout();
@@ -48,12 +54,11 @@ const AuthNavigator = ({
         setDsprDriverId(loggedInUser.dsprDrivers[0]);
         console.log('one driver');
       }
-      console.log('hide splash screen');
-      SplashScreen.hideAsync();
+      hideSplashScreen();
     }
   }, [loggedInUser]);
 
-  return (
+  return appReady ? (
     <NavigationContainer ref={navigationRef}>
       <RootStack.Navigator screenOptions={{ gestureEnabled: false }}>
         {!loggedInUser ? (
@@ -75,7 +80,7 @@ const AuthNavigator = ({
         )}
       </RootStack.Navigator>
     </NavigationContainer>
-  );
+  ) : null;
 };
 
 const mapStateToProps = (state) => {
