@@ -1,10 +1,8 @@
 import base64 from 'Base64';
 import qs from 'query-string';
 import * as SecureStore from 'expo-secure-store';
-// import * as RootNavigation from '../navigation/RootNavigation';
 import { CALL_API, Schemas } from '../middleware/api';
 
-// import { updateLoggedInUserInfo } from './userActions';
 // import { logException } from './apiUIHelperActions';
 
 import { getEnvVars } from '../environment';
@@ -25,7 +23,6 @@ export const preloadAccessTokenFromLocalStorage = () => {
   return async (dispatch) => {
     const accessToken = await SecureStore.getItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
     if (!accessToken) {
-      // RootNavigation.navigate('Login', null);
       return;
     }
     dispatch({
@@ -63,7 +60,6 @@ export const LOGOUT = 'LOGOUT';
 export const logout = () => {
   SecureStore.deleteItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
   SecureStore.deleteItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_TYPE);
-  // RootNavigation.navigate('Login', null);
   return { type: LOGOUT };
 };
 
@@ -133,10 +129,6 @@ const getLoggedInUser = () => ({
   },
 });
 
-// export const updateLoggedInUserInfo = () => (dispatch) => {
-//   return dispatch(getLoggedInUser());
-// };
-
 export const LOGIN = 'LOGIN';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
@@ -158,7 +150,7 @@ const login = (email, password) => {
 export const attemptLogin = (email, password) => (dispatch) => {
   dispatch({ type: LOGIN_PENDING });
   dispatch(login(email, password)).then((response) => {
-    if (!response.error) {
+    if (response.type === LOGIN_SUCCESS) {
       dispatch(getLoggedInUser());
     }
   });

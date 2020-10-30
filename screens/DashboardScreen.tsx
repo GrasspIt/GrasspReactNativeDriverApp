@@ -30,7 +30,6 @@ import OnCallSwitch from '../components/OnCallSwitch';
 
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
-import { getLoggedInUser } from '../selectors/userSelectors';
 
 // handler for push notifications
 Notifications.setNotificationHandler({
@@ -44,7 +43,6 @@ Notifications.setNotificationHandler({
 type DashboardScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Dashboard'>;
 type Props = {
   navigation: DashboardScreenNavigationProp;
-  loggedInUser;
   dspr;
   driverId;
   dsprDriver;
@@ -59,7 +57,6 @@ type Props = {
 const DashboardScreen = ({
   navigation,
   driverId,
-  loggedInUser,
   dspr,
   error,
   dsprDriver,
@@ -78,12 +75,12 @@ const DashboardScreen = ({
 
   // polling data from API while logged in
   const getDriverData = () => {
-    if (loggedInUser) refreshDSPRDriver(driverId);
+    if (driverId) refreshDSPRDriver(driverId);
   };
   useInterval(getDriverData, 60000);
 
   useEffect(() => {
-    if (loggedInUser) getDSPRDriver(driverId);
+    if (driverId) getDSPRDriver(driverId);
   }, [driverId]);
 
   useEffect(() => {
@@ -105,7 +102,6 @@ const DashboardScreen = ({
     // listen for when a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       (response: { notification: any }) => {
-        console.log(response);
         RootNavigation.navigate('Main', {
           screen: 'Orders',
           params: {
@@ -159,7 +155,7 @@ const DashboardScreen = ({
     })();
   }, [dsprDriver, isTracking]);
 
-  return loggedInUser && dsprDriver ? (
+  return dsprDriver ? (
     <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -251,7 +247,6 @@ const mapStateToProps = (state) => {
   const pushToken = state.api.entities.pushToken;
   const error = state.api.errorMessage;
   return {
-    loggedInUser: getLoggedInUser(state),
     driverId,
     dspr,
     dsprDriver,
