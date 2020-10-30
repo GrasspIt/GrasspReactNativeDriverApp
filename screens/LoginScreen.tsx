@@ -1,24 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, View, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Platform,
+  Keyboard,
+  View,
+  Image,
+  SafeAreaView,
+  Alert,
+} from 'react-native';
+import { Input, Button, Card } from 'react-native-elements';
+import { StatusBar } from 'expo-status-bar';
+import { useTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
-import { attemptLogin, preloadAccessTokenFromLocalStorage, logout } from '../actions/oauthActions';
+import { attemptLogin } from '../actions/oauthActions';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/AuthNavigator';
-import { setDsprDriverId } from '../actions/driverActions';
-import * as RootNavigation from '../navigation/RootNavigation';
-import LoginForm from '../components/LoginForm';
 import { getLoggedInUser } from '../selectors/userSelectors';
-import { useTheme } from 'react-native-paper';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Login'>;
 type Props = {
   navigation: LoginScreenNavigationProp;
   loggedInUser;
   errorMessage;
-  driverId;
-  logout;
-  setDsprDriverId;
-  preloadAccessTokenFromLocalStorage;
   attemptLogin;
   isLoading;
 };
@@ -27,18 +31,15 @@ const LoginScreen = ({
   navigation,
   loggedInUser,
   errorMessage,
-  driverId,
-  logout,
-  setDsprDriverId,
-  preloadAccessTokenFromLocalStorage,
   attemptLogin,
   isLoading,
 }: Props) => {
   const { colors } = useTheme();
 
-  const handleLogin = (username: string, password: string) => {
-    attemptLogin(username, password);
-  };
+  const [passwordInvalid, setPasswordInvalid] = useState(false);
+  const [emailInvalid, setEmailInvalid] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     if (!loggedInUser && errorMessage) {
@@ -46,26 +47,119 @@ const LoginScreen = ({
     }
   }, [loggedInUser, errorMessage]);
 
-  return <LoginForm handleLogin={handleLogin} isLoading={isLoading} />;
+  const handleEmailChange = (text) => {
+    if (emailInvalid) setEmailInvalid(false);
+    setEmail(text);
+  };
+
+  const handlePasswordChange = (text) => {
+    if (passwordInvalid) setPasswordInvalid(false);
+    setPassword(text);
+  };
+
+  const handleSubmit = () => {
+    if (email.trim().length === 0) {
+      setEmailInvalid(true);
+      return;
+    }
+    if (password.trim().length === 0) {
+      setPasswordInvalid(true);
+      return;
+    }
+    Keyboard.dismiss();
+    attemptLogin(email, password);
+    setEmail('');
+    setPassword('');
+  };
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1, backgroundColor: colors.background }}
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: 1,
+            }}
+          >
+            <Image
+              source={require('../assets/grassp_health.png')}
+              style={{
+                height: 60,
+                width: 230,
+              }}
+            />
+            <Card containerStyle={{ width: '80%' }}>
+              <Card.Title>LOGIN</Card.Title>
+              <Card.Divider />
+              <Input
+                containerStyle={{ marginVertical: 10 }}
+                placeholder='Email'
+                label='Email'
+                labelStyle={{ color: colors.onSurface }}
+                keyboardType='email-address'
+                autoCapitalize='none'
+                leftIcon={{
+                  type: 'font-awesome',
+                  color: colors.onSurface,
+                  name: 'envelope',
+                }}
+                errorStyle={{ color: 'red' }}
+                errorMessage={emailInvalid ? 'ENTER EMAIL' : undefined}
+                onChangeText={(text) => handleEmailChange(text)}
+                value={email}
+              />
+              <Input
+                containerStyle={{ marginVertical: 10 }}
+                placeholder='Password'
+                label='Password'
+                labelStyle={{ color: colors.onSurface }}
+                autoCapitalize='none'
+                leftIcon={{
+                  type: 'font-awesome',
+                  color: colors.onSurface,
+                  name: 'lock',
+                }}
+                secureTextEntry={true}
+                errorStyle={{ color: colors.error }}
+                errorMessage={passwordInvalid ? 'ENTER PASSWORD' : undefined}
+                onChangeText={(text) => handlePasswordChange(text)}
+                value={password}
+              />
+              {isLoading ? (
+                <Button buttonStyle={{ backgroundColor: colors.primary }} loading />
+              ) : (
+                <Button
+                  buttonStyle={{ backgroundColor: colors.primary }}
+                  title='Login'
+                  titleStyle={{ color: colors.surface }}
+                  onPress={handleSubmit}
+                />
+              )}
+            </Card>
+          </View>
+        </TouchableWithoutFeedback>
+        <StatusBar style='dark' />
+      </KeyboardAvoidingView>
+      <StatusBar style='dark' />
+    </SafeAreaView>
+  );
 };
 
 const mapStateToProps = (state) => {
-  const driverId = state.api.dsprDriverId;
   const errorMessage = state.api.errorMessage;
   const isLoading = state.api.isLoading;
   return {
     loggedInUser: getLoggedInUser(state),
     errorMessage,
-    driverId,
     isLoading,
   };
 };
 
-const mapDispatchToProps = {
-  preloadAccessTokenFromLocalStorage,
-  logout,
-  setDsprDriverId,
-  attemptLogin,
-};
+const mapDispatchToProps = { attemptLogin };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
