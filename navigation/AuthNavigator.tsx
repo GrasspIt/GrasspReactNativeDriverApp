@@ -30,7 +30,6 @@ const AuthNavigator = ({
 
   const hideSplashScreen = async () => {
     setAppReady(true);
-    console.log('hide splash screen');
     await SplashScreen.hideAsync();
   };
 
@@ -52,7 +51,6 @@ const AuthNavigator = ({
       }
       if (loggedInUser.dsprDrivers.length === 1) {
         setDsprDriverId(loggedInUser.dsprDrivers[0]);
-        console.log('one driver');
       }
       hideSplashScreen();
     }
