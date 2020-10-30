@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { getEnvVars } from '../environment';
@@ -15,6 +15,8 @@ const DsprCard = ({ dspr, handleSelect }: CardProps) => {
   const image = dspr.imageLocation
     ? { uri: `${apiUrl}${dspr.imageLocation}` }
     : require('../assets/grassp_health.png');
+
+  //only display dsprs that the user is active driver for (dsprDriver.active?)
 
   return (
     <TouchableOpacity style={styles.container} onPress={() => handleSelect(dspr.id)}>

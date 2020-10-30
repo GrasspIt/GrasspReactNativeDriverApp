@@ -1,7 +1,6 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { setDsprDriverId } from '../actions/driverActions';
-import { State } from '../store/reduxStoreState';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import { View, FlatList, Text } from 'react-native';
@@ -10,21 +9,23 @@ import DsprCard from '../components/DsprCard';
 import { StatusBar } from 'expo-status-bar';
 
 type DSPRScreenNavigationProp = StackNavigationProp<DrawerStackParamsList, 'DSPRs'>;
-type Props = { navigation: DSPRScreenNavigationProp };
+type Props = { navigation: DSPRScreenNavigationProp; setDsprDriverId; dsprs; dsprDrivers };
 
-const DSPRScreen = ({ navigation }: Props) => {
-  const dispatch = useDispatch();
+const DSPRScreen = ({ navigation, setDsprDriverId, dsprs, dsprDrivers }: Props) => {
   const { colors } = useTheme();
-  const dsprs = useSelector<State, Object>((state) => state.api.entities.DSPRs);
-  const dsprDataList = Object.values(dsprs);
 
-  const dsprDrivers = useSelector<State, Object>((state) => state.api.entities.dsprDrivers);
-  const dsprDriverDataList = dsprDrivers && Object.values(dsprDrivers);
+  // only use dsprs with ids that match active dspr drivers
+  const driverDataList =
+    dsprDrivers && Object.values(dsprDrivers).filter((driver: any) => driver.active);
+  const driverDsprIds = driverDataList.map((driver: any) => driver.dspr);
+  const dsprsWithActiveDriver = Object.values(dsprs).filter((dspr: any) =>
+    driverDsprIds.some((id) => id === dspr.id)
+  );
 
   const handleSelectDspr = (dsprId: number) => {
     // find the dsprDriver that matches the dsprId
-    const selectedDriver = dsprDriverDataList.find((driver: any) => driver.dspr === dsprId);
-    dispatch(setDsprDriverId(selectedDriver.id));
+    const selectedDriver: any = driverDataList.find((driver: any) => driver.dspr === dsprId);
+    setDsprDriverId(selectedDriver.id);
   };
 
   return (
@@ -37,14 +38,14 @@ const DSPRScreen = ({ navigation }: Props) => {
     >
       <View
         style={{
-          paddingTop: 40,
+          paddingTop: 22,
           alignItems: 'center',
         }}
       >
         <Text
           style={{
             fontSize: 20,
-            padding: 20,
+            padding: 16,
             fontWeight: 'bold',
           }}
         >
@@ -52,7 +53,7 @@ const DSPRScreen = ({ navigation }: Props) => {
         </Text>
       </View>
       <FlatList
-        data={dsprDataList}
+        data={dsprsWithActiveDriver}
         renderItem={(item) => <DsprCard handleSelect={handleSelectDspr} dspr={item.item} />}
         keyExtractor={(item: any) => item.id.toString()}
       />
@@ -61,4 +62,19 @@ const DSPRScreen = ({ navigation }: Props) => {
   );
 };
 
-export default DSPRScreen;
+const mapStateToProps = (state) => {
+  const errorMessage = state.api.errorMessage;
+  const isLoading = state.api.isLoading;
+  const dsprs = state.api.entities.DSPRs;
+  const dsprDrivers = state.api.entities.dsprDrivers;
+  return {
+    errorMessage,
+    isLoading,
+    dsprs,
+    dsprDrivers,
+  };
+};
+
+const mapDispatchToProps = { setDsprDriverId };
+
+export default connect(mapStateToProps, mapDispatchToProps)(DSPRScreen);
