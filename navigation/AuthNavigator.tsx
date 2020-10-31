@@ -21,6 +21,7 @@ const RootStack = createStackNavigator<RootStackParamsList>();
 
 const AuthNavigator = ({
   isLoading,
+  dsprDrivers,
   loggedInUser,
   logout,
   setDsprDriverId,
@@ -44,17 +45,20 @@ const AuthNavigator = ({
   }, []);
 
   useEffect(() => {
-    if (loggedInUser) {
-      if (!loggedInUser.dsprDrivers.length) {
+    if (loggedInUser && dsprDrivers) {
+      // check if the user is an active dspr driver
+      const activeDrivers: any =
+        dsprDrivers && Object.values(dsprDrivers).filter((driver: any) => driver.active);
+      if (!activeDrivers || !activeDrivers.length) {
         logout();
-        Alert.alert('You must be a DSPR driver to use this app.');
+        Alert.alert('You must be an active DSPR driver to use this app.');
       }
-      if (loggedInUser.dsprDrivers.length === 1) {
-        setDsprDriverId(loggedInUser.dsprDrivers[0]);
+      if (activeDrivers.length === 1) {
+        setDsprDriverId(activeDrivers[0].id);
       }
       hideSplashScreen();
     }
-  }, [loggedInUser]);
+  }, [loggedInUser, dsprDrivers]);
 
   return appReady ? (
     <NavigationContainer ref={navigationRef}>
@@ -83,8 +87,10 @@ const AuthNavigator = ({
 
 const mapStateToProps = (state) => {
   const isLoading = state.api.isLoading;
+  const dsprDrivers = state.api.entities.dsprDrivers;
   return {
     loggedInUser: getLoggedInUser(state),
+    dsprDrivers,
     isLoading,
   };
 };

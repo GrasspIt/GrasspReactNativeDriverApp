@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { CALL_API, Schemas } from '../middleware/api';
 import { getOrderFromProps } from '../selectors/orderSelectors';
 import { getDSPRDriver } from './driverActions';
@@ -56,6 +57,10 @@ export const cancelOrder = (orderId) => (dispatch, getState) => {
     if (response.type === CANCEL_ORDER_SUCCESS) {
       const order = getOrderFromProps(getState(), { orderId });
       order && dispatch(getDSPRDriver(order.dsprDriver));
+      Alert.alert('Success!', 'Order cancelled.');
+    }
+    if (response.type === CANCEL_ORDER_FAILURE) {
+      Alert.alert('Error', 'Failed to cancel order.');
     }
   });
 };
