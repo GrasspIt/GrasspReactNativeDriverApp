@@ -51,7 +51,6 @@ const AuthNavigator = ({
         Alert.alert('You must be a DSPR driver to use this app.');
       }
       if (loggedInUser.dsprDrivers.length === 1) {
-        console.log('loggedInUser.dsprDrivers', loggedInUser.dsprDrivers);
         setDsprDriverId(loggedInUser.dsprDrivers[0]);
       }
       hideSplashScreen();

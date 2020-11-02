@@ -83,7 +83,6 @@ const DashboardScreen = ({
 
   useEffect(() => {
     getDriverData();
-    console.log('driverId: Dashboard', driverId);
   }, [driverId]);
 
   // push notifications

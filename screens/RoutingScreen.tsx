@@ -284,7 +284,6 @@ const mapStateToProps = (state) => {
   const driver = getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps(state, {
     dsprDriverId: dsprDriverIdForOrderDetails,
   });
-  console.log('driver', driver);
   const dspr = driver ? getDSPRFromProps(state, { dsprId: driver.dspr }) : undefined;
   const isLoading = state.api.isLoading;
   return {

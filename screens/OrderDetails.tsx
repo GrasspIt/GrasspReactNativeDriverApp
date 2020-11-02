@@ -8,7 +8,7 @@ import {
   Clipboard,
   SafeAreaView,
 } from 'react-native';
-import { ListItem, Divider } from 'react-native-elements';
+import { ListItem, Divider, Tooltip } from 'react-native-elements';
 import { Button, Title, IconButton, useTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
@@ -167,12 +167,14 @@ const OrderDetails = ({
                   <ListItem.Title>Medical ID:</ListItem.Title>
                   <ListItem.Subtitle>{medicalRecommendation.idNumber}</ListItem.Subtitle>
                 </ListItem.Content>
-                <IconButton
-                  icon='content-copy'
-                  color={colors.primary}
-                  size={20}
-                  onPress={() => Clipboard.setString(medicalRecommendation.idNumber)}
-                />
+                <Tooltip popover={<Text>Copied to clipboard.</Text>}>
+                  <IconButton
+                    icon='content-copy'
+                    color={colors.primary}
+                    size={20}
+                    onPress={() => Clipboard.setString(medicalRecommendation.idNumber)}
+                  />
+                </Tooltip>
               </ListItem>
             )}
 
