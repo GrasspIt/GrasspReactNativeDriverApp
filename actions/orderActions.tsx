@@ -30,6 +30,10 @@ export const completeOrder = (orderId) => (dispatch, getState) => {
     if (response.type === COMPLETE_ORDER_SUCCESS) {
       const order = getOrderFromProps(getState(), { orderId });
       order && dispatch(getDSPRDriver(order.dsprDriver));
+      Alert.alert('Success!', 'Order completed.');
+    }
+    if (response.type === COMPLETE_ORDER_FAILURE) {
+      Alert.alert('Error', response.error);
     }
   });
 };
@@ -60,7 +64,7 @@ export const cancelOrder = (orderId) => (dispatch, getState) => {
       Alert.alert('Success!', 'Order cancelled.');
     }
     if (response.type === CANCEL_ORDER_FAILURE) {
-      Alert.alert('Error', 'Failed to cancel order.');
+      Alert.alert('Error', response.error);
     }
   });
 };
@@ -88,6 +92,10 @@ export const markOrderInProcess = (orderId) => (dispatch, getState) => {
     if (response.type === MARK_IN_PROCESS_SUCCESS) {
       const order = getOrderFromProps(getState(), { orderId });
       order && dispatch(getDSPRDriver(order.dsprDriver));
+      Alert.alert('Success!', 'Order in process.');
+    }
+    if (response.type === MARK_IN_PROCESS_FAILURE) {
+      Alert.alert('Error', response.error);
     }
   });
 };

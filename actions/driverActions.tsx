@@ -1,5 +1,5 @@
 import { CALL_API, Schemas } from '../middleware/api';
-
+import { Alert } from 'react-native';
 import { getSpecificUser } from './userActions';
 import { getDSPR } from './dsprActions';
 import * as RootNavigation from '../navigation/RootNavigation';
@@ -259,9 +259,23 @@ export const createDSPRDriverRoute = (
   usingFinalDestinationInRoute: Boolean
 ) => (dispatch) => {
   dispatch({ type: CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING });
-  return dispatch(
+  // dispatch(orderCanceler(orderId)).then((response) => {
+  //   if (response.type === CANCEL_ORDER_SUCCESS) {
+  //     const order = getOrderFromProps(getState(), { orderId });
+  //     order && dispatch(getDSPRDriver(order.dsprDriver));
+  //     Alert.alert('Success!', 'Order cancelled.');
+  //   }
+  //   if (response.type === CANCEL_ORDER_FAILURE) {
+  //     Alert.alert('Error', 'Failed to cancel order.');
+  //   }
+  // });
+  dispatch(
     createNewRoute(driverId, waypoints, finalDestination, usingFinalDestinationInRoute)
-  );
+  ).then((response) => {
+    if (response.type === CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE) {
+      Alert.alert('Error', response.error);
+    }
+  });
 };
 
 export const PROGRESS_DSPR_DRIVER_ROUTE_PENDING = 'PROGRESS_DSPR_DRIVER_ROUTE_PENDING';

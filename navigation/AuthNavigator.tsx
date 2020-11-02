@@ -45,18 +45,29 @@ const AuthNavigator = ({
   }, []);
 
   useEffect(() => {
-    if (loggedInUser && dsprDrivers) {
-      // check if the user is an active dspr driver
-      const activeDrivers: any =
-        dsprDrivers && Object.values(dsprDrivers).filter((driver: any) => driver.active);
-      if (!activeDrivers || !activeDrivers.length) {
-        logout();
-        Alert.alert('You must be an active DSPR driver to use this app.');
+    if (loggedInUser) {
+      //   // check if the user is an active dspr driver
+      //   const activeDrivers: any =
+      //     dsprDrivers && Object.values(dsprDrivers).filter((driver: any) => driver.active);
+      //   if (!activeDrivers || !activeDrivers.length) {
+      //     logout();
+      //     Alert.alert('You must be an active DSPR driver to use this app.');
+      //   }
+      //   if (activeDrivers.length === 1) {
+      //     setDsprDriverId(activeDrivers[0].id);
+      //   }
+      //   hideSplashScreen();
+      // }
+      if (loggedInUser) {
+        if (!loggedInUser.dsprDrivers || loggedInUser.dsprDrivers.length < 1) {
+          logout();
+          Alert.alert('You must be an active DSPR driver to use this app.');
+        }
+        if (loggedInUser.dsprDrivers.length === 1) {
+          setDsprDriverId(loggedInUser.dsprDrivers[0].id);
+        }
+        hideSplashScreen();
       }
-      if (activeDrivers.length === 1) {
-        setDsprDriverId(activeDrivers[0].id);
-      }
-      hideSplashScreen();
     }
   }, [loggedInUser, dsprDrivers]);
 
