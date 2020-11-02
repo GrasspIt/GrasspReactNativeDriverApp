@@ -69,7 +69,7 @@ const OrderDetails = ({
         <View style={[styles.fillScreen, { backgroundColor: colors.background }]}>
           <ActivityIndicator size='large' color={colors.primary} />
         </View>
-      ) : (
+      ) : order ? (
         <>
           <ScrollView style={[styles.scroll, { backgroundColor: colors.background }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -262,6 +262,10 @@ const OrderDetails = ({
           </ScrollView>
           {order && <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />}
         </>
+      ) : (
+        <View style={[styles.fillScreen, { backgroundColor: colors.background }]}>
+          <Text>Failed to fetch order details.</Text>
+        </View>
       )}
     </SafeAreaView>
   );

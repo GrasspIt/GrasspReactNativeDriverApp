@@ -72,13 +72,18 @@ const DashboardScreen = ({
   const [notification, setNotification] = useState<any>(false);
 
   // polling data from API while logged in
-  const getDriverData = () => {
+  const refreshDriverData = () => {
     if (driverId) refreshDSPRDriver(driverId);
   };
-  useInterval(getDriverData, 60000);
+  useInterval(refreshDriverData, 60000);
+
+  const getDriverData = () => {
+    if (driverId) getDSPRDriver(driverId);
+  };
 
   useEffect(() => {
-    if (driverId) getDSPRDriver(driverId);
+    getDriverData();
+    console.log('driverId: Dashboard', driverId);
   }, [driverId]);
 
   // push notifications
@@ -149,24 +154,27 @@ const DashboardScreen = ({
     })();
   }, [dsprDriver, isTracking]);
 
-  return dsprDriver ? (
+  return (
     <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
           <ActivityIndicator size='large' color={colors.primary} />
         </View>
-      ) : (
+      ) : dsprDriver ? (
         <View style={{ flex: 1, backgroundColor: colors.background }}>
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
         </View>
+      ) : (
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+          <Text>Unable to fetch driver data.</Text>
+          <Button mode='text' onPress={getDriverData}>
+            Try Again
+          </Button>
+        </View>
       )}
       <StatusBar style='dark' />
     </SafeAreaView>
-  ) : (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text>No driver data.</Text>
-    </View>
   );
 };
 

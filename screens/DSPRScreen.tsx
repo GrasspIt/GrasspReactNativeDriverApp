@@ -16,20 +16,11 @@ const DSPRScreen = ({ navigation, setDsprDriverId, dsprs, dsprDrivers }: Props) 
 
   const dsprDataList = Object.values(dsprs);
   const dsprDriverDataList = dsprDrivers && Object.values(dsprDrivers);
-  // only use dsprs with ids that match active dspr drivers
-  // const driverDataList =
-  //   dsprDrivers && Object.values(dsprDrivers).filter((driver: any) => driver.active);
-  // const driverDsprIds = driverDataList.map((driver: any) => driver.dspr);
-  // const dsprsWithActiveDriver = Object.values(dsprs).filter((dspr: any) =>
-  //   driverDsprIds.some((id) => id === dspr.id)
-  // );
 
   const handleSelectDspr = (dsprId: number) => {
     // find the dsprDriver that matches the dsprId
     const selectedDriver: any = dsprDriverDataList.find((driver: any) => driver.dspr === dsprId);
     setDsprDriverId(selectedDriver.id);
-    // const selectedDriver: any = driverDataList.find((driver: any) => driver.dspr === dsprId);
-    // setDsprDriverId(selectedDriver.id);
   };
 
   return (
@@ -39,7 +30,6 @@ const DSPRScreen = ({ navigation, setDsprDriverId, dsprs, dsprDrivers }: Props) 
       </View>
       <FlatList
         data={dsprDataList}
-        // data={dsprsWithActiveDriver}
         renderItem={(item) => <DsprCard handleSelect={handleSelectDspr} dspr={item.item} />}
         keyExtractor={(item: any) => item.id.toString()}
       />
