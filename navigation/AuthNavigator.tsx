@@ -20,8 +20,7 @@ export type RootStackParamsList = {
 const RootStack = createStackNavigator<RootStackParamsList>();
 
 const AuthNavigator = ({
-  isLoading,
-  dsprDrivers,
+  driverId,
   loggedInUser,
   logout,
   setDsprDriverId,
@@ -50,12 +49,12 @@ const AuthNavigator = ({
         logout();
         Alert.alert('You must be a DSPR driver to use this app.');
       }
-      if (loggedInUser.dsprDrivers.length === 1) {
+      if (!driverId && loggedInUser.dsprDrivers.length === 1) {
         setDsprDriverId(loggedInUser.dsprDrivers[0]);
       }
       hideSplashScreen();
     }
-  }, [loggedInUser]);
+  }, [loggedInUser, driverId]);
 
   return appReady ? (
     <NavigationContainer ref={navigationRef}>
@@ -85,8 +84,10 @@ const AuthNavigator = ({
 const mapStateToProps = (state) => {
   const isLoading = state.api.isLoading;
   const dsprDrivers = state.api.entities.dsprDrivers;
+  const driverId = state.api.dsprDriverId;
   return {
     loggedInUser: getLoggedInUser(state),
+    driverId,
     dsprDrivers,
     isLoading,
   };

@@ -11,6 +11,7 @@ const OrderSelectionModal = ({
   maxOrdersPerRoute,
   driver,
   confirmCreateRoute,
+  disableButton,
 }) => {
   const { colors } = useTheme();
   return (
@@ -55,6 +56,7 @@ const OrderSelectionModal = ({
           Cancel
         </Button>
         <Button
+          disabled={disableButton}
           mode='contained'
           labelStyle={{ color: colors.background }}
           onPress={() => confirmCreateRoute()}

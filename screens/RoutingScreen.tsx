@@ -55,6 +55,7 @@ type Props = {
 const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoading }: Props) => {
   const { colors } = useTheme();
 
+  const [disableButton, setDisableButton] = useState(false);
   const [ordersForRoute, setOrdersForRoute] = useState<any>();
   const [finalOrderForRoute, setFinalOrderForRoute] = useState<any>();
   const [currentInProcessOrderInActiveRoute, setCurrentInProcessOrderInActiveRoute] = useState<
@@ -90,11 +91,13 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
       return;
     }
     createNewRoute(driver.id, ordersForRoute, finalOrderForRoute, false);
+    setDisableButton(false);
     setOrderSelectionModalOpen(false);
   };
 
   // check if there is already an active route
   const confirmCreateRoute = () => {
+    setDisableButton(true);
     if (driver && driver.currentRoute && driver.currentRoute.active) {
       Alert.alert(
         'Override Route?',
@@ -258,6 +261,7 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ padding: 10 }}>No currently active route.</Text>
           <Button
+            disabled={disableButton}
             mode='contained'
             labelStyle={{ color: colors.surface, fontSize: 14 }}
             onPress={() => setOrderSelectionModalOpen(true)}
@@ -273,6 +277,7 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
         maxOrdersPerRoute={maxOrdersPerRoute}
         driver={driver}
         confirmCreateRoute={confirmCreateRoute}
+        disableButton={disableButton}
       />
       <StatusBar style='dark' />
     </SafeAreaView>
