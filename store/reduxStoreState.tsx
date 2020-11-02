@@ -46,7 +46,6 @@ export interface Api {
   accessToken: string;
   loggedInUserId: string;
   dsprDriverId: string;
-  errorMessage: string;
   isLoading: boolean;
   entities: Entities;
 }

@@ -22,30 +22,17 @@ type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Login
 type Props = {
   navigation: LoginScreenNavigationProp;
   loggedInUser;
-  errorMessage;
   attemptLogin;
   isLoading;
 };
 
-const LoginScreen = ({
-  navigation,
-  loggedInUser,
-  errorMessage,
-  attemptLogin,
-  isLoading,
-}: Props) => {
+const LoginScreen = ({ navigation, loggedInUser, attemptLogin, isLoading }: Props) => {
   const { colors } = useTheme();
 
   const [passwordInvalid, setPasswordInvalid] = useState(false);
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  useEffect(() => {
-    if (!loggedInUser && errorMessage) {
-      Alert.alert(errorMessage);
-    }
-  }, [loggedInUser, errorMessage]);
 
   const handleEmailChange = (text) => {
     if (emailInvalid) setEmailInvalid(false);
@@ -151,11 +138,9 @@ const LoginScreen = ({
 };
 
 const mapStateToProps = (state) => {
-  const errorMessage = state.api.errorMessage;
   const isLoading = state.api.isLoading;
   return {
     loggedInUser: getLoggedInUser(state),
-    errorMessage,
     isLoading,
   };
 };

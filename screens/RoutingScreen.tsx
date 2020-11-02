@@ -50,17 +50,9 @@ type Props = {
   dspr: DSPR;
   createDSPRDriverRoute: any;
   isLoading: Boolean;
-  error: any;
 };
 
-const RoutingScreen = ({
-  navigation,
-  driver,
-  dspr,
-  createDSPRDriverRoute,
-  isLoading,
-  error,
-}: Props) => {
+const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoading }: Props) => {
   const { colors } = useTheme();
 
   const [ordersForRoute, setOrdersForRoute] = useState<any>();
@@ -74,10 +66,6 @@ const RoutingScreen = ({
   const [orderPolyline, setOrderPolyline] = useState<any>();
   const [overviewPolyline, setOverviewPolyline] = useState<any>();
   const [maxOrdersPerRoute, setMaxOrdersPerRoute] = useState<any>();
-
-  useEffect(() => {
-    if (error) Alert.alert('ERROR', error);
-  }, [error]);
 
   const createNewRoute = (
     driverId: number,
@@ -299,12 +287,10 @@ const mapStateToProps = (state) => {
   console.log('driver', driver);
   const dspr = driver ? getDSPRFromProps(state, { dsprId: driver.dspr }) : undefined;
   const isLoading = state.api.isLoading;
-  const error = state.api.errorMessage;
   return {
     dspr,
     driver,
     isLoading,
-    error,
   };
 };
 

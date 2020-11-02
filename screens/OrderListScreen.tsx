@@ -28,7 +28,6 @@ type Props = {
   isLoading;
   refreshDSPRDriver;
   getDSPRDriver;
-  error;
 };
 
 const OrderListScreen = ({
@@ -37,15 +36,9 @@ const OrderListScreen = ({
   loggedInUser,
   dsprDriver,
   isLoading,
-  refreshDSPRDriver,
   getDSPRDriver,
-  error,
 }: Props) => {
   const { colors } = useTheme();
-
-  useEffect(() => {
-    if (error) Alert.alert('ERROR', error);
-  }, [error]);
 
   const getDriverData = () => {
     if (loggedInUser) getDSPRDriver(driverId);
@@ -122,13 +115,11 @@ const mapStateToProps = (state) => {
     dsprDriverId: driverId,
   });
   const isLoading = state.api.isLoading;
-  const error = state.api.errorMessage;
   return {
     loggedInUser: getLoggedInUser(state),
     driverId,
     dsprDriver,
     isLoading,
-    error,
   };
 };
 

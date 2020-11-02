@@ -66,14 +66,18 @@ const dsprDriverGetter = (dsprDriverId) => {
 
 export const getDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
   dispatch({ type: DRIVER_DATA_PENDING });
-  dispatch(dsprDriverGetter(dsprDriverId)).then((response) => {
-    return response;
-  });
+  dispatch(dsprDriverGetter(dsprDriverId))
+    .then((response) => {
+      if (response.type === GET_DSPR_DRIVER_FAILURE) {
+        Alert.alert('ERROR', 'Failed to fetch driver data.');
+      }
+    })
+    .catch((error) => console.log(error));
 };
 
 export const refreshDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
-  dispatch(dsprDriverGetter(dsprDriverId)).then((response) => {
-    return response;
+  dispatch(dsprDriverGetter(dsprDriverId)).catch((error) => {
+    console.log(error);
   });
 };
 
@@ -161,7 +165,13 @@ const driverOnCallStateSetter = (dsprDriverId, onCallString) => {
 
 export const setDriverOnCallState = (dsprDriverId, isOnCall) => (dispatch, getState) => {
   dispatch({ type: SET_ON_CALL_STATE_FOR_DRIVER_PENDING });
-  return dispatch(driverOnCallStateSetter(dsprDriverId, isOnCall));
+  dispatch(driverOnCallStateSetter(dsprDriverId, isOnCall))
+    .then((response) => {
+      if (response.type === SET_ON_CALL_STATE_FOR_DRIVER_FAILURE) {
+        Alert.alert('ERROR', response.error);
+      }
+    })
+    .catch((error) => console.log(error));
 };
 
 export const SET_DRIVER_LOCATION = 'SET_DRIVER_LOCATION';
@@ -259,16 +269,6 @@ export const createDSPRDriverRoute = (
   usingFinalDestinationInRoute: Boolean
 ) => (dispatch) => {
   dispatch({ type: CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING });
-  // dispatch(orderCanceler(orderId)).then((response) => {
-  //   if (response.type === CANCEL_ORDER_SUCCESS) {
-  //     const order = getOrderFromProps(getState(), { orderId });
-  //     order && dispatch(getDSPRDriver(order.dsprDriver));
-  //     Alert.alert('Success!', 'Order cancelled.');
-  //   }
-  //   if (response.type === CANCEL_ORDER_FAILURE) {
-  //     Alert.alert('Error', 'Failed to cancel order.');
-  //   }
-  // });
   dispatch(
     createNewRoute(driverId, waypoints, finalDestination, usingFinalDestinationInRoute)
   ).then((response) => {
@@ -299,10 +299,15 @@ const progressDriverRoute = (routeId: number) => {
 };
 export const progressDSPRDriverRoute = (routeId: number) => (dispatch, getState) => {
   dispatch({ type: PROGRESS_DSPR_DRIVER_ROUTE_PENDING });
-  return dispatch(progressDriverRoute(routeId)).then((response) => {
-    if (response.type === PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS) {
-      const driverId = getState().api.dsprDriverId;
-      dispatch(getDSPRDriver(driverId));
-    }
-  });
+  return dispatch(progressDriverRoute(routeId))
+    .then((response) => {
+      if (response.type === PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS) {
+        const driverId = getState().api.dsprDriverId;
+        dispatch(getDSPRDriver(driverId));
+      }
+      if (response.type === PROGRESS_DSPR_DRIVER_ROUTE_FAILURE) {
+        Alert.alert('ERROR', response.error);
+      }
+    })
+    .catch((error) => console.log(error));
 };

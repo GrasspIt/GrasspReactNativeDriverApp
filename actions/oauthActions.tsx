@@ -6,6 +6,7 @@ import { CALL_API, Schemas } from '../middleware/api';
 // import { logException } from './apiUIHelperActions';
 
 import { getEnvVars } from '../environment';
+import { Alert } from 'react-native';
 const { apiUrl } = getEnvVars();
 
 export const API_HOST = apiUrl;
@@ -29,7 +30,7 @@ export const preloadAccessTokenFromLocalStorage = () => {
       type: PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE,
       accessToken,
     });
-    dispatch(getLoggedInUser());
+    dispatch(getLoggedInUser()).catch((error) => console.log(error));
   };
 };
 
@@ -149,11 +150,16 @@ const login = (email, password) => {
 
 export const attemptLogin = (email, password) => (dispatch) => {
   dispatch({ type: LOGIN_PENDING });
-  dispatch(login(email, password)).then((response) => {
-    if (response.type === LOGIN_SUCCESS) {
-      dispatch(getLoggedInUser());
-    }
-  });
+  dispatch(login(email, password))
+    .then((response) => {
+      if (response.type === LOGIN_SUCCESS) {
+        dispatch(getLoggedInUser());
+      }
+      if (response.type === LOGIN_FAILURE) {
+        Alert.alert('ERROR', 'Invalid email or password.');
+      }
+    })
+    .catch((error) => console.log(error));
 };
 
 export const UPDATE_ACCESS_TOKEN = 'UPDATE_ACCESS_TOKEN';

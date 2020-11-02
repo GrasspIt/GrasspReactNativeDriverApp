@@ -51,14 +51,12 @@ type Props = {
   refreshDSPRDriver;
   getDSPRDriver;
   sendPushToken;
-  error;
 };
 
 const DashboardScreen = ({
   navigation,
   driverId,
   dspr,
-  error,
   dsprDriver,
   isLoading,
   pushToken,
@@ -82,10 +80,6 @@ const DashboardScreen = ({
   useEffect(() => {
     if (driverId) getDSPRDriver(driverId);
   }, [driverId]);
-
-  useEffect(() => {
-    if (error) Alert.alert('ERROR', error);
-  }, [error]);
 
   // push notifications
   useEffect(() => {
@@ -245,13 +239,11 @@ const mapStateToProps = (state) => {
   const dspr = dsprDriver ? getDSPRFromProps(state, { dsprId: dsprDriver.dspr }) : undefined;
   const isLoading = state.api.isLoading;
   const pushToken = state.api.entities.pushToken;
-  const error = state.api.errorMessage;
   return {
     driverId,
     dspr,
     dsprDriver,
     isLoading,
-    error,
     pushToken,
   };
 };

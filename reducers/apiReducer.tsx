@@ -66,6 +66,7 @@ import {
   PROGRESS_DSPR_DRIVER_ROUTE_PENDING,
   CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE,
   PROGRESS_DSPR_DRIVER_ROUTE_FAILURE,
+  SET_ON_CALL_STATE_FOR_DRIVER_FAILURE,
 } from '../actions/driverActions';
 // import {
 //     CREATE_DSP_PRODUCT_SUCCESS, GET_PRODUCT_SUCCESS, GET_ALL_PRODUCTS_FOR_DSP_SUCCESS, CREATE_NEW_CATEGORY_SUCCESS,
@@ -115,7 +116,6 @@ const initialState = {
   accessToken: '',
   loggedInUserId: '',
   dsprDriverId: '',
-  errorMessage: '',
   isLoading: false,
   entities: entitiesInitialState,
 };
@@ -132,23 +132,16 @@ export default (state = initialState, action) => {
     case SET_ON_CALL_STATE_FOR_DRIVER_PENDING:
     case CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING:
     case PROGRESS_DSPR_DRIVER_ROUTE_PENDING:
-      return { ...state, errorMessage: '', isLoading: true };
+      return { ...state, isLoading: true };
 
     // actions failed
-    case LOGGED_IN_USER_INFO_FAILURE:
-      return { ...state, isLoading: false, errorMessage: 'Failed to fetch user info.' };
-    case LOGIN_FAILURE:
-      return { ...state, isLoading: false, errorMessage: 'Invalid email or password.' };
     case GET_DSPR_DRIVER_FAILURE:
-      return { ...state, isLoading: false, errorMessage: 'Failed to get driver data.' };
     case GET_ORDER_DETAILS_WITH_ID_FAILURE:
-      return { ...state, isLoading: false, errorMessage: 'Failed to get order details.' };
-    case COMPLETE_ORDER_FAILURE:
-      return { ...state, isLoading: false, errorMessage: 'Failed to complete order.' };
-    case MARK_IN_PROCESS_FAILURE:
-      return { ...state, isLoading: false, errorMessage: 'Failed to mark order in process.' };
     case PROGRESS_DSPR_DRIVER_ROUTE_FAILURE:
-      return { ...state, isLoading: false, errorMessage: 'Failed to progress route.' };
+    case SET_ON_CALL_STATE_FOR_DRIVER_FAILURE:
+    case LOGIN_FAILURE:
+    case MARK_IN_PROCESS_FAILURE:
+    case COMPLETE_ORDER_FAILURE:
     case CANCEL_ORDER_FAILURE:
     case CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE:
       return { ...state, isLoading: false };
@@ -248,7 +241,7 @@ export default (state = initialState, action) => {
     //     case UPDATE_DSPR_MENU_MECHANISM_SUCCESS:
     case CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS:
     case PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS:
-      const newState = { ...state, errorMessage: '', isLoading: false };
+      const newState = { ...state, isLoading: false };
       return merge({}, newState, {
         entities: entitiesReducer(state.entities, action),
       });
@@ -266,7 +259,7 @@ export default (state = initialState, action) => {
         entities: entitiesReducer(newStateWithoutMedicalRecommendations.entities, action),
       });
     case CLEAR_API_ERROR_MESSAGE:
-      return { ...state, errorMessage: '' };
+      return { ...state };
     // case MODIFY_ORDER_SUCCESS:
     //     return merge({}, state, { entities: entitiesReducer(state.entities, action) });
     case LOGOUT:

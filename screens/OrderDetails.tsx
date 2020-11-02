@@ -6,7 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Clipboard,
-  Alert,
+  SafeAreaView,
 } from 'react-native';
 import { ListItem, Divider } from 'react-native-elements';
 import { Button, Title, IconButton, useTheme } from 'react-native-paper';
@@ -39,12 +39,10 @@ type Props = {
   idDocument;
   medicalRecommendation;
   isLoading;
-  error;
 };
 const OrderDetails = ({
   navigation,
   isLoading,
-  error,
   order,
   orderId,
   user,
@@ -58,10 +56,6 @@ const OrderDetails = ({
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
   useEffect(() => {
-    if (error) Alert.alert('ERROR', error);
-  }, [error]);
-
-  useEffect(() => {
     if (order.orderStatus == 'completed' || order.orderStatus == 'canceled') navigation.goBack();
   }, [order.orderStatus]);
 
@@ -70,7 +64,7 @@ const OrderDetails = ({
   };
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? (
         <View style={[styles.fillScreen, { backgroundColor: colors.background }]}>
           <ActivityIndicator size='large' color={colors.primary} />
@@ -269,7 +263,7 @@ const OrderDetails = ({
           {order && <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />}
         </>
       )}
-    </>
+    </SafeAreaView>
   );
 };
 
@@ -309,7 +303,6 @@ const mapStateToProps = (state, route) => {
   const medicalRecommendations = getUserMedicalRecommendations(state);
   const medicalRecommendation = order && medicalRecommendations[order.userMedicalRecommendation];
   const isLoading = state.api.isLoading;
-  const error = state.api.errorMessage;
   return {
     order,
     orderId,
@@ -318,7 +311,6 @@ const mapStateToProps = (state, route) => {
     userNotes,
     idDocument,
     medicalRecommendation,
-    error,
     isLoading,
   };
 };

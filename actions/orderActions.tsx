@@ -175,5 +175,11 @@ const orderGetter = (orderId: number) => {
 
 export const getOrderDetailsWithId = (orderId: number) => (dispatch) => {
   dispatch({ type: ORDER_DETAILS_PENDING });
-  dispatch(orderGetter(orderId));
+  dispatch(orderGetter(orderId))
+    .then((response) => {
+      if (response.type === GET_ORDER_DETAILS_WITH_ID_FAILURE) {
+        Alert.alert('ERROR', 'Failed to fetch order details.');
+      }
+    })
+    .catch((error) => console.log(error));
 };

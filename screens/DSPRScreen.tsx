@@ -63,12 +63,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  const errorMessage = state.api.errorMessage;
   const isLoading = state.api.isLoading;
   const dsprs = state.api.entities.DSPRs;
   const dsprDrivers = state.api.entities.dsprDrivers;
   return {
-    errorMessage,
     isLoading,
     dsprs,
     dsprDrivers,
