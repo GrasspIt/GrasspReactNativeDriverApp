@@ -55,9 +55,14 @@ const LoginScreen = ({ navigation, loggedInUser, attemptLogin, isLoading }: Prop
     }
     Keyboard.dismiss();
     attemptLogin(email, password);
-    setEmail('');
-    setPassword('');
   };
+
+  useEffect(() => {
+    if (loggedInUser) {
+      setEmail('');
+      setPassword('');
+    }
+  }, [loggedInUser]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
