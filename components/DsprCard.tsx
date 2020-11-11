@@ -16,8 +16,6 @@ const DsprCard = ({ dspr, handleSelect }: CardProps) => {
     ? { uri: `${apiUrl}${dspr.imageLocation}` }
     : require('../assets/grassp_health.png');
 
-  //only display dsprs that the user is active driver for (dsprDriver.active?)
-
   return (
     <TouchableOpacity style={styles.container} onPress={() => handleSelect(dspr.id)}>
       <View style={[styles.cardContainer, { backgroundColor: colors.surface }]}>
