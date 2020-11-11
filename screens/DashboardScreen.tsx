@@ -73,7 +73,7 @@ const DashboardScreen = ({
 
   // polling data from API while logged in
   const refreshDriverData = () => {
-    if (driverId) refreshDSPRDriver(driverId);
+    if (driverId && !isLoading) refreshDSPRDriver(driverId);
   };
   useInterval(refreshDriverData, 60000);
 
