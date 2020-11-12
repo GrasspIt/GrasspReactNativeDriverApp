@@ -370,6 +370,7 @@ dsprDriverRouteSchema.define({
   finalOrder: orderSchema,
   legs: [dsprDriverRouteLegSchema],
   polylineContainingCoordinates: [routeLocationSchema],
+  previousRoute: dsprDriverRouteSchema,
 });
 
 dsprDriverRouteLegSchema.define({

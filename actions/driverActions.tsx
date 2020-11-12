@@ -278,6 +278,56 @@ export const createDSPRDriverRoute = (
   });
 };
 
+export const CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS =
+  'CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS';
+export const CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS =
+  'CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS';
+export const CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_FAILURE =
+  'CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_FAILURE';
+
+const createNewRouteWithoutNotifications = (
+  driverId: number,
+  waypoints,
+  finalDestination,
+  usingFinalDestinationInRoute: Boolean
+) => {
+  const route = {
+    dsprDriver: { id: driverId },
+    waypoints,
+    finalDestination,
+    usingFinalDestinationInRoute,
+  };
+
+  return {
+    [CALL_API]: {
+      httpAction: 'POST',
+      types: [
+        CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS,
+        CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS,
+        CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_FAILURE,
+      ],
+      endPoint: 'dspr/driver/route/remakeWithoutNotifications',
+      schema: Schemas.DSPR_DRIVER_ROUTE,
+      body: route,
+    },
+  };
+};
+export const createDSPRDriverRouteWithoutNotifications = (
+  driverId: number,
+  waypoints,
+  finalDestination,
+  usingFinalDestinationInRoute: Boolean
+) => (dispatch) => {
+  return dispatch(
+    createNewRouteWithoutNotifications(
+      driverId,
+      waypoints,
+      finalDestination,
+      usingFinalDestinationInRoute
+    )
+  );
+};
+
 export const PROGRESS_DSPR_DRIVER_ROUTE_PENDING = 'PROGRESS_DSPR_DRIVER_ROUTE_PENDING';
 export const PROGRESS_DSPR_DRIVER_ROUTE = 'PROGRESS_DSPR_DRIVER_ROUTE';
 export const PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS = 'PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS';
@@ -310,4 +360,30 @@ export const progressDSPRDriverRoute = (routeId: number) => (dispatch, getState)
       }
     })
     .catch((error) => console.log(error));
+};
+
+export const DEACTIVATE_DSPR_DRIVER_ROUTE = 'DEACTIVATE_DSPR_DRIVER_ROUTE';
+export const DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS = 'DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS';
+export const DEACTIVATE_DSPR_DRIVER_ROUTE_FAILURE = 'DEACTIVATE_DSPR_DRIVER_ROUTE_FAILURE';
+
+const deactivateDriverRoute = (routeId: number) => {
+  const body = {
+    id: routeId,
+  };
+  return {
+    [CALL_API]: {
+      httpAction: 'POST',
+      types: [
+        DEACTIVATE_DSPR_DRIVER_ROUTE,
+        DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS,
+        DEACTIVATE_DSPR_DRIVER_ROUTE_FAILURE,
+      ],
+      endPoint: `dspr/driver/route/deactivate`,
+      schema: Schemas.DSPR_DRIVER_ROUTE,
+      body,
+    },
+  };
+};
+export const deactivateDSPRDriverRoute = (routeId: number) => (dispatch) => {
+  return dispatch(deactivateDriverRoute(routeId));
 };
