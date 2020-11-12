@@ -39,6 +39,7 @@ type Props = {
   idDocument;
   medicalRecommendation;
   isLoading;
+  getOrderDetailsWithId;
 };
 const OrderDetails = ({
   navigation,
@@ -50,14 +51,23 @@ const OrderDetails = ({
   userNotes,
   idDocument,
   medicalRecommendation,
+  getOrderDetailsWithId,
 }: Props) => {
   const { colors } = useTheme();
   const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
+  console.log('order', order);
+  console.log('idDocument', idDocument);
+  console.log('userNotes', userNotes);
+  console.log('medicalRecommendation', medicalRecommendation);
 
   useEffect(() => {
     if (order.orderStatus == 'completed' || order.orderStatus == 'canceled') navigation.goBack();
   }, [order.orderStatus]);
+
+  useEffect(() => {
+    if (order.id) getOrderDetailsWithId(order.id);
+  }, [order.id]);
 
   const handleManageNotes = () => {
     navigation.navigate('Notes', { userId: user.id, dsprDriverId: order.dsprDriver, userNotes });
