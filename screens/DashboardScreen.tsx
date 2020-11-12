@@ -124,9 +124,6 @@ const DashboardScreen = ({
       //permissions for location tracking
       if (dsprDriver !== undefined) {
         let { status } = await Location.requestPermissionsAsync();
-        if (status !== 'granted') {
-          Alert.alert('Permission to access location was denied.');
-        }
         //start location updates if driver is on call
         if (status === 'granted' && dsprDriver && dsprDriver.onCall) {
           console.log('start location updates');
@@ -191,7 +188,7 @@ const styles = StyleSheet.create({
 });
 
 // get permission for push notifications and set token
-async function registerForPushNotificationsAsync() {
+const registerForPushNotificationsAsync = async () => {
   let token;
   if (Constants.isDevice) {
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
@@ -201,12 +198,10 @@ async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
+      alert('Failed to get push token for push notifications!');
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-  } else {
-    alert('Must use physical device for Push Notifications');
   }
 
   if (Platform.OS === 'android') {
@@ -218,7 +213,7 @@ async function registerForPushNotificationsAsync() {
     });
   }
   return token;
-}
+};
 
 // define the task that will be called with startLocationTrackingUpdates
 TaskManager.defineTask('location-tracking', ({ data, error }) => {
