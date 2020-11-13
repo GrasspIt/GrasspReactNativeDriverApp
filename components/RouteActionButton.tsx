@@ -64,7 +64,7 @@ const RouteActionButton = ({ driver, currentInProcessOrderInActiveRoute, ordersF
           confirmCompleteOrder(driver.currentInProcessOrder.id);
         }
       } else {
-        dispatch(progressDSPRDriverRoute(driver.currentRoute.id));
+        confirmProgressRoute(driver.currentRoute.id);
       }
     }
   };

@@ -131,14 +131,14 @@ const RouteMapView: React.FC<RouteMapViewProps> = ({
             ? {
                 latitude: routeCenter.lat,
                 longitude: routeCenter.lng,
-                latitudeDelta: 0.5,
-                longitudeDelta: 0.5,
+                latitudeDelta: 0.2,
+                longitudeDelta: 0.2,
               }
             : polylineCenter && {
                 latitude: polylineCenter.lat,
                 longitude: polylineCenter.lng,
-                latitudeDelta: 0.5,
-                longitudeDelta: 0.5,
+                latitudeDelta: 0.2,
+                longitudeDelta: 0.2,
               }
         }
       >
