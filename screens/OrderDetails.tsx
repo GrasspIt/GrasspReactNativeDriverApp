@@ -58,8 +58,14 @@ const OrderDetails = ({
   const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
+  const handleNavigate = () => {
+    if (order && order.status) {
+      if (order.orderStatus == 'completed' || order.orderStatus == 'canceled') navigation.goBack();
+    }
+  };
+
   useEffect(() => {
-    if (order.orderStatus == 'completed' || order.orderStatus == 'canceled') navigation.goBack();
+    handleNavigate();
   }, [order.orderStatus]);
 
   useEffect(() => {
@@ -223,7 +229,7 @@ const OrderDetails = ({
               </>
             )}
 
-            {order && (
+            {order && order.cashTotalPreTaxesAndFees && (
               <ListItem>
                 <ListItem.Content>
                   <ListItem.Title>Subtotal</ListItem.Title>
@@ -272,7 +278,9 @@ const OrderDetails = ({
               </ListItem>
             )}
           </ScrollView>
-          {order && <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />}
+          {order && order.orderStatus && (
+            <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />
+          )}
         </>
       ) : (
         <View style={[styles.fillScreen, { backgroundColor: colors.background }]}>

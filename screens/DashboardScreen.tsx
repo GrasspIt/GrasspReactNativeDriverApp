@@ -96,19 +96,18 @@ const DashboardScreen = ({
       setNotification(notification);
     });
     // listen for when a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(
-      (response: { notification: any }) => {
-        RootNavigation.navigate('Main', {
-          screen: 'Orders',
-          params: {
-            screen: 'Details',
-            params: {
-              orderId: response.notification.request.content.data.body.orderId,
-            },
-          },
-        });
-      }
-    );
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      console.log('response orderId', response.notification.request.content.data.body.orderId);
+      // RootNavigation.navigate('Main', {
+      //   screen: 'Orders',
+      //   params: {
+      //     screen: 'Details',
+      //     params: {
+      //       orderId: response.notification.request.content.data.body.orderId,
+      //     },
+      //   },
+      // });
+    });
     // listener cleanup
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
@@ -234,7 +233,7 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
     console.log('Error: ', error.message);
     return;
   }
-  if (data) {
+  if (data && movingDsprDriver) {
     const { locations } = data as any;
     let lat = locations[0].coords.latitude;
     let long = locations[0].coords.longitude;
