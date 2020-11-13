@@ -30,7 +30,7 @@ export const preloadAccessTokenFromLocalStorage = () => {
       type: PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE,
       accessToken,
     });
-    dispatch(getLoggedInUser()).catch((error) => console.log(error));
+    dispatch(getLoggedInUser()).catch((error) => Alert.alert(error));
   };
 };
 
@@ -159,7 +159,7 @@ export const attemptLogin = (email, password) => (dispatch) => {
         Alert.alert('ERROR', 'Invalid email or password.');
       }
     })
-    .catch((error) => console.log(error));
+    .catch((error) => Alert.alert(error));
 };
 
 export const UPDATE_ACCESS_TOKEN = 'UPDATE_ACCESS_TOKEN';

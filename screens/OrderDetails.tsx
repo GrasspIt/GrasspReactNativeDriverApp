@@ -64,13 +64,20 @@ const OrderDetails = ({
     }
   };
 
-  useEffect(() => {
-    handleNavigate();
-  }, [order.orderStatus]);
+  const getOrderDetails = () => {
+    console.log('order', order);
+    if (order && order.id) getOrderDetailsWithId(order.id);
+  };
+
+  const orderStatusDefined = order && order.orderStatus;
 
   useEffect(() => {
-    if (order.id) getOrderDetailsWithId(order.id);
-  }, [order.id]);
+    handleNavigate();
+  }, [orderStatusDefined]);
+
+  useEffect(() => {
+    getOrderDetails();
+  }, []);
 
   const handleManageNotes = () => {
     navigation.navigate('Notes', { userId: user.id, dsprDriverId: order.dsprDriver, userNotes });
@@ -285,6 +292,9 @@ const OrderDetails = ({
       ) : (
         <View style={[styles.fillScreen, { backgroundColor: colors.background }]}>
           <Text>Failed to fetch order details.</Text>
+          <Button mode='text' onPress={getOrderDetails}>
+            Try Again
+          </Button>
         </View>
       )}
     </SafeAreaView>
