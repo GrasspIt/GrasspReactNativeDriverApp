@@ -118,37 +118,49 @@ const DashboardScreen = ({
     };
   }, [notification, notificationListener, responseListener]);
 
-  // location tracking
-  useEffect(() => {
-    (async () => {
+  const startLocationUpdates = async () => {
+    console.log('start location updates');
+    await Location.startLocationUpdatesAsync('location-tracking', {
+      accuracy: Location.Accuracy.High,
+      timeInterval: 180000,
+      distanceInterval: 0,
+      showsBackgroundLocationIndicator: true,
+      foregroundService: {
+        notificationTitle: 'Location Updates',
+        notificationBody: 'Grassp Health Driver App is tracking your current location.',
+      },
+      pausesUpdatesAutomatically: false,
+    });
+  };
+
+  const stopLocationUpdates = async () => {
+    console.log('stop location updates');
+    await Location.stopLocationUpdatesAsync('location-tracking');
+  };
+
+  const toggleLocationUpdates = async () => {
+    if (dsprDriver) {
       //permissions for location tracking
-      if (dsprDriver !== undefined) {
-        let { status } = await Location.requestPermissionsAsync();
-        //start location updates if driver is on call
-        if (status === 'granted' && dsprDriver && dsprDriver.onCall) {
-          console.log('start location updates');
-          setIsTracking(true);
-          await Location.startLocationUpdatesAsync('location-tracking', {
-            accuracy: Location.Accuracy.High,
-            timeInterval: 60000,
-            distanceInterval: 300,
-            showsBackgroundLocationIndicator: true,
-            foregroundService: {
-              notificationTitle: 'Location Updates',
-              notificationBody: 'Grassp Health Driver App is tracking your current location.',
-            },
-            pausesUpdatesAutomatically: false,
-          });
-        }
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted' && dsprDriver.onCall) {
+        Alert.alert(
+          'Location updates are disables. Please go to device Settings and give this app permission to track your location.'
+        );
       }
-      //stop location updates if driver is not on call
-      if (isTracking && dsprDriver && !dsprDriver.onCall) {
-        console.log('stop location updates');
-        setIsTracking(false);
-        await Location.stopLocationUpdatesAsync('location-tracking');
+      //start updates if onCall, stop updates if not
+      if (status === 'granted' && dsprDriver.onCall) {
+        startLocationUpdates();
+      } else {
+        stopLocationUpdates();
       }
-    })();
-  }, [dsprDriver, isTracking]);
+    }
+  };
+
+  useEffect(() => {
+    toggleLocationUpdates();
+  }, [dsprDriver.onCall]);
+
+  useEffect(() => {}, [isTracking]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -198,7 +210,9 @@ const registerForPushNotificationsAsync = async () => {
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notifications!');
+      alert(
+        'Failed to register for push notifications! Go into your device Settings to give this app permission to send push notifications.'
+      );
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
