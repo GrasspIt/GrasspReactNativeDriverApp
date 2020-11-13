@@ -67,8 +67,6 @@ const DashboardScreen = ({
   const notificationListener: any = useRef();
   const responseListener: any = useRef();
   const { colors } = useTheme();
-
-  const [isTracking, setIsTracking] = useState(false);
   const [notification, setNotification] = useState<any>(false);
 
   // polling data from API while logged in
@@ -159,8 +157,6 @@ const DashboardScreen = ({
   useEffect(() => {
     toggleLocationUpdates();
   }, [dsprDriver.onCall]);
-
-  useEffect(() => {}, [isTracking]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

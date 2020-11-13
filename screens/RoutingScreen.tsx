@@ -225,6 +225,7 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
         })
       : null;
   }, [navigation, driver]);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       {isLoading ? (

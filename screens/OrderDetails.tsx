@@ -7,8 +7,9 @@ import {
   ActivityIndicator,
   Clipboard,
   SafeAreaView,
+  Alert,
 } from 'react-native';
-import { ListItem, Divider, Tooltip } from 'react-native-elements';
+import { ListItem, Divider } from 'react-native-elements';
 import { Button, Title, IconButton, useTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
@@ -56,10 +57,6 @@ const OrderDetails = ({
   const { colors } = useTheme();
   const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
-  console.log('order', order);
-  console.log('idDocument', idDocument);
-  console.log('userNotes', userNotes);
-  console.log('medicalRecommendation', medicalRecommendation);
 
   useEffect(() => {
     if (order.orderStatus == 'completed' || order.orderStatus == 'canceled') navigation.goBack();
@@ -71,6 +68,11 @@ const OrderDetails = ({
 
   const handleManageNotes = () => {
     navigation.navigate('Notes', { userId: user.id, dsprDriverId: order.dsprDriver, userNotes });
+  };
+
+  const handleCopyToClipboard = () => {
+    Alert.alert('Copied to clipboard.');
+    Clipboard.setString(medicalRecommendation.idNumber);
   };
 
   return (
@@ -177,14 +179,12 @@ const OrderDetails = ({
                   <ListItem.Title>Medical ID:</ListItem.Title>
                   <ListItem.Subtitle>{medicalRecommendation.idNumber}</ListItem.Subtitle>
                 </ListItem.Content>
-                <Tooltip popover={<Text>Copied to clipboard.</Text>}>
-                  <IconButton
-                    icon='content-copy'
-                    color={colors.primary}
-                    size={20}
-                    onPress={() => Clipboard.setString(medicalRecommendation.idNumber)}
-                  />
-                </Tooltip>
+                <IconButton
+                  icon='content-copy'
+                  color={colors.primary}
+                  size={20}
+                  onPress={handleCopyToClipboard}
+                />
               </ListItem>
             )}
 

@@ -13,6 +13,16 @@ const RouteActionButton = ({ driver, currentInProcessOrderInActiveRoute, ordersF
     dispatch(progressDSPRDriverRoute(routeId));
   };
 
+  const confirmProgressRoute = (routeId) => {
+    Alert.alert('Progress Route', 'Are you sure you want to start the next leg?', [
+      { text: 'No', style: 'cancel' },
+      {
+        text: 'Yes',
+        onPress: () => handleProgressRoute(routeId),
+      },
+    ]);
+  };
+
   const handleCompleteOrder = (orderId) => {
     if (driver && driver.currentRoute) {
       dispatch(completeOrder(orderId));
@@ -28,6 +38,7 @@ const RouteActionButton = ({ driver, currentInProcessOrderInActiveRoute, ordersF
       },
     ]);
   };
+
   // determine whether to complete order or progress route
   const handleRouteActionButtonPressed = () => {
     if (driver && ordersForRoute) {
@@ -44,7 +55,7 @@ const RouteActionButton = ({ driver, currentInProcessOrderInActiveRoute, ordersF
               {
                 text: 'Continue Without Completing',
                 style: 'cancel',
-                onPress: () => handleProgressRoute(driver.currentRoute.id),
+                onPress: () => confirmProgressRoute(driver.currentRoute.id),
               },
               { text: 'Cancel', style: 'cancel' },
             ]
