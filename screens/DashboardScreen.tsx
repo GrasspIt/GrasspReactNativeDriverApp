@@ -153,8 +153,6 @@ const DashboardScreen = ({
     }
   };
 
-  const driverOnCallDefined = dsprDriver && dsprDriver.onCall !== undefined;
-
   useEffect(() => {
     toggleLocationUpdates();
   }, [dsprDriver]);
