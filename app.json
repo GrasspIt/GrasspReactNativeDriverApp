@@ -14,7 +14,7 @@
     },
     "privacy": "unlisted",
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 20000
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -22,12 +22,18 @@
       "buildNumber": "1.0.0",
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": ["location", "fetch"]
+        "UIBackgroundModes": ["location", "fetch"],
+        "NSLocationWhenInUseUsageDescription": "This app automatically updates the driver's current location."
       }
     },
     "android": {
       "package": "com.GrasspHealth.DriverApp",
       "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION"
+      ],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyD9DqhXUVHI6Z9RlFK8EBW1kRFmzqlyW5c"

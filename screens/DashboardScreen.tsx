@@ -142,21 +142,20 @@ const DashboardScreen = ({
       let { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted' && dsprDriver.onCall) {
         Alert.alert(
-          'Location updates are disables. Please go to device Settings and give this app permission to track your location.'
+          'Location updates are disabled. Please go to device Settings and give Grassp Driver App permission to track your location.'
         );
       }
       //start updates if onCall, stop updates if not
-      if (status === 'granted' && dsprDriver.onCall) {
-        startLocationUpdates();
-      } else {
-        stopLocationUpdates();
-      }
+      if (status === 'granted' && dsprDriver.onCall) startLocationUpdates();
+      if (status === 'granted' && !dsprDriver.onCall) stopLocationUpdates();
     }
   };
 
+  const onCallDefined = dsprDriver && dsprDriver.onCall;
+
   useEffect(() => {
     toggleLocationUpdates();
-  }, [dsprDriver.onCall]);
+  }, [onCallDefined]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
