@@ -72,12 +72,12 @@ export const getDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
         Alert.alert('ERROR', 'Failed to fetch driver data.');
       }
     })
-    .catch((error) => console.log(error));
+    .catch((error) => Alert.alert(error));
 };
 
 export const refreshDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
   dispatch(dsprDriverGetter(dsprDriverId)).catch((error) => {
-    console.log(error);
+    Alert.alert(error);
   });
 };
 
@@ -171,7 +171,7 @@ export const setDriverOnCallState = (dsprDriverId, isOnCall) => (dispatch, getSt
         Alert.alert('ERROR', response.error);
       }
     })
-    .catch((error) => console.log(error));
+    .catch((error) => Alert.alert(error));
 };
 
 export const SET_DRIVER_LOCATION = 'SET_DRIVER_LOCATION';
@@ -359,7 +359,7 @@ export const progressDSPRDriverRoute = (routeId: number) => (dispatch, getState)
         Alert.alert('ERROR', response.error);
       }
     })
-    .catch((error) => console.log(error));
+    .catch((error) => Alert.alert(error));
 };
 
 export const DEACTIVATE_DSPR_DRIVER_ROUTE = 'DEACTIVATE_DSPR_DRIVER_ROUTE';

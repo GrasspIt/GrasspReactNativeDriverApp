@@ -181,5 +181,5 @@ export const getOrderDetailsWithId = (orderId: number) => (dispatch) => {
         Alert.alert('ERROR', 'Failed to fetch order details.');
       }
     })
-    .catch((error) => console.log(error));
+    .catch((error) => Alert.alert(error));
 };

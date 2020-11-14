@@ -96,19 +96,18 @@ const DashboardScreen = ({
       setNotification(notification);
     });
     // listen for when a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(
-      (response: { notification: any }) => {
-        RootNavigation.navigate('Main', {
-          screen: 'Orders',
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      getDriverData();
+      RootNavigation.navigate('Main', {
+        screen: 'Orders',
+        params: {
+          screen: 'Details',
           params: {
-            screen: 'Details',
-            params: {
-              orderId: response.notification.request.content.data.body.orderId,
-            },
+            orderId: response.notification.request.content.data.body.orderId,
           },
-        });
-      }
-    );
+        },
+      });
+    });
     // listener cleanup
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
@@ -151,11 +150,11 @@ const DashboardScreen = ({
     }
   };
 
-  const onCallDefined = dsprDriver && dsprDriver.onCall;
+  const driverOnCallDefined = dsprDriver && dsprDriver.onCall !== null;
 
   useEffect(() => {
     toggleLocationUpdates();
-  }, [onCallDefined]);
+  }, [driverOnCallDefined]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -230,10 +229,10 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
   const movingDriverId = store.getState().api.dsprDriverId;
   const movingDsprDriver = store.getState().api.entities.dsprDrivers[movingDriverId];
   if (error) {
-    console.log('Error: ', error.message);
+    Alert.alert('Error: ', error.message);
     return;
   }
-  if (data) {
+  if (data && movingDsprDriver) {
     const { locations } = data as any;
     let lat = locations[0].coords.latitude;
     let long = locations[0].coords.longitude;
