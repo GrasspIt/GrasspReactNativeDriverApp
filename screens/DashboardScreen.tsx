@@ -68,6 +68,7 @@ const DashboardScreen = ({
   const responseListener: any = useRef();
   const { colors } = useTheme();
   const [notification, setNotification] = useState<any>(false);
+  const [isTracking, setIsTracking] = useState<any>(false);
 
   // polling data from API while logged in
   const refreshDriverData = () => {
@@ -128,11 +129,13 @@ const DashboardScreen = ({
       },
       pausesUpdatesAutomatically: false,
     });
+    setIsTracking(true);
   };
 
   const stopLocationUpdates = async () => {
     console.log('stop location updates');
     await Location.stopLocationUpdatesAsync('location-tracking');
+    setIsTracking(false);
   };
 
   const toggleLocationUpdates = async () => {
@@ -145,16 +148,16 @@ const DashboardScreen = ({
         );
       }
       //start updates if onCall, stop updates if not
-      if (status === 'granted' && dsprDriver.onCall) startLocationUpdates();
-      if (status === 'granted' && !dsprDriver.onCall) stopLocationUpdates();
+      if (status === 'granted' && !isTracking && dsprDriver.onCall) startLocationUpdates();
+      if (isTracking && !dsprDriver.onCall) stopLocationUpdates();
     }
   };
 
-  const driverOnCallDefined = dsprDriver && dsprDriver.onCall !== null;
+  const driverOnCallDefined = dsprDriver && dsprDriver.onCall !== undefined;
 
   useEffect(() => {
     toggleLocationUpdates();
-  }, [driverOnCallDefined]);
+  }, [dsprDriver]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
