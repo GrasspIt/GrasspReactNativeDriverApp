@@ -68,7 +68,6 @@ const DashboardScreen = ({
   const responseListener: any = useRef();
   const { colors } = useTheme();
   const [notification, setNotification] = useState<any>(false);
-  const [isTracking, setIsTracking] = useState<any>(false);
 
   // polling data from API while logged in
   const refreshDriverData = () => {
@@ -131,13 +130,11 @@ const DashboardScreen = ({
       },
       pausesUpdatesAutomatically: false,
     });
-    setIsTracking(true);
   };
 
   const stopLocationUpdates = async () => {
     console.log('stop location updates');
     await Location.stopLocationUpdatesAsync('location-tracking');
-    setIsTracking(false);
   };
 
   const toggleLocationUpdates = async () => {
@@ -149,9 +146,11 @@ const DashboardScreen = ({
           'Location updates are disabled. Please go to device Settings and give Grassp Driver App permission to track your location.'
         );
       }
+      //see if location is already being tracked
+      let tracking = await Location.hasStartedLocationUpdatesAsync('location-tracking');
       //start updates if onCall, stop updates if not
-      if (status === 'granted' && !isTracking && dsprDriver.onCall) startLocationUpdates();
-      if (isTracking && !dsprDriver.onCall) stopLocationUpdates();
+      if (status === 'granted' && !tracking && dsprDriver.onCall) startLocationUpdates();
+      if (tracking && !dsprDriver.onCall) stopLocationUpdates();
     }
   };
 
