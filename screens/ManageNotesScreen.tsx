@@ -6,7 +6,7 @@ import { ListItem } from 'react-native-elements';
 import NewUserNoteForm from '../components/NewUserNoteForm';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual, connect } from 'react-redux';
 import { State } from '../store/reduxStoreState';
 import { getUserNotesFromProps } from '../selectors/userSelectors';
 import Moment from 'moment';
@@ -23,33 +23,35 @@ type ManageNotesScreenNavigationProp = StackNavigationProp<OrderListStackParamsL
 type Props = {
   navigation: ManageNotesScreenNavigationProp;
   route;
+  userNotes;
   userId: number;
   dsprDriverId?: number;
   showTitle?: boolean;
+  createUserNote;
+  hideUserNote;
+  unhideUserNote;
+  getSpecificUser;
 };
 
-const ManageNotes = ({ navigation, route }: Props) => {
-  const dispatch = useDispatch();
+const ManageNotes = ({
+  navigation,
+  route,
+  createUserNote,
+  hideUserNote,
+  unhideUserNote,
+  getSpecificUser,
+  userNotes,
+  dsprDriverId,
+  userId,
+}: Props) => {
   const { colors } = useTheme();
-  const { userId, dsprDriverId } = route.params;
   const [showNotes, setShowNotes] = useState(false);
 
-  const createNote = (userId, note, dsprDriverId) =>
-    dispatch(createUserNote(userId, note, dsprDriverId, null));
-  const hideNote = (noteId) => dispatch(hideUserNote(noteId));
-  const unhideNote = (noteId) => dispatch(unhideUserNote(noteId));
-  const refreshUser = () => dispatch(getSpecificUser(userId));
-
   const handleNewNoteSubmit = (values) => {
-    createNote(userId, values.note, dsprDriverId);
-    refreshUser();
+    createUserNote(userId, values.note, dsprDriverId, null);
+    getSpecificUser(userId);
     setShowNotes(false);
   };
-
-  const userNotes = useSelector<State, any[]>(
-    (state) => getUserNotesFromProps(state, { userId }),
-    shallowEqual
-  );
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -66,7 +68,9 @@ const ManageNotes = ({ navigation, route }: Props) => {
                   checkedColor={colors.primary}
                   title={userNote.isVisible ? 'visible' : 'hidden'}
                   onPress={
-                    userNote.isVisible ? () => hideNote(userNote.id) : () => unhideNote(userNote.id)
+                    userNote.isVisible
+                      ? () => hideUserNote(userNote.id)
+                      : () => unhideUserNote(userNote.id)
                   }
                   checked={userNote.isVisible}
                 />
@@ -102,4 +106,16 @@ const ManageNotes = ({ navigation, route }: Props) => {
   );
 };
 
-export default ManageNotes;
+const mapStateToProps = (state, route) => {
+  const { userId, dsprDriverId } = route.route.params;
+  const userNotes = getUserNotesFromProps(state, { userId });
+  return {
+    userNotes,
+    dsprDriverId,
+    userId,
+  };
+};
+
+const mapDispatchToProps = { createUserNote, hideUserNote, unhideUserNote, getSpecificUser };
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageNotes);
