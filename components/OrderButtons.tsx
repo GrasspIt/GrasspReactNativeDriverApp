@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { Button, useTheme } from 'react-native-paper';
+import { Button, useTheme, FAB, Portal } from 'react-native-paper';
 import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
 
 const OrderButtons = ({ orderId, orderStatus }) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
+  const [buttonsOpen, setButtonsOpen] = useState(false);
 
   const handleCancelOrder = () => {
     Alert.alert('Cancel Order', 'Are you sure you want to cancel this order?', [
@@ -30,47 +31,95 @@ const OrderButtons = ({ orderId, orderStatus }) => {
   };
 
   return (
-    <View
-      style={{
-        backgroundColor: colors.surface,
-        flexDirection: 'row',
-        bottom: 0,
-      }}
-    >
-      <Button
-        icon='cancel'
-        mode='contained'
-        color={colors.error}
-        style={styles.buttons}
-        labelStyle={{ paddingVertical: 4, color: colors.surface }}
-        onPress={handleCancelOrder}
+    <>
+      <Portal>
+        <FAB.Group
+          open={buttonsOpen}
+          visible
+          icon='format-list-bulleted'
+          actions={[
+            {
+              icon: 'cancel',
+              label: 'Cancel Order',
+              color: colors.surface,
+              style: { backgroundColor: colors.error },
+              onPress: handleCancelOrder,
+            },
+            {
+              icon: 'map-minus',
+              label: 'Remove From Route',
+              color: colors.surface,
+              style: { backgroundColor: colors.error },
+              onPress: () => console.log('Remove from Route'),
+            },
+            {
+              icon: 'check',
+              label: 'Complete Order',
+              color: colors.surface,
+              style: { backgroundColor: colors.primary },
+              onPress: handleCompleteOrder,
+            },
+          ]}
+          onStateChange={() => setButtonsOpen(!buttonsOpen)}
+          onPress={() => {
+            if (buttonsOpen) {
+              // do something if the speed dial is open
+            }
+          }}
+        />
+      </Portal>
+      <View
+        style={{
+          backgroundColor: colors.surface,
+          // flexDirection: 'row',
+          // bottom: 0,
+        }}
       >
-        Cancel Order
-      </Button>
-      {orderStatus == 'in_process' ? (
         <Button
-          icon='check'
+          icon='cancel'
           mode='contained'
-          color={colors.primary}
+          color={colors.error}
           style={styles.buttons}
           labelStyle={{ paddingVertical: 4, color: colors.surface }}
-          onPress={handleCompleteOrder}
+          onPress={handleCancelOrder}
         >
-          Complete Order
+          Cancel Order
         </Button>
-      ) : (
         <Button
-          mode='contained'
-          icon='autorenew'
-          color={colors.primary}
+          icon='map-minus'
+          mode='outlined'
+          color={colors.error}
           style={styles.buttons}
-          labelStyle={{ paddingVertical: 4, color: colors.surface }}
-          onPress={handleProcessOrder}
+          labelStyle={{ paddingVertical: 4, color: colors.error }}
+          onPress={handleCancelOrder}
         >
-          Set In Process
+          Remove from Route
         </Button>
-      )}
-    </View>
+        {orderStatus == 'in_process' ? (
+          <Button
+            icon='check'
+            mode='contained'
+            color={colors.primary}
+            style={styles.buttons}
+            labelStyle={{ paddingVertical: 4, color: colors.surface }}
+            onPress={handleCompleteOrder}
+          >
+            Complete Order
+          </Button>
+        ) : (
+          <Button
+            mode='contained'
+            icon='autorenew'
+            color={colors.primary}
+            style={styles.buttons}
+            labelStyle={{ paddingVertical: 4, color: colors.surface }}
+            onPress={handleProcessOrder}
+          >
+            Set In Process
+          </Button>
+        )}
+      </View>
+    </>
   );
 };
 

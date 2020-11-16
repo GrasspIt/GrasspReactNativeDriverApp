@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
-import { Button, useTheme } from 'react-native-paper';
+import { Button, useTheme, FAB } from 'react-native-paper';
 import { ListItem } from 'react-native-elements';
 import NewUserNoteForm from '../components/NewUserNoteForm';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -15,6 +15,7 @@ import {
   hideUserNote,
   unhideUserNote,
 } from '../actions/userActions';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 type ManageNotesScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Notes'>;
 
@@ -85,16 +86,13 @@ const ManageNotes = ({
           <Text>No User Notes</Text>
         </View>
       )}
-      <Button
+      <FAB
+        style={[styles.fab, { backgroundColor: colors.primary }]}
+        color={colors.surface}
+        label='Create Note'
         icon='plus'
-        mode='contained'
-        color={colors.primary}
-        labelStyle={{ paddingVertical: 4, color: colors.surface }}
         onPress={() => setShowNotes(true)}
-        style={styles.floatingButton}
-      >
-        Create Note
-      </Button>
+      />
       <NewUserNoteForm
         showNotes={showNotes}
         closeDialog={() => setShowNotes(false)}
@@ -105,12 +103,11 @@ const ManageNotes = ({
 };
 
 const styles = StyleSheet.create({
-  floatingButton: {
-    borderRadius: 10,
-    margin: 10,
-    elevation: 4,
-    width: '50%',
-    alignSelf: 'flex-end',
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
   },
 });
 

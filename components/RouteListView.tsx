@@ -22,6 +22,7 @@ const RouteListView = ({ navigation, driver }: Props) => {
     driver.currentRoute &&
     driver.currentRoute.legs &&
     driver.currentRoute.legs.find((leg) => leg.order.orderStatus === 'in_process');
+  console.log('driver.currentRoute.legs', driver.currentRoute.legs);
 
   return driver && driver.currentRoute && driver.currentRoute.legs ? (
     <SafeAreaView style={{ flex: 1 }}>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
-import { Button, useTheme } from 'react-native-paper';
+import { View, Alert, StyleSheet } from 'react-native';
+import { Button, useTheme, FAB } from 'react-native-paper';
 import { completeOrder } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
 import { progressDSPRDriverRoute } from '../actions/driverActions';
@@ -43,6 +43,8 @@ const RouteActionButton = ({ driver, currentInProcessOrderInActiveRoute, ordersF
   const handleRouteActionButtonPressed = () => {
     if (driver && ordersForRoute) {
       if (driver.currentInProcessOrder) {
+        console.log('ordersForRoute', ordersForRoute);
+        console.log('driver.currentInProcessOrder', driver.currentInProcessOrder);
         if (!ordersForRoute.includes(driver.currentInProcessOrder)) {
           Alert.alert(
             'Warning',
@@ -70,21 +72,37 @@ const RouteActionButton = ({ driver, currentInProcessOrderInActiveRoute, ordersF
   };
 
   return (
-    <View style={{ flexDirection: 'row', bottom: 0, backgroundColor: colors.background }}>
-      <Button
-        icon={!currentInProcessOrderInActiveRoute ? 'autorenew' : 'check'}
-        mode='contained'
-        style={{
-          flex: 1,
-          borderRadius: 0,
-        }}
-        labelStyle={{ paddingVertical: 4, color: colors.background }}
-        onPress={() => handleRouteActionButtonPressed()}
-      >
-        {!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
-      </Button>
-    </View>
+    <FAB
+      style={[styles.fab, { backgroundColor: colors.primary }]}
+      color={colors.surface}
+      label={!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
+      icon={!currentInProcessOrderInActiveRoute ? 'autorenew' : 'check'}
+      onPress={() => handleRouteActionButtonPressed()}
+    />
+    // <View style={{ flexDirection: 'row', bottom: 0, backgroundColor: colors.background }}>
+    //   <Button
+    //     icon={!currentInProcessOrderInActiveRoute ? 'autorenew' : 'check'}
+    //     mode='contained'
+    //     style={{
+    //       flex: 1,
+    //       borderRadius: 0,
+    //     }}
+    //     labelStyle={{ paddingVertical: 4, color: colors.background }}
+    //     onPress={() => handleRouteActionButtonPressed()}
+    //   >
+    //     {!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
+    //   </Button>
+    // </View>
   );
 };
+
+const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
+  },
+});
 
 export default RouteActionButton;

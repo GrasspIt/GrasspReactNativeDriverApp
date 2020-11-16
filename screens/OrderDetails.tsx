@@ -5,10 +5,10 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
-  Clipboard,
   SafeAreaView,
   Alert,
 } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import { ListItem, Divider } from 'react-native-elements';
 import { Button, Title, IconButton, useTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
@@ -65,7 +65,6 @@ const OrderDetails = ({
   };
 
   const getOrderDetails = () => {
-    console.log('order', order);
     if (order && order.id) getOrderDetailsWithId(order.id);
   };
 
@@ -205,6 +204,7 @@ const OrderDetails = ({
               <ListItem>
                 <ListItem.Title>
                   {address.street}, {address.zipCode}
+                  {address.aptNumber && `, Unit ${address.aptNumber}`}
                 </ListItem.Title>
               </ListItem>
             )}
@@ -284,10 +284,10 @@ const OrderDetails = ({
                 </ListItem.Content>
               </ListItem>
             )}
+            {order && order.orderStatus && (
+              <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />
+            )}
           </ScrollView>
-          {order && order.orderStatus && (
-            <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />
-          )}
         </>
       ) : (
         <View style={[styles.fillScreen, { backgroundColor: colors.background }]}>
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
     paddingBottom: 30,
   },
   title: {

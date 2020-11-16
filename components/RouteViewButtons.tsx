@@ -8,12 +8,14 @@ const RouteViewButtons = ({ routeView, setRouteView }) => {
   const activeStyle = {
     borderRadius: 0,
     flex: 1,
+    elevation: 4,
     backgroundColor: colors.accent,
   };
 
   const inactiveStyle = {
     borderRadius: 0,
     flex: 1,
+    elevation: 4,
     backgroundColor: colors.primary,
   };
 

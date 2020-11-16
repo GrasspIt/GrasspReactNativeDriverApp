@@ -41,7 +41,8 @@ const OrderItem = ({ orderInfo, navigation }) => {
             <Text style={{ fontSize: 14 }}>${orderInfo.cashTotal}</Text>
           </ListItem.Title>
           <ListItem.Subtitle style={{ fontSize: 14 }}>
-            {orderInfo.address.street} {orderInfo.address.zipCode}
+            {orderInfo.address.street} {orderInfo.address.zipCode}{' '}
+            {orderInfo.address.aptNumber && `, Unit ${orderInfo.address.aptNumber}`}
           </ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron color={colors.onBackground} size={18} />
