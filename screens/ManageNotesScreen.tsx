@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text } from 'react-native';
-
+import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 import { ListItem } from 'react-native-elements';
 import NewUserNoteForm from '../components/NewUserNoteForm';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
-import { useDispatch, useSelector, shallowEqual, connect } from 'react-redux';
-import { State } from '../store/reduxStoreState';
+import { connect } from 'react-redux';
 import { getUserNotesFromProps } from '../selectors/userSelectors';
 import Moment from 'moment';
 
@@ -93,7 +91,7 @@ const ManageNotes = ({
         color={colors.primary}
         labelStyle={{ paddingVertical: 4, color: colors.surface }}
         onPress={() => setShowNotes(true)}
-        style={{ width: '100%', borderRadius: 0 }}
+        style={styles.floatingButton}
       >
         Create Note
       </Button>
@@ -105,6 +103,16 @@ const ManageNotes = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  floatingButton: {
+    borderRadius: 10,
+    margin: 10,
+    elevation: 4,
+    width: '50%',
+    alignSelf: 'flex-end',
+  },
+});
 
 const mapStateToProps = (state, route) => {
   const { userId, dsprDriverId } = route.route.params;
