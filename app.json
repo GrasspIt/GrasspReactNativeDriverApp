@@ -3,7 +3,6 @@
     "name": "Grassp Driver App",
     "slug": "GrasspDriverApp",
     "version": "1.0.0",
-    "sdkVersion": "38.0.0",
     "platforms": ["ios", "android"],
     "orientation": "portrait",
     "icon": "./assets/grasspLogo1024.png",
