@@ -6,32 +6,25 @@ import OrderItem from '../components/OrderItem';
 
 type Props = {
   navigation;
-  driver;
+  ordersForRoute;
 };
 
-const RouteListView = ({ navigation, driver }: Props) => {
+const RouteListView = ({ navigation, ordersForRoute }: Props) => {
   const { colors } = useTheme();
 
   let queuedOrders =
-    driver &&
-    driver.currentRoute &&
-    driver.currentRoute.legs &&
-    driver.currentRoute.legs.filter((leg) => leg.order.orderStatus === 'queued');
+    ordersForRoute && ordersForRoute.filter((order) => order.orderStatus === 'queued');
   let inProcessOrder =
-    driver &&
-    driver.currentRoute &&
-    driver.currentRoute.legs &&
-    driver.currentRoute.legs.find((leg) => leg.order.orderStatus === 'in_process');
-  console.log('driver.currentRoute.legs', driver.currentRoute.legs);
+    ordersForRoute && ordersForRoute.find((order) => order.orderStatus === 'in_process');
 
-  return driver && driver.currentRoute && driver.currentRoute.legs ? (
+  return ordersForRoute ? (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <Text style={styles.listTitle}>In Process Order</Text>
         <Divider />
 
-        {driver.currentRoute.legs.some((order) => order.order.orderStatus === 'in_process') ? (
-          <InProcessOrderItem orderInfo={inProcessOrder.order} navigation={navigation} />
+        {ordersForRoute.some((order) => order.orderStatus === 'in_process') ? (
+          <InProcessOrderItem orderInfo={inProcessOrder} navigation={navigation} />
         ) : (
           <View style={[styles.empty, { backgroundColor: colors.background }]}>
             <Text>No order in process.</Text>
@@ -49,7 +42,7 @@ const RouteListView = ({ navigation, driver }: Props) => {
             </View>
           }
           data={queuedOrders}
-          renderItem={(item) => <OrderItem orderInfo={item.item.order} navigation={navigation} />}
+          renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
           keyExtractor={(item: any) => item.id.toString() + '-routeList'}
           style={{ paddingHorizontal: 10 }}
         />

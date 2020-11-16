@@ -97,18 +97,20 @@ const DashboardScreen = ({
       setNotification(notification);
     });
     // listen for when a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      getDriverData();
-      RootNavigation.navigate('Main', {
-        screen: 'Orders',
-        params: {
-          screen: 'Details',
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(
+      async (response) => {
+        await getDriverData();
+        RootNavigation.navigate('Main', {
+          screen: 'Orders',
           params: {
-            orderId: response.notification.request.content.data.body.orderId,
+            screen: 'Details',
+            params: {
+              orderId: response.notification.request.content.data.orderId,
+            },
           },
-        },
-      });
-    });
+        });
+      }
+    );
     // listener cleanup
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);

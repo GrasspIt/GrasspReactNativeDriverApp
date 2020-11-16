@@ -35,8 +35,10 @@ const OrderButtons = ({ orderId, orderStatus }) => {
       <Portal>
         <FAB.Group
           open={buttonsOpen}
-          visible
+          visible={buttonsOpen}
           icon='format-list-bulleted'
+          fabStyle={{ backgroundColor: colors.primary }}
+          color={colors.surface}
           actions={[
             {
               icon: 'cancel',
@@ -62,9 +64,7 @@ const OrderButtons = ({ orderId, orderStatus }) => {
           ]}
           onStateChange={() => setButtonsOpen(!buttonsOpen)}
           onPress={() => {
-            if (buttonsOpen) {
-              // do something if the speed dial is open
-            }
+            console.log('but');
           }}
         />
       </Portal>
