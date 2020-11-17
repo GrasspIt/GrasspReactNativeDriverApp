@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import { ListItem, Divider } from 'react-native-elements';
-import { Button, Title, IconButton, useTheme } from 'react-native-paper';
+import { Button, IconButton, useTheme, Card } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { getUserFromProps, getUserNotesFromProps } from '../selectors/userSelectors';
@@ -55,6 +55,7 @@ const OrderDetails = ({
   getOrderDetailsWithId,
 }: Props) => {
   const { colors } = useTheme();
+
   const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
@@ -96,35 +97,39 @@ const OrderDetails = ({
       ) : order ? (
         <>
           <ScrollView style={[styles.scroll, { backgroundColor: colors.background }]}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Title style={{ paddingTop: 4 }}>Notes</Title>
-              <Button
-                mode='text'
-                onPress={handleManageNotes}
-                color={colors.primary}
-                labelStyle={{ paddingVertical: 4, color: colors.primary }}
-              >
-                Manage Notes
-              </Button>
-            </View>
-            {userNotes && userNotes.some((note) => note.isVisible) ? (
-              userNotes
-                .filter((note) => note.isVisible)
-                .map((userNote) => (
-                  <ListItem key={userNote.id}>
-                    <ListItem.Content>
-                      <ListItem.Title>{userNote.note}</ListItem.Title>
-                      <ListItem.Subtitle style={{ alignSelf: 'flex-end', paddingTop: 6 }}>
-                        {Moment(userNote.createdTimestamp).format('MMMM Do YYYY, h:mm a')}
-                      </ListItem.Subtitle>
-                    </ListItem.Content>
-                  </ListItem>
-                ))
-            ) : (
-              <View style={[styles.empty, { backgroundColor: colors.background }]}>
-                <Text style={{ fontSize: 16 }}>No active notes.</Text>
-              </View>
-            )}
+            <Card style={{ margin: 10 }}>
+              <Card.Title title='Notes' />
+              <Card.Content>
+                {userNotes && userNotes.some((note) => note.isVisible) ? (
+                  userNotes
+                    .filter((note) => note.isVisible)
+                    .map((userNote) => (
+                      <ListItem key={userNote.id}>
+                        <ListItem.Content>
+                          <ListItem.Title>{userNote.note}</ListItem.Title>
+                          <ListItem.Subtitle style={{ alignSelf: 'flex-end', paddingTop: 6 }}>
+                            {Moment(userNote.createdTimestamp).format('MMMM Do YYYY, h:mm a')}
+                          </ListItem.Subtitle>
+                        </ListItem.Content>
+                      </ListItem>
+                    ))
+                ) : (
+                  // <View style={[styles.empty, { backgroundColor: colors.background }]}>
+                  <Text style={{ fontSize: 16 }}>No active notes.</Text>
+                  // </View>
+                )}
+              </Card.Content>
+              <Card.Actions style={{ alignSelf: 'flex-end' }}>
+                <Button
+                  mode='text'
+                  onPress={handleManageNotes}
+                  color={colors.primary}
+                  labelStyle={{ paddingVertical: 4, color: colors.primary }}
+                >
+                  Manage Notes
+                </Button>
+              </Card.Actions>
+            </Card>
             <Divider />
 
             {order && order.specialInstructions ? (

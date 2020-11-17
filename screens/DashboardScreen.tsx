@@ -121,7 +121,7 @@ const DashboardScreen = ({
     console.log('start location updates');
     await Location.startLocationUpdatesAsync('location-tracking', {
       accuracy: Location.Accuracy.High,
-      timeInterval: 180000,
+      timeInterval: 150000,
       distanceInterval: 0,
       showsBackgroundLocationIndicator: true,
       foregroundService: {
