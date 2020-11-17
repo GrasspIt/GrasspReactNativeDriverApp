@@ -130,165 +130,161 @@ const OrderDetails = ({
                 </Button>
               </Card.Actions>
             </Card>
-            <Divider />
 
-            {order && order.specialInstructions ? (
-              <ListItem>
-                <ListItem.Content>
-                  <ListItem.Title style={{ fontWeight: 'bold' }}>
-                    Special Instructions:
-                  </ListItem.Title>
-                  <ListItem.Subtitle>{order.specialInstructions}</ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
-            ) : null}
-
-            {order && order.userFirstTimeOrderWithDSPR ? (
-              <ListItem>
-                <ListItem.Title style={{ fontWeight: 'bold' }}>FIRST TIME ORDER</ListItem.Title>
-              </ListItem>
-            ) : null}
-
-            {medicalRecommendation ? (
-              <ListItem>
-                <ListItem.Title style={{ fontWeight: 'bold' }}>Medical User</ListItem.Title>
-              </ListItem>
-            ) : (
-              <ListItem>
-                <ListItem.Title style={{ fontWeight: 'bold' }}>Adult User</ListItem.Title>
-              </ListItem>
+            {order && order.specialInstructions && (
+              <Card style={{ marginHorizontal: 10, marginBottom: 10 }}>
+                <Card.Title title='Special Instructions:' />
+                <Card.Content>
+                  <Text>{order.specialInstructions}</Text>
+                </Card.Content>
+              </Card>
             )}
 
-            {orderDate && (
-              <ListItem>
-                <ListItem.Title>{orderDate}</ListItem.Title>
-              </ListItem>
-            )}
+            <Card style={{ marginHorizontal: 10, marginBottom: 10 }}>
+              {order && order.userFirstTimeOrderWithDSPR && <Card.Title title='FIRST TIME ORDER' />}
+              <Card.Content>
+                {medicalRecommendation ? (
+                  <ListItem>
+                    <ListItem.Title style={{ fontWeight: 'bold' }}>Medical User</ListItem.Title>
+                  </ListItem>
+                ) : (
+                  <ListItem>
+                    <ListItem.Title style={{ fontWeight: 'bold' }}>Adult User</ListItem.Title>
+                  </ListItem>
+                )}
 
-            {user && (
-              <ListItem>
-                <ListItem.Title>
-                  {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
-                </ListItem.Title>
-              </ListItem>
-            )}
+                {orderDate && (
+                  <ListItem>
+                    <ListItem.Title>{orderDate}</ListItem.Title>
+                  </ListItem>
+                )}
 
-            {idDocument && (
-              <View>
-                <ListItem>
-                  <ListItem.Content>
-                    <ListItem.Title>Identification Document:</ListItem.Title>
-                    <ListItem.Subtitle>{idDocument.idNumber}</ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-                <ListItem>
-                  <ListItem.Title>
-                    Birth Date: &nbsp;
-                    {birthDate ? <Text>{birthDate}</Text> : <Text>Not provided</Text>}{' '}
-                  </ListItem.Title>
-                </ListItem>
-              </View>
-            )}
+                {user && (
+                  <ListItem>
+                    <ListItem.Title>
+                      {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
+                    </ListItem.Title>
+                  </ListItem>
+                )}
 
-            {medicalRecommendation && (
-              <ListItem>
-                <ListItem.Content>
-                  <ListItem.Title>Medical ID:</ListItem.Title>
-                  <ListItem.Subtitle>{medicalRecommendation.idNumber}</ListItem.Subtitle>
-                </ListItem.Content>
-                <IconButton
-                  icon='content-copy'
-                  color={colors.primary}
-                  size={20}
-                  onPress={handleCopyToClipboard}
-                />
-              </ListItem>
-            )}
+                {idDocument && (
+                  <View>
+                    <ListItem>
+                      <ListItem.Content>
+                        <ListItem.Title>Identification Document:</ListItem.Title>
+                        <ListItem.Subtitle>{idDocument.idNumber}</ListItem.Subtitle>
+                      </ListItem.Content>
+                    </ListItem>
+                    <ListItem>
+                      <ListItem.Title>
+                        Birth Date: &nbsp;
+                        {birthDate ? <Text>{birthDate}</Text> : <Text>Not provided</Text>}{' '}
+                      </ListItem.Title>
+                    </ListItem>
+                  </View>
+                )}
 
-            {address && (
-              <ListItem>
-                <ListItem.Title>
-                  {address.street}, {address.zipCode}
-                  {address.aptNumber && `, Unit ${address.aptNumber}`}
-                </ListItem.Title>
-              </ListItem>
-            )}
-
-            {order &&
-              order.orderDetails &&
-              order.orderDetails.map((detail) => (
-                <OrderDetailListItem
-                  key={`${detail.product.id}-${detail.unit || '0'}`}
-                  orderDetail={detail}
-                />
-              ))}
-            <Divider />
-
-            {order && order.coupon && (
-              <>
-                <ListItem>
-                  <ListItem.Content>
-                    <ListItem.Title>Code</ListItem.Title>
-                    <ListItem.Subtitle>{`${order.coupon.code}`}</ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-                <ListItem>
-                  <ListItem.Content>
-                    <ListItem.Title>Discount</ListItem.Title>
-                    <ListItem.Subtitle>{`$${order.discountTotal}`}</ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-              </>
-            )}
-
-            {order && order.cashTotalPreTaxesAndFees && (
-              <ListItem>
-                <ListItem.Content>
-                  <ListItem.Title>Subtotal</ListItem.Title>
-                  <ListItem.Subtitle>{`$${order.cashTotalPreTaxesAndFees.toFixed(
-                    2
-                  )}`}</ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
-            )}
-
-            {order && order.orderTaxDetails && order.orderTaxDetails.length !== 0 ? (
-              order.orderTaxDetails
-                .slice(0)
-                .reverse()
-                .map((detail) => (
-                  <ListItem key={detail.name + detail.amount.toString()}>
+                {medicalRecommendation && (
+                  <ListItem>
                     <ListItem.Content>
-                      <ListItem.Title>{`${detail.name} : ${detail.rate}%`}</ListItem.Title>
-                      <ListItem.Subtitle>{`$${detail.amount.toFixed(2)}`}</ListItem.Subtitle>
+                      <ListItem.Title>Medical ID:</ListItem.Title>
+                      <ListItem.Subtitle>{medicalRecommendation.idNumber}</ListItem.Subtitle>
+                    </ListItem.Content>
+                    <IconButton
+                      icon='content-copy'
+                      color={colors.primary}
+                      size={20}
+                      onPress={handleCopyToClipboard}
+                    />
+                  </ListItem>
+                )}
+
+                {address && (
+                  <ListItem>
+                    <ListItem.Title>
+                      {address.street}, {address.zipCode}
+                      {address.aptNumber && `, Unit ${address.aptNumber}`}
+                    </ListItem.Title>
+                  </ListItem>
+                )}
+
+                {order &&
+                  order.orderDetails &&
+                  order.orderDetails.map((detail) => (
+                    <OrderDetailListItem
+                      key={`${detail.product.id}-${detail.unit || '0'}`}
+                      orderDetail={detail}
+                    />
+                  ))}
+                <Divider />
+
+                {order && order.coupon && (
+                  <>
+                    <ListItem>
+                      <ListItem.Content>
+                        <ListItem.Title>Code</ListItem.Title>
+                        <ListItem.Subtitle>{`${order.coupon.code}`}</ListItem.Subtitle>
+                      </ListItem.Content>
+                    </ListItem>
+                    <ListItem>
+                      <ListItem.Content>
+                        <ListItem.Title>Discount</ListItem.Title>
+                        <ListItem.Subtitle>{`$${order.discountTotal}`}</ListItem.Subtitle>
+                      </ListItem.Content>
+                    </ListItem>
+                  </>
+                )}
+
+                {order && order.cashTotalPreTaxesAndFees && (
+                  <ListItem>
+                    <ListItem.Content>
+                      <ListItem.Title>Subtotal</ListItem.Title>
+                      <ListItem.Subtitle>{`$${order.cashTotalPreTaxesAndFees.toFixed(
+                        2
+                      )}`}</ListItem.Subtitle>
                     </ListItem.Content>
                   </ListItem>
-                ))
-            ) : (
-              <ListItem key='Tax0'>
-                <ListItem.Content>
-                  <ListItem.Title>Tax</ListItem.Title>
-                  <ListItem.Subtitle>$0.00</ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
-            )}
+                )}
 
-            {order && (
-              <ListItem>
-                <ListItem.Content>
-                  <ListItem.Title>Delivery Fee</ListItem.Title>
-                  <ListItem.Subtitle>{`$${order.deliveryFee.toFixed(2)}`}</ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
-            )}
+                {order && order.orderTaxDetails && order.orderTaxDetails.length !== 0 ? (
+                  order.orderTaxDetails
+                    .slice(0)
+                    .reverse()
+                    .map((detail) => (
+                      <ListItem key={detail.name + detail.amount.toString()}>
+                        <ListItem.Content>
+                          <ListItem.Title>{`${detail.name} : ${detail.rate}%`}</ListItem.Title>
+                          <ListItem.Subtitle>{`$${detail.amount.toFixed(2)}`}</ListItem.Subtitle>
+                        </ListItem.Content>
+                      </ListItem>
+                    ))
+                ) : (
+                  <ListItem key='Tax0'>
+                    <ListItem.Content>
+                      <ListItem.Title>Tax</ListItem.Title>
+                      <ListItem.Subtitle>$0.00</ListItem.Subtitle>
+                    </ListItem.Content>
+                  </ListItem>
+                )}
 
-            {order && (
-              <ListItem>
-                <ListItem.Content>
-                  <ListItem.Title>{`Total: $${order.cashTotal.toFixed(2)}`}</ListItem.Title>
-                </ListItem.Content>
-              </ListItem>
-            )}
+                {order && (
+                  <ListItem>
+                    <ListItem.Content>
+                      <ListItem.Title>Delivery Fee</ListItem.Title>
+                      <ListItem.Subtitle>{`$${order.deliveryFee.toFixed(2)}`}</ListItem.Subtitle>
+                    </ListItem.Content>
+                  </ListItem>
+                )}
+
+                {order && (
+                  <ListItem>
+                    <ListItem.Content>
+                      <ListItem.Title>{`Total: $${order.cashTotal.toFixed(2)}`}</ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                )}
+              </Card.Content>
+            </Card>
             {order && order.orderStatus && (
               <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />
             )}

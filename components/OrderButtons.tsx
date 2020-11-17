@@ -30,13 +30,7 @@ const OrderButtons = ({ orderId, orderStatus }) => {
   };
 
   return (
-    <View
-      style={{
-        backgroundColor: colors.surface,
-        // flexDirection: 'row',
-        // bottom: 0,
-      }}
-    >
+    <View>
       <Button
         icon='cancel'
         mode='contained'
@@ -87,9 +81,10 @@ const OrderButtons = ({ orderId, orderStatus }) => {
 const styles = StyleSheet.create({
   buttons: {
     flex: 1,
-    margin: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
     borderRadius: 50,
-    elevation: 4,
+    elevation: 2,
     // width: '50%',
     // alignSelf: 'flex-end',
   },
