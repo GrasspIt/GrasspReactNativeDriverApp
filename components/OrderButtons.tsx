@@ -41,7 +41,7 @@ const OrderButtons = ({ orderId, orderStatus }) => {
       >
         Cancel Order
       </Button>
-      <Button
+      {/* <Button
         icon='map-minus'
         mode='contained'
         color={colors.error}
@@ -50,7 +50,7 @@ const OrderButtons = ({ orderId, orderStatus }) => {
         onPress={handleCancelOrder}
       >
         Remove from Route
-      </Button>
+      </Button> */}
       {orderStatus == 'in_process' ? (
         <Button
           icon='check'

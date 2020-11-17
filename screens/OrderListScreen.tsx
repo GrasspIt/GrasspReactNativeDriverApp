@@ -1,14 +1,6 @@
-import React, { useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  SafeAreaView,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
-import { Divider, useTheme } from 'react-native-paper';
+import React from 'react';
+import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import InProcessOrderItem from '../components/InProcessOrderItem';
 import OrderItem from '../components/OrderItem';
 import { refreshDSPRDriver, getDSPRDriver } from '../actions/driverActions';
@@ -53,7 +45,6 @@ const OrderListScreen = ({
       ) : (
         <View style={{ flex: 1 }}>
           <Text style={styles.listTitle}>In Process Order</Text>
-          <Divider />
 
           {dsprDriver.currentInProcessOrder ? (
             <InProcessOrderItem
@@ -66,9 +57,7 @@ const OrderListScreen = ({
             </View>
           )}
 
-          <Divider />
           <Text style={styles.listTitle}>Queued Orders</Text>
-          <Divider />
 
           <FlatList
             ListEmptyComponent={

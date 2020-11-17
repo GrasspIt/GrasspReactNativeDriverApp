@@ -33,7 +33,7 @@ export const completeOrder = (orderId) => (dispatch, getState) => {
       Alert.alert('Success!', 'Order completed.');
     }
     if (response.type === COMPLETE_ORDER_FAILURE) {
-      Alert.alert('Error', response.error);
+      Alert.alert('Failed to complete order:', response.error);
     }
   });
 };
@@ -64,7 +64,7 @@ export const cancelOrder = (orderId) => (dispatch, getState) => {
       Alert.alert('Success!', 'Order cancelled.');
     }
     if (response.type === CANCEL_ORDER_FAILURE) {
-      Alert.alert('Error', response.error);
+      Alert.alert('Failed to cancel order:', response.error);
     }
   });
 };
@@ -95,7 +95,7 @@ export const markOrderInProcess = (orderId) => (dispatch, getState) => {
       Alert.alert('Success!', 'Order in process.');
     }
     if (response.type === MARK_IN_PROCESS_FAILURE) {
-      Alert.alert('Error', response.error);
+      Alert.alert('Failed to mark order in-process:', response.error);
     }
   });
 };
@@ -178,8 +178,8 @@ export const getOrderDetailsWithId = (orderId: number) => (dispatch) => {
   dispatch(orderGetter(orderId))
     .then((response) => {
       if (response.type === GET_ORDER_DETAILS_WITH_ID_FAILURE) {
-        Alert.alert('ERROR', 'Failed to fetch order details.');
+        Alert.alert('Failed to get order details:', response.error);
       }
     })
-    .catch((error) => Alert.alert(error));
+    .catch((error) => Alert.alert('Network error:', error));
 };

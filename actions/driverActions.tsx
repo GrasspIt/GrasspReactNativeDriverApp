@@ -69,15 +69,15 @@ export const getDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
   dispatch(dsprDriverGetter(dsprDriverId))
     .then((response) => {
       if (response.type === GET_DSPR_DRIVER_FAILURE) {
-        Alert.alert('ERROR', 'Failed to fetch driver data.');
+        Alert.alert('Failed to fetch driver data.', response.error);
       }
     })
-    .catch((error) => Alert.alert(error));
+    .catch((error) => Alert.alert('Network error:', error));
 };
 
 export const refreshDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
   dispatch(dsprDriverGetter(dsprDriverId)).catch((error) => {
-    Alert.alert(error);
+    Alert.alert('Network error:', error);
   });
 };
 
@@ -168,10 +168,10 @@ export const setDriverOnCallState = (dsprDriverId, isOnCall) => (dispatch, getSt
   dispatch(driverOnCallStateSetter(dsprDriverId, isOnCall))
     .then((response) => {
       if (response.type === SET_ON_CALL_STATE_FOR_DRIVER_FAILURE) {
-        Alert.alert('ERROR', response.error);
+        Alert.alert('Failed to set oncall state:', response.error);
       }
     })
-    .catch((error) => Alert.alert(error));
+    .catch((error) => Alert.alert('Network error:', error));
 };
 
 export const SET_DRIVER_LOCATION = 'SET_DRIVER_LOCATION';
@@ -273,7 +273,7 @@ export const createDSPRDriverRoute = (
     createNewRoute(driverId, waypoints, finalDestination, usingFinalDestinationInRoute)
   ).then((response) => {
     if (response.type === CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE) {
-      Alert.alert('Error', response.error);
+      Alert.alert('Failed to create new route:', response.error);
     }
   });
 };
@@ -356,10 +356,10 @@ export const progressDSPRDriverRoute = (routeId: number) => (dispatch, getState)
         dispatch(getDSPRDriver(driverId));
       }
       if (response.type === PROGRESS_DSPR_DRIVER_ROUTE_FAILURE) {
-        Alert.alert('ERROR', response.error);
+        Alert.alert('Failed to progress route:', response.error);
       }
     })
-    .catch((error) => Alert.alert(error));
+    .catch((error) => Alert.alert('Network error:', error));
 };
 
 export const DEACTIVATE_DSPR_DRIVER_ROUTE = 'DEACTIVATE_DSPR_DRIVER_ROUTE';

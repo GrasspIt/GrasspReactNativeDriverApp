@@ -156,10 +156,10 @@ export const attemptLogin = (email, password) => (dispatch) => {
         dispatch(getLoggedInUser());
       }
       if (response.type === LOGIN_FAILURE) {
-        Alert.alert('ERROR', 'Invalid email or password.');
+        Alert.alert('Failed to log in:', response.error);
       }
     })
-    .catch((error) => Alert.alert(error));
+    .catch((error) => Alert.alert('Network error:', error));
 };
 
 export const UPDATE_ACCESS_TOKEN = 'UPDATE_ACCESS_TOKEN';
