@@ -156,7 +156,7 @@ export const attemptLogin = (email, password) => (dispatch) => {
         dispatch(getLoggedInUser());
       }
       if (response.type === LOGIN_FAILURE) {
-        Alert.alert('Failed to log in:', response.error);
+        Alert.alert('Failed to log in:', 'Invalid email or password.');
       }
     })
     .catch((error) => Alert.alert('Network error:', error));
