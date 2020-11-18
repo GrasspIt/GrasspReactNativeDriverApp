@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import DashboardScreen from '../screens/DashboardScreen';
-import { Icon } from 'react-native-elements';
+import { IconButton } from 'react-native-paper';
 
 type DashboardNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
@@ -32,7 +32,7 @@ const DashboardNavigator = ({ route, navigation }: Props) => {
         name='Dashboard'
         component={DashboardScreen}
         options={{
-          headerLeft: () => <Icon name='menu' onPress={() => navigation.toggleDrawer()} />,
+          headerLeft: () => <IconButton icon='menu' onPress={() => navigation.toggleDrawer()} />,
         }}
       />
     </DashboardStack.Navigator>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, Alert, View, StyleSheet } from 'react-native';
-// import { ListItem, Button } from 'react-native-elements';
 import { useTheme, Button, Card, IconButton, Divider } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
@@ -73,35 +72,6 @@ const OrderItem = ({ orderInfo, navigation }) => {
           </Button>
         </Card.Actions>
       </Card>
-      // <ListItem
-      //   bottomDivider
-      //   containerStyle={{ padding: 2 }}
-      //   onPress={() => navigation.navigate('Details', { orderId: orderInfo.id })}
-      // >
-      //   <Button
-      //     title='Set In Process'
-      //     titleStyle={{ fontSize: 14 }}
-      //     buttonStyle={{
-      //       width: 80,
-      //       height: 60,
-      //       borderRadius: 0,
-      //       backgroundColor: colors.primary,
-      //     }}
-      //     containerStyle={{ borderRadius: 0 }}
-      //     onPress={handleProcessOrder}
-      //   />
-      //   <ListItem.Content>
-      //     <ListItem.Title style={{ fontSize: 16 }}>
-      //       {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}
-      //       <Text style={{ fontSize: 14 }}>${orderInfo.cashTotal}</Text>
-      //     </ListItem.Title>
-      //     <ListItem.Subtitle style={{ fontSize: 14 }}>
-      //       {orderInfo.address.street} {orderInfo.address.zipCode}{' '}
-      //       {orderInfo.address.aptNumber && `, Unit ${orderInfo.address.aptNumber}`}
-      //     </ListItem.Subtitle>
-      //   </ListItem.Content>
-      //   <ListItem.Chevron color={colors.onBackground} size={18} />
-      // </ListItem>
     )
   );
 };
@@ -109,12 +79,8 @@ const OrderItem = ({ orderInfo, navigation }) => {
 const styles = StyleSheet.create({
   buttons: {
     flex: 1,
-    // marginHorizontal: 6,
-    // marginBottom: 6,
     elevation: 0,
     margin: 2,
-    // width: '50%',
-    // alignSelf: 'flex-end',
   },
 });
 

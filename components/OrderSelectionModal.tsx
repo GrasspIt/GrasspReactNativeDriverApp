@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Modal } from 'react-native';
-import { Button, Dialog, useTheme } from 'react-native-paper';
-import { Divider } from 'react-native-elements';
+import { Button, Dialog, useTheme, Divider } from 'react-native-paper';
 import OrderItemBasic from './OrderItemBasic';
 
 const OrderSelectionModal = ({

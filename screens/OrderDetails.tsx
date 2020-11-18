@@ -7,10 +7,9 @@ import {
   ActivityIndicator,
   SafeAreaView,
   Alert,
+  Clipboard,
 } from 'react-native';
-import Clipboard from '@react-native-community/clipboard';
-import { ListItem, Divider } from 'react-native-elements';
-import { Button, IconButton, useTheme, Card } from 'react-native-paper';
+import { Button, IconButton, useTheme, Card, Divider, List } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { getUserFromProps, getUserNotesFromProps } from '../selectors/userSelectors';
@@ -83,9 +82,9 @@ const OrderDetails = ({
     navigation.navigate('Notes', { userId: user.id, dsprDriverId: order.dsprDriver, userNotes });
   };
 
-  const handleCopyToClipboard = () => {
+  const handleCopyToClipboard = async () => {
+    await Clipboard.setString(medicalRecommendation.idNumber);
     Alert.alert('Copied to clipboard.');
-    Clipboard.setString(medicalRecommendation.idNumber);
   };
 
   return (
@@ -104,19 +103,17 @@ const OrderDetails = ({
                   userNotes
                     .filter((note) => note.isVisible)
                     .map((userNote) => (
-                      <ListItem key={userNote.id}>
-                        <ListItem.Content>
-                          <ListItem.Title>{userNote.note}</ListItem.Title>
-                          <ListItem.Subtitle style={{ alignSelf: 'flex-end', paddingTop: 6 }}>
-                            {Moment(userNote.createdTimestamp).format('MMMM Do YYYY, h:mm a')}
-                          </ListItem.Subtitle>
-                        </ListItem.Content>
-                      </ListItem>
+                      <List.Item
+                        key={userNote.id}
+                        title={`${userNote.note}`}
+                        description={`${Moment(userNote.createdTimestamp).format(
+                          'MMMM Do YYYY, h:mm a'
+                        )}`}
+                        descriptionStyle={{ alignSelf: 'flex-end' }}
+                      />
                     ))
                 ) : (
-                  // <View style={[styles.empty, { backgroundColor: colors.background }]}>
-                  <Text style={{ fontSize: 16 }}>No active notes.</Text>
-                  // </View>
+                  <List.Item title='No active notes.' />
                 )}
               </Card.Content>
               <Card.Actions style={{ alignSelf: 'flex-end' }}>
@@ -131,7 +128,7 @@ const OrderDetails = ({
               </Card.Actions>
             </Card>
 
-            {order && order.specialInstructions && (
+            {order.specialInstructions && (
               <Card style={{ marginHorizontal: 10, marginBottom: 10 }}>
                 <Card.Title title='Special Instructions:' />
                 <Card.Content>
@@ -141,75 +138,58 @@ const OrderDetails = ({
             )}
 
             <Card style={{ marginHorizontal: 10, marginBottom: 10 }}>
-              {order && order.userFirstTimeOrderWithDSPR && <Card.Title title='FIRST TIME ORDER' />}
+              {order.userFirstTimeOrderWithDSPR && <Card.Title title='FIRST TIME ORDER' />}
               <Card.Content>
                 {medicalRecommendation ? (
-                  <ListItem>
-                    <ListItem.Title style={{ fontWeight: 'bold' }}>Medical User</ListItem.Title>
-                  </ListItem>
+                  <List.Item title='Medical User' titleStyle={{ fontWeight: 'bold' }} />
                 ) : (
-                  <ListItem>
-                    <ListItem.Title style={{ fontWeight: 'bold' }}>Adult User</ListItem.Title>
-                  </ListItem>
+                  <List.Item title='Adult User' titleStyle={{ fontWeight: 'bold' }} />
                 )}
 
-                {orderDate && (
-                  <ListItem>
-                    <ListItem.Title>{orderDate}</ListItem.Title>
-                  </ListItem>
-                )}
+                {orderDate && <List.Item title={`${orderDate}`} />}
 
                 {user && (
-                  <ListItem>
-                    <ListItem.Title>
-                      {user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}
-                    </ListItem.Title>
-                  </ListItem>
+                  <List.Item
+                    title={`${user.firstName} ${user.lastName}, ${formatPhone(user.phoneNumber)}`}
+                  />
                 )}
 
                 {idDocument && (
-                  <View>
-                    <ListItem>
-                      <ListItem.Content>
-                        <ListItem.Title>Identification Document:</ListItem.Title>
-                        <ListItem.Subtitle>{idDocument.idNumber}</ListItem.Subtitle>
-                      </ListItem.Content>
-                    </ListItem>
-                    <ListItem>
-                      <ListItem.Title>
-                        Birth Date: &nbsp;
-                        {birthDate ? <Text>{birthDate}</Text> : <Text>Not provided</Text>}{' '}
-                      </ListItem.Title>
-                    </ListItem>
-                  </View>
+                  <>
+                    <List.Item
+                      title='Identification Document:'
+                      description={`${idDocument.idNumber}`}
+                    />
+                    <List.Item
+                      title='Birth Date:'
+                      description={`${birthDate ? birthDate : 'Not provided'}`}
+                    />
+                  </>
                 )}
 
                 {medicalRecommendation && (
-                  <ListItem>
-                    <ListItem.Content>
-                      <ListItem.Title>Medical ID:</ListItem.Title>
-                      <ListItem.Subtitle>{medicalRecommendation.idNumber}</ListItem.Subtitle>
-                    </ListItem.Content>
-                    <IconButton
-                      icon='content-copy'
-                      color={colors.primary}
-                      size={20}
-                      onPress={handleCopyToClipboard}
-                    />
-                  </ListItem>
+                  <List.Item
+                    title='Medical ID'
+                    description={`${medicalRecommendation.idNumber}`}
+                    right={() => (
+                      <IconButton
+                        icon='content-copy'
+                        color={colors.primary}
+                        size={20}
+                        onPress={handleCopyToClipboard}
+                      />
+                    )}
+                  />
                 )}
 
                 {address && (
-                  <ListItem>
-                    <ListItem.Title>
-                      {address.street}, {address.zipCode}
-                      {address.aptNumber && `, Unit ${address.aptNumber}`}
-                    </ListItem.Title>
-                  </ListItem>
+                  <List.Item
+                    title={`${address.street}, ${address.zipCode}
+                  ${address.aptNumber && `, Unit ${address.aptNumber}`}`}
+                  />
                 )}
 
-                {order &&
-                  order.orderDetails &&
+                {order.orderDetails &&
                   order.orderDetails.map((detail) => (
                     <OrderDetailListItem
                       key={`${detail.product.id}-${detail.unit || '0'}`}
@@ -218,74 +198,39 @@ const OrderDetails = ({
                   ))}
                 <Divider />
 
-                {order && order.coupon && (
+                {order.coupon && (
                   <>
-                    <ListItem>
-                      <ListItem.Content>
-                        <ListItem.Title>Code</ListItem.Title>
-                        <ListItem.Subtitle>{`${order.coupon.code}`}</ListItem.Subtitle>
-                      </ListItem.Content>
-                    </ListItem>
-                    <ListItem>
-                      <ListItem.Content>
-                        <ListItem.Title>Discount</ListItem.Title>
-                        <ListItem.Subtitle>{`$${order.discountTotal}`}</ListItem.Subtitle>
-                      </ListItem.Content>
-                    </ListItem>
+                    <List.Item title='Code' description={`${order.coupon.code}`} />
+                    <List.Item title='Discount' description={`$${order.discountTotal}`} />
                   </>
                 )}
 
-                {order && order.cashTotalPreTaxesAndFees && (
-                  <ListItem>
-                    <ListItem.Content>
-                      <ListItem.Title>Subtotal</ListItem.Title>
-                      <ListItem.Subtitle>{`$${order.cashTotalPreTaxesAndFees.toFixed(
-                        2
-                      )}`}</ListItem.Subtitle>
-                    </ListItem.Content>
-                  </ListItem>
+                {order.cashTotalPreTaxesAndFees && (
+                  <List.Item
+                    title='Subtotal'
+                    description={`$${order.cashTotalPreTaxesAndFees.toFixed(2)}`}
+                  />
                 )}
 
-                {order && order.orderTaxDetails && order.orderTaxDetails.length !== 0 ? (
+                {order.orderTaxDetails && order.orderTaxDetails.length !== 0 ? (
                   order.orderTaxDetails
                     .slice(0)
                     .reverse()
                     .map((detail) => (
-                      <ListItem key={detail.name + detail.amount.toString()}>
-                        <ListItem.Content>
-                          <ListItem.Title>{`${detail.name} : ${detail.rate}%`}</ListItem.Title>
-                          <ListItem.Subtitle>{`$${detail.amount.toFixed(2)}`}</ListItem.Subtitle>
-                        </ListItem.Content>
-                      </ListItem>
+                      <List.Item
+                        key={detail.name + detail.amount.toString()}
+                        title={`${detail.name} : ${detail.rate}%`}
+                        description={`$${detail.amount.toFixed(2)}`}
+                      />
                     ))
                 ) : (
-                  <ListItem key='Tax0'>
-                    <ListItem.Content>
-                      <ListItem.Title>Tax</ListItem.Title>
-                      <ListItem.Subtitle>$0.00</ListItem.Subtitle>
-                    </ListItem.Content>
-                  </ListItem>
+                  <List.Item key='Tax0' title='Tax' description='$0.00' />
                 )}
-
-                {order && (
-                  <ListItem>
-                    <ListItem.Content>
-                      <ListItem.Title>Delivery Fee</ListItem.Title>
-                      <ListItem.Subtitle>{`$${order.deliveryFee.toFixed(2)}`}</ListItem.Subtitle>
-                    </ListItem.Content>
-                  </ListItem>
-                )}
-
-                {order && (
-                  <ListItem>
-                    <ListItem.Content>
-                      <ListItem.Title>{`Total: $${order.cashTotal.toFixed(2)}`}</ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                )}
+                <List.Item title='Delivery Fee' description={`$${order.deliveryFee.toFixed(2)}`} />
+                <List.Item title={`Total: $${order.cashTotal.toFixed(2)}`} />
               </Card.Content>
             </Card>
-            {order && order.orderStatus && (
+            {order.orderStatus && (
               <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />
             )}
           </ScrollView>
@@ -310,12 +255,7 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
-    // paddingHorizontal: 10,
     paddingBottom: 30,
-  },
-  title: {
-    fontWeight: 'bold',
-    padding: 10,
   },
   empty: {
     justifyContent: 'center',

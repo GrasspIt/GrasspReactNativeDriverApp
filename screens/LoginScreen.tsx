@@ -7,16 +7,16 @@ import {
   View,
   Image,
   SafeAreaView,
-  Alert,
+  StyleSheet,
 } from 'react-native';
-import { Input, Button, Card } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
-import { useTheme } from 'react-native-paper';
+import { HelperText, useTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { attemptLogin } from '../actions/oauthActions';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/AuthNavigator';
 import { getLoggedInUser } from '../selectors/userSelectors';
+import { Card, Button, TextInput } from 'react-native-paper';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Login'>;
 type Props = {
@@ -71,67 +71,51 @@ const LoginScreen = ({ navigation, loggedInUser, attemptLogin, isLoading }: Prop
         behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: 1,
-            }}
-          >
-            <Image
-              source={require('../assets/grassp_health.png')}
-              style={{
-                height: 60,
-                width: 230,
-              }}
-            />
-            <Card containerStyle={{ width: '80%' }}>
-              <Card.Title>LOGIN</Card.Title>
-              <Card.Divider />
-              <Input
-                containerStyle={{ marginVertical: 10 }}
-                placeholder='Email'
-                label='Email'
-                labelStyle={{ color: colors.onSurface }}
-                keyboardType='email-address'
-                autoCapitalize='none'
-                leftIcon={{
-                  type: 'font-awesome',
-                  color: colors.onSurface,
-                  name: 'envelope',
-                }}
-                errorStyle={{ color: 'red' }}
-                errorMessage={emailInvalid ? 'ENTER EMAIL' : undefined}
-                onChangeText={(text) => handleEmailChange(text)}
-                value={email}
-              />
-              <Input
-                containerStyle={{ marginVertical: 10 }}
-                placeholder='Password'
-                label='Password'
-                labelStyle={{ color: colors.onSurface }}
-                autoCapitalize='none'
-                leftIcon={{
-                  type: 'font-awesome',
-                  color: colors.onSurface,
-                  name: 'lock',
-                }}
-                secureTextEntry={true}
-                errorStyle={{ color: colors.error }}
-                errorMessage={passwordInvalid ? 'ENTER PASSWORD' : undefined}
-                onChangeText={(text) => handlePasswordChange(text)}
-                value={password}
-              />
-              {isLoading ? (
-                <Button buttonStyle={{ backgroundColor: colors.primary }} loading />
-              ) : (
-                <Button
-                  buttonStyle={{ backgroundColor: colors.primary }}
-                  title='Login'
-                  titleStyle={{ color: colors.surface }}
-                  onPress={handleSubmit}
+          <View style={styles.screen}>
+            <Card style={styles.card}>
+              <Card.Content>
+                <View style={{ alignItems: 'center', paddingLeft: 14, paddingBottom: 10 }}>
+                  <Image
+                    source={require('../assets/grassp_health.png')}
+                    style={{
+                      height: 60,
+                      width: 230,
+                    }}
+                  />
+                </View>
+                <TextInput
+                  mode='outlined'
+                  label='Email'
+                  value={email}
+                  error={emailInvalid}
+                  onChangeText={(text) => handleEmailChange(text)}
                 />
-              )}
+                <HelperText type='error' visible={emailInvalid}>
+                  Enter an email address.
+                </HelperText>
+                <TextInput
+                  mode='outlined'
+                  label='Password'
+                  secureTextEntry={true}
+                  value={password}
+                  onChangeText={(text) => handlePasswordChange(text)}
+                  error={passwordInvalid}
+                />
+                <HelperText type='error' visible={passwordInvalid}>
+                  Enter a password.
+                </HelperText>
+              </Card.Content>
+              <Card.Actions>
+                <Button
+                  mode='contained'
+                  loading={isLoading}
+                  onPress={handleSubmit}
+                  labelStyle={{ color: colors.surface }}
+                  style={{ width: '100%' }}
+                >
+                  Login
+                </Button>
+              </Card.Actions>
             </Card>
           </View>
         </TouchableWithoutFeedback>
@@ -141,6 +125,18 @@ const LoginScreen = ({ navigation, loggedInUser, attemptLogin, isLoading }: Prop
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  screen: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  card: {
+    width: '80%',
+    padding: 10,
+  },
+});
 
 const mapStateToProps = (state) => {
   const isLoading = state.api.isLoading;

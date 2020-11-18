@@ -1,7 +1,6 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { ListItem } from 'react-native-elements';
-import { useTheme } from 'react-native-paper';
+import { Text, View } from 'react-native';
+import { useTheme, List, Divider } from 'react-native-paper';
 import { OrderDetail } from '../store/reduxStoreState';
 
 interface OrderDetailListItemProps {
@@ -29,33 +28,23 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
     <>
       {orderDetail && product && (
         <>
-          <ListItem topDivider>
-            <ListItem.Content>
-              <ListItem.Title>{`${orderDetail.quantity} ${unit} ${product.name}`}</ListItem.Title>
-              <View style={styles.subtitle}>
-                <View>
-                  <Text style={{ color: productColor, fontWeight: 'bold' }}>
-                    {product.flowerType.replace('_', ' ').toUpperCase()}
-                  </Text>
-                </View>
-                <View>
+          <View>
+            <Divider />
+            <List.Item
+              title={`${orderDetail.quantity} ${unit} ${product.name}`}
+              description={`${product.flowerType.replace('_', ' ').toUpperCase()}`}
+              descriptionStyle={{ color: productColor, fontWeight: 'bold' }}
+              right={() => (
+                <View style={{ alignSelf: 'flex-end' }}>
                   <Text>${orderDetail.pricePreDiscount}</Text>
                 </View>
-              </View>
-            </ListItem.Content>
-          </ListItem>
+              )}
+            />
+          </View>
         </>
       )}
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  subtitle: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-});
 
 export default OrderDetailListItem;
