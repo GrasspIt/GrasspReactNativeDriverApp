@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { View, Text, StyleSheet, FlatList, SafeAreaView } from 'react-native';
+import { useTheme, ActivityIndicator } from 'react-native-paper';
 import InProcessOrderItem from '../components/InProcessOrderItem';
 import OrderItem from '../components/OrderItem';
 import { refreshDSPRDriver, getDSPRDriver } from '../actions/driverActions';

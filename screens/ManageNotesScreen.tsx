@@ -101,7 +101,7 @@ const ManageNotes = ({
           </View>
         )}
         <FAB
-          style={[styles.fab, { backgroundColor: colors.primary }]}
+          style={styles.fab}
           color={colors.surface}
           label='Create Note'
           icon='plus'

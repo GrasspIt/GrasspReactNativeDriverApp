@@ -71,7 +71,7 @@ const RouteActionButton = ({ driver, currentInProcessOrderInActiveRoute, ordersF
 
   return (
     <FAB
-      style={[styles.fab, { backgroundColor: colors.primary }]}
+      style={styles.fab}
       color={colors.surface}
       label={!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}
       icon={!currentInProcessOrderInActiveRoute ? 'autorenew' : 'check'}

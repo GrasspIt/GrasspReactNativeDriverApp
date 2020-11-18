@@ -1,14 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Alert,
-  ActivityIndicator,
-  Platform,
-  SafeAreaView,
-} from 'react-native';
-import { Button, useTheme } from 'react-native-paper';
+import { StyleSheet, Text, View, Alert, Platform, SafeAreaView } from 'react-native';
+import { Button, useTheme, ActivityIndicator } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 
 import Constants from 'expo-constants';

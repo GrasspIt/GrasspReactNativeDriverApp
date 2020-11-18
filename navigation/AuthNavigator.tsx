@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { navigationRef } from './RootNavigation';
@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { getLoggedInUser } from '../selectors/userSelectors';
 import { setDsprDriverId } from '../actions/driverActions';
 import { preloadAccessTokenFromLocalStorage, logout } from '../actions/oauthActions';
-import * as SplashScreen from 'expo-splash-screen';
 
 import LoginScreen from '../screens/LoginScreen';
 import DrawerNavigator from './DrawerNavigator';
@@ -26,21 +25,8 @@ const AuthNavigator = ({
   setDsprDriverId,
   preloadAccessTokenFromLocalStorage,
 }) => {
-  const [appReady, setAppReady] = useState(false);
-
-  const hideSplashScreen = async () => {
-    setAppReady(true);
-    await SplashScreen.hideAsync();
-  };
-
-  const checkForToken = async () => {
-    await SplashScreen.preventAutoHideAsync();
-    await preloadAccessTokenFromLocalStorage();
-    hideSplashScreen();
-  };
-
   useEffect(() => {
-    checkForToken();
+    preloadAccessTokenFromLocalStorage();
   }, []);
 
   useEffect(() => {
@@ -52,11 +38,10 @@ const AuthNavigator = ({
       if (!driverId && loggedInUser.dsprDrivers.length === 1) {
         setDsprDriverId(loggedInUser.dsprDrivers[0]);
       }
-      hideSplashScreen();
     }
   }, [loggedInUser, driverId]);
 
-  return appReady ? (
+  return (
     <NavigationContainer ref={navigationRef}>
       <RootStack.Navigator screenOptions={{ gestureEnabled: false }}>
         {!loggedInUser ? (
@@ -78,7 +63,7 @@ const AuthNavigator = ({
         )}
       </RootStack.Navigator>
     </NavigationContainer>
-  ) : null;
+  );
 };
 
 const mapStateToProps = (state) => {

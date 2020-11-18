@@ -155,7 +155,7 @@ export default (state = initialState, action) => {
     case UPDATE_ACCESS_TOKEN:
     case LOGIN_SUCCESS:
     case PRELOAD_ACCESS_TOKEN_FROM_LOCAL_STORAGE:
-      return { ...state, accessToken: action.accessToken };
+      return { ...state, isLoading: true, accessToken: action.accessToken };
     case LOGGED_IN_USER_INFO_SUCCESS:
       let entities = action.response.entities;
       let usersFromResponse = entities.users;

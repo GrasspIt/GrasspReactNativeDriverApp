@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, SafeAreaView, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RoutingStackParamsList } from '../navigation/RoutingNavigator';
-import { Button, useTheme } from 'react-native-paper';
+import { Button, useTheme, ActivityIndicator } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { connect } from 'react-redux';
 import {
@@ -49,7 +49,7 @@ type Props = {
   };
   dspr: DSPR;
   createDSPRDriverRoute: any;
-  isLoading: Boolean;
+  isLoading;
 };
 
 const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoading }: Props) => {
@@ -218,6 +218,7 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
               mode='text'
               labelStyle={{ color: colors.primary, fontSize: 14 }}
               onPress={() => setOrderSelectionModalOpen(true)}
+              disabled={isLoading}
             >
               New Route
             </Button>

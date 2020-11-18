@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
+import { View, ScrollView, Text, StyleSheet, SafeAreaView, Alert, Clipboard } from 'react-native';
 import {
-  View,
-  ScrollView,
-  Text,
-  StyleSheet,
+  Button,
+  IconButton,
+  useTheme,
+  Card,
+  Divider,
+  List,
   ActivityIndicator,
-  SafeAreaView,
-  Alert,
-  Clipboard,
-} from 'react-native';
-import { Button, IconButton, useTheme, Card, Divider, List } from 'react-native-paper';
+} from 'react-native-paper';
 import { connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { getUserFromProps, getUserNotesFromProps } from '../selectors/userSelectors';
