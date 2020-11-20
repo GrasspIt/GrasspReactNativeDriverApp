@@ -109,6 +109,7 @@ const OrderDetails = ({
                           'MMMM Do YYYY, h:mm a'
                         )}`}
                         descriptionStyle={{ alignSelf: 'flex-end' }}
+                        titleNumberOfLines={3}
                       />
                     ))
                 ) : (
@@ -150,6 +151,7 @@ const OrderDetails = ({
                 {user && (
                   <List.Item
                     title={`${user.firstName} ${user.lastName}, ${formatPhone(user.phoneNumber)}`}
+                    titleNumberOfLines={2}
                   />
                 )}
 
@@ -185,9 +187,13 @@ const OrderDetails = ({
                   <List.Item
                     title={`${address.street}, ${address.zipCode}
                   ${address.aptNumber && `, Unit ${address.aptNumber}`}`}
+                    titleNumberOfLines={2}
                   />
                 ) : (
-                  <List.Item title={`${address.street}, ${address.zipCode}`} />
+                  <List.Item
+                    title={`${address.street}, ${address.zipCode}`}
+                    titleNumberOfLines={2}
+                  />
                 )}
 
                 {order.orderDetails &&

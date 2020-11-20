@@ -34,6 +34,8 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
               title={`${orderDetail.quantity} ${unit} ${product.name}`}
               description={`${product.flowerType.replace('_', ' ').toUpperCase()}`}
               descriptionStyle={{ color: productColor, fontWeight: 'bold' }}
+              titleNumberOfLines={2}
+              descriptionNumberOfLines={2}
               right={() => (
                 <View style={{ alignSelf: 'flex-end' }}>
                   <Text>${orderDetail.pricePreDiscount}</Text>

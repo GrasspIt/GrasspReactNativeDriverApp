@@ -8,6 +8,8 @@ const OrderItemBasic = ({ orderInfo }) => {
         <List.Item
           title={`${orderInfo.user.firstName} ${orderInfo.user.lastName}, $${orderInfo.cashTotal}`}
           description={`${orderInfo.address.street} ${orderInfo.address.zipCode}`}
+          titleNumberOfLines={2}
+          descriptionNumberOfLines={2}
         />
         <Divider />
       </>

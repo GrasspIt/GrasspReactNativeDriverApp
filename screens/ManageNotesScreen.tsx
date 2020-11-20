@@ -66,6 +66,7 @@ const ManageNotes = ({
                         'MMMM Do YYYY, h:mm a'
                       )}`}
                       descriptionStyle={{ alignSelf: 'flex-end' }}
+                      titleNumberOfLines={3}
                     />
                   </Card.Content>
                   <Card.Actions>
