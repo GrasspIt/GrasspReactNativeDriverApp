@@ -181,11 +181,13 @@ const OrderDetails = ({
                   />
                 )}
 
-                {address && (
+                {address && address.aptNumber ? (
                   <List.Item
                     title={`${address.street}, ${address.zipCode}
                   ${address.aptNumber && `, Unit ${address.aptNumber}`}`}
                   />
+                ) : (
+                  <List.Item title={`${address.street}, ${address.zipCode}`} />
                 )}
 
                 {order.orderDetails &&

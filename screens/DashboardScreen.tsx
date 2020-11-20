@@ -112,8 +112,7 @@ const DashboardScreen = ({
   const startLocationUpdates = async () => {
     console.log('start location updates');
     await Location.startLocationUpdatesAsync('location-tracking', {
-      accuracy: Location.Accuracy.High,
-      timeInterval: 1500000,
+      timeInterval: 270000,
       distanceInterval: 0,
       showsBackgroundLocationIndicator: true,
       foregroundService: {
@@ -130,25 +129,28 @@ const DashboardScreen = ({
   };
 
   const toggleLocationUpdates = async () => {
+    //see if location is already being tracked
+    let tracking = await Location.hasStartedLocationUpdatesAsync('location-tracking');
+    console.log('tracking', tracking);
     if (dsprDriver) {
       //permissions for location tracking
       let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted' && dsprDriver.onCall) {
+      if (status !== 'granted' && dsprDriver.onCall === true) {
         Alert.alert(
           'Location updates are disabled. Please go to device Settings and give Grassp Driver App permission to track your location.'
         );
       }
-      //see if location is already being tracked
-      let tracking = await Location.hasStartedLocationUpdatesAsync('location-tracking');
       //start updates if onCall, stop updates if not
-      if (status === 'granted' && !tracking && dsprDriver.onCall) startLocationUpdates();
-      if (tracking && !dsprDriver.onCall) stopLocationUpdates();
+      if (status === 'granted' && !tracking && dsprDriver.onCall === true) startLocationUpdates();
+      if (tracking && dsprDriver.onCall === false) stopLocationUpdates();
     }
+    if (tracking && !dsprDriver) stopLocationUpdates();
   };
 
+  let oncallState = dsprDriver && dsprDriver.onCall;
   useEffect(() => {
     toggleLocationUpdates();
-  }, [dsprDriver]);
+  }, [oncallState]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
