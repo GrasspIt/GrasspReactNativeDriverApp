@@ -112,7 +112,6 @@ const DashboardScreen = ({
   const startLocationUpdates = async () => {
     console.log('start location updates');
     await Location.startLocationUpdatesAsync('location-tracking', {
-      timeInterval: 270000,
       distanceInterval: 1200,
       showsBackgroundLocationIndicator: true,
       foregroundService: {
