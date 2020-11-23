@@ -55,62 +55,17 @@ type Props = {
 const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoading }: Props) => {
   const { colors } = useTheme();
 
-  const [disableButton, setDisableButton] = useState(false);
   const [ordersForRoute, setOrdersForRoute] = useState<any>();
-  const [finalOrderForRoute, setFinalOrderForRoute] = useState<any>();
-  const [currentInProcessOrderInActiveRoute, setCurrentInProcessOrderInActiveRoute] = useState<
-    any
-  >();
+  const [
+    currentInProcessOrderInActiveRoute,
+    setCurrentInProcessOrderInActiveRoute,
+  ] = useState<any>();
   const [currentlyActiveRouteLegIndex, setCurrentlyActiveRouteLegIndex] = useState<any>();
   const [orderSelectionModalOpen, setOrderSelectionModalOpen] = useState(false);
   const [routeView, setRouteView] = useState('map');
   const [orderPolyline, setOrderPolyline] = useState<any>();
   const [overviewPolyline, setOverviewPolyline] = useState<any>();
   const [maxOrdersPerRoute, setMaxOrdersPerRoute] = useState<any>();
-
-  const createNewRoute = (
-    driverId: number,
-    waypoints: OrderWithAddressAndUser[],
-    finalDestination: any,
-    usingFinalDestinationInRoute: Boolean
-  ) => {
-    const orderIds = waypoints.map((order) => ({ id: order.id }));
-    if (!finalDestination) {
-      finalDestination = orderIds.pop();
-      usingFinalDestinationInRoute = true;
-    } else {
-      finalDestination = { id: finalDestination.id };
-    }
-    createDSPRDriverRoute(driverId, orderIds, finalDestination, usingFinalDestinationInRoute);
-  };
-
-  // function to create a new route
-  const handleRouteCreation = () => {
-    if (ordersForRoute.length === 0) {
-      Alert.alert('A route must contain at least 1 order.');
-      return;
-    }
-    createNewRoute(driver.id, ordersForRoute, finalOrderForRoute, false);
-    setDisableButton(false);
-    setOrderSelectionModalOpen(false);
-  };
-
-  // check if there is already an active route
-  const confirmCreateRoute = () => {
-    setDisableButton(true);
-    if (driver && driver.currentRoute && driver.currentRoute.active) {
-      Alert.alert(
-        'Override Route?',
-        'The driver is currently in the middle of a route. Are you sure you want to override their current route?',
-        [
-          { text: 'No', style: 'cancel' },
-          { text: 'Yes', onPress: () => handleRouteCreation() },
-        ]
-      );
-    } else {
-      handleRouteCreation();
-    }
-  };
 
   useEffect(() => {
     // set number orders per route
@@ -170,24 +125,6 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
     }
     return;
   }, [dspr, driver]);
-
-  useEffect(() => {
-    // create an array with in process order and all queued orders
-    const routeOrders =
-      driver && driver.currentInProcessOrder && driver.queuedOrders
-        ? [driver.currentInProcessOrder, ...driver.queuedOrders]
-        : driver && driver.currentInProcessOrder
-        ? [driver.currentInProcessOrder]
-        : driver && driver.queuedOrders
-        ? [...driver.queuedOrders]
-        : [];
-
-    // slice the array up to the max order length
-    const updatedOrdersForRoute = routeOrders.slice(0, maxOrdersPerRoute);
-
-    setFinalOrderForRoute(updatedOrdersForRoute[updatedOrdersForRoute.length - 1]);
-    setOrdersForRoute(updatedOrdersForRoute);
-  }, [driver, maxOrdersPerRoute]);
 
   // create order leg polyline for map
   useEffect(() => {
@@ -263,7 +200,6 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ padding: 10 }}>No currently active route.</Text>
           <Button
-            disabled={disableButton}
             mode='contained'
             labelStyle={{ color: colors.surface, fontSize: 14 }}
             onPress={() => setOrderSelectionModalOpen(true)}
@@ -275,11 +211,9 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
       <OrderSelectionModal
         orderSelectionModalOpen={orderSelectionModalOpen}
         setOrderSelectionModalOpen={setOrderSelectionModalOpen}
-        ordersForRoute={ordersForRoute}
         maxOrdersPerRoute={maxOrdersPerRoute}
         driver={driver}
-        confirmCreateRoute={confirmCreateRoute}
-        disableButton={disableButton}
+        createDSPRDriverRoute={createDSPRDriverRoute}
       />
       <StatusBar style='dark' />
     </SafeAreaView>

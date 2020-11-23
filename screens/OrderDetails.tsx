@@ -185,8 +185,7 @@ const OrderDetails = ({
 
                 {address && address.aptNumber ? (
                   <List.Item
-                    title={`${address.street}, ${address.zipCode}
-                  ${address.aptNumber && `, Unit ${address.aptNumber}`}`}
+                    title={`${address.street}, ${address.zipCode}, Unit ${address.aptNumber}`}
                     titleNumberOfLines={2}
                   />
                 ) : (
