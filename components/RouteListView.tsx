@@ -13,18 +13,17 @@ const RouteListView = ({ navigation, ordersForRoute }: Props) => {
   const { colors } = useTheme();
 
   let queuedOrders =
-    ordersForRoute && ordersForRoute.filter((order) => order.orderStatus === 'queued');
+    ordersForRoute && ordersForRoute.filter((leg) => leg.order.orderStatus === 'queued');
   let inProcessOrder =
-    ordersForRoute && ordersForRoute.find((order) => order.orderStatus === 'in_process');
-
+    ordersForRoute && ordersForRoute.find((leg) => leg.order.orderStatus === 'in_process');
   return ordersForRoute ? (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <Text style={styles.listTitle}>In Process Order</Text>
         <Divider />
 
-        {ordersForRoute.some((order) => order.orderStatus === 'in_process') ? (
-          <InProcessOrderItem orderInfo={inProcessOrder} navigation={navigation} />
+        {ordersForRoute.some((leg) => leg.order.orderStatus === 'in_process') ? (
+          <InProcessOrderItem orderInfo={inProcessOrder.order} navigation={navigation} />
         ) : (
           <View style={[styles.empty, { backgroundColor: colors.background }]}>
             <Text>No order in process.</Text>
@@ -42,7 +41,7 @@ const RouteListView = ({ navigation, ordersForRoute }: Props) => {
             </View>
           }
           data={queuedOrders}
-          renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
+          renderItem={(item) => <OrderItem orderInfo={item.item.order} navigation={navigation} />}
           keyExtractor={(item: any) => item.id.toString() + '-routeList'}
           style={{ paddingHorizontal: 10 }}
         />

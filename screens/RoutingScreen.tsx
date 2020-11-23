@@ -180,7 +180,7 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
         <View style={{ flex: 1 }}>
           <RouteViewButtons routeView={routeView} setRouteView={setRouteView} />
           {routeView === 'list' ? (
-            <RouteListView navigation={navigation} ordersForRoute={ordersForRoute} />
+            <RouteListView navigation={navigation} ordersForRoute={driver.currentRoute.legs} />
           ) : (
             <RouteMapView
               navigation={navigation}
