@@ -4,9 +4,10 @@ import { useTheme, Button, Card, IconButton, Divider } from 'react-native-paper'
 import { useDispatch } from 'react-redux';
 import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
 
-const OrderItem = ({ orderInfo, navigation }) => {
+const OrderItem = ({ orderInfo, navigation, ordersForRoute }) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
+  let orderList = ordersForRoute && ordersForRoute.map((leg) => leg.order);
 
   const handleProcessOrder = () => {
     Alert.alert('Process Order', 'Are you sure you want to set this order in-process?', [
@@ -60,6 +61,18 @@ const OrderItem = ({ orderInfo, navigation }) => {
           >
             Cancel Order
           </Button>
+          {orderList && orderList.includes(orderInfo) && (
+            <Button
+              icon='map-minus'
+              mode='contained'
+              color={colors.error}
+              style={styles.buttons}
+              labelStyle={{ color: colors.surface }}
+              onPress={handleCancelOrder}
+            >
+              Remove From Route
+            </Button>
+          )}
           <Button
             mode='contained'
             icon='autorenew'

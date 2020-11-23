@@ -55,7 +55,6 @@ type Props = {
 const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoading }: Props) => {
   const { colors } = useTheme();
 
-  const [ordersForRoute, setOrdersForRoute] = useState<any>();
   const [
     currentInProcessOrderInActiveRoute,
     setCurrentInProcessOrderInActiveRoute,
@@ -192,7 +191,7 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
           )}
           <RouteActionButton
             driver={driver}
-            ordersForRoute={ordersForRoute}
+            ordersForRoute={driver.currentRoute.legs}
             currentInProcessOrderInActiveRoute={currentInProcessOrderInActiveRoute}
           />
         </View>

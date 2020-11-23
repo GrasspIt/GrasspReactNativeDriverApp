@@ -23,7 +23,11 @@ const RouteListView = ({ navigation, ordersForRoute }: Props) => {
         <Divider />
 
         {ordersForRoute.some((leg) => leg.order.orderStatus === 'in_process') ? (
-          <InProcessOrderItem orderInfo={inProcessOrder.order} navigation={navigation} />
+          <InProcessOrderItem
+            orderInfo={inProcessOrder.order}
+            navigation={navigation}
+            ordersForRoute={ordersForRoute}
+          />
         ) : (
           <View style={[styles.empty, { backgroundColor: colors.background }]}>
             <Text>No order in process.</Text>
@@ -41,7 +45,13 @@ const RouteListView = ({ navigation, ordersForRoute }: Props) => {
             </View>
           }
           data={queuedOrders}
-          renderItem={(item) => <OrderItem orderInfo={item.item.order} navigation={navigation} />}
+          renderItem={(item) => (
+            <OrderItem
+              ordersForRoute={ordersForRoute}
+              orderInfo={item.item.order}
+              navigation={navigation}
+            />
+          )}
           keyExtractor={(item: any) => item.id.toString() + '-routeList'}
           style={{ paddingHorizontal: 10 }}
         />
