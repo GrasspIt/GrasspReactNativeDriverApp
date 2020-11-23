@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Modal, Alert } from 'react-native';
-import { Button, Dialog, useTheme, Divider, IconButton, FAB } from 'react-native-paper';
+import { Dialog, useTheme, Divider, IconButton, FAB } from 'react-native-paper';
 import OrderItemBasic from './OrderItemBasic';
 
 const OrderSelectionModal = ({
@@ -14,14 +14,24 @@ const OrderSelectionModal = ({
 
   //need a list of all orders to display, need a list of selected orders to highlight
 
-  const [disableButton, setDisableButton] = useState(false);
   const [selectedOrdersForRoute, setSelectedOrdersForRoute] = useState<any>();
   const [finalOrderForRoute, setFinalOrderForRoute] = useState<any>();
 
-  const handleSelectOrder = (orderId) => {
+  const handleSelectOrder = (selectedOrder) => {
     //if item is included in selectedOrdersList, remove it
-    //if not, and the maxOrders has been reached, notify the user, else add to list
-    console.log('orderId', orderId);
+    if (selectedOrdersForRoute && selectedOrdersForRoute.includes(selectedOrder)) {
+      setSelectedOrdersForRoute(selectedOrdersForRoute.filter((order) => order != selectedOrder));
+    } else {
+      //if maxOrders has been reached, notify the user, otherwise add it to list
+      if (selectedOrdersForRoute.length === maxOrdersPerRoute) {
+        Alert.alert(
+          'Order Limit Reached',
+          'No room to add that order to the route. Please remove an order before trying to add a new one.'
+        );
+      } else {
+        setSelectedOrdersForRoute([...selectedOrdersForRoute, selectedOrder]);
+      }
+    }
   };
 
   // function to create a new route
@@ -43,13 +53,11 @@ const OrderSelectionModal = ({
       return;
     }
     createNewRoute(driver.id, selectedOrdersForRoute, finalOrderForRoute, false);
-    setDisableButton(false);
     setOrderSelectionModalOpen(false);
   };
 
   // check if there is already an active route
   const confirmCreateRoute = () => {
-    setDisableButton(true);
     if (driver && driver.currentRoute && driver.currentRoute.active) {
       Alert.alert(
         'Override Route?',
@@ -60,7 +68,10 @@ const OrderSelectionModal = ({
         ]
       );
     } else {
-      handleRouteCreation();
+      Alert.alert('Create Route?', 'Are you ready to create this route?', [
+        { text: 'No', style: 'cancel' },
+        { text: 'Yes', onPress: () => handleRouteCreation() },
+      ]);
     }
   };
 
@@ -84,15 +95,16 @@ const OrderSelectionModal = ({
 
   return (
     <Modal
+      style={{ flex: 1 }}
       animationType='slide'
       visible={orderSelectionModalOpen}
       onRequestClose={() => setOrderSelectionModalOpen(false)}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      <View style={styles.modalHeader}>
         <Dialog.Title>Order Selection</Dialog.Title>
         <IconButton icon='close' onPress={() => setOrderSelectionModalOpen(false)} />
       </View>
-      <Dialog.Content>
+      <Dialog.Content style={{ flex: 1 }}>
         <Text style={styles.listTitle}>
           Selected Orders: {(selectedOrdersForRoute && selectedOrdersForRoute.length) || 0}/
           {maxOrdersPerRoute}
@@ -110,7 +122,7 @@ const OrderSelectionModal = ({
           </>
         )}
         {driver && driver.queuedOrders && driver.queuedOrders.length > 0 && (
-          <View>
+          <>
             <Text style={styles.listTitle}>Queued Orders</Text>
             <Divider />
             <View style={{ flexGrow: 1 }}>
@@ -128,17 +140,16 @@ const OrderSelectionModal = ({
                     orderInfo={item.item}
                   />
                 )}
-                contentContainerStyle={{ paddingBottom: 300 }}
+                contentContainerStyle={{ paddingBottom: 100 }}
                 keyExtractor={(item: any) => item.id.toString()}
               />
             </View>
-          </View>
+          </>
         )}
       </Dialog.Content>
       <FAB
         label='Create Route'
         icon='check'
-        disabled={disableButton}
         onPress={() => confirmCreateRoute()}
         style={styles.fab}
       />
@@ -157,6 +168,11 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingVertical: 8,
     fontWeight: 'bold',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   fab: {
     position: 'absolute',

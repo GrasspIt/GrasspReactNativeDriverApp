@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Checkbox, Divider, List } from 'react-native-paper';
 
 const OrderItemBasic = ({ orderInfo, handleSelectOrder, selectedOrdersForRoute }) => {
+  const [checked, setChecked] = useState(false);
+
   const description =
     orderInfo && orderInfo.address && orderInfo.address && orderInfo.address.aptNumber
       ? `${orderInfo.address.street}, ${orderInfo.address.zipCode}, Unit ${orderInfo.address.aptNumber}`
       : `${orderInfo.address.street}, ${orderInfo.address.zipCode}`;
+
+  useEffect(() => {
+    selectedOrdersForRoute.includes(orderInfo) ? setChecked(true) : setChecked(false);
+  }, [selectedOrdersForRoute, orderInfo]);
 
   return (
     orderInfo &&
@@ -18,12 +24,8 @@ const OrderItemBasic = ({ orderInfo, handleSelectOrder, selectedOrdersForRoute }
           description={description}
           descriptionNumberOfLines={2}
           titleNumberOfLines={2}
-          onPress={() => handleSelectOrder(orderInfo.id)}
-          left={() => (
-            <Checkbox
-              status={selectedOrdersForRoute.includes(orderInfo) ? 'checked' : 'unchecked'}
-            />
-          )}
+          onPress={() => handleSelectOrder(orderInfo)}
+          left={() => <Checkbox status={checked ? 'checked' : 'unchecked'} />}
         />
         <Divider />
       </>

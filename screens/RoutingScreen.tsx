@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, Alert } from 'react-native';
+import { View, Text, SafeAreaView, Alert, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RoutingStackParamsList } from '../navigation/RoutingNavigator';
-import { Button, useTheme, ActivityIndicator } from 'react-native-paper';
+import { Button, useTheme, ActivityIndicator, FAB } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { connect } from 'react-redux';
 import {
@@ -165,7 +165,7 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
   }, [navigation, driver]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? (
         <View
           style={{
@@ -199,13 +199,12 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
       ) : (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ padding: 10 }}>No currently active route.</Text>
-          <Button
-            mode='contained'
-            labelStyle={{ color: colors.surface, fontSize: 14 }}
+          <FAB
+            label='Create New Route'
+            icon='plus'
             onPress={() => setOrderSelectionModalOpen(true)}
-          >
-            Create New Route
-          </Button>
+            style={styles.fab}
+          />
         </View>
       )}
       <OrderSelectionModal
@@ -219,6 +218,15 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
+  },
+});
 
 const mapStateToProps = (state) => {
   const dsprDriverIdForOrderDetails = state.api.dsprDriverId;
