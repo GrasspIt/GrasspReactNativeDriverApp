@@ -25,7 +25,7 @@ import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
 import OrderButtons from '../components/OrderButtons';
 import { getOrderFromProps } from '../selectors/orderSelectors';
 import { getAddressFromProps } from '../selectors/addressSelectors';
-import { getRouteLegs } from '../selectors/dsprDriverRouteSelectors';
+import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 
 type DetailsScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Details'>;
 
@@ -41,6 +41,7 @@ type Props = {
   isLoading;
   getOrderDetailsWithId;
   orderIdsInRoute;
+  activeRoute;
 };
 const OrderDetails = ({
   navigation,
@@ -54,6 +55,7 @@ const OrderDetails = ({
   medicalRecommendation,
   getOrderDetailsWithId,
   orderIdsInRoute,
+  activeRoute,
 }: Props) => {
   const { colors } = useTheme();
 
@@ -243,6 +245,7 @@ const OrderDetails = ({
                 orderId={orderId}
                 orderStatus={order.orderStatus}
                 orderIdsInRoute={orderIdsInRoute}
+                activeRoute={activeRoute}
               />
             )}
           </ScrollView>
@@ -290,6 +293,8 @@ const mapStateToProps = (state, route) => {
   const medicalRecommendations = getUserMedicalRecommendations(state);
   const medicalRecommendation = order && medicalRecommendations[order.userMedicalRecommendation];
   const isLoading = state.api.isLoading;
+  const driverRoutes = getRoutes(state);
+  const activeRoute = Object.values(driverRoutes).filter((route) => route.active)[0];
   const routeLegs = getRouteLegs(state);
   const orderIdsInRoute = routeLegs && Object.values(routeLegs).map((leg) => leg.order);
   return {
@@ -302,6 +307,7 @@ const mapStateToProps = (state, route) => {
     medicalRecommendation,
     isLoading,
     orderIdsInRoute,
+    activeRoute,
   };
 };
 

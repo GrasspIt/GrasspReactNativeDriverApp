@@ -318,7 +318,7 @@ const refreshRoute = (
   waypoints,
   finalDestination,
   usingFinalDestinationInRoute: Boolean
-) => (dispatch) => {
+) => (dispatch, getState) => {
   dispatch(
     createNewDsprDriverRouteWithoutNotifications(
       driverId,
@@ -328,7 +328,8 @@ const refreshRoute = (
     )
   )
     .then((response) => {
-      if (response.typle === CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS) {
+      if (response.type === CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS) {
+        dispatch(getDSPRDriver(driverId));
         Alert.alert('Success!', 'Order removed from route.');
       }
       if (response.type === CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_FAILURE) {

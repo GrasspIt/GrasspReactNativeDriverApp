@@ -25,6 +25,7 @@ import RouteActionButton from '../components/RouteActionButton';
 import RouteMapView from '../components/RouteMapView';
 import RouteListView from '../components/RouteListView';
 import RouteViewButtons from '../components/RouteViewButtons';
+import { getRouteLegs } from '../selectors/dsprDriverRouteSelectors';
 
 type RoutingScreenNavigationProp = StackNavigationProp<RoutingStackParamsList, 'Routing'>;
 type Props = {
@@ -50,9 +51,17 @@ type Props = {
   dspr: DSPR;
   createDSPRDriverRoute: any;
   isLoading;
+  orderIdsInRoute;
 };
 
-const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoading }: Props) => {
+const RoutingScreen = ({
+  navigation,
+  driver,
+  dspr,
+  createDSPRDriverRoute,
+  isLoading,
+  orderIdsInRoute,
+}: Props) => {
   const { colors } = useTheme();
 
   const [
@@ -193,6 +202,7 @@ const RoutingScreen = ({ navigation, driver, dspr, createDSPRDriverRoute, isLoad
             driver={driver}
             ordersForRoute={driver.currentRoute.legs}
             currentInProcessOrderInActiveRoute={currentInProcessOrderInActiveRoute}
+            orderIdsInRoute={orderIdsInRoute}
           />
         </View>
       ) : (
@@ -234,10 +244,13 @@ const mapStateToProps = (state) => {
   });
   const dspr = driver ? getDSPRFromProps(state, { dsprId: driver.dspr }) : undefined;
   const isLoading = state.api.isLoading;
+  const routeLegs = getRouteLegs(state);
+  const orderIdsInRoute = routeLegs && Object.values(routeLegs).map((leg) => leg.order);
   return {
     dspr,
     driver,
     isLoading,
+    orderIdsInRoute,
   };
 };
 

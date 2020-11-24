@@ -5,7 +5,7 @@ import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/order
 import { useDispatch } from 'react-redux';
 import { removeOrderAndRefreshRoute } from '../actions/driverActions';
 
-const OrderButtons = ({ orderId, orderStatus, orderIdsInRoute }) => {
+const OrderButtons = ({ orderId, orderStatus, orderIdsInRoute, activeRoute }) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
 
@@ -17,12 +17,34 @@ const OrderButtons = ({ orderId, orderStatus, orderIdsInRoute }) => {
   };
 
   const handleRemoveFromRoute = () => {
+    let orderIdsInNewRoute = orderIdsInRoute
+      .filter((id) => id !== orderId)
+      .map((orderId) => ({
+        id: orderId,
+      }));
+    let finalOrderInNewRouteId = orderIdsInNewRoute[orderIdsInNewRoute.length - 1];
+    console.log('orderIdsInNewRoute', orderIdsInNewRoute);
+    console.log('finalOrderInNewRouteId', finalOrderInNewRouteId);
+    console.log('activeRoute.id', activeRoute.id);
+    console.log('activeRoute.dsprDriver', activeRoute.dsprDriver);
     Alert.alert(
       'Remove From Route',
       'Are you sure you want to remove this order from the current route?',
       [
         { text: 'No', style: 'cancel' },
-        // { text: 'Yes', onPress: () => dispatch(removeOrderAndRefreshRoute(routeId, driverId, ordersInRouteIds, finalOrderInRouteId, false)) },
+        {
+          text: 'Yes',
+          onPress: () =>
+            dispatch(
+              removeOrderAndRefreshRoute(
+                activeRoute.id,
+                activeRoute.dsprDriver,
+                orderIdsInNewRoute,
+                finalOrderInNewRouteId,
+                false
+              )
+            ),
+        },
       ]
     );
   };
