@@ -23,11 +23,7 @@ const RouteListView = ({ navigation, ordersForRoute }: Props) => {
         <Divider />
 
         {ordersForRoute.some((leg) => leg.order.orderStatus === 'in_process') ? (
-          <InProcessOrderItem
-            orderInfo={inProcessOrder.order}
-            navigation={navigation}
-            ordersForRoute={ordersForRoute}
-          />
+          <InProcessOrderItem orderInfo={inProcessOrder.order} navigation={navigation} />
         ) : (
           <View style={[styles.empty, { backgroundColor: colors.background }]}>
             <Text>No order in process.</Text>

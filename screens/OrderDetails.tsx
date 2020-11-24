@@ -25,6 +25,7 @@ import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
 import OrderButtons from '../components/OrderButtons';
 import { getOrderFromProps } from '../selectors/orderSelectors';
 import { getAddressFromProps } from '../selectors/addressSelectors';
+import { getRouteLegs } from '../selectors/dsprDriverRouteSelectors';
 
 type DetailsScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Details'>;
 
@@ -39,6 +40,7 @@ type Props = {
   medicalRecommendation;
   isLoading;
   getOrderDetailsWithId;
+  orderIdsInRoute;
 };
 const OrderDetails = ({
   navigation,
@@ -51,12 +53,12 @@ const OrderDetails = ({
   idDocument,
   medicalRecommendation,
   getOrderDetailsWithId,
+  orderIdsInRoute,
 }: Props) => {
   const { colors } = useTheme();
 
   const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
-
   const handleNavigate = () => {
     if (order && order.status) {
       if (order.orderStatus == 'completed' || order.orderStatus == 'canceled') navigation.goBack();
@@ -237,7 +239,11 @@ const OrderDetails = ({
               </Card.Content>
             </Card>
             {order.orderStatus && (
-              <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />
+              <OrderButtons
+                orderId={orderId}
+                orderStatus={order.orderStatus}
+                orderIdsInRoute={orderIdsInRoute}
+              />
             )}
           </ScrollView>
         </>
@@ -284,6 +290,8 @@ const mapStateToProps = (state, route) => {
   const medicalRecommendations = getUserMedicalRecommendations(state);
   const medicalRecommendation = order && medicalRecommendations[order.userMedicalRecommendation];
   const isLoading = state.api.isLoading;
+  const routeLegs = getRouteLegs(state);
+  const orderIdsInRoute = routeLegs && Object.values(routeLegs).map((leg) => leg.order);
   return {
     order,
     orderId,
@@ -293,6 +301,7 @@ const mapStateToProps = (state, route) => {
     idDocument,
     medicalRecommendation,
     isLoading,
+    orderIdsInRoute,
   };
 };
 
