@@ -138,7 +138,6 @@ const RoutingScreen = ({
 
   // create order leg polyline for map
   useEffect(() => {
-    console.log('currentlyActiveRouteLegIndex', currentlyActiveRouteLegIndex);
     if (
       currentlyActiveRouteLegIndex !== undefined &&
       driver &&
@@ -147,7 +146,6 @@ const RoutingScreen = ({
       driver.currentRoute.legs &&
       driver.currentRoute.legs.length
     ) {
-      console.log('driver.currentRoute.legs', driver.currentRoute.legs);
       const legPolyline = [];
       const legDirectionPolylines = driver.currentRoute.legs[
         currentlyActiveRouteLegIndex
@@ -254,9 +252,12 @@ const mapStateToProps = (state) => {
   const dspr = driver ? getDSPRFromProps(state, { dsprId: driver.dspr }) : undefined;
   const isLoading = state.api.isLoading;
   const driverRoutes = getRoutes(state);
-  const activeRoute = Object.values(driverRoutes).filter((route) => route.active)[0];
-  const routeLegs = getRouteLegs(state);
-  const orderIdsInRoute = routeLegs && Object.values(routeLegs).map((leg) => leg.order);
+  const activeRoute =
+    driverRoutes && Object.values(driverRoutes).filter((route) => route.active)[0];
+  const routeLegs = Object.values(getRouteLegs(state));
+  const activeRouteLegs =
+    activeRoute && routeLegs && routeLegs.filter((leg) => activeRoute.legs.includes(leg.id));
+  const orderIdsInRoute = activeRouteLegs && activeRouteLegs.map((leg) => leg.order);
   return {
     dspr,
     driver,

@@ -294,9 +294,12 @@ const mapStateToProps = (state, route) => {
   const medicalRecommendation = order && medicalRecommendations[order.userMedicalRecommendation];
   const isLoading = state.api.isLoading;
   const driverRoutes = getRoutes(state);
-  const activeRoute = Object.values(driverRoutes).filter((route) => route.active)[0];
-  const routeLegs = getRouteLegs(state);
-  const orderIdsInRoute = routeLegs && Object.values(routeLegs).map((leg) => leg.order);
+  const activeRoute =
+    driverRoutes && Object.values(driverRoutes).filter((route) => route.active)[0];
+  const routeLegs = Object.values(getRouteLegs(state));
+  const activeRouteLegs =
+    activeRoute && routeLegs && routeLegs.filter((leg) => activeRoute.legs.includes(leg.id));
+  const orderIdsInRoute = activeRouteLegs && activeRouteLegs.map((leg) => leg.order);
   return {
     order,
     orderId,

@@ -22,6 +22,8 @@ const OrderButtons = ({ orderId, orderStatus, orderIdsInRoute, activeRoute }) =>
       .map((orderId) => ({
         id: orderId,
       }));
+    console.log('orderIdsInRoute', orderIdsInRoute);
+    console.log('orderIdsInNewRoute', orderIdsInNewRoute);
     let finalOrderInNewRouteId = orderIdsInNewRoute[orderIdsInNewRoute.length - 1];
     Alert.alert(
       'Remove From Route',
