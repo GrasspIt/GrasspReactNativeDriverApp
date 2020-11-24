@@ -378,7 +378,7 @@ export const DEACTIVATE_DSPR_DRIVER_ROUTE = 'DEACTIVATE_DSPR_DRIVER_ROUTE';
 export const DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS = 'DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS';
 export const DEACTIVATE_DSPR_DRIVER_ROUTE_FAILURE = 'DEACTIVATE_DSPR_DRIVER_ROUTE_FAILURE';
 
-const deactivateDriverRoute = (routeId: number) => {
+export const deactivateDriverRoute = (routeId: number) => {
   const body = {
     id: routeId,
   };

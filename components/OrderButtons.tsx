@@ -3,9 +3,9 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
-import { removeOrderAndRefreshRoute } from '../actions/driverActions';
+import { removeOrderAndRefreshRoute, deactivateDriverRoute } from '../actions/driverActions';
 
-const OrderButtons = ({ orderId, orderStatus, orderIdsInRoute, activeRoute }) => {
+const OrderButtons = ({ navigation, orderId, orderStatus, orderIdsInRoute, activeRoute }) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
 
@@ -16,15 +16,27 @@ const OrderButtons = ({ orderId, orderStatus, orderIdsInRoute, activeRoute }) =>
     ]);
   };
 
+  const removeFromRoute = (routeId, driverId, orderIds, finalOrderId, boolean) => {
+    if (finalOrderId === null) {
+      dispatch(deactivateDriverRoute(routeId));
+      Alert.alert('Success!', 'Order removed from route.');
+      return;
+    }
+    dispatch(removeOrderAndRefreshRoute(routeId, driverId, orderIds, finalOrderId, boolean));
+    navigation.goBack();
+  };
+
   const handleRemoveFromRoute = () => {
     let orderIdsInNewRoute = orderIdsInRoute
       .filter((id) => id !== orderId)
       .map((orderId) => ({
         id: orderId,
       }));
-    console.log('orderIdsInRoute', orderIdsInRoute);
-    console.log('orderIdsInNewRoute', orderIdsInNewRoute);
-    let finalOrderInNewRouteId = orderIdsInNewRoute[orderIdsInNewRoute.length - 1];
+    let finalOrderInNewRouteId = orderIdsInNewRoute.length
+      ? orderIdsInNewRoute.length > 1
+        ? orderIdsInNewRoute[orderIdsInNewRoute.length - 1]
+        : orderIdsInNewRoute[0]
+      : null;
     Alert.alert(
       'Remove From Route',
       'Are you sure you want to remove this order from the current route?',
@@ -33,14 +45,12 @@ const OrderButtons = ({ orderId, orderStatus, orderIdsInRoute, activeRoute }) =>
         {
           text: 'Yes',
           onPress: () =>
-            dispatch(
-              removeOrderAndRefreshRoute(
-                activeRoute.id,
-                activeRoute.dsprDriver,
-                orderIdsInNewRoute,
-                finalOrderInNewRouteId,
-                false
-              )
+            removeFromRoute(
+              activeRoute.id,
+              activeRoute.dsprDriver,
+              orderIdsInNewRoute,
+              finalOrderInNewRouteId,
+              false
             ),
         },
       ]

@@ -246,6 +246,7 @@ const OrderDetails = ({
                 orderStatus={order.orderStatus}
                 orderIdsInRoute={orderIdsInRoute}
                 activeRoute={activeRoute}
+                navigation={navigation}
               />
             )}
           </ScrollView>

@@ -3,7 +3,7 @@ import { Text, Alert, View, StyleSheet } from 'react-native';
 import { useTheme, Button, Card, IconButton } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
-import { removeOrderAndRefreshRoute } from '../actions/driverActions';
+import { removeOrderAndRefreshRoute, deactivateDriverRoute } from '../actions/driverActions';
 
 const OrderItem = ({ orderInfo, navigation, ordersForRoute, orderIdsInRoute, activeRoute }) => {
   const dispatch = useDispatch();
@@ -23,6 +23,15 @@ const OrderItem = ({ orderInfo, navigation, ordersForRoute, orderIdsInRoute, act
       { text: 'Yes', onPress: () => dispatch(cancelOrder(orderInfo.id)) },
     ]);
   };
+  const removeFromRoute = (routeId, driverId, orderIds, finalOrderId, boolean) => {
+    if (finalOrderId === null) {
+      dispatch(deactivateDriverRoute(routeId));
+      Alert.alert('Success!', 'Order removed from route.');
+      return;
+    }
+    dispatch(removeOrderAndRefreshRoute(routeId, driverId, orderIds, finalOrderId, boolean));
+    navigation.goBack();
+  };
 
   const handleRemoveFromRoute = () => {
     let orderIdsInNewRoute = orderIdsInRoute
@@ -30,7 +39,11 @@ const OrderItem = ({ orderInfo, navigation, ordersForRoute, orderIdsInRoute, act
       .map((orderId) => ({
         id: orderId,
       }));
-    let finalOrderInNewRouteId = orderIdsInNewRoute[orderIdsInNewRoute.length - 1];
+    let finalOrderInNewRouteId = orderIdsInNewRoute.length
+      ? orderIdsInNewRoute.length > 1
+        ? orderIdsInNewRoute[orderIdsInNewRoute.length - 1]
+        : orderIdsInNewRoute[0]
+      : null;
     Alert.alert(
       'Remove From Route',
       'Are you sure you want to remove this order from the current route?',
@@ -39,14 +52,12 @@ const OrderItem = ({ orderInfo, navigation, ordersForRoute, orderIdsInRoute, act
         {
           text: 'Yes',
           onPress: () =>
-            dispatch(
-              removeOrderAndRefreshRoute(
-                activeRoute.id,
-                activeRoute.dsprDriver,
-                orderIdsInNewRoute,
-                finalOrderInNewRouteId,
-                false
-              )
+            removeFromRoute(
+              activeRoute.id,
+              activeRoute.dsprDriver,
+              orderIdsInNewRoute,
+              finalOrderInNewRouteId,
+              false
             ),
         },
       ]
