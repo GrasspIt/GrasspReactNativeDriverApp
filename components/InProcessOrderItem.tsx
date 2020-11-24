@@ -2,11 +2,9 @@ import React from 'react';
 import { Alert, Text, Platform, View } from 'react-native';
 import { formatPhone } from '../utils/util';
 import * as Linking from 'expo-linking';
-import { useTheme, Card, Button, IconButton } from 'react-native-paper';
+import { Card, Button, IconButton } from 'react-native-paper';
 
 const InProcessOrderItem = ({ orderInfo, navigation }) => {
-  const { colors } = useTheme();
-
   const handleMap = () => {
     let daddr = encodeURIComponent(`${orderInfo.address.street} ${orderInfo.address.zipCode}`);
     if (Platform.OS === 'ios') {

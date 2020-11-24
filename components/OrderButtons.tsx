@@ -3,8 +3,9 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
+import { removeOrderAndRefreshRoute } from '../actions/driverActions';
 
-const OrderButtons = ({ orderId, orderStatus }) => {
+const OrderButtons = ({ orderId, orderStatus, orderIdsInRoute, activeRoute }) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
 
@@ -13,6 +14,37 @@ const OrderButtons = ({ orderId, orderStatus }) => {
       { text: 'No', style: 'cancel' },
       { text: 'Yes', onPress: () => dispatch(cancelOrder(orderId)) },
     ]);
+  };
+
+  const handleRemoveFromRoute = () => {
+    let orderIdsInNewRoute = orderIdsInRoute
+      .filter((id) => id !== orderId)
+      .map((orderId) => ({
+        id: orderId,
+      }));
+    console.log('orderIdsInRoute', orderIdsInRoute);
+    console.log('orderIdsInNewRoute', orderIdsInNewRoute);
+    let finalOrderInNewRouteId = orderIdsInNewRoute[orderIdsInNewRoute.length - 1];
+    Alert.alert(
+      'Remove From Route',
+      'Are you sure you want to remove this order from the current route?',
+      [
+        { text: 'No', style: 'cancel' },
+        {
+          text: 'Yes',
+          onPress: () =>
+            dispatch(
+              removeOrderAndRefreshRoute(
+                activeRoute.id,
+                activeRoute.dsprDriver,
+                orderIdsInNewRoute,
+                finalOrderInNewRouteId,
+                false
+              )
+            ),
+        },
+      ]
+    );
   };
 
   const handleCompleteOrder = () => {
@@ -41,16 +73,20 @@ const OrderButtons = ({ orderId, orderStatus }) => {
       >
         Cancel Order
       </Button>
-      {/* <Button
-        icon='map-minus'
-        mode='contained'
-        color={colors.error}
-        style={styles.buttons}
-        labelStyle={{ paddingVertical: 4, color: colors.surface }}
-        onPress={handleCancelOrder}
-      >
-        Remove from Route
-      </Button> */}
+
+      {orderIdsInRoute && orderIdsInRoute.includes(orderId) && (
+        <Button
+          icon='map-minus'
+          mode='contained'
+          color={colors.error}
+          style={styles.buttons}
+          labelStyle={{ paddingVertical: 4, color: colors.surface }}
+          onPress={handleRemoveFromRoute}
+        >
+          Remove from Route
+        </Button>
+      )}
+
       {orderStatus == 'in_process' ? (
         <Button
           icon='check'
@@ -85,8 +121,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 50,
     elevation: 2,
-    // width: '50%',
-    // alignSelf: 'flex-end',
   },
 });
 

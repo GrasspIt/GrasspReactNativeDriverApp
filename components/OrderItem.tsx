@@ -1,12 +1,14 @@
 import React from 'react';
 import { Text, Alert, View, StyleSheet } from 'react-native';
-import { useTheme, Button, Card, IconButton, Divider } from 'react-native-paper';
+import { useTheme, Button, Card, IconButton } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
+import { removeOrderAndRefreshRoute } from '../actions/driverActions';
 
-const OrderItem = ({ orderInfo, navigation }) => {
+const OrderItem = ({ orderInfo, navigation, ordersForRoute, orderIdsInRoute, activeRoute }) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
+  let orderList = ordersForRoute && ordersForRoute.map((leg) => leg.order);
 
   const handleProcessOrder = () => {
     Alert.alert('Process Order', 'Are you sure you want to set this order in-process?', [
@@ -22,15 +24,42 @@ const OrderItem = ({ orderInfo, navigation }) => {
     ]);
   };
 
+  const handleRemoveFromRoute = () => {
+    let orderIdsInNewRoute = orderIdsInRoute
+      .filter((id) => id !== orderInfo.id)
+      .map((orderId) => ({
+        id: orderId,
+      }));
+    let finalOrderInNewRouteId = orderIdsInNewRoute[orderIdsInNewRoute.length - 1];
+    Alert.alert(
+      'Remove From Route',
+      'Are you sure you want to remove this order from the current route?',
+      [
+        { text: 'No', style: 'cancel' },
+        {
+          text: 'Yes',
+          onPress: () =>
+            dispatch(
+              removeOrderAndRefreshRoute(
+                activeRoute.id,
+                activeRoute.dsprDriver,
+                orderIdsInNewRoute,
+                finalOrderInNewRouteId,
+                false
+              )
+            ),
+        },
+      ]
+    );
+  };
+
   return (
     orderInfo && (
       <Card
         style={{ marginBottom: 10 }}
         onPress={() => navigation.navigate('Details', { orderId: orderInfo.id })}
       >
-        <Card.Content
-          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
-        >
+        <Card.Content style={styles.cardContent}>
           <View>
             <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
               <Text style={{ fontSize: 18, paddingBottom: 4 }}>
@@ -48,18 +77,30 @@ const OrderItem = ({ orderInfo, navigation }) => {
             onPress={() => navigation.navigate('Details', { orderId: orderInfo.id })}
           />
         </Card.Content>
-        <Divider />
         <Card.Actions style={{ padding: 0 }}>
-          <Button
-            icon='cancel'
-            mode='contained'
-            color={colors.error}
-            style={styles.buttons}
-            labelStyle={{ color: colors.surface }}
-            onPress={handleCancelOrder}
-          >
-            Cancel Order
-          </Button>
+          {orderList && orderList.includes(orderInfo) ? (
+            <Button
+              icon='map-minus'
+              mode='contained'
+              color={colors.error}
+              style={styles.buttons}
+              labelStyle={{ color: colors.surface }}
+              onPress={handleRemoveFromRoute}
+            >
+              Remove From Route
+            </Button>
+          ) : (
+            <Button
+              icon='cancel'
+              mode='contained'
+              color={colors.error}
+              style={styles.buttons}
+              labelStyle={{ color: colors.surface }}
+              onPress={handleCancelOrder}
+            >
+              Cancel Order
+            </Button>
+          )}
           <Button
             mode='contained'
             icon='autorenew'
@@ -81,6 +122,12 @@ const styles = StyleSheet.create({
     flex: 1,
     elevation: 0,
     margin: 2,
+  },
+  cardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
   },
 });
 

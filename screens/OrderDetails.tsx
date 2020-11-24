@@ -25,6 +25,7 @@ import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
 import OrderButtons from '../components/OrderButtons';
 import { getOrderFromProps } from '../selectors/orderSelectors';
 import { getAddressFromProps } from '../selectors/addressSelectors';
+import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 
 type DetailsScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Details'>;
 
@@ -39,6 +40,8 @@ type Props = {
   medicalRecommendation;
   isLoading;
   getOrderDetailsWithId;
+  orderIdsInRoute;
+  activeRoute;
 };
 const OrderDetails = ({
   navigation,
@@ -51,12 +54,13 @@ const OrderDetails = ({
   idDocument,
   medicalRecommendation,
   getOrderDetailsWithId,
+  orderIdsInRoute,
+  activeRoute,
 }: Props) => {
   const { colors } = useTheme();
 
   const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
-
   const handleNavigate = () => {
     if (order && order.status) {
       if (order.orderStatus == 'completed' || order.orderStatus == 'canceled') navigation.goBack();
@@ -185,8 +189,7 @@ const OrderDetails = ({
 
                 {address && address.aptNumber ? (
                   <List.Item
-                    title={`${address.street}, ${address.zipCode}
-                  ${address.aptNumber && `, Unit ${address.aptNumber}`}`}
+                    title={`${address.street}, ${address.zipCode}, Unit ${address.aptNumber}`}
                     titleNumberOfLines={2}
                   />
                 ) : (
@@ -238,7 +241,12 @@ const OrderDetails = ({
               </Card.Content>
             </Card>
             {order.orderStatus && (
-              <OrderButtons orderId={orderId} orderStatus={order.orderStatus} />
+              <OrderButtons
+                orderId={orderId}
+                orderStatus={order.orderStatus}
+                orderIdsInRoute={orderIdsInRoute}
+                activeRoute={activeRoute}
+              />
             )}
           </ScrollView>
         </>
@@ -285,6 +293,13 @@ const mapStateToProps = (state, route) => {
   const medicalRecommendations = getUserMedicalRecommendations(state);
   const medicalRecommendation = order && medicalRecommendations[order.userMedicalRecommendation];
   const isLoading = state.api.isLoading;
+  const driverRoutes = getRoutes(state);
+  const activeRoute =
+    driverRoutes && Object.values(driverRoutes).filter((route) => route.active)[0];
+  const routeLegs = Object.values(getRouteLegs(state));
+  const activeRouteLegs =
+    activeRoute && routeLegs && routeLegs.filter((leg) => activeRoute.legs.includes(leg.id));
+  const orderIdsInRoute = activeRouteLegs && activeRouteLegs.map((leg) => leg.order);
   return {
     order,
     orderId,
@@ -294,6 +309,8 @@ const mapStateToProps = (state, route) => {
     idDocument,
     medicalRecommendation,
     isLoading,
+    orderIdsInRoute,
+    activeRoute,
   };
 };
 
