@@ -269,13 +269,13 @@ export const createDSPRDriverRoute = (
   usingFinalDestinationInRoute: Boolean
 ) => (dispatch) => {
   dispatch({ type: CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING });
-  dispatch(
-    createNewRoute(driverId, waypoints, finalDestination, usingFinalDestinationInRoute)
-  ).then((response) => {
-    if (response.type === CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE) {
-      Alert.alert('Failed to create new route:', response.error);
-    }
-  });
+  dispatch(createNewRoute(driverId, waypoints, finalDestination, usingFinalDestinationInRoute))
+    .then((response) => {
+      if (response.type === CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE) {
+        Alert.alert('Failed to create new route:', response.error);
+      }
+    })
+    .catch((error) => Alert.alert('Network error:', error));
 };
 
 export const CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS =
@@ -285,7 +285,7 @@ export const CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS =
 export const CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_FAILURE =
   'CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_FAILURE';
 
-const createNewRouteWithoutNotifications = (
+const createNewDsprDriverRouteWithoutNotifications = (
   driverId: number,
   waypoints,
   finalDestination,
@@ -312,20 +312,30 @@ const createNewRouteWithoutNotifications = (
     },
   };
 };
-export const createDSPRDriverRouteWithoutNotifications = (
+
+const refreshRoute = (
   driverId: number,
   waypoints,
   finalDestination,
   usingFinalDestinationInRoute: Boolean
 ) => (dispatch) => {
-  return dispatch(
-    createNewRouteWithoutNotifications(
+  dispatch(
+    createNewDsprDriverRouteWithoutNotifications(
       driverId,
       waypoints,
       finalDestination,
       usingFinalDestinationInRoute
     )
-  );
+  )
+    .then((response) => {
+      if (response.typle === CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS) {
+        Alert.alert('Success!', 'Order removed from route.');
+      }
+      if (response.type === CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_FAILURE) {
+        Alert.alert('Failed to remove order from route:', response.error);
+      }
+    })
+    .catch((error) => Alert.alert('Network error:', error));
 };
 
 export const PROGRESS_DSPR_DRIVER_ROUTE_PENDING = 'PROGRESS_DSPR_DRIVER_ROUTE_PENDING';
@@ -347,9 +357,10 @@ const progressDriverRoute = (routeId: number) => {
     },
   };
 };
+
 export const progressDSPRDriverRoute = (routeId: number) => (dispatch, getState) => {
   dispatch({ type: PROGRESS_DSPR_DRIVER_ROUTE_PENDING });
-  return dispatch(progressDriverRoute(routeId))
+  dispatch(progressDriverRoute(routeId))
     .then((response) => {
       if (response.type === PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS) {
         const driverId = getState().api.dsprDriverId;
@@ -384,6 +395,25 @@ const deactivateDriverRoute = (routeId: number) => {
     },
   };
 };
-export const deactivateDSPRDriverRoute = (routeId: number) => (dispatch) => {
-  return dispatch(deactivateDriverRoute(routeId));
+
+export const REMOVE_ORDER_AND_REFRESH_ROUTE_PENDING = 'REMOVE_ORDER_AND_REFRESH_ROUTE_PENDING';
+
+export const removeOrderAndRefreshRoute = (
+  routeId: number,
+  driverId: number,
+  waypoints,
+  finalDestination,
+  usingFinalDestinationInRoute: Boolean
+) => (dispatch) => {
+  dispatch({ type: REMOVE_ORDER_AND_REFRESH_ROUTE_PENDING });
+  dispatch(deactivateDriverRoute(routeId))
+    .then((response) => {
+      if (response.type == DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS) {
+        dispatch(refreshRoute(driverId, waypoints, finalDestination, usingFinalDestinationInRoute));
+      }
+      if (response.type == DEACTIVATE_DSPR_DRIVER_ROUTE_FAILURE) {
+        Alert.alert('Failed to remove order from route:', response.error);
+      }
+    })
+    .catch((error) => Alert.alert('Network error:', error));
 };

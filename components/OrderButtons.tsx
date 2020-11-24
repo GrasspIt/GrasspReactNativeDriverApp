@@ -3,6 +3,7 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/orderActions';
 import { useDispatch } from 'react-redux';
+import { removeOrderAndRefreshRoute } from '../actions/driverActions';
 
 const OrderButtons = ({ orderId, orderStatus, orderIdsInRoute }) => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const OrderButtons = ({ orderId, orderStatus, orderIdsInRoute }) => {
       'Are you sure you want to remove this order from the current route?',
       [
         { text: 'No', style: 'cancel' },
-        { text: 'Yes', onPress: () => console.log('remove') },
+        // { text: 'Yes', onPress: () => dispatch(removeOrderAndRefreshRoute(routeId, driverId, ordersInRouteIds, finalOrderInRouteId, false)) },
       ]
     );
   };
