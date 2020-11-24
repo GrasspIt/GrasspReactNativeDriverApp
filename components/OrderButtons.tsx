@@ -23,10 +23,6 @@ const OrderButtons = ({ orderId, orderStatus, orderIdsInRoute, activeRoute }) =>
         id: orderId,
       }));
     let finalOrderInNewRouteId = orderIdsInNewRoute[orderIdsInNewRoute.length - 1];
-    console.log('orderIdsInNewRoute', orderIdsInNewRoute);
-    console.log('finalOrderInNewRouteId', finalOrderInNewRouteId);
-    console.log('activeRoute.id', activeRoute.id);
-    console.log('activeRoute.dsprDriver', activeRoute.dsprDriver);
     Alert.alert(
       'Remove From Route',
       'Are you sure you want to remove this order from the current route?',

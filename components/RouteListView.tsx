@@ -7,9 +7,11 @@ import OrderItem from '../components/OrderItem';
 type Props = {
   navigation;
   ordersForRoute;
+  orderIdsInRoute;
+  activeRoute;
 };
 
-const RouteListView = ({ navigation, ordersForRoute }: Props) => {
+const RouteListView = ({ navigation, ordersForRoute, orderIdsInRoute, activeRoute }: Props) => {
   const { colors } = useTheme();
 
   let queuedOrders =
@@ -46,6 +48,8 @@ const RouteListView = ({ navigation, ordersForRoute }: Props) => {
               ordersForRoute={ordersForRoute}
               orderInfo={item.item.order}
               navigation={navigation}
+              orderIdsInRoute={orderIdsInRoute}
+              activeRoute={activeRoute}
             />
           )}
           keyExtractor={(item: any) => item.id.toString() + '-routeList'}

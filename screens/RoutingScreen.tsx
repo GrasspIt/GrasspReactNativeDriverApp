@@ -25,7 +25,7 @@ import RouteActionButton from '../components/RouteActionButton';
 import RouteMapView from '../components/RouteMapView';
 import RouteListView from '../components/RouteListView';
 import RouteViewButtons from '../components/RouteViewButtons';
-import { getRouteLegs } from '../selectors/dsprDriverRouteSelectors';
+import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 
 type RoutingScreenNavigationProp = StackNavigationProp<RoutingStackParamsList, 'Routing'>;
 type Props = {
@@ -52,6 +52,7 @@ type Props = {
   createDSPRDriverRoute: any;
   isLoading;
   orderIdsInRoute;
+  activeRoute;
 };
 
 const RoutingScreen = ({
@@ -61,6 +62,7 @@ const RoutingScreen = ({
   createDSPRDriverRoute,
   isLoading,
   orderIdsInRoute,
+  activeRoute,
 }: Props) => {
   const { colors } = useTheme();
 
@@ -188,7 +190,12 @@ const RoutingScreen = ({
         <View style={{ flex: 1 }}>
           <RouteViewButtons routeView={routeView} setRouteView={setRouteView} />
           {routeView === 'list' ? (
-            <RouteListView navigation={navigation} ordersForRoute={driver.currentRoute.legs} />
+            <RouteListView
+              navigation={navigation}
+              ordersForRoute={driver.currentRoute.legs}
+              orderIdsInRoute={orderIdsInRoute}
+              activeRoute={activeRoute}
+            />
           ) : (
             <RouteMapView
               navigation={navigation}
@@ -244,6 +251,8 @@ const mapStateToProps = (state) => {
   });
   const dspr = driver ? getDSPRFromProps(state, { dsprId: driver.dspr }) : undefined;
   const isLoading = state.api.isLoading;
+  const driverRoutes = getRoutes(state);
+  const activeRoute = Object.values(driverRoutes).filter((route) => route.active)[0];
   const routeLegs = getRouteLegs(state);
   const orderIdsInRoute = routeLegs && Object.values(routeLegs).map((leg) => leg.order);
   return {
@@ -251,6 +260,7 @@ const mapStateToProps = (state) => {
     driver,
     isLoading,
     orderIdsInRoute,
+    activeRoute,
   };
 };
 

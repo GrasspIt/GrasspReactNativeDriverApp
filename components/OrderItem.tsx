@@ -3,8 +3,9 @@ import { Text, Alert, View, StyleSheet } from 'react-native';
 import { useTheme, Button, Card, IconButton } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
+import { removeOrderAndRefreshRoute } from '../actions/driverActions';
 
-const OrderItem = ({ orderInfo, navigation, ordersForRoute }) => {
+const OrderItem = ({ orderInfo, navigation, ordersForRoute, orderIdsInRoute, activeRoute }) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
   let orderList = ordersForRoute && ordersForRoute.map((leg) => leg.order);
@@ -21,6 +22,35 @@ const OrderItem = ({ orderInfo, navigation, ordersForRoute }) => {
       { text: 'No', style: 'cancel' },
       { text: 'Yes', onPress: () => dispatch(cancelOrder(orderInfo.id)) },
     ]);
+  };
+
+  const handleRemoveFromRoute = () => {
+    let orderIdsInNewRoute = orderIdsInRoute
+      .filter((id) => id !== orderInfo.id)
+      .map((orderId) => ({
+        id: orderId,
+      }));
+    let finalOrderInNewRouteId = orderIdsInNewRoute[orderIdsInNewRoute.length - 1];
+    Alert.alert(
+      'Remove From Route',
+      'Are you sure you want to remove this order from the current route?',
+      [
+        { text: 'No', style: 'cancel' },
+        {
+          text: 'Yes',
+          onPress: () =>
+            dispatch(
+              removeOrderAndRefreshRoute(
+                activeRoute.id,
+                activeRoute.dsprDriver,
+                orderIdsInNewRoute,
+                finalOrderInNewRouteId,
+                false
+              )
+            ),
+        },
+      ]
+    );
   };
 
   return (
@@ -55,7 +85,7 @@ const OrderItem = ({ orderInfo, navigation, ordersForRoute }) => {
               color={colors.error}
               style={styles.buttons}
               labelStyle={{ color: colors.surface }}
-              onPress={handleCancelOrder}
+              onPress={handleRemoveFromRoute}
             >
               Remove From Route
             </Button>
