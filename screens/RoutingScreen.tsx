@@ -138,13 +138,16 @@ const RoutingScreen = ({
 
   // create order leg polyline for map
   useEffect(() => {
+    console.log('currentlyActiveRouteLegIndex', currentlyActiveRouteLegIndex);
     if (
       currentlyActiveRouteLegIndex !== undefined &&
       driver &&
       driver.currentRoute &&
       driver.currentRoute.active &&
-      driver.currentRoute.legs
+      driver.currentRoute.legs &&
+      driver.currentRoute.legs.length
     ) {
+      console.log('driver.currentRoute.legs', driver.currentRoute.legs);
       const legPolyline = [];
       const legDirectionPolylines = driver.currentRoute.legs[
         currentlyActiveRouteLegIndex
@@ -177,13 +180,7 @@ const RoutingScreen = ({
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
+        <View style={styles.container}>
           <ActivityIndicator size='large' color={colors.primary} />
         </View>
       ) : driver && driver.currentRoute && driver.currentRoute.active ? (
@@ -213,7 +210,7 @@ const RoutingScreen = ({
           />
         </View>
       ) : (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={styles.container}>
           <Text style={{ padding: 10 }}>No currently active route.</Text>
           <FAB
             label='Create New Route'
@@ -236,6 +233,11 @@ const RoutingScreen = ({
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   fab: {
     position: 'absolute',
     margin: 16,

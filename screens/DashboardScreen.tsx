@@ -93,12 +93,12 @@ const DashboardScreen = ({
         await getDriverData();
         RootNavigation.navigate('Main', {
           screen: 'Orders',
-          params: {
-            screen: 'Details',
-            params: {
-              orderId: response.notification.request.content.data.orderId,
-            },
-          },
+          // params: {
+          //   screen: 'Details',
+          //   params: {
+          //     orderId: response.notification.request.content.data.orderId,
+          //   },
+          // },
         });
       }
     );
