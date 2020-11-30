@@ -2,7 +2,7 @@ import { CALL_API, Schemas } from '../middleware/api';
 import { Alert } from 'react-native';
 import { getSpecificUser } from './userActions';
 import { getDSPR } from './dsprActions';
-import * as RootNavigation from '../navigation/RootNavigation';
+import * as RootNavigation from '../App';
 
 export const ASSIGN_DSPR_DRIVER = 'ASSIGN_DSPR_DRIVER';
 export const ASSIGN_DSPR_DRIVER_SUCCESS = 'ASSIGN_DSPR_DRIVER_SUCCESS';

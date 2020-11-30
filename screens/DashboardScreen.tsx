@@ -8,7 +8,7 @@ import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
-import * as RootNavigation from '../navigation/RootNavigation';
+import * as RootNavigation from '../App';
 
 import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';

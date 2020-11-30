@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { navigationRef } from './RootNavigation';
 import { connect } from 'react-redux';
 import { getLoggedInUser } from '../selectors/userSelectors';
 import { setDsprDriverId } from '../actions/driverActions';
@@ -42,27 +40,25 @@ const AuthNavigator = ({
   }, [loggedInUser, driverId]);
 
   return (
-    <NavigationContainer ref={navigationRef}>
-      <RootStack.Navigator screenOptions={{ gestureEnabled: false }}>
-        {!loggedInUser ? (
-          <RootStack.Screen
-            name='Login'
-            component={LoginScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-        ) : (
-          <RootStack.Screen
-            name='Main'
-            component={DrawerNavigator}
-            options={{
-              headerShown: false,
-            }}
-          />
-        )}
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <RootStack.Navigator screenOptions={{ gestureEnabled: false }}>
+      {!loggedInUser ? (
+        <RootStack.Screen
+          name='Login'
+          component={LoginScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+      ) : (
+        <RootStack.Screen
+          name='Main'
+          component={DrawerNavigator}
+          options={{
+            headerShown: false,
+          }}
+        />
+      )}
+    </RootStack.Navigator>
   );
 };
 

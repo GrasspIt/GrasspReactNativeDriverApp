@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 
 import { DrawerActions } from '@react-navigation/native';
 // import * as Linking from 'expo-linking';
-import * as RootNavigation from '../navigation/RootNavigation';
+import * as RootNavigation from '../App';
 import { useTheme } from 'react-native-paper';
 
 import { StackNavigationProp } from '@react-navigation/stack';

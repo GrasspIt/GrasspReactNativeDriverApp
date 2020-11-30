@@ -7,9 +7,7 @@ import {
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
 import { DefaultTheme as PaperDefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-// import merge from 'deepmerge';
 
-// const CombinedDefaultTheme = merge(PaperDefaultTheme, NavigationDefaultTheme);
 // import { AppRegistry } from 'react-native';
 // import { name as appName } from './app.json';
 
@@ -47,38 +45,19 @@ const CombinedDefaultTheme = {
   },
 };
 
-// const theme = {
-//   ...DefaultTheme,
-//   dark: false,
-//   roundness: 4,
-//   colors: {
-//     ...DefaultTheme.colors,
-//     primary: '#4caf50',
-//     accent: '#357a38',
-//     background: DefaultTheme.colors.background,
-//     surface: DefaultTheme.colors.surface,
-//     error: DefaultTheme.colors.error,
-//     text: DefaultTheme.colors.text,
-//     onBackground: DefaultTheme.colors.onBackground,
-//     onSurface: DefaultTheme.colors.onSurface,
-//     notification: DefaultTheme.colors.notification,
-//     disabled: DefaultTheme.colors.disabled,
-//     placeholder: DefaultTheme.colors.placeholder,
-//     backdrop: DefaultTheme.colors.backdrop,
-//   },
-//   fonts: {
-//     ...DefaultTheme.fonts,
-//     regular: DefaultTheme.fonts.regular,
-//   },
-// };
+const navigationRef: React.RefObject<any> = React.createRef();
+
+export const navigate = (name, params) => {
+  navigationRef.current?.navigate(name, params);
+};
 
 export default function App() {
   return (
     <Provider store={store}>
       <PaperProvider theme={CombinedDefaultTheme}>
-        {/* <NavigationContainer theme={CombinedDefaultTheme}> */}
-        <AuthNavigator />
-        {/* </NavigationContainer> */}
+        <NavigationContainer theme={CombinedDefaultTheme} ref={navigationRef}>
+          <AuthNavigator />
+        </NavigationContainer>
       </PaperProvider>
     </Provider>
   );
