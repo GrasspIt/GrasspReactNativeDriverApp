@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
+import { indexOf } from 'lodash';
 
 type OrderListScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Orders'>;
 type Props = {
@@ -68,7 +69,13 @@ const OrderListScreen = ({
             onRefresh={() => getDriverData()}
             refreshing={isLoading}
             data={dsprDriver.queuedOrders}
-            renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
+            renderItem={(item) => (
+              <OrderItem
+                orderInfo={item.item}
+                index={dsprDriver.queuedOrders.indexOf(item.item)}
+                navigation={navigation}
+              />
+            )}
             keyExtractor={(item: any) => item.id.toString()}
             style={{ paddingHorizontal: 10 }}
           />
