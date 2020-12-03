@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
-import { indexOf } from 'lodash';
 
 type OrderListScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Orders'>;
 type Props = {

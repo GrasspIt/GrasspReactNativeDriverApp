@@ -79,9 +79,11 @@ const OrderItem = ({
       >
         <Card.Content style={styles.cardContent}>
           <View style={{ flexDirection: 'row' }}>
-            <View style={{ alignSelf: 'flex-start', marginRight: 4 }}>
-              <Text style={{ fontSize: 16, padding: 2 }}>{index + 1}.</Text>
-            </View>
+            {index !== undefined && (
+              <View style={{ alignSelf: 'flex-start', marginRight: 4 }}>
+                <Text style={{ fontSize: 16, padding: 2 }}>{index + 1}.</Text>
+              </View>
+            )}
             <View>
               <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
                 <Text style={{ fontSize: 18, paddingBottom: 4 }}>
