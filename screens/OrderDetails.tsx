@@ -114,9 +114,9 @@ const OrderDetails = ({
       'Contact Customer',
       `How would you like to contact ${formatPhone(user.phoneNumber)}`,
       [
+        { text: 'Cancel', style: 'cancel' },
         { text: 'Call', onPress: () => Linking.openURL(`tel:${user.phoneNumber}`) },
         { text: 'Text', onPress: () => Linking.openURL(`sms:${user.phoneNumber}`) },
-        { text: 'Cancel', style: 'cancel' },
       ]
     );
   };

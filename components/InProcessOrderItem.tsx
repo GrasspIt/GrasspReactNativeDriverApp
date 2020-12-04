@@ -20,9 +20,9 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
       'Contact Customer',
       `How would you like to contact ${formatPhone(orderInfo.user.phoneNumber)}`,
       [
+        { text: 'Cancel', style: 'cancel' },
         { text: 'Call', onPress: () => Linking.openURL(`tel:${orderInfo.user.phoneNumber}`) },
         { text: 'Text', onPress: () => Linking.openURL(`sms:${orderInfo.user.phoneNumber}`) },
-        { text: 'Cancel', style: 'cancel' },
       ]
     );
   };

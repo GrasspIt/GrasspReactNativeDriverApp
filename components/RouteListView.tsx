@@ -50,6 +50,7 @@ const RouteListView = ({ navigation, ordersForRoute, orderIdsInRoute, activeRout
               navigation={navigation}
               orderIdsInRoute={orderIdsInRoute}
               activeRoute={activeRoute}
+              index={undefined}
             />
           )}
           keyExtractor={(item: any) => item.id.toString() + '-routeList'}
