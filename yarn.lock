@@ -1406,10 +1406,17 @@
     mv "~2"
     safe-json-stringify "~1"
 
+<<<<<<< HEAD
 "@expo/config-plugins@1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-1.0.5.tgz#d6098a94b9962058b2d78b6f8ff1c3cae0434c9a"
   integrity sha512-ykEHIZu7Xjnq7wgauXw0cSbo9C2SVvDmCRwyAJoReJ88R0xXOt+4GQJ6BYdmGv9Gmdt6DTrWqwMQOJK6GmoMew==
+=======
+"@expo/config-plugins@1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-1.0.6.tgz#b10796f5f1ef085c1db0348998d5f14bef7eb9dd"
+  integrity sha512-uL6ob+Dezls1huQMLDpIPvw4QIm4wa+Om9EZ9z5QPlBDnLg4LLH4y4CDN+MH9Eo7hZPT5n2JlGOw7jdgEEa1Kw==
+>>>>>>> theming
   dependencies:
     "@expo/config-types" "^40.0.0-beta.1"
     "@expo/configure-splash-screen" "0.2.1"
@@ -1607,6 +1614,7 @@
   version "8.2.25"
   resolved "https://registry.yarnpkg.com/@expo/json-file/-/json-file-8.2.25.tgz#3f7f403612efab98b6043868b8bb8b27a7189ed1"
   integrity sha512-KFX6grWVzttaDskq/NK8ByqFPgpDZGFnyeZVeecGoKx5kU61zuR7/xQM04OvN6BNXq3jTUst1TyS8fXEfJuscA==
+<<<<<<< HEAD
   dependencies:
     "@babel/code-frame" "~7.10.4"
     fs-extra "9.0.0"
@@ -1619,6 +1627,20 @@
   resolved "https://registry.yarnpkg.com/@expo/metro-config/-/metro-config-0.1.43.tgz#2ad88a3bf1110cd99eace4e3fca8f1cec31e7a26"
   integrity sha512-ZkZXu2dVjZ88tiH51gqM3DUAmey18tM9MlDh91r1iLF6hHT6UeZD0lBDN7IJTQv/SJuAPQHoylXmAx6cuIGU9A==
   dependencies:
+=======
+  dependencies:
+    "@babel/code-frame" "~7.10.4"
+    fs-extra "9.0.0"
+    json5 "^1.0.1"
+    lodash "^4.17.15"
+    write-file-atomic "^2.3.0"
+
+"@expo/metro-config@0.1.43":
+  version "0.1.43"
+  resolved "https://registry.yarnpkg.com/@expo/metro-config/-/metro-config-0.1.43.tgz#2ad88a3bf1110cd99eace4e3fca8f1cec31e7a26"
+  integrity sha512-ZkZXu2dVjZ88tiH51gqM3DUAmey18tM9MlDh91r1iLF6hHT6UeZD0lBDN7IJTQv/SJuAPQHoylXmAx6cuIGU9A==
+  dependencies:
+>>>>>>> theming
     "@expo/config" "3.3.18"
     metro-react-native-babel-transformer "^0.58.0"
 
@@ -6546,9 +6568,15 @@ electron-to-chromium@^1.3.488:
   integrity sha512-sPdW5bUDZwiFtoonuZCUwRGzsZmKzcLM0bMVhp6SMCfUG+B3faENLx3cE+o+K0Jl+MPuNA9s9cScyFjOlixZpQ==
 
 electron-to-chromium@^1.3.564:
+<<<<<<< HEAD
   version "1.3.612"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.612.tgz#4a49864b9de694403a69d5a9f439cbceca543e48"
   integrity sha512-CdrdX1B6mQqxfw+51MPWB5qA6TKWjza9f5voBtUlRfEZEwZiFaxJLrhFI8zHE9SBAuGt4h84rQU6Ho9Bauo1LA==
+=======
+  version "1.3.614"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.614.tgz#ff359e8d2249e2ce859a4c2bc34c22bd2e2eb0a2"
+  integrity sha512-JMDl46mg4G+n6q/hAJkwy9eMTj5FJjsE+8f/irAGRMLM4yeRVbMuRrdZrbbGGOrGVcZc4vJPjUpEUWNb/fA6hg==
+>>>>>>> theming
 
 electron-to-chromium@^1.3.571:
   version "1.3.578"
@@ -6976,6 +7004,7 @@ expo-asset@~8.2.0:
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
 
+<<<<<<< HEAD
 expo-cli@^4.0.6:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/expo-cli/-/expo-cli-4.0.6.tgz#81356d995a1e598622578cd7cf34e0cf8a8db4b2"
@@ -6984,6 +7013,16 @@ expo-cli@^4.0.6:
     "@expo/bunyan" "4.0.0"
     "@expo/config" "3.3.18"
     "@expo/config-plugins" "1.0.5"
+=======
+expo-cli@^4.0.7:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/expo-cli/-/expo-cli-4.0.7.tgz#d2ab71d095a0711b0067aa91f87a9836e0ed59bc"
+  integrity sha512-FQsgAyaSnfs8ZcYKXuQx/W1jYCcp+aPRxn8WDd6qeKZg9lJWGFIDSOfPlj4qyAclQP2vGOmNFYLfcVASZJbbeQ==
+  dependencies:
+    "@expo/bunyan" "4.0.0"
+    "@expo/config" "3.3.18"
+    "@expo/config-plugins" "1.0.6"
+>>>>>>> theming
     "@expo/dev-tools" "0.13.65"
     "@expo/eas-build-job" "0.1.2"
     "@expo/json-file" "8.2.25"

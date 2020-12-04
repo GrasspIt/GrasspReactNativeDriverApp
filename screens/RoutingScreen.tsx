@@ -107,6 +107,7 @@ const RoutingScreen = ({
         // create an object with the ids of orders in route
         const ordersInRoute = {};
         if (driver.queuedOrders && driver.currentRoute.legs) {
+          console.log('driver.currentRoute.legs', driver.currentRoute.legs);
           driver.currentRoute.legs.forEach((leg: any) => {
             if (leg.order) ordersInRoute[leg.order.id] = leg.legOrder;
           });
@@ -115,7 +116,8 @@ const RoutingScreen = ({
         if (
           ordersInRoute &&
           Object.keys(ordersInRoute).length > 0 &&
-          driver.currentInProcessOrder
+          driver.currentInProcessOrder &&
+          driver.currentInProcessOrder.id
         ) {
           if (Object.keys(ordersInRoute).includes(driver.currentInProcessOrder.id.toString())) {
             setCurrentInProcessOrderInActiveRoute(true);

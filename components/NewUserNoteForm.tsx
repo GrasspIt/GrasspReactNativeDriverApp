@@ -12,6 +12,31 @@ const validate = (values) => {
   return errors;
 };
 
+const renderField = ({
+  input: { onChange, ...restInput },
+  label,
+  type,
+  meta: { asyncValidating, touched, error },
+  ...custom
+}) => {
+  const { colors } = useTheme();
+
+  return (
+    <TextInput
+      label={label}
+      // type={type}
+      {...restInput}
+      {...custom}
+      multiline={true}
+      numberOfLines={3}
+      onChangeText={onChange}
+      underlineColor={colors.primary}
+      error={!!(touched && error)}
+      // helperText={touched && error ? error : ''}
+    />
+  );
+};
+
 interface NewUserNoteFormProps {
   closeDialog: () => void;
 }
@@ -22,25 +47,6 @@ const NewUserNoteForm = (
   const { closeDialog, handleSubmit, showNotes } = props;
   const { colors } = useTheme();
 
-  const renderField = ({
-    input,
-    label,
-    type,
-    meta: { asyncValidating, touched, error },
-    ...custom
-  }) => (
-    <TextInput
-      label={label}
-      type={type}
-      {...input}
-      {...custom}
-      multiline={true}
-      numberOfLines={3}
-      underlineColor={colors.primary}
-      error={!!(touched && error)}
-      helperText={touched && error ? error : ''}
-    />
-  );
   return (
     <Modal animationType='slide' visible={showNotes} onRequestClose={closeDialog}>
       <Dialog.Title>New Note</Dialog.Title>
@@ -75,5 +81,5 @@ const NewUserNoteForm = (
 
 export default reduxForm<any, NewUserNoteFormProps>({
   form: 'NewUserNoteForm', // a unique identifier for this form
-  validate,
+  // validate,
 })(NewUserNoteForm);

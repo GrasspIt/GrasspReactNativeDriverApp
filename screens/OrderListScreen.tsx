@@ -68,7 +68,13 @@ const OrderListScreen = ({
             onRefresh={() => getDriverData()}
             refreshing={isLoading}
             data={dsprDriver.queuedOrders}
-            renderItem={(item) => <OrderItem orderInfo={item.item} navigation={navigation} />}
+            renderItem={(item) => (
+              <OrderItem
+                orderInfo={item.item}
+                index={dsprDriver.queuedOrders.indexOf(item.item)}
+                navigation={navigation}
+              />
+            )}
             keyExtractor={(item: any) => item.id.toString()}
             style={{ paddingHorizontal: 10 }}
           />

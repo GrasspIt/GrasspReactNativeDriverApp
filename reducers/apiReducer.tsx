@@ -102,7 +102,6 @@ import {
   CANCEL_ORDER_SUCCESS,
   CANCEL_ORDER_FAILURE,
   CANCEL_ORDER_PENDING,
-  MODIFY_ORDER_SUCCESS,
   GET_ORDER_DETAILS_WITH_ID_SUCCESS,
   GET_ORDER_DETAILS_WITH_ID_FAILURE,
   ORDER_DETAILS_PENDING,
@@ -112,8 +111,10 @@ import {
 // import { SEND_TEXT_BLAST_SUCCESS } from '../actions/marketingActions';
 import { GET_METRICS_FOR_USERS_SUCCESS } from '../actions/metricsActions';
 
-import merge from 'lodash/merge';
-import entitiesReducer, { initialState as entitiesInitialState } from './entitiesReducer';
+import entitiesReducer, {
+  initialState as entitiesInitialState,
+  overwriteArray,
+} from './entitiesReducer';
 
 const initialState = {
   accessToken: '',
@@ -225,7 +226,6 @@ export default (state = initialState, action) => {
     case SET_CURRENT_USER_ID_SUCCESS:
     case SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS:
     //     case GET_ALL_DRIVERS_FOR_DSPR_SUCCESS:
-    //     case MODIFY_ORDER_SUCCESS:
     case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
     case HIDE_USER_NOTE_SUCCESS:
     case UNHIDE_USER_NOTE_SUCCESS:
@@ -247,13 +247,13 @@ export default (state = initialState, action) => {
     case PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS:
     case CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS:
     case DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS:
-      const newState = { ...state, isLoading: false };
-      return merge({}, newState, {
+      const newState = { ...state, isLoading: false, entities: { ...entitiesInitialState } };
+      return _.merge({}, newState, {
         entities: entitiesReducer(state.entities, action),
       });
     case GET_ALL_USER_ID_DOCUMENTS_SUCCESS:
       const newEntitiesState = { ...state, entities: { ...state.entities, usersIdDocuments: {} } };
-      return merge({}, newEntitiesState, {
+      return _.merge({}, newEntitiesState, {
         entities: entitiesReducer(newEntitiesState.entities, action),
       });
     case GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS:
@@ -261,13 +261,11 @@ export default (state = initialState, action) => {
         ...state,
         entities: { ...state.entities, usersMedicalRecommendations: {} },
       };
-      return merge({}, newStateWithoutMedicalRecommendations, {
+      return _.merge({}, newStateWithoutMedicalRecommendations, {
         entities: entitiesReducer(newStateWithoutMedicalRecommendations.entities, action),
       });
     case CLEAR_API_ERROR_MESSAGE:
       return { ...state };
-    // case MODIFY_ORDER_SUCCESS:
-    //     return merge({}, state, { entities: entitiesReducer(state.entities, action) });
     case LOGOUT:
       return {
         ...initialState,

@@ -57,7 +57,7 @@ const ManageNotes = ({
           <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
             {userNotes.map((userNote) => (
               <>
-                <Card style={{ marginHorizontal: 10, marginTop: 10 }}>
+                <Card key={userNote.id} style={{ marginHorizontal: 10, marginTop: 10 }}>
                   <Card.Content>
                     <List.Item
                       key={userNote.id}

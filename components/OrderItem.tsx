@@ -5,7 +5,14 @@ import { useDispatch } from 'react-redux';
 import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
 import { removeOrderAndRefreshRoute, deactivateDriverRoute } from '../actions/driverActions';
 
-const OrderItem = ({ orderInfo, navigation, ordersForRoute, orderIdsInRoute, activeRoute }) => {
+const OrderItem = ({
+  index,
+  orderInfo,
+  navigation,
+  ordersForRoute,
+  orderIdsInRoute,
+  activeRoute,
+}) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
   let orderList = ordersForRoute && ordersForRoute.map((leg) => leg.order);
@@ -71,17 +78,24 @@ const OrderItem = ({ orderInfo, navigation, ordersForRoute, orderIdsInRoute, act
         onPress={() => navigation.navigate('Details', { orderId: orderInfo.id })}
       >
         <Card.Content style={styles.cardContent}>
-          <View>
-            <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-              <Text style={{ fontSize: 18, paddingBottom: 4 }}>
-                {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}
+          <View style={{ flexDirection: 'row' }}>
+            {index !== undefined && (
+              <View style={{ alignSelf: 'flex-start', marginRight: 4 }}>
+                <Text style={{ fontSize: 16, padding: 2 }}>{index + 1}.</Text>
+              </View>
+            )}
+            <View>
+              <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                <Text style={{ fontSize: 18, paddingBottom: 4 }}>
+                  {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}
+                </Text>
+                <Text style={{ fontSize: 16, paddingBottom: 4 }}>${orderInfo.cashTotal}</Text>
+              </View>
+              <Text style={{ fontSize: 16, paddingBottom: 8 }}>
+                {orderInfo.address.street} {orderInfo.address.zipCode}{' '}
+                {orderInfo.address.aptNumber && `, Unit ${orderInfo.address.aptNumber}`}
               </Text>
-              <Text style={{ fontSize: 16, paddingBottom: 4 }}>${orderInfo.cashTotal}</Text>
             </View>
-            <Text style={{ fontSize: 16, paddingBottom: 8 }}>
-              {orderInfo.address.street} {orderInfo.address.zipCode}{' '}
-              {orderInfo.address.aptNumber && `, Unit ${orderInfo.address.aptNumber}`}
-            </Text>
           </View>
           <IconButton
             icon='chevron-right'

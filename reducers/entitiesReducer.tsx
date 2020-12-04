@@ -80,13 +80,10 @@ import {
 import {
   COMPLETE_ORDER_SUCCESS,
   CANCEL_ORDER_SUCCESS,
-  MODIFY_ORDER_SUCCESS,
   GET_ORDER_DETAILS_WITH_ID_SUCCESS,
 } from '../actions/orderActions';
 // import { SEND_TEXT_BLAST_SUCCESS } from '../actions/marketingActions';
 import { GET_METRICS_FOR_USERS_SUCCESS } from '../actions/metricsActions';
-
-// import { merge, mergeWith, isArray } from 'lodash';
 // import { DSPRDriverServiceArea } from '../store/reduxStoreState';
 
 export const initialState = {
@@ -127,7 +124,7 @@ export const initialState = {
   dsprDriverRouteMetrics: {},
 };
 
-const overwriteArray = (objValue, srcValue) => {
+export const overwriteArray = (objValue, srcValue) => {
   if (_.isArray(srcValue)) return srcValue;
 };
 
@@ -228,8 +225,8 @@ export default (state = initialState, action) => {
     // case GET_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS:
     // case POST_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS:
     case GET_METRICS_FOR_USERS_SUCCESS:
-      return appendAndUpdateEntitiesFromResponse(state, responseEntities);
     case COMPLETE_ORDER_SUCCESS:
+      return appendAndUpdateEntitiesFromResponse(state, responseEntities);
     // case GET_DSPR_SUCCESS:
     case REMOVE_INVENTORY_ITEM_FROM_PERIOD_SUCCESS:
     // case GET_ORDER_HISTORY_FOR_DSPR_SUCCESS:
@@ -244,7 +241,6 @@ export default (state = initialState, action) => {
     case CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS:
     case DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS:
       return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
-
     case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
       const dsprServiceAreaFromResponse: any =
         responseEntities && responseEntities.dsprDriverServiceAreas
@@ -265,7 +261,6 @@ export default (state = initialState, action) => {
         stateWithoutDSPRDriverServiceArea,
         responseEntities
       );
-
     // case GET_ALL_DRIVERS_FOR_DSPR_SUCCESS:
     //     const dsprFromResponse = responseEntities && responseEntities.DSPRs ? Object.values(responseEntities.DSPRs)[0] as { id: number } : undefined;
     //     const driverIdsForDspr = action.response.result;
@@ -290,8 +285,11 @@ export default (state = initialState, action) => {
       const dsprDriverId = Object.keys(responseEntities.dsprDrivers)[0];
       let oldDsprDrivers = state.dsprDrivers;
       oldDsprDrivers[dsprDriverId] = {};
-      state = { ...state, dsprDrivers: oldDsprDrivers };
-      return appendAndUpdateEntitiesFromResponse(state, responseEntities);
+      const routeId = oldDsprDrivers[dsprDriverId].currentRoute;
+      let oldRoutes = state.dsprDriverRoutes;
+      if (routeId !== undefined) oldRoutes[routeId] = {};
+      state = { ...state, dsprDrivers: oldDsprDrivers, dsprDriverRoutes: oldRoutes };
+      return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
     case SET_CURRENT_USER_ID_SUCCESS:
       const idUserKey = Object.keys(responseEntities.users)[0];
       responseEntities.users[idUserKey].identificationDocument = action.response.result;
@@ -300,36 +298,12 @@ export default (state = initialState, action) => {
       const recommendationUserKey = Object.keys(responseEntities.users)[0];
       responseEntities.users[recommendationUserKey].medicalRecommendation = action.response.result;
       return appendAndUpdateEntitiesFromResponse(state, responseEntities);
-    // case MODIFY_ORDER_SUCCESS:
-    //     const modifiedState = merge({},state);
-    //     const oldOrderId = responseEntities.orders[action.response.result].modifiedOrder.id;
-    //     const dsprId = responseEntities.orders[action.response.result].dspr
-    //     const transfereeDriverId = modifiedState.orders[oldOrderId].dsprDriver
-    //     const currentInProcessOrder = modifiedState.dsprDrivers[transfereeDriverId].currentInProcessOrder
-    //     if (oldOrderId === currentInProcessOrder) {
-    //         delete modifiedState.dsprDrivers[transfereeDriverId].currentInProcessOrder
-    //     } else {
-    //         const queuedOrders = modifiedState.dsprDrivers[transfereeDriverId].queuedOrders
-    //         const deletionIndex = modifiedState.dsprDrivers[transfereeDriverId].queuedOrders.indexOf(oldOrderId)
-    //         queuedOrders.splice(deletionIndex,1)
-    //         queuedOrders.push(action.response.result)
-    //     }
-    //     delete modifiedState.orders[oldOrderId]
-    //     if (modifiedState.dsprOrderHistories[dsprId] &&
-    //             modifiedState.dsprOrderHistories[dsprId].orders.indexOf(oldOrderId)) {
-    //         const ordersHistoryForDspr = modifiedState.dsprOrderHistories[dsprId]
-    //         const orderIndex = modifiedState.dsprOrderHistories[dsprId].orders.indexOf(oldOrderId)
-    //         ordersHistoryForDspr.orders.splice(orderIndex,1)
-    //         ordersHistoryForDspr.orders.push(action.response.result)
-    //     }
-    //     return appendAndUpdateEntitiesFromResponse(modifiedState, responseEntities)
     // case GET_USERS_BY_SEARCH_SUCCESS:
     //     return { ...state, searchUsers: responseEntities.searchUsers };
     // case GET_PRODUCT_BY_SEARCH_SUCCESS:
     //     return { ...state, searchProducts: responseEntities.searchProducts };
     // case SEARCH_DSPR_COUPONS_SUCCESS:
     //     return { ...state, coupons: responseEntities.coupons };
-
     default:
       return state;
   }

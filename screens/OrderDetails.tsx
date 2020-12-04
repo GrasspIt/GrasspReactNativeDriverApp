@@ -1,5 +1,14 @@
 import React, { useEffect } from 'react';
-import { View, ScrollView, Text, StyleSheet, SafeAreaView, Alert, Clipboard } from 'react-native';
+import {
+  View,
+  ScrollView,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Alert,
+  Clipboard,
+  Platform,
+} from 'react-native';
 import {
   Button,
   IconButton,
@@ -19,6 +28,7 @@ import {
 import OrderDetailListItem from '../components/OrderDetailListItem';
 import Moment from 'moment';
 import { formatPhone } from '../utils/util';
+import * as Linking from 'expo-linking';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
@@ -90,6 +100,27 @@ const OrderDetails = ({
     Alert.alert('Copied to clipboard.');
   };
 
+  const handleMap = () => {
+    let daddr = encodeURIComponent(`${address.street} ${address.zipCode}`);
+    if (Platform.OS === 'ios') {
+      Linking.openURL(`http://maps.apple.com/?daddr=${daddr}`);
+    } else {
+      Linking.openURL(`http://maps.google.com/?daddr=${daddr}`);
+    }
+  };
+
+  const handlePhone = () => {
+    Alert.alert(
+      'Contact Customer',
+      `How would you like to contact ${formatPhone(user.phoneNumber)}`,
+      [
+        { text: 'Call', onPress: () => Linking.openURL(`tel:${user.phoneNumber}`) },
+        { text: 'Text', onPress: () => Linking.openURL(`sms:${user.phoneNumber}`) },
+        { text: 'Cancel', style: 'cancel' },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? (
@@ -156,6 +187,14 @@ const OrderDetails = ({
                   <List.Item
                     title={`${user.firstName} ${user.lastName}, ${formatPhone(user.phoneNumber)}`}
                     titleNumberOfLines={2}
+                    right={() => (
+                      <IconButton
+                        icon='phone'
+                        color={colors.primary}
+                        size={20}
+                        onPress={handlePhone}
+                      />
+                    )}
                   />
                 )}
 
@@ -191,11 +230,17 @@ const OrderDetails = ({
                   <List.Item
                     title={`${address.street}, ${address.zipCode}, Unit ${address.aptNumber}`}
                     titleNumberOfLines={2}
+                    right={() => (
+                      <IconButton icon='map' color={colors.primary} size={20} onPress={handleMap} />
+                    )}
                   />
                 ) : (
                   <List.Item
                     title={`${address.street}, ${address.zipCode}`}
                     titleNumberOfLines={2}
+                    right={() => (
+                      <IconButton icon='map' color={colors.primary} size={20} onPress={handleMap} />
+                    )}
                   />
                 )}
 
