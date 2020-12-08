@@ -8,16 +8,17 @@ import {
 } from '@react-navigation/native';
 import { DefaultTheme as PaperDefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
-// import { AppRegistry } from 'react-native';
-// import { name as appName } from './app.json';
+import * as Sentry from 'sentry-expo';
+import { getEnvVars } from './environment';
+const { debugSentry } = getEnvVars();
 
-// import * as Sentry from 'sentry-expo';
+Sentry.init({
+  dsn: 'https://b663eac230f04197be6a4e605c67606b@o88449.ingest.sentry.io/5548189',
+  enableInExpoDevelopment: false,
+  debug: debugSentry,
+});
 
-// Sentry.init({
-//   dsn: 'YOUR DSN HERE',
-//   enableInExpoDevelopment: false,
-//   debug: true,
-// });
+//combine the default themes used by react-navigation and react-native-paper
 const CombinedDefaultTheme = {
   ...PaperDefaultTheme,
   ...NavigationDefaultTheme,
@@ -45,8 +46,8 @@ const CombinedDefaultTheme = {
   },
 };
 
+//create a ref to the main navigator to access from anywhere in the app
 const navigationRef: React.RefObject<any> = React.createRef();
-
 export const navigate = (name, params) => {
   navigationRef.current?.navigate(name, params);
 };
@@ -62,5 +63,3 @@ export default function App() {
     </Provider>
   );
 }
-
-// AppRegistry.registerComponent(appName, () => App);

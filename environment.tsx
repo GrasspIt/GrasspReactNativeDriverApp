@@ -3,12 +3,15 @@ import Constants from 'expo-constants';
 const ENV = {
   dev: {
     apiUrl: Constants.manifest.extra.stagingURL,
+    debugSentry: true,
   },
   staging: {
     apiUrl: Constants.manifest.extra.stagingURL,
+    debugSentry: false,
   },
   prod: {
     apiUrl: Constants.manifest.extra.prodURL,
+    debugSentry: false,
   },
 };
 

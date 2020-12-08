@@ -76,7 +76,6 @@ import {
 //     GET_PRODUCT_BY_SEARCH_SUCCESS, CREATE_DSP_PRODUCT_FAILURE, GET_PRODUCT_CATEGORIES_FOR_DSP_SUCCESS, GET_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS,
 //     POST_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS
 // } from '../actions/dspProductActions';
-import { CLEAR_API_ERROR_MESSAGE } from '../actions/apiUIHelperActions';
 import {
   CREATE_INVENTORY_PERIOD_SUCCESS,
   GET_DRIVER_INVENTORY_PERIOD_SUCCESS,
@@ -264,8 +263,6 @@ export default (state = initialState, action) => {
       return _.merge({}, newStateWithoutMedicalRecommendations, {
         entities: entitiesReducer(newStateWithoutMedicalRecommendations.entities, action),
       });
-    case CLEAR_API_ERROR_MESSAGE:
-      return { ...state };
     case LOGOUT:
       return {
         ...initialState,

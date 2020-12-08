@@ -43,6 +43,19 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "A mobile app for Grassp Health dispensary drivers."
+    "description": "A mobile app for Grassp Health dispensary drivers.",
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "GrasspIt",
+            "project": "react-native-driver-app",
+            "authToken": "53ed552848c64d258df356c87bdc9c304122ed59e3714d01b5e6280c9d211aa8",
+            "setCommits": true
+          }
+        }
+      ]
+    }
   }
 }

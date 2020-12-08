@@ -2,9 +2,7 @@ import base64 from 'Base64';
 import qs from 'query-string';
 import * as SecureStore from 'expo-secure-store';
 import { CALL_API, Schemas } from '../middleware/api';
-
-// import { logException } from './apiUIHelperActions';
-
+import { logException } from './apiUIHelperActions';
 import { getEnvVars } from '../environment';
 import { Alert } from 'react-native';
 const { apiUrl } = getEnvVars();
@@ -40,7 +38,7 @@ export const setAccessToken = (type, accessToken, accessTokenType) => {
     SecureStore.setItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_TYPE, accessTokenType);
   } catch (err) {
     console.log('Failed to set access token:', err);
-    // logException(err, { type, accessToken, accessTokenType });
+    logException(err, { type, accessToken, accessTokenType });
   }
   return {
     type,
@@ -65,7 +63,7 @@ export const logout = () => {
 };
 
 const apiError = (type, error, context) => {
-  // logException(error, context);
+  logException(error, context);
   return { type, error };
 };
 
