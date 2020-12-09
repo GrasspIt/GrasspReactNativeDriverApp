@@ -108,7 +108,6 @@ import {
   MARK_IN_PROCESS_PENDING,
 } from '../actions/orderActions';
 // import { SEND_TEXT_BLAST_SUCCESS } from '../actions/marketingActions';
-import { GET_METRICS_FOR_USERS_SUCCESS } from '../actions/metricsActions';
 
 import entitiesReducer, {
   initialState as entitiesInitialState,
@@ -238,7 +237,6 @@ export default (state = initialState, action) => {
     //     case HIDE_DSPR_PRODUCT_CATEGORY_PROMOTION_SUCCESS:
     //     case GET_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS:
     //     case POST_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS:
-    case GET_METRICS_FOR_USERS_SUCCESS:
     case GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS:
     case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
     //     case UPDATE_DSPR_MENU_MECHANISM_SUCCESS:

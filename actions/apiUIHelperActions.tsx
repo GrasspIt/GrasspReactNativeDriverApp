@@ -6,7 +6,7 @@ export const logException = (err, context) => {
       context.action === 'GET_USER_MEDICAL_RECOMMENDATION') &&
     err.includes('has no current')
   ) {
-    Sentry.captureException(err, {
+    Sentry.Native.captureException(err, {
       extra: context,
     });
   }

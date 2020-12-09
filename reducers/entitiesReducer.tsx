@@ -83,7 +83,6 @@ import {
   GET_ORDER_DETAILS_WITH_ID_SUCCESS,
 } from '../actions/orderActions';
 // import { SEND_TEXT_BLAST_SUCCESS } from '../actions/marketingActions';
-import { GET_METRICS_FOR_USERS_SUCCESS } from '../actions/metricsActions';
 // import { DSPRDriverServiceArea } from '../store/reduxStoreState';
 
 export const initialState = {
@@ -224,7 +223,6 @@ export default (state = initialState, action) => {
     // case HIDE_DSPR_PRODUCT_CATEGORY_PROMOTION_SUCCESS:
     // case GET_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS:
     // case POST_DSPR_PRODUCT_CATEGORIES_WITH_ORDER_SUCCESS:
-    case GET_METRICS_FOR_USERS_SUCCESS:
     case COMPLETE_ORDER_SUCCESS:
       return appendAndUpdateEntitiesFromResponse(state, responseEntities);
     // case GET_DSPR_SUCCESS:
