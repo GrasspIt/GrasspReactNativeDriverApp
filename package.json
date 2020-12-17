@@ -27,7 +27,7 @@
     "Base64": "^1.1.0",
     "deepmerge": "^4.2.2",
     "expo": "^39.0.0",
-    "expo-cli": "^4.0.11",
+    "expo-cli": "^4.0.12",
     "expo-constants": "~9.2.0",
     "expo-linking": "^1.0.3",
     "expo-location": "~9.0.0",

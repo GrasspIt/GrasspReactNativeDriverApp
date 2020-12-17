@@ -49,10 +49,10 @@
         {
           "file": "sentry-expo/upload-sourcemaps",
           "config": {
-            "organization": "GrasspIt",
-            "project": "react-native-driver-app",
-            "authToken": "53ed552848c64d258df356c87bdc9c304122ed59e3714d01b5e6280c9d211aa8",
-            "setCommits": true
+            "organization": "grasspit",
+            "project": "reactnativedriverapp",
+            "authToken": "6d466895a4f3456988544cb57e482814f61c40bca07a491f90a080ec922538ac",
+            "release": "prod"
           }
         }
       ]

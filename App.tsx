@@ -16,6 +16,7 @@ Sentry.init({
   dsn: 'https://b663eac230f04197be6a4e605c67606b@o88449.ingest.sentry.io/5548189',
   enableInExpoDevelopment: false,
   debug: debugSentry,
+  release: 'prod',
 });
 
 //combine the default themes used by react-navigation and react-native-paper
