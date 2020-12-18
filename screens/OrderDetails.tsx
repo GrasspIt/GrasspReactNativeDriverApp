@@ -1,14 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  View,
-  ScrollView,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Alert,
-  Clipboard,
-  Platform,
-} from 'react-native';
+import { View, ScrollView, Text, StyleSheet, SafeAreaView, Alert, Platform } from 'react-native';
 import {
   Button,
   IconButton,
@@ -18,6 +9,7 @@ import {
   List,
   ActivityIndicator,
 } from 'react-native-paper';
+import Clipboard from 'expo-clipboard';
 import { connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { getUserFromProps, getUserNotesFromProps } from '../selectors/userSelectors';
