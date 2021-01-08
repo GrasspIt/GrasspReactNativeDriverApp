@@ -63,6 +63,7 @@ const OrderDetails = ({
 
   const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
+
   const handleNavigate = () => {
     if (order && order.status) {
       if (order.orderStatus == 'completed' || order.orderStatus == 'canceled') navigation.goBack();

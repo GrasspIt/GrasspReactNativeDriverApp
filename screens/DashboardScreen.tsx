@@ -93,12 +93,6 @@ const DashboardScreen = ({
         await getDriverData();
         RootNavigation.navigate('Main', {
           screen: 'Orders',
-          // params: {
-          //   screen: 'Details',
-          //   params: {
-          //     orderId: response.notification.request.content.data.orderId,
-          //   },
-          // },
         });
       }
     );
@@ -112,7 +106,8 @@ const DashboardScreen = ({
   const startLocationUpdates = async () => {
     console.log('start location updates');
     await Location.startLocationUpdatesAsync('location-tracking', {
-      distanceInterval: 1200,
+      distanceInterval: 100, //meters between updates
+      deferredUpdatesInterval: 300000, //milliseconds between batched updates when app is backgrounded
       showsBackgroundLocationIndicator: true,
       foregroundService: {
         notificationTitle: 'Location Updates',

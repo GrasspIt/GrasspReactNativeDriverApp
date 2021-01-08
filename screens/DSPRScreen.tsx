@@ -40,6 +40,7 @@ const DSPRScreen = ({ navigation, setDsprDriverId, dsprs, dsprDrivers }: Props) 
 
 const styles = StyleSheet.create({
   screen: {
+    flex: 1,
     paddingTop: 22,
   },
   header: {
