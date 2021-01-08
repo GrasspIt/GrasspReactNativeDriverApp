@@ -2,15 +2,15 @@ import Constants from 'expo-constants';
 
 const ENV = {
   dev: {
-    apiUrl: Constants.manifest.extra.stagingURL,
+    apiUrl: 'https://api.staging.grasspit.com/',
     debugSentry: true,
   },
   staging: {
-    apiUrl: Constants.manifest.extra.stagingURL,
+    apiUrl: 'https://api.staging.grasspit.com/',
     debugSentry: false,
   },
   prod: {
-    apiUrl: Constants.manifest.extra.prodURL,
+    apiUrl: 'https://api.grassp.it/',
     debugSentry: false,
   },
 };
