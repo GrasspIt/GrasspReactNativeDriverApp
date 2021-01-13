@@ -106,8 +106,8 @@ const DashboardScreen = ({
   const startLocationUpdates = async () => {
     console.log('start location updates');
     await Location.startLocationUpdatesAsync('location-tracking', {
-      distanceInterval: 100, //meters between updates
-      deferredUpdatesInterval: 300000, //milliseconds between batched updates when app is backgrounded
+      distanceInterval: 120, //meters between updates, about .25 miles
+      deferredUpdatesInterval: 300000, //milliseconds between batched updates when app is backgrounded, every 5 minutes
       showsBackgroundLocationIndicator: true,
       foregroundService: {
         notificationTitle: 'Location Updates',
