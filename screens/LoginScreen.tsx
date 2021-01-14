@@ -20,13 +20,13 @@ import { Card, Button, TextInput } from 'react-native-paper';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Login'>;
 type Props = {
-  navigation: LoginScreenNavigationProp;
+  navigation?: LoginScreenNavigationProp;
   loggedInUser;
   attemptLogin;
   isLoading;
 };
 
-const LoginScreen = ({ navigation, loggedInUser, attemptLogin, isLoading }: Props) => {
+const LoginScreen = ({ loggedInUser, attemptLogin, isLoading }: Props) => {
   const { colors } = useTheme();
 
   const [passwordInvalid, setPasswordInvalid] = useState(false);

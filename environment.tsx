@@ -4,14 +4,17 @@ const ENV = {
   dev: {
     apiUrl: 'https://api.staging.grasspit.com/',
     debugSentry: true,
+    enableNative: false,
   },
   staging: {
     apiUrl: 'https://api.staging.grasspit.com/',
     debugSentry: false,
+    enableNative: true,
   },
   prod: {
     apiUrl: 'https://api.grassp.it/',
     debugSentry: false,
+    enableNative: true,
   },
 };
 

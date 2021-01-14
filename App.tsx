@@ -10,13 +10,13 @@ import { DefaultTheme as PaperDefaultTheme, Provider as PaperProvider } from 're
 
 import * as Sentry from 'sentry-expo';
 import { getEnvVars } from './environment';
-const { debugSentry } = getEnvVars();
+const { debugSentry, enableNative } = getEnvVars();
 
 Sentry.init({
   dsn: 'https://b663eac230f04197be6a4e605c67606b@o88449.ingest.sentry.io/5548189',
   enableInExpoDevelopment: false,
   debug: debugSentry,
-  release: 'prod',
+  enableNative: enableNative,
 });
 
 //combine the default themes used by react-navigation and react-native-paper
@@ -53,7 +53,7 @@ export const navigate = (name, params) => {
   navigationRef.current?.navigate(name, params);
 };
 
-export default function App() {
+const App = () => {
   return (
     <Provider store={store}>
       <PaperProvider theme={CombinedDefaultTheme}>
@@ -63,4 +63,6 @@ export default function App() {
       </PaperProvider>
     </Provider>
   );
-}
+};
+
+export default App;

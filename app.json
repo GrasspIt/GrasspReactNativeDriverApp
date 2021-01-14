@@ -51,8 +51,7 @@
           "config": {
             "organization": "grasspit",
             "project": "reactnativedriverapp",
-            "authToken": "6d466895a4f3456988544cb57e482814f61c40bca07a491f90a080ec922538ac",
-            "release": "prod"
+            "authToken": "6d466895a4f3456988544cb57e482814f61c40bca07a491f90a080ec922538ac"
           }
         }
       ]
