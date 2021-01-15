@@ -55,24 +55,8 @@ const productCategoryAutoCompleteSelected = (state, action) => {
       return state;
   }
 };
-// const productForDriverInventoryAutoCompleteSelected = (state, action) => {
-//     switch(action.type) {
-//         case AUTOCOMPLETE_SELECTED:
-//             const item = merge({}, state.values.items[action.itemIndex], {productId: action.id});
-//             let items = [...state.values.items];
-//             items[action.itemIndex] = item;
-//             return {
-//                 ...state, values: {
-//                     ...state.values, items
-//                 }
-//             };
-//         default:
-//             return state;
-//     }
-// };
 
 const rootReducer = combineReducers({
-  // DriverInventoryPeriodForm: (state, action) => {if(state) return productForDriverInventoryAutoCompleteSelected(state, action)}
   form: formReducer.plugin({
     DSPForm: (state, action) => {
       if (state) return userAutoCompleteSelected(state, action);
