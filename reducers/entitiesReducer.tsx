@@ -5,10 +5,6 @@ import {
   GET_USER_ID_DOCUMENT_SUCCESS,
   GET_USER_MEDICAL_RECOMMENDATION_SUCCESS,
   CREATE_USER_NOTE_SUCCESS,
-  GET_ALL_USER_ID_DOCUMENTS_SUCCESS,
-  SET_CURRENT_USER_ID_SUCCESS,
-  GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS,
-  SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS,
   HIDE_USER_NOTE_SUCCESS,
   UNHIDE_USER_NOTE_SUCCESS,
   SEND_PUSH_TOKEN_SUCCESS,
@@ -29,13 +25,6 @@ import {
   CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS,
   DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS,
 } from '../actions/driverActions';
-import {
-  CREATE_INVENTORY_PERIOD_SUCCESS,
-  GET_DRIVER_INVENTORY_PERIOD_SUCCESS,
-  REMOVE_INVENTORY_ITEM_FROM_PERIOD_SUCCESS,
-  ADD_INVENTORY_ITEM_TO_PERIOD_SUCCESS,
-  TRANSFER_INVENTORY_PERIOD_SUCCESS,
-} from '../actions/dsprDriverInventoryPeriodActions';
 import {
   COMPLETE_ORDER_SUCCESS,
   CANCEL_ORDER_SUCCESS,
@@ -127,12 +116,9 @@ export default (state = initialState, action) => {
     case GET_SPECIFIC_USER_SUCCESS:
     case SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS:
     case SET_DRIVER_LOCATION_SUCCESS:
-    case GET_DRIVER_INVENTORY_PERIOD_SUCCESS:
-    case ADD_INVENTORY_ITEM_TO_PERIOD_SUCCESS:
     case GET_USER_ID_DOCUMENT_SUCCESS:
     case GET_USER_MEDICAL_RECOMMENDATION_SUCCESS:
     case CANCEL_ORDER_SUCCESS:
-    case TRANSFER_INVENTORY_PERIOD_SUCCESS:
     case CREATE_USER_NOTE_SUCCESS:
     case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
     case HIDE_USER_NOTE_SUCCESS:
@@ -142,9 +128,6 @@ export default (state = initialState, action) => {
     case SEND_PUSH_TOKEN_SUCCESS:
     case COMPLETE_ORDER_SUCCESS:
       return appendAndUpdateEntitiesFromResponse(state, responseEntities);
-    case REMOVE_INVENTORY_ITEM_FROM_PERIOD_SUCCESS:
-    case GET_ALL_USER_ID_DOCUMENTS_SUCCESS:
-    case GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS:
     case GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS:
     case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
     case PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS:
@@ -181,14 +164,6 @@ export default (state = initialState, action) => {
       if (routeId !== undefined) oldRoutes[routeId] = {};
       state = { ...state, dsprDrivers: oldDsprDrivers, dsprDriverRoutes: oldRoutes };
       return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
-    case SET_CURRENT_USER_ID_SUCCESS:
-      const idUserKey = Object.keys(responseEntities.users)[0];
-      responseEntities.users[idUserKey].identificationDocument = action.response.result;
-      return appendAndUpdateEntitiesFromResponse(state, responseEntities);
-    case SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS:
-      const recommendationUserKey = Object.keys(responseEntities.users)[0];
-      responseEntities.users[recommendationUserKey].medicalRecommendation = action.response.result;
-      return appendAndUpdateEntitiesFromResponse(state, responseEntities);
     default:
       return state;
   }

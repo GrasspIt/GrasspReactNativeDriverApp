@@ -1,19 +1,9 @@
 import { createSelector } from 'reselect';
 import { State } from '../store/reduxStoreState';
 
-// const NullLoggedInUserEntities = {
-//     users: {}
-// }
-
 export const getLoggedInUserId = (state: State) => state.api.loggedInUserId;
 export const getLoggedInUser = (state: State) =>
   state.api.loggedInUserId ? state.api.entities.users[state.api.loggedInUserId] : undefined;
-
-// export const getLoggedInUserEntities = (state: State) => {
-//     return state.api.entities.users || NullLoggedInUserEntities;
-// };
-
-// export const getLoggedInUser = (state: State) => getLoggedInUserEntities(state)[getLoggedInUserId(state)];
 
 export const getUnverifiedUsers = (state: State) => state.api.entities.unverifiedUsers;
 export const getSearchUsers = (state: State) => state.api.entities.searchUsers;

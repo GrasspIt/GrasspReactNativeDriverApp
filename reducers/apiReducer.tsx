@@ -14,12 +14,7 @@ import {
   GET_SPECIFIC_USER_SUCCESS,
   GET_USER_ID_DOCUMENT_SUCCESS,
   GET_USER_MEDICAL_RECOMMENDATION_SUCCESS,
-  VERIFY_USER_DOCUMENT_SUCCESS,
   CREATE_USER_NOTE_SUCCESS,
-  GET_ALL_USER_ID_DOCUMENTS_SUCCESS,
-  SET_CURRENT_USER_ID_SUCCESS,
-  GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS,
-  SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS,
   HIDE_USER_NOTE_SUCCESS,
   UNHIDE_USER_NOTE_SUCCESS,
   HIDE_USER_DOCUMENT_SUCCESS,
@@ -50,12 +45,6 @@ import {
   DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS,
   REMOVE_ORDER_AND_REFRESH_ROUTE_PENDING,
 } from '../actions/driverActions';
-import {
-  CREATE_INVENTORY_PERIOD_SUCCESS,
-  GET_DRIVER_INVENTORY_PERIOD_SUCCESS,
-  REMOVE_INVENTORY_ITEM_FROM_PERIOD_SUCCESS,
-  ADD_INVENTORY_ITEM_TO_PERIOD_SUCCESS,
-} from '../actions/dsprDriverInventoryPeriodActions';
 import {
   COMPLETE_ORDER_SUCCESS,
   COMPLETE_ORDER_FAILURE,
@@ -128,18 +117,11 @@ export default (state = initialState, action) => {
     case SET_DRIVER_LOCATION_SUCCESS:
     case SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS:
     case GET_DSPR_DRIVER_SUCCESS:
-    case CREATE_INVENTORY_PERIOD_SUCCESS:
-    case GET_DRIVER_INVENTORY_PERIOD_SUCCESS:
-    case REMOVE_INVENTORY_ITEM_FROM_PERIOD_SUCCESS:
-    case ADD_INVENTORY_ITEM_TO_PERIOD_SUCCESS:
     case GET_USER_ID_DOCUMENT_SUCCESS:
     case GET_USER_MEDICAL_RECOMMENDATION_SUCCESS:
-    case VERIFY_USER_DOCUMENT_SUCCESS:
     case COMPLETE_ORDER_SUCCESS:
     case CANCEL_ORDER_SUCCESS:
     case CREATE_USER_NOTE_SUCCESS:
-    case SET_CURRENT_USER_ID_SUCCESS:
-    case SET_CURRENT_USER_MEDICAL_RECOMMENDATION_SUCCESS:
     case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
     case HIDE_USER_NOTE_SUCCESS:
     case UNHIDE_USER_NOTE_SUCCESS:
@@ -155,19 +137,6 @@ export default (state = initialState, action) => {
       const newState = { ...state, isLoading: false, entities: { ...entitiesInitialState } };
       return _.merge({}, newState, {
         entities: entitiesReducer(state.entities, action),
-      });
-    case GET_ALL_USER_ID_DOCUMENTS_SUCCESS:
-      const newEntitiesState = { ...state, entities: { ...state.entities, usersIdDocuments: {} } };
-      return _.merge({}, newEntitiesState, {
-        entities: entitiesReducer(newEntitiesState.entities, action),
-      });
-    case GET_ALL_USER_MEDICAL_RECOMMENDATIONS_SUCCESS:
-      const newStateWithoutMedicalRecommendations = {
-        ...state,
-        entities: { ...state.entities, usersMedicalRecommendations: {} },
-      };
-      return _.merge({}, newStateWithoutMedicalRecommendations, {
-        entities: entitiesReducer(newStateWithoutMedicalRecommendations.entities, action),
       });
     case LOGOUT:
       return {

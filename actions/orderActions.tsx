@@ -100,59 +100,6 @@ export const markOrderInProcess = (orderId) => (dispatch, getState) => {
   });
 };
 
-export const MODIFY_ORDER = 'MODIFY_ORDER';
-export const MODIFY_ORDER_SUCCESS = 'MODIFY_ORDER_SUCCESS';
-export const MODIFY_ORDER_FAILURE = 'MODIFY_ORDER_FAILURE';
-
-const orderModifier = (
-  oldOrderId: number,
-  orderDetails: any[],
-  newDriverId: number,
-  couponCode?: string
-) => {
-  return {
-    [CALL_API]: {
-      httpAction: 'POST',
-      types: [MODIFY_ORDER, MODIFY_ORDER_SUCCESS, MODIFY_ORDER_FAILURE],
-      endPoint: 'order/modified',
-      body: {
-        orderDetails,
-        dsprDriver: { id: newDriverId },
-        modifiedOrder: { id: oldOrderId },
-        couponCode: couponCode || null,
-      },
-      schema: Schemas.ORDER,
-    },
-  };
-};
-
-export const modifyOrder = (
-  oldOrderId: number,
-  orderDetails: any[],
-  newDriverId: number,
-  couponCode?: string
-) => (dispatch) => {
-  return dispatch(orderModifier(oldOrderId, orderDetails, newDriverId, couponCode));
-};
-
-export const GET_ORDER_COST = 'GET_ORDER_COST';
-export const GET_ORDER_COST_SUCCESS = 'GET_ORDER_COST_SUCCESS';
-export const GET_ORDER_COST_FAILURE = 'GET_ORDER_COST_FAILURE';
-
-const orderCostGetter = (order) => ({
-  [CALL_API]: {
-    httpAction: 'POST',
-    types: [GET_ORDER_COST, GET_ORDER_COST_SUCCESS, GET_ORDER_COST_FAILURE],
-    endPoint: 'order/cost',
-    body: order,
-    schema: Schemas.ORDER,
-  },
-});
-
-export const getOrderCost = (order) => (dispatch) => {
-  return dispatch(orderCostGetter(order));
-};
-
 export const ORDER_DETAILS_PENDING = 'ORDER_DETAILS_PENDING';
 export const GET_ORDER_DETAILS_WITH_ID = 'GET_ORDER_DETAILS_WITH_ID';
 export const GET_ORDER_DETAILS_WITH_ID_SUCCESS = 'GET_ORDER_DETAILS_WITH_ID_SUCCESS';
