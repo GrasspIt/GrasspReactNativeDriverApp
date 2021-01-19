@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<OnCallSwitch /> renders corrently 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "paddingVertical": 12,
+    }
+  }
+>
+  <RCTSwitch
+    accessibilityRole="switch"
+    onChange={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    onTintColor="#6200ee"
+    style={
+      Object {
+        "height": 31,
+        "width": 51,
+      }
+    }
+    tintColor=""
+    value={false}
+  />
+  <Text>
+    Not on Call
+  </Text>
+</View>
+`;

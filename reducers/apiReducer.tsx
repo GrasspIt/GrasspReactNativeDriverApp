@@ -61,7 +61,7 @@ import {
 
 import entitiesReducer, { initialState as entitiesInitialState } from './entitiesReducer';
 
-const initialState = {
+export const initialState = {
   accessToken: '',
   loggedInUserId: '',
   dsprDriverId: '',

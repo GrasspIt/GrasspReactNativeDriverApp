@@ -1,7 +1,8 @@
 import React from 'react';
-
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+import { initialState } from '../../reducers/apiReducer';
 import { render } from '@testing-library/react-native';
-
 import OnCallSwitch from '../OnCallSwitch';
 
 const dsprDriver = {
@@ -12,17 +13,23 @@ const dsprDriver = {
   serviceAreas: [1, 2],
 };
 
-it('exists!', () => {
-  expect(true).toBeTruthy();
-});
-// describe('<OnCallSwitch />', () => {
-// it('has 1 child', () => {
-//   const tree = render(<OnCallSwitch dsprDriver={dsprDriver} />).toJSON();
-//   expect(tree.children.length).toBe(1);
-// });
+const mockStore = configureStore([]);
 
-//   it('renders corrently', async () => {
-//     const tree = render(<OnCallSwitch dsprDriver={dsprDriver} />).toJSON();
-//     await expect(tree).toMatchSnapshot();
-//   });
-// });
+describe('<OnCallSwitch />', () => {
+  let store;
+  let component;
+
+  beforeEach(() => {
+    store = mockStore(initialState);
+    component = render(
+      <Provider store={store}>
+        <OnCallSwitch dsprDriver={dsprDriver} />
+      </Provider>
+    );
+  });
+
+  it('renders correctly', async () => {
+    const tree = component.toJSON();
+    await expect(tree).toMatchSnapshot();
+  });
+});
