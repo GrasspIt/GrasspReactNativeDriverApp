@@ -19,7 +19,7 @@ import {
 } from '../selectors/userDocumentsSelector';
 import OrderDetailListItem from '../components/OrderDetailListItem';
 import Moment from 'moment';
-import { formatPhone } from '../utils/util';
+import { formatPhone, handleMap, handlePhone } from '../utils/util';
 import * as Linking from 'expo-linking';
 
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -93,26 +93,26 @@ const OrderDetails = ({
     Alert.alert('Copied to clipboard.');
   };
 
-  const handleMap = () => {
-    let daddr = encodeURIComponent(`${address.street} ${address.zipCode}`);
-    if (Platform.OS === 'ios') {
-      Linking.openURL(`http://maps.apple.com/?daddr=${daddr}`);
-    } else {
-      Linking.openURL(`http://maps.google.com/?daddr=${daddr}`);
-    }
-  };
+  // const handleMap = () => {
+  //   let daddr = encodeURIComponent(`${address.street} ${address.zipCode}`);
+  //   if (Platform.OS === 'ios') {
+  //     Linking.openURL(`http://maps.apple.com/?daddr=${daddr}`);
+  //   } else {
+  //     Linking.openURL(`http://maps.google.com/?daddr=${daddr}`);
+  //   }
+  // };
 
-  const handlePhone = () => {
-    Alert.alert(
-      'Contact Customer',
-      `How would you like to contact ${formatPhone(user.phoneNumber)}`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Call', onPress: () => Linking.openURL(`tel:${user.phoneNumber}`) },
-        { text: 'Text', onPress: () => Linking.openURL(`sms:${user.phoneNumber}`) },
-      ]
-    );
-  };
+  // const handlePhone = () => {
+  //   Alert.alert(
+  //     'Contact Customer',
+  //     `How would you like to contact ${formatPhone(user.phoneNumber)}`,
+  //     [
+  //       { text: 'Cancel', style: 'cancel' },
+  //       { text: 'Call', onPress: () => Linking.openURL(`tel:${user.phoneNumber}`) },
+  //       { text: 'Text', onPress: () => Linking.openURL(`sms:${user.phoneNumber}`) },
+  //     ]
+  //   );
+  // };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -185,7 +185,7 @@ const OrderDetails = ({
                         icon='phone'
                         color={colors.primary}
                         size={20}
-                        onPress={handlePhone}
+                        onPress={() => handlePhone(user)}
                       />
                     )}
                   />
@@ -224,7 +224,12 @@ const OrderDetails = ({
                     title={`${address.street}, ${address.zipCode}, Unit ${address.aptNumber}`}
                     titleNumberOfLines={2}
                     right={() => (
-                      <IconButton icon='map' color={colors.primary} size={20} onPress={handleMap} />
+                      <IconButton
+                        icon='map'
+                        color={colors.primary}
+                        size={20}
+                        onPress={() => handleMap(address)}
+                      />
                     )}
                   />
                 ) : (
@@ -232,7 +237,12 @@ const OrderDetails = ({
                     title={`${address.street}, ${address.zipCode}`}
                     titleNumberOfLines={2}
                     right={() => (
-                      <IconButton icon='map' color={colors.primary} size={20} onPress={handleMap} />
+                      <IconButton
+                        icon='map'
+                        color={colors.primary}
+                        size={20}
+                        onPress={() => handleMap(address)}
+                      />
                     )}
                   />
                 )}

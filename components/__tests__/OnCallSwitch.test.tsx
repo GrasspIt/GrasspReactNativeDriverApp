@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
 
 import OnCallSwitch from '../OnCallSwitch';
@@ -15,10 +16,10 @@ it('exists!', () => {
   expect(true).toBeTruthy();
 });
 // describe('<OnCallSwitch />', () => {
-//   it('has 1 child', () => {
-//     const tree = render(<OnCallSwitch dsprDriver={dsprDriver} />).toJSON();
-//     expect(tree.children.length).toBe(1);
-//   });
+// it('has 1 child', () => {
+//   const tree = render(<OnCallSwitch dsprDriver={dsprDriver} />).toJSON();
+//   expect(tree.children.length).toBe(1);
+// });
 
 //   it('renders corrently', async () => {
 //     const tree = render(<OnCallSwitch dsprDriver={dsprDriver} />).toJSON();
