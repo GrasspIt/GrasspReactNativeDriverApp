@@ -1,31 +1,10 @@
 import React from 'react';
-import { Alert, Text, Platform, View } from 'react-native';
-import { formatPhone } from '../utils/util';
-import * as Linking from 'expo-linking';
-import { Card, Button, IconButton, useTheme, List } from 'react-native-paper';
+import { Text, View } from 'react-native';
+import { formatPhone, handlePhone, handleMap } from '../utils/util';
+import { Card, IconButton, useTheme, List } from 'react-native-paper';
 
 const InProcessOrderItem = ({ orderInfo, navigation }) => {
   const { colors } = useTheme();
-  const handleMap = () => {
-    let daddr = encodeURIComponent(`${orderInfo.address.street} ${orderInfo.address.zipCode}`);
-    if (Platform.OS === 'ios') {
-      Linking.openURL(`http://maps.apple.com/?daddr=${daddr}`);
-    } else {
-      Linking.openURL(`http://maps.google.com/?daddr=${daddr}`);
-    }
-  };
-
-  const handlePhone = () => {
-    Alert.alert(
-      'Contact Customer',
-      `How would you like to contact ${formatPhone(orderInfo.user.phoneNumber)}`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Call', onPress: () => Linking.openURL(`tel:${orderInfo.user.phoneNumber}`) },
-        { text: 'Text', onPress: () => Linking.openURL(`sms:${orderInfo.user.phoneNumber}`) },
-      ]
-    );
-  };
 
   return (
     orderInfo && (
@@ -61,7 +40,12 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
                 titleNumberOfLines={2}
                 style={{ padding: 0 }}
                 left={() => (
-                  <IconButton icon='map' color={colors.primary} size={20} onPress={handleMap} />
+                  <IconButton
+                    icon='map'
+                    color={colors.primary}
+                    size={20}
+                    onPress={() => handleMap(orderInfo.address)}
+                  />
                 )}
               />
             ) : (
@@ -70,7 +54,12 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
                 titleNumberOfLines={2}
                 style={{ padding: 0 }}
                 left={() => (
-                  <IconButton icon='map' color={colors.primary} size={20} onPress={handleMap} />
+                  <IconButton
+                    icon='map'
+                    color={colors.primary}
+                    size={20}
+                    onPress={() => handleMap(orderInfo.address)}
+                  />
                 )}
               />
             )}
@@ -79,7 +68,12 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
               titleNumberOfLines={2}
               style={{ padding: 0 }}
               left={() => (
-                <IconButton icon='phone' color={colors.primary} size={20} onPress={handlePhone} />
+                <IconButton
+                  icon='phone'
+                  color={colors.primary}
+                  size={20}
+                  onPress={() => handlePhone(orderInfo.user)}
+                />
               )}
             />
           </View>
