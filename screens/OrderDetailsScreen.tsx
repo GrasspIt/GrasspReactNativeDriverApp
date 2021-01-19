@@ -44,7 +44,7 @@ type Props = {
   orderIdsInRoute;
   activeRoute;
 };
-const OrderDetails = ({
+const OrderDetailsScreen = ({
   navigation,
   isLoading,
   order,
@@ -343,4 +343,4 @@ const mapStateToProps = (state, route) => {
 
 const mapDispatchToProps = { getOrderDetailsWithId };
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrderDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(OrderDetailsScreen);

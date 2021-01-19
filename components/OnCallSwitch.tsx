@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, Alert } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { setDriverOnCallState } from '../actions/driverActions';
 import { DsprDriver } from '../store/reduxStoreState';
 import { useTheme, Switch } from 'react-native-paper';
 
-type SwitchProps = { dsprDriver: DsprDriver };
+type SwitchProps = { dsprDriver: DsprDriver; setDriverOnCallState };
 
-const OnCallSwitch = ({ dsprDriver }: SwitchProps) => {
-  const dispatch = useDispatch();
+const OnCallSwitch = ({ dsprDriver, setDriverOnCallState }: SwitchProps) => {
   const { colors } = useTheme();
   const [isOnCall, setIsOnCall] = useState<boolean | undefined>(false);
 
@@ -19,7 +18,7 @@ const OnCallSwitch = ({ dsprDriver }: SwitchProps) => {
     }
     if (dsprDriver && dsprDriver.onCall !== null) {
       let onCallString = !dsprDriver.onCall ? 'on' : null;
-      dispatch(setDriverOnCallState(dsprDriver.id, onCallString));
+      setDriverOnCallState(dsprDriver.id, onCallString);
       setIsOnCall(!isOnCall);
     }
   };
@@ -36,4 +35,6 @@ const OnCallSwitch = ({ dsprDriver }: SwitchProps) => {
   );
 };
 
-export default OnCallSwitch;
+const mapDispatchToProps = { setDriverOnCallState };
+
+export default connect(null, mapDispatchToProps)(OnCallSwitch);
