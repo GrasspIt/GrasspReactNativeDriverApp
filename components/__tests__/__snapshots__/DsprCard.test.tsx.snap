@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DsprCard /> renders correctly 1`] = `
+<View
+  accessible={true}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "elevation": 5,
+      "opacity": 1,
+      "shadowColor": "#000000",
+      "shadowOffset": Object {
+        "height": 1,
+        "width": 0,
+      },
+      "shadowOpacity": 0.4,
+      "shadowRadius": 2,
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "borderRadius": 5,
+          "display": "flex",
+          "elevation": 5,
+          "justifyContent": "center",
+          "margin": 10,
+          "maxWidth": 500,
+          "overflow": "hidden",
+        },
+        Object {
+          "backgroundColor": "#ffffff",
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Object {
+          "minHeight": 200,
+          "padding": 10,
+          "width": "100%",
+        }
+      }
+    >
+      <Image
+        resizeMode="contain"
+        source={1}
+        style={
+          Object {
+            "flex": 1,
+            "height": undefined,
+            "width": undefined,
+          }
+        }
+      />
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "bottom": 0,
+            "flex": 1,
+            "justifyContent": "center",
+            "opacity": 0.9,
+            "position": "absolute",
+            "width": "100%",
+          },
+          Object {
+            "backgroundColor": "#000000",
+          },
+        ]
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "#fff",
+            "fontSize": 20,
+            "paddingVertical": 20,
+            "textAlign": "center",
+          }
+        }
+      >
+        name
+      </Text>
+    </View>
+  </View>
+</View>
+`;

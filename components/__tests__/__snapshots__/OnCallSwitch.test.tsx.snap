@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<OnCallSwitch /> renders corrently 1`] = `
+exports[`<OnCallSwitch /> renders correctly 1`] = `
 <View
   style={
     Object {

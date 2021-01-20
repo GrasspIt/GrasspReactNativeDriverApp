@@ -9,7 +9,7 @@ describe('<App />', () => {
     expect(tree.children.length).toBe(1);
   });
 
-  it('renders corrently', async () => {
+  it('renders correctly', async () => {
     const tree = render(<App />).toJSON();
     await expect(tree).toMatchSnapshot();
   });
