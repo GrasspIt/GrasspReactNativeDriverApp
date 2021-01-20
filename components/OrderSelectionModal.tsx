@@ -12,10 +12,9 @@ const OrderSelectionModal = ({
 }) => {
   const { colors } = useTheme();
 
-  //need a list of all orders to display, need a list of selected orders to highlight
-
   const [selectedOrdersForRoute, setSelectedOrdersForRoute] = useState<any>();
   const [finalOrderForRoute, setFinalOrderForRoute] = useState<any>();
+  const [disableButton, setDisableButton] = useState<boolean>(false);
 
   const handleSelectOrder = (selectedOrder) => {
     //if item is included in selectedOrdersList, remove it
@@ -52,8 +51,8 @@ const OrderSelectionModal = ({
       Alert.alert('A route must contain at least 1 order.');
       return;
     }
-    createNewRoute(driver.id, selectedOrdersForRoute, finalOrderForRoute, false);
     setOrderSelectionModalOpen(false);
+    createNewRoute(driver.id, selectedOrdersForRoute, finalOrderForRoute, false);
   };
 
   // check if there is already an active route
@@ -95,7 +94,6 @@ const OrderSelectionModal = ({
 
   return (
     <Modal
-      style={{ flex: 1 }}
       animationType='slide'
       visible={orderSelectionModalOpen}
       onRequestClose={() => setOrderSelectionModalOpen(false)}
@@ -152,6 +150,7 @@ const OrderSelectionModal = ({
         icon='check'
         onPress={() => confirmCreateRoute()}
         style={styles.fab}
+        disabled={disableButton}
       />
     </Modal>
   );

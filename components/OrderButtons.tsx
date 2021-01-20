@@ -33,7 +33,6 @@ const OrderButtons = ({
       return;
     }
     removeOrderAndRefreshRoute(routeId, driverId, orderIds, finalOrderId, boolean);
-    navigation.goBack();
   };
 
   const handleRemoveFromRoute = () => {
