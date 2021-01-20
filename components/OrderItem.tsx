@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, Alert, View, StyleSheet } from 'react-native';
 import { useTheme, Button, Card, IconButton } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
 import { removeOrderAndRefreshRoute, deactivateDriverRoute } from '../actions/driverActions';
 
@@ -12,31 +12,34 @@ const OrderItem = ({
   ordersForRoute,
   orderIdsInRoute,
   activeRoute,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+  markOrderInProcess,
+  cancelOrder,
 }) => {
-  const dispatch = useDispatch();
   const { colors } = useTheme();
   let orderList = ordersForRoute && ordersForRoute.map((leg) => leg.order);
 
   const handleProcessOrder = () => {
     Alert.alert('Process Order', 'Are you sure you want to set this order in-process?', [
       { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => dispatch(markOrderInProcess(orderInfo.id)) },
+      { text: 'Yes', onPress: () => markOrderInProcess(orderInfo.id) },
     ]);
   };
 
   const handleCancelOrder = () => {
     Alert.alert('Cancel Order', 'Are you sure you want to cancel this order?', [
       { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => dispatch(cancelOrder(orderInfo.id)) },
+      { text: 'Yes', onPress: () => cancelOrder(orderInfo.id) },
     ]);
   };
   const removeFromRoute = (routeId, driverId, orderIds, finalOrderId, boolean) => {
     if (finalOrderId === null) {
-      dispatch(deactivateDriverRoute(routeId));
+      deactivateDriverRoute(routeId);
       Alert.alert('Success!', 'Order removed from route.');
       return;
     }
-    dispatch(removeOrderAndRefreshRoute(routeId, driverId, orderIds, finalOrderId, boolean));
+    removeOrderAndRefreshRoute(routeId, driverId, orderIds, finalOrderId, boolean);
     navigation.goBack();
   };
 
@@ -156,4 +159,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OrderItem;
+const mapDispatchToProps = {
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+  markOrderInProcess,
+  cancelOrder,
+};
+
+export default connect(null, mapDispatchToProps)(OrderItem);

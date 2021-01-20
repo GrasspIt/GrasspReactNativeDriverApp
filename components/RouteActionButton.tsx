@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import { useTheme, FAB } from 'react-native-paper';
 import { completeOrder } from '../actions/orderActions';
-import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { progressDSPRDriverRoute } from '../actions/driverActions';
 
 const RouteActionButton = ({
@@ -10,12 +10,12 @@ const RouteActionButton = ({
   currentInProcessOrderInActiveRoute,
   ordersForRoute,
   orderIdsInRoute,
+  progressDSPRDriverRoute,
 }) => {
-  const dispatch = useDispatch();
   const { colors } = useTheme();
 
   const handleProgressRoute = (routeId) => {
-    dispatch(progressDSPRDriverRoute(routeId));
+    progressDSPRDriverRoute(routeId);
   };
 
   const confirmProgressRoute = (routeId) => {
@@ -30,7 +30,7 @@ const RouteActionButton = ({
 
   const handleCompleteOrder = (orderId) => {
     if (driver && driver.currentRoute) {
-      dispatch(completeOrder(orderId));
+      completeOrder(orderId);
     }
   };
 
@@ -94,4 +94,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RouteActionButton;
+const mapDispatchToProps = { progressDSPRDriverRoute };
+
+export default connect(null, mapDispatchToProps)(RouteActionButton);

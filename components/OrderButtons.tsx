@@ -2,27 +2,37 @@ import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/orderActions';
-import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { removeOrderAndRefreshRoute, deactivateDriverRoute } from '../actions/driverActions';
 
-const OrderButtons = ({ navigation, orderId, orderStatus, orderIdsInRoute, activeRoute }) => {
-  const dispatch = useDispatch();
+const OrderButtons = ({
+  navigation,
+  orderId,
+  orderStatus,
+  orderIdsInRoute,
+  activeRoute,
+  completeOrder,
+  cancelOrder,
+  markOrderInProcess,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+}) => {
   const { colors } = useTheme();
 
   const handleCancelOrder = () => {
     Alert.alert('Cancel Order', 'Are you sure you want to cancel this order?', [
       { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => dispatch(cancelOrder(orderId)) },
+      { text: 'Yes', onPress: () => cancelOrder(orderId) },
     ]);
   };
 
   const removeFromRoute = (routeId, driverId, orderIds, finalOrderId, boolean) => {
     if (finalOrderId === null) {
-      dispatch(deactivateDriverRoute(routeId));
+      deactivateDriverRoute(routeId);
       Alert.alert('Success!', 'Order removed from route.');
       return;
     }
-    dispatch(removeOrderAndRefreshRoute(routeId, driverId, orderIds, finalOrderId, boolean));
+    removeOrderAndRefreshRoute(routeId, driverId, orderIds, finalOrderId, boolean);
     navigation.goBack();
   };
 
@@ -60,14 +70,14 @@ const OrderButtons = ({ navigation, orderId, orderStatus, orderIdsInRoute, activ
   const handleCompleteOrder = () => {
     Alert.alert('Complete Order', 'Are you ready to complete this order?', [
       { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => dispatch(completeOrder(orderId)) },
+      { text: 'Yes', onPress: () => completeOrder(orderId) },
     ]);
   };
 
   const handleProcessOrder = () => {
     Alert.alert('Process Order', 'Mark this order as in-process?', [
       { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => dispatch(markOrderInProcess(orderId)) },
+      { text: 'Yes', onPress: () => markOrderInProcess(orderId) },
     ]);
   };
 
@@ -134,4 +144,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OrderButtons;
+const mapDispatchToProps = {
+  completeOrder,
+  cancelOrder,
+  markOrderInProcess,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+};
+
+export default connect(null, mapDispatchToProps)(OrderButtons);
