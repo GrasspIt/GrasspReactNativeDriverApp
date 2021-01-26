@@ -5,7 +5,7 @@ import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import { IconButton } from 'react-native-paper';
 
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
-import ManageNotes from '../screens/ManageNotesScreen';
+import ManageNotesScreen from '../screens/ManageNotesScreen';
 import RoutingScreen from '../screens/RoutingScreen';
 
 type RoutingNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Routing'>;
@@ -49,7 +49,7 @@ const RoutingNavigator = ({ route, navigation }: Props) => {
       />
       <RoutingStack.Screen
         name='Notes'
-        component={ManageNotes}
+        component={ManageNotesScreen}
         options={{
           headerShown: true,
         }}

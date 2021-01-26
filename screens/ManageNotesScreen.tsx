@@ -21,7 +21,7 @@ type Props = {
   getSpecificUser;
 };
 
-const ManageNotes = ({
+const ManageNotesScreen = ({
   createUserNote,
   hideUserNote,
   unhideUserNote,
@@ -62,4 +62,4 @@ const mapStateToProps = (state, route) => {
 
 const mapDispatchToProps = { createUserNote, hideUserNote, unhideUserNote, getSpecificUser };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageNotes);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageNotesScreen);
