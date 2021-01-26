@@ -1,8 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Alert, Platform, SafeAreaView } from 'react-native';
-import { Button, useTheme, ActivityIndicator } from 'react-native-paper';
-import { StatusBar } from 'expo-status-bar';
-
+import { Alert, Platform } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
@@ -10,18 +7,14 @@ import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import * as RootNavigation from '../App';
 
-import { DashboardStackParamsList } from '../navigation/DashboardNavigator';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { sendPushToken } from '../actions/userActions';
 import { refreshDSPRDriver, getDSPRDriver, setDriverLocation } from '../actions/driverActions';
 import { connect } from 'react-redux';
 import { store } from '../store/store';
 import { useInterval } from '../utils/useInterval';
-
-import OnCallSwitch from '../components/OnCallSwitch';
-
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
+import DashboardDisplay from '../components/DashboardDisplay';
 
 // handler for push notifications
 Notifications.setNotificationHandler({
@@ -32,9 +25,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-type DashboardScreenNavigationProp = StackNavigationProp<DashboardStackParamsList, 'Dashboard'>;
 type Props = {
-  navigation: DashboardScreenNavigationProp;
   dspr;
   driverId;
   dsprDriver;
@@ -46,7 +37,6 @@ type Props = {
 };
 
 const DashboardScreen = ({
-  navigation,
   driverId,
   dspr,
   dsprDriver,
@@ -58,7 +48,6 @@ const DashboardScreen = ({
 }: Props) => {
   const notificationListener: any = useRef();
   const responseListener: any = useRef();
-  const { colors } = useTheme();
   const [notification, setNotification] = useState<any>(false);
 
   // polling data from API while logged in
@@ -147,41 +136,14 @@ const DashboardScreen = ({
   }, [oncallState]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {isLoading ? (
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
-          <ActivityIndicator size='large' color={colors.primary} />
-        </View>
-      ) : dsprDriver ? (
-        <View style={{ flex: 1, backgroundColor: colors.background }}>
-          <Text style={styles.dsprTitle}>{dspr.name}</Text>
-          {dsprDriver && <OnCallSwitch dsprDriver={dsprDriver} />}
-        </View>
-      ) : (
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
-          <Text>Unable to fetch driver data.</Text>
-          <Button mode='text' onPress={getDriverData}>
-            Try Again
-          </Button>
-        </View>
-      )}
-      <StatusBar style='dark' />
-    </SafeAreaView>
+    <DashboardDisplay
+      dspr={dspr}
+      dsprDriver={dsprDriver}
+      isLoading={isLoading}
+      getDriverData={getDriverData}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dsprTitle: {
-    fontSize: 22,
-    textAlign: 'center',
-    paddingTop: 20,
-  },
-});
 
 // get permission for push notifications and set token
 const registerForPushNotificationsAsync = async () => {
