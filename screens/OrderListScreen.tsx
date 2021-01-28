@@ -1,5 +1,11 @@
 import React from 'react';
-import { refreshDSPRDriver, getDSPRDriver } from '../actions/driverActions';
+import {
+  refreshDSPRDriver,
+  getDSPRDriver,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+} from '../actions/driverActions';
+import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
 import { connect } from 'react-redux';
@@ -16,6 +22,10 @@ type Props = {
   isLoading;
   refreshDSPRDriver;
   getDSPRDriver;
+  removeOrderAndRefreshRoute;
+  deactivateDriverRoute;
+  markOrderInProcess;
+  cancelOrder;
 };
 
 const OrderListScreen = ({
@@ -25,6 +35,10 @@ const OrderListScreen = ({
   dsprDriver,
   isLoading,
   getDSPRDriver,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+  markOrderInProcess,
+  cancelOrder,
 }: Props) => {
   const getDriverData = () => {
     if (loggedInUser) getDSPRDriver(driverId);
@@ -36,6 +50,10 @@ const OrderListScreen = ({
       dsprDriver={dsprDriver}
       isLoading={isLoading}
       getDriverData={getDriverData}
+      removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
+      deactivateDriverRoute={deactivateDriverRoute}
+      markOrderInProcess={markOrderInProcess}
+      cancelOrder={cancelOrder}
     />
   ) : null;
 };
@@ -54,6 +72,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = { refreshDSPRDriver, getDSPRDriver };
+const mapDispatchToProps = {
+  refreshDSPRDriver,
+  getDSPRDriver,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+  markOrderInProcess,
+  cancelOrder,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderListScreen);

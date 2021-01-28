@@ -10,9 +10,22 @@ type Props = {
   dsprDriver;
   isLoading;
   getDriverData;
+  removeOrderAndRefreshRoute;
+  deactivateDriverRoute;
+  markOrderInProcess;
+  cancelOrder;
 };
 
-const OrderList = ({ navigation, dsprDriver, isLoading, getDriverData }: Props) => {
+const OrderList = ({
+  navigation,
+  dsprDriver,
+  isLoading,
+  getDriverData,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+  markOrderInProcess,
+  cancelOrder,
+}: Props) => {
   const { colors } = useTheme();
 
   return (
@@ -52,6 +65,10 @@ const OrderList = ({ navigation, dsprDriver, isLoading, getDriverData }: Props) 
                 orderInfo={item.item}
                 index={dsprDriver.queuedOrders.indexOf(item.item)}
                 navigation={navigation}
+                removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
+                deactivateDriverRoute={deactivateDriverRoute}
+                markOrderInProcess={markOrderInProcess}
+                cancelOrder={cancelOrder}
               />
             )}
             keyExtractor={(item: any) => item.id.toString()}

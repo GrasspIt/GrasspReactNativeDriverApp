@@ -24,6 +24,10 @@ type Props = {
   setOrderSelectionModalOpen;
   orderSelectionModalOpen;
   maxOrdersPerRoute;
+  removeOrderAndRefreshRoute;
+  deactivateDriverRoute;
+  markOrderInProcess;
+  cancelOrder;
 };
 
 const RoutingMainDisplay = ({
@@ -42,6 +46,10 @@ const RoutingMainDisplay = ({
   setOrderSelectionModalOpen,
   orderSelectionModalOpen,
   maxOrdersPerRoute,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+  markOrderInProcess,
+  cancelOrder,
 }: Props) => {
   const { colors } = useTheme();
 
@@ -78,6 +86,10 @@ const RoutingMainDisplay = ({
               ordersForRoute={driver.currentRoute.legs}
               orderIdsInRoute={orderIdsInRoute}
               activeRoute={activeRoute}
+              removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
+              deactivateDriverRoute={deactivateDriverRoute}
+              markOrderInProcess={markOrderInProcess}
+              cancelOrder={cancelOrder}
             />
           ) : (
             <RouteMapView

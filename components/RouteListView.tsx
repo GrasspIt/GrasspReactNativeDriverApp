@@ -9,9 +9,22 @@ type Props = {
   ordersForRoute;
   orderIdsInRoute;
   activeRoute;
+  removeOrderAndRefreshRoute;
+  deactivateDriverRoute;
+  markOrderInProcess;
+  cancelOrder;
 };
 
-const RouteListView = ({ navigation, ordersForRoute, orderIdsInRoute, activeRoute }: Props) => {
+const RouteListView = ({
+  navigation,
+  ordersForRoute,
+  orderIdsInRoute,
+  activeRoute,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+  markOrderInProcess,
+  cancelOrder,
+}: Props) => {
   const { colors } = useTheme();
 
   let queuedOrders =
@@ -51,6 +64,10 @@ const RouteListView = ({ navigation, ordersForRoute, orderIdsInRoute, activeRout
               orderIdsInRoute={orderIdsInRoute}
               activeRoute={activeRoute}
               index={undefined}
+              removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
+              deactivateDriverRoute={deactivateDriverRoute}
+              markOrderInProcess={markOrderInProcess}
+              cancelOrder={cancelOrder}
             />
           )}
           keyExtractor={(item: any) => item.id.toString() + '-routeList'}

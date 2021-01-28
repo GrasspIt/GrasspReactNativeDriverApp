@@ -16,7 +16,12 @@ import {
 } from '../store/reduxStoreState';
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
-import { createDSPRDriverRoute } from '../actions/driverActions';
+import {
+  createDSPRDriverRoute,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+} from '../actions/driverActions';
+import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
 import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 import RoutingMainDisplay from '../components/RoutingMainDisplay';
 
@@ -46,6 +51,10 @@ type Props = {
   isLoading;
   orderIdsInRoute;
   activeRoute;
+  removeOrderAndRefreshRoute;
+  deactivateDriverRoute;
+  markOrderInProcess;
+  cancelOrder;
 };
 
 const RoutingScreen = ({
@@ -56,6 +65,10 @@ const RoutingScreen = ({
   isLoading,
   orderIdsInRoute,
   activeRoute,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+  markOrderInProcess,
+  cancelOrder,
 }: Props) => {
   const [
     currentInProcessOrderInActiveRoute,
@@ -166,6 +179,10 @@ const RoutingScreen = ({
       orderSelectionModalOpen={orderSelectionModalOpen}
       setOrderSelectionModalOpen={setOrderSelectionModalOpen}
       maxOrdersPerRoute={maxOrdersPerRoute}
+      removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
+      deactivateDriverRoute={deactivateDriverRoute}
+      markOrderInProcess={markOrderInProcess}
+      cancelOrder={cancelOrder}
     />
   );
 };
@@ -193,6 +210,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = { createDSPRDriverRoute };
+const mapDispatchToProps = {
+  createDSPRDriverRoute,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+  markOrderInProcess,
+  cancelOrder,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoutingScreen);

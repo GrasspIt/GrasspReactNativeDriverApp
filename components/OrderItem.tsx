@@ -1,17 +1,14 @@
 import React from 'react';
 import { Text, Alert, View, StyleSheet } from 'react-native';
 import { useTheme, Button, Card, IconButton } from 'react-native-paper';
-import { connect } from 'react-redux';
-import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
-import { removeOrderAndRefreshRoute, deactivateDriverRoute } from '../actions/driverActions';
 
 type Props = {
   index;
   orderInfo;
   navigation;
-  ordersForRoute;
-  orderIdsInRoute;
-  activeRoute;
+  ordersForRoute?;
+  orderIdsInRoute?;
+  activeRoute?;
   removeOrderAndRefreshRoute;
   deactivateDriverRoute;
   markOrderInProcess;
@@ -173,11 +170,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapDispatchToProps = {
-  removeOrderAndRefreshRoute,
-  deactivateDriverRoute,
-  markOrderInProcess,
-  cancelOrder,
-};
-
-export default connect(null, mapDispatchToProps)(OrderItem);
+export default OrderItem;
