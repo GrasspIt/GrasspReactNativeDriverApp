@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DashboardDisplay /> renders correctly 1`] = `
+<RCTSafeAreaView
+  emulateUnlessSupported={true}
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#f6f6f6",
+        "flex": 1,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 22,
+          "paddingTop": 20,
+          "textAlign": "center",
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "paddingVertical": 12,
+        }
+      }
+    >
+      <RCTSwitch
+        accessibilityRole="switch"
+        onChange={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        onTintColor="#6200ee"
+        style={
+          Object {
+            "height": 31,
+            "width": 51,
+          }
+        }
+        tintColor=""
+        value={false}
+      />
+      <Text>
+        Not on Call
+      </Text>
+    </View>
+  </View>
+</RCTSafeAreaView>
+`;

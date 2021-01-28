@@ -8,7 +8,12 @@ import * as Permissions from 'expo-permissions';
 import * as RootNavigation from '../App';
 
 import { sendPushToken } from '../actions/userActions';
-import { refreshDSPRDriver, getDSPRDriver, setDriverLocation } from '../actions/driverActions';
+import {
+  refreshDSPRDriver,
+  getDSPRDriver,
+  setDriverLocation,
+  setDriverOnCallState,
+} from '../actions/driverActions';
 import { connect } from 'react-redux';
 import { store } from '../store/store';
 import { useInterval } from '../utils/useInterval';
@@ -141,6 +146,7 @@ const DashboardScreen = ({
       dsprDriver={dsprDriver}
       isLoading={isLoading}
       getDriverData={getDriverData}
+      setDriverOnCallState={setDriverOnCallState}
     />
   );
 };
@@ -210,6 +216,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = { refreshDSPRDriver, getDSPRDriver, sendPushToken };
+const mapDispatchToProps = {
+  refreshDSPRDriver,
+  getDSPRDriver,
+  sendPushToken,
+  setDriverOnCallState,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardScreen);

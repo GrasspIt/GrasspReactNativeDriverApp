@@ -13,6 +13,8 @@ const dsprDriver = {
   serviceAreas: [1, 2],
 };
 
+const setDriverOnCallState = jest.fn();
+
 const mockStore = configureStore([]);
 
 describe('<OnCallSwitch />', () => {
@@ -23,7 +25,7 @@ describe('<OnCallSwitch />', () => {
     store = mockStore(initialState);
     component = render(
       <Provider store={store}>
-        <OnCallSwitch dsprDriver={dsprDriver} />
+        <OnCallSwitch dsprDriver={dsprDriver} setDriverOnCallState={setDriverOnCallState} />
       </Provider>
     );
   });

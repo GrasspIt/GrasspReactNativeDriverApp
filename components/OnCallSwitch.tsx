@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, Alert } from 'react-native';
-import { connect } from 'react-redux';
-import { setDriverOnCallState } from '../actions/driverActions';
 import { DsprDriver } from '../store/reduxStoreState';
 import { useTheme, Switch } from 'react-native-paper';
 
@@ -35,6 +33,4 @@ const OnCallSwitch = ({ dsprDriver, setDriverOnCallState }: SwitchProps) => {
   );
 };
 
-const mapDispatchToProps = { setDriverOnCallState };
-
-export default connect(null, mapDispatchToProps)(OnCallSwitch);
+export default OnCallSwitch;

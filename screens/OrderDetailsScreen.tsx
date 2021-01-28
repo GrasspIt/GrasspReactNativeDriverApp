@@ -3,6 +3,8 @@ import { Alert } from 'react-native';
 import Clipboard from 'expo-clipboard';
 import { connect } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
+import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/orderActions';
+import { removeOrderAndRefreshRoute, deactivateDriverRoute } from '../actions/driverActions';
 import { getUserFromProps, getUserNotesFromProps } from '../selectors/userSelectors';
 import {
   getUserIdDocumentFromPropsWithOrder,
@@ -32,6 +34,11 @@ type Props = {
   getOrderDetailsWithId;
   orderIdsInRoute;
   activeRoute;
+  completeOrder;
+  cancelOrder;
+  markOrderInProcess;
+  removeOrderAndRefreshRoute;
+  deactivateDriverRoute;
 };
 const OrderDetailsScreen = ({
   navigation,
@@ -46,6 +53,11 @@ const OrderDetailsScreen = ({
   getOrderDetailsWithId,
   orderIdsInRoute,
   activeRoute,
+  completeOrder,
+  cancelOrder,
+  markOrderInProcess,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
 }: Props) => {
   const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
@@ -98,6 +110,11 @@ const OrderDetailsScreen = ({
       activeRoute={activeRoute}
       handleManageNotes={handleManageNotes}
       handleCopyToClipboard={handleCopyToClipboard}
+      completeOrder={completeOrder}
+      cancelOrder={cancelOrder}
+      markOrderInProcess={markOrderInProcess}
+      removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
+      deactivateDriverRoute={deactivateDriverRoute}
     />
   );
 };
@@ -138,6 +155,13 @@ const mapStateToProps = (state, route) => {
   };
 };
 
-const mapDispatchToProps = { getOrderDetailsWithId };
+const mapDispatchToProps = {
+  getOrderDetailsWithId,
+  completeOrder,
+  cancelOrder,
+  markOrderInProcess,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderDetailsScreen);

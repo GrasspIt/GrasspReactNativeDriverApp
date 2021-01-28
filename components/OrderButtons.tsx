@@ -1,9 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
-import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/orderActions';
-import { connect } from 'react-redux';
-import { removeOrderAndRefreshRoute, deactivateDriverRoute } from '../actions/driverActions';
 
 type Props = {
   orderId;
@@ -154,12 +151,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapDispatchToProps = {
-  completeOrder,
-  cancelOrder,
-  markOrderInProcess,
-  removeOrderAndRefreshRoute,
-  deactivateDriverRoute,
-};
-
-export default connect(null, mapDispatchToProps)(OrderButtons);
+export default OrderButtons;

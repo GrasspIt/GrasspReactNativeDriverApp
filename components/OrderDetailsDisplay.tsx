@@ -33,6 +33,11 @@ type Props = {
   activeRoute;
   handleManageNotes;
   handleCopyToClipboard;
+  completeOrder;
+  cancelOrder;
+  markOrderInProcess;
+  removeOrderAndRefreshRoute;
+  deactivateDriverRoute;
 };
 const OrderDetailsDisplay = ({
   navigation,
@@ -51,6 +56,11 @@ const OrderDetailsDisplay = ({
   activeRoute,
   handleManageNotes,
   handleCopyToClipboard,
+  completeOrder,
+  cancelOrder,
+  markOrderInProcess,
+  removeOrderAndRefreshRoute,
+  deactivateDriverRoute,
 }: Props) => {
   const { colors } = useTheme();
 
@@ -234,7 +244,11 @@ const OrderDetailsDisplay = ({
                 orderStatus={order.orderStatus}
                 orderIdsInRoute={orderIdsInRoute}
                 activeRoute={activeRoute}
-                navigation={navigation}
+                completeOrder={completeOrder}
+                cancelOrder={cancelOrder}
+                markOrderInProcess={markOrderInProcess}
+                removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
+                deactivateDriverRoute={deactivateDriverRoute}
               />
             )}
           </ScrollView>
