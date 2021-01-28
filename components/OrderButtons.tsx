@@ -5,8 +5,19 @@ import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/order
 import { connect } from 'react-redux';
 import { removeOrderAndRefreshRoute, deactivateDriverRoute } from '../actions/driverActions';
 
+type Props = {
+  orderId;
+  orderStatus;
+  orderIdsInRoute;
+  activeRoute;
+  completeOrder;
+  cancelOrder;
+  markOrderInProcess;
+  removeOrderAndRefreshRoute;
+  deactivateDriverRoute;
+};
+
 const OrderButtons = ({
-  navigation,
   orderId,
   orderStatus,
   orderIdsInRoute,
@@ -16,7 +27,7 @@ const OrderButtons = ({
   markOrderInProcess,
   removeOrderAndRefreshRoute,
   deactivateDriverRoute,
-}) => {
+}: Props) => {
   const { colors } = useTheme();
 
   const handleCancelOrder = () => {

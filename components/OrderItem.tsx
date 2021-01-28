@@ -5,6 +5,19 @@ import { connect } from 'react-redux';
 import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
 import { removeOrderAndRefreshRoute, deactivateDriverRoute } from '../actions/driverActions';
 
+type Props = {
+  index;
+  orderInfo;
+  navigation;
+  ordersForRoute;
+  orderIdsInRoute;
+  activeRoute;
+  removeOrderAndRefreshRoute;
+  deactivateDriverRoute;
+  markOrderInProcess;
+  cancelOrder;
+};
+
 const OrderItem = ({
   index,
   orderInfo,
@@ -16,7 +29,7 @@ const OrderItem = ({
   deactivateDriverRoute,
   markOrderInProcess,
   cancelOrder,
-}) => {
+}: Props) => {
   const { colors } = useTheme();
   let orderList = ordersForRoute && ordersForRoute.map((leg) => leg.order);
 
@@ -33,6 +46,7 @@ const OrderItem = ({
       { text: 'Yes', onPress: () => cancelOrder(orderInfo.id) },
     ]);
   };
+
   const removeFromRoute = (routeId, driverId, orderIds, finalOrderId, boolean) => {
     if (finalOrderId === null) {
       deactivateDriverRoute(routeId);
