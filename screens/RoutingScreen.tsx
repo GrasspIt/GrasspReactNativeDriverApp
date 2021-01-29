@@ -48,7 +48,7 @@ type Props = {
   };
   dspr: DSPR;
   createDSPRDriverRoute: any;
-  isLoading;
+  isLoading: boolean;
   orderIdsInRoute;
   activeRoute;
   removeOrderAndRefreshRoute;
@@ -80,25 +80,62 @@ const RoutingScreen = ({
   const [orderPolyline, setOrderPolyline] = useState<any>();
   const [overviewPolyline, setOverviewPolyline] = useState<any>();
   const [maxOrdersPerRoute, setMaxOrdersPerRoute] = useState<any>();
+  const [ordersInRoute, setOrdersInRoute] = useState<any>();
+
+  const setNumberOrdersPerRoute = () => {
+    if (
+      driver &&
+      driver.serviceAreas &&
+      driver.serviceAreas[0] &&
+      driver.serviceAreas[0].numberOrdersPerRoute
+    ) {
+      setMaxOrdersPerRoute(driver.serviceAreas[0].numberOrdersPerRoute);
+    } else {
+      setMaxOrdersPerRoute(dspr.numberOrdersPerRoute);
+    }
+  };
+
+  const createOrdersInRoute = () => {
+    // create an object with the ids of the orders in route
+    const orderIdsInRoute = {};
+    if (driver.queuedOrders && driver.currentRoute.legs) {
+      driver.currentRoute.legs.forEach((leg: any) => {
+        if (leg.order) orderIdsInRoute[leg.order.id] = leg.legOrder;
+      });
+    }
+    setOrdersInRoute(orderIdsInRoute);
+  };
+
+  const handleInProcessOrderInRoute = () => {
+    // check if the driver has an in process order
+    if (
+      ordersInRoute &&
+      Object.keys(ordersInRoute).length > 0 &&
+      driver.currentInProcessOrder &&
+      driver.currentInProcessOrder.id
+    ) {
+      //if the in process order is in the route, set it to the active leg
+      if (Object.keys(ordersInRoute).includes(driver.currentInProcessOrder.id.toString())) {
+        setCurrentInProcessOrderInActiveRoute(true);
+        setCurrentlyActiveRouteLegIndex(
+          driver.currentRoute.legs.findIndex(
+            (leg: any) => leg.legOrder === ordersInRoute[driver.currentInProcessOrder.id]
+          )
+        );
+      } else {
+        setCurrentInProcessOrderInActiveRoute(false);
+        setCurrentlyActiveRouteLegIndex(undefined);
+      }
+    } else {
+      setCurrentInProcessOrderInActiveRoute(false);
+    }
+  };
 
   useEffect(() => {
-    // set number orders per route
-    if (dspr && dspr.numberOrdersPerRoute) {
-      if (
-        driver &&
-        driver.serviceAreas &&
-        driver.serviceAreas[0] &&
-        driver.serviceAreas[0].numberOrdersPerRoute
-      ) {
-        setMaxOrdersPerRoute(driver.serviceAreas[0].numberOrdersPerRoute);
-      } else {
-        setMaxOrdersPerRoute(dspr.numberOrdersPerRoute);
-      }
-    }
-    // set polylines and orders in route
+    if (dspr && dspr.numberOrdersPerRoute) setNumberOrdersPerRoute();
     if (driver && driver.currentRoute) {
       if (!driver.currentRoute.active) {
-        //if no active route
+        //if no active route, reset local state
         setOverviewPolyline(undefined);
         setOrderPolyline(undefined);
         setCurrentInProcessOrderInActiveRoute(false);
@@ -108,40 +145,22 @@ const RoutingScreen = ({
         if (driver.currentRoute.overviewPolyline) {
           setOverviewPolyline(driver.currentRoute.overviewPolyline);
         }
-        // create an object with the ids of orders in route
-        const ordersInRoute = {};
-        if (driver.queuedOrders && driver.currentRoute.legs) {
-          driver.currentRoute.legs.forEach((leg: any) => {
-            if (leg.order) ordersInRoute[leg.order.id] = leg.legOrder;
-          });
-        }
-        // if there is an in-process order, set it to the active leg of the route
-        if (
-          ordersInRoute &&
-          Object.keys(ordersInRoute).length > 0 &&
-          driver.currentInProcessOrder &&
-          driver.currentInProcessOrder.id
-        ) {
-          if (Object.keys(ordersInRoute).includes(driver.currentInProcessOrder.id.toString())) {
-            setCurrentInProcessOrderInActiveRoute(true);
-            setCurrentlyActiveRouteLegIndex(
-              driver.currentRoute.legs.findIndex(
-                (leg: any) => leg.legOrder === ordersInRoute[driver.currentInProcessOrder.id]
-              )
-            );
-          } else {
-            setCurrentInProcessOrderInActiveRoute(false);
-            setCurrentlyActiveRouteLegIndex(undefined);
-          }
-        } else {
-          setCurrentInProcessOrderInActiveRoute(false);
-        }
+        createOrdersInRoute();
+        handleInProcessOrderInRoute();
       }
     }
     return;
   }, [dspr, driver]);
 
-  // create order leg polyline for map
+  const createOrderPolyline = () => {
+    const legPolyline = [];
+    const legDirectionPolylines = driver.currentRoute.legs[
+      currentlyActiveRouteLegIndex
+    ].routeLegDirections.map((routeLegDirection: any) => routeLegDirection.overviewPolyline);
+    const finishedArray = legPolyline.concat(...legDirectionPolylines);
+    setOrderPolyline(finishedArray);
+  };
+
   useEffect(() => {
     if (
       currentlyActiveRouteLegIndex !== undefined &&
@@ -151,12 +170,7 @@ const RoutingScreen = ({
       driver.currentRoute.legs &&
       driver.currentRoute.legs.length
     ) {
-      const legPolyline = [];
-      const legDirectionPolylines = driver.currentRoute.legs[
-        currentlyActiveRouteLegIndex
-      ].routeLegDirections.map((routeLegDirection: any) => routeLegDirection.overviewPolyline);
-      const finishedArray = legPolyline.concat(...legDirectionPolylines);
-      setOrderPolyline(finishedArray);
+      createOrderPolyline();
     } else {
       setOrderPolyline(null);
     }
