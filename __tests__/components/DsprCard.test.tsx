@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 
-import DsprCard from '../DsprCard';
+import DsprCard from '../../components/DsprCard';
 
 const dspr = {
   id: 12,

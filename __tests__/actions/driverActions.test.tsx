@@ -1,4 +1,4 @@
-import * as actions from '../driverActions';
+import * as actions from '../../actions/driverActions';
 
 describe('setDriverId', () => {
   it('should create an action to set the driver id', () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 
-import DashboardDisplay from '../DashboardDisplay';
+import DashboardDisplay from '../../components/DashboardDisplay';
 
 const dspr = 12;
 const dsprDriver = {
@@ -13,6 +13,7 @@ const dsprDriver = {
 };
 const isLoading = false;
 const getDriverData = jest.fn();
+const setDriverOnCallState = jest.fn();
 
 describe('<DashboardDisplay />', () => {
   it('renders correctly', async () => {
@@ -22,6 +23,7 @@ describe('<DashboardDisplay />', () => {
         dsprDriver={dsprDriver}
         isLoading={isLoading}
         getDriverData={getDriverData}
+        setDriverOnCallState={setDriverOnCallState}
       />
     ).toJSON();
     await expect(tree).toMatchSnapshot();

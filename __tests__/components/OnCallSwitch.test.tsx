@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import { initialState } from '../../reducers/apiReducer';
 import { render } from '@testing-library/react-native';
-import OnCallSwitch from '../OnCallSwitch';
+import OnCallSwitch from '../../components/OnCallSwitch';
 
 const dsprDriver = {
   id: 12,

@@ -1,4 +1,4 @@
-import apiReducer, { initialState } from '../apiReducer';
+import apiReducer, { initialState } from '../../reducers/apiReducer';
 import * as driverActionTypes from '../../actions/driverActions';
 
 describe('api reducer', () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-import DsprCard from '../components/DsprCard';
+import DsprCard from './DsprCard';
 
 type Props = { handleSelectDspr; dsprDataList };
 
