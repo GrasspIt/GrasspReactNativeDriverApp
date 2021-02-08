@@ -2,14 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import { attemptLogin } from '../actions/oauthActions';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamsList } from '../navigation/AuthNavigator';
 import { getLoggedInUser } from '../selectors/userSelectors';
 import LoginForm from '../components/LoginForm';
 
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamsList, 'Login'>;
 type Props = {
-  navigation?: LoginScreenNavigationProp;
   loggedInUser;
   attemptLogin;
   isLoading;

@@ -1,7 +1,4 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
-import { initialState } from '../../reducers/apiReducer';
 import { render } from '@testing-library/react-native';
 import OnCallSwitch from '../../components/OnCallSwitch';
 
@@ -15,23 +12,11 @@ const dsprDriver = {
 
 const setDriverOnCallState = jest.fn();
 
-const mockStore = configureStore([]);
-
 describe('<OnCallSwitch />', () => {
-  let store;
-  let component;
-
-  beforeEach(() => {
-    store = mockStore(initialState);
-    component = render(
-      <Provider store={store}>
-        <OnCallSwitch dsprDriver={dsprDriver} setDriverOnCallState={setDriverOnCallState} />
-      </Provider>
-    );
-  });
-
   it('renders correctly', async () => {
-    const tree = component.toJSON();
+    const tree = render(
+      <OnCallSwitch dsprDriver={dsprDriver} setDriverOnCallState={setDriverOnCallState} />
+    ).toJSON();
     await expect(tree).toMatchSnapshot();
   });
 });
