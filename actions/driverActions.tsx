@@ -19,7 +19,7 @@ export const setDsprDriverId = (dsprDriverId) => (dispatch) => {
   });
 };
 
-const dsprDriverGetter = (dsprDriverId) => {
+export const dsprDriverGetter = (dsprDriverId) => {
   return {
     [CALL_API]: {
       httpAction: 'GET',
@@ -51,7 +51,7 @@ export const TOGGLE_DSPR_DRIVER_ACTIVE_STATUS = 'TOGGLE_DSPR_DRIVER_ACTIVE_STATU
 export const TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS = 'TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS';
 export const TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_FAILURE = 'TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_FAILURE';
 
-const dsprDriverActiveStatusToggler = (dsprDriverId, isCurrentlyActive) => {
+export const dsprDriverActiveStatusToggler = (dsprDriverId, isCurrentlyActive) => {
   const dsprDriver = {
     id: dsprDriverId,
   };
@@ -85,7 +85,7 @@ export const SET_ON_CALL_STATE_FOR_DRIVER = 'SET_ON_CALL_STATE_FOR_DRIVER';
 export const SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS = 'SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS';
 export const SET_ON_CALL_STATE_FOR_DRIVER_FAILURE = 'SET_ON_CALL_STATE_FOR_DRIVER_FAILURE';
 
-const driverOnCallStateSetter = (dsprDriverId, onCallString) => {
+export const driverOnCallStateSetter = (dsprDriverId, onCallString) => {
   const dsprDriver = {
     id: dsprDriverId,
   };
@@ -120,7 +120,7 @@ export const SET_DRIVER_LOCATION = 'SET_DRIVER_LOCATION';
 export const SET_DRIVER_LOCATION_SUCCESS = 'SET_DRIVER_LOCATION_SUCCESS';
 export const SET_DRIVER_LOCATION_FAILURE = 'SET_DRIVER_LOCATION_FAILURE';
 
-const driverLocationSetter = (dsprId, latitude, longitude) => {
+export const driverLocationSetter = (dsprId, latitude, longitude) => {
   const driverLocation = {
     longitude,
     latitude,
@@ -149,7 +149,7 @@ export const CREATE_NEW_DSPR_DRIVER_ROUTE = 'CREATE_NEW_DSPR_DRIVER_ROUTE';
 export const CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS = 'CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS';
 export const CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE = 'CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE';
 
-const createNewRoute = (
+export const createNewRoute = (
   driverId: number,
   waypoints,
   finalDestination,

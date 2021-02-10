@@ -39,6 +39,7 @@ type Props = {
   refreshDSPRDriver;
   getDSPRDriver;
   sendPushToken;
+  setDriverOnCallState;
 };
 
 const DashboardScreen = ({
@@ -50,6 +51,7 @@ const DashboardScreen = ({
   refreshDSPRDriver,
   getDSPRDriver,
   sendPushToken,
+  setDriverOnCallState,
 }: Props) => {
   const notificationListener: any = useRef();
   const responseListener: any = useRef();
