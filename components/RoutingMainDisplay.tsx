@@ -28,6 +28,8 @@ type Props = {
   deactivateDriverRoute;
   markOrderInProcess;
   cancelOrder;
+  completeOrder;
+  progressDSPRDriverRoute;
 };
 
 const RoutingMainDisplay = ({
@@ -50,6 +52,8 @@ const RoutingMainDisplay = ({
   deactivateDriverRoute,
   markOrderInProcess,
   cancelOrder,
+  completeOrder,
+  progressDSPRDriverRoute,
 }: Props) => {
   const { colors } = useTheme();
 
@@ -105,6 +109,8 @@ const RoutingMainDisplay = ({
             ordersForRoute={driver.currentRoute.legs}
             currentInProcessOrderInActiveRoute={currentInProcessOrderInActiveRoute}
             orderIdsInRoute={orderIdsInRoute}
+            completeOrder={completeOrder}
+            progressDSPRDriverRoute={progressDSPRDriverRoute}
           />
         </View>
       ) : (

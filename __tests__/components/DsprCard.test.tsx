@@ -13,7 +13,7 @@ const handleSelect = jest.fn();
 
 describe('<DsprCard />', () => {
   it('renders correctly', async () => {
-    const tree = render(<DsprCard dspr={dspr} handleSelect={handleSelect} />).toJSON();
-    await expect(tree).toMatchSnapshot();
+    const component = render(<DsprCard dspr={dspr} handleSelect={handleSelect} />).toJSON();
+    await expect(component).toMatchSnapshot();
   });
 });

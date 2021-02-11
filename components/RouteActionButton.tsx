@@ -1,9 +1,6 @@
 import React from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import { useTheme, FAB } from 'react-native-paper';
-import { completeOrder } from '../actions/orderActions';
-import { connect } from 'react-redux';
-import { progressDSPRDriverRoute } from '../actions/driverActions';
 
 const RouteActionButton = ({
   driver,
@@ -11,6 +8,7 @@ const RouteActionButton = ({
   ordersForRoute,
   orderIdsInRoute,
   progressDSPRDriverRoute,
+  completeOrder,
 }) => {
   const { colors } = useTheme();
 
@@ -94,6 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapDispatchToProps = { progressDSPRDriverRoute };
-
-export default connect(null, mapDispatchToProps)(RouteActionButton);
+export default RouteActionButton;

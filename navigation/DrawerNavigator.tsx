@@ -81,9 +81,9 @@ const DrawerNavigator = ({ navigation, route, dsprDrivers, logout }: Props) => {
       }}
     >
       {drivers.length > 1 ? <Drawer.Screen name='DSPRs' component={DSPRScreen} /> : null}
-      <Drawer.Screen name='Dashboard' navigation={navigation} component={DashboardNavigator} />
-      <Drawer.Screen name='Orders' navigation={navigation} component={OrderListNavigator} />
-      <Drawer.Screen name='Routing' navigation={navigation} component={RoutingNavigator} />
+      <Drawer.Screen name='Dashboard' component={DashboardNavigator} />
+      <Drawer.Screen name='Orders' component={OrderListNavigator} />
+      <Drawer.Screen name='Routing' component={RoutingNavigator} />
     </Drawer.Navigator>
   );
 };

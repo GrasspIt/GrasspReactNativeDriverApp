@@ -7,7 +7,4 @@ describe('<DSPRScreen />', () => {
   it('renders with given state from Redux store', async () => {
     await expect(renderWithRedux(<DSPRScreen />).toJSON()).toMatchSnapshot();
   });
-  //   it('should dispatch an action on button click', () => {
-
-  // });
 });

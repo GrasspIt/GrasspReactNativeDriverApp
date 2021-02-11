@@ -21,7 +21,8 @@ import {
   removeOrderAndRefreshRoute,
   deactivateDriverRoute,
 } from '../actions/driverActions';
-import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
+import { progressDSPRDriverRoute } from '../actions/driverActions';
+import { markOrderInProcess, cancelOrder, completeOrder } from '../actions/orderActions';
 import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 import RoutingMainDisplay from '../components/RoutingMainDisplay';
 
@@ -55,6 +56,8 @@ type Props = {
   deactivateDriverRoute;
   markOrderInProcess;
   cancelOrder;
+  completeOrder;
+  progressDSPRDriverRoute;
 };
 
 const RoutingScreen = ({
@@ -69,6 +72,8 @@ const RoutingScreen = ({
   deactivateDriverRoute,
   markOrderInProcess,
   cancelOrder,
+  completeOrder,
+  progressDSPRDriverRoute,
 }: Props) => {
   const [
     currentInProcessOrderInActiveRoute,
@@ -197,6 +202,8 @@ const RoutingScreen = ({
       deactivateDriverRoute={deactivateDriverRoute}
       markOrderInProcess={markOrderInProcess}
       cancelOrder={cancelOrder}
+      completeOrder={completeOrder}
+      progressDSPRDriverRoute={progressDSPRDriverRoute}
     />
   );
 };
@@ -230,6 +237,8 @@ const mapDispatchToProps = {
   deactivateDriverRoute,
   markOrderInProcess,
   cancelOrder,
+  completeOrder,
+  progressDSPRDriverRoute,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoutingScreen);
