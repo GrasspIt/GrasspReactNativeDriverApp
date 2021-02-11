@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, ScrollView, Text, StyleSheet, SafeAreaView } from 'react-native';
 import {
   Button,
@@ -63,6 +63,10 @@ const OrderDetailsDisplay = ({
   deactivateDriverRoute,
 }: Props) => {
   const { colors } = useTheme();
+
+  useEffect(() => {
+    if (order.orderStatus === 'canceled' || order.orderStatus === 'completed') navigation.goBack();
+  }, [order]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

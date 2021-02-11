@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Image } from 'react-native';
+import { Text } from 'react-native';
 import MapView, { Callout, Marker, Polyline } from 'react-native-maps';
 import { OrderWithAddressAndUser, RouteLeg } from '../store/reduxStoreState';
 
@@ -103,6 +103,7 @@ const RouteMapView: React.FC<RouteMapViewProps> = ({
         }
       )
       .filter((marker) => marker != null);
+
   // change polyline keys from lat/lng into latitude/longitude
   let orderPolylineCoordinates =
     orderPolyline &&

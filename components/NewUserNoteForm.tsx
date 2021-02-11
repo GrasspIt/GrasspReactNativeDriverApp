@@ -32,7 +32,6 @@ const renderField = ({
       onChangeText={onChange}
       underlineColor={colors.primary}
       error={!!(touched && error)}
-      // helperText={touched && error ? error : ''}
     />
   );
 };
@@ -81,5 +80,5 @@ const NewUserNoteForm = (
 
 export default reduxForm<any, NewUserNoteFormProps>({
   form: 'NewUserNoteForm', // a unique identifier for this form
-  // validate,
+  validate,
 })(NewUserNoteForm);
