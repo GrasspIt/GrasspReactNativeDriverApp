@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme, List, Divider } from 'react-native-paper';
-import { OrderDetail } from '../store/reduxStoreState';
+import { CalculatedOrderDetail } from '../store/reduxStoreState';
 
 interface OrderDetailListItemProps {
-  orderDetail: Partial<OrderDetail>;
+  orderDetail: Partial<CalculatedOrderDetail>;
 }
 
 const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
@@ -32,13 +32,28 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
             <Divider />
             <List.Item
               title={`${orderDetail.quantity} ${unit} ${product.name}`}
-              description={`${product.flowerType.replace('_', ' ').toUpperCase()}`}
+              description={
+                orderDetail.appliedCoupon
+                  ? `${product.flowerType
+                      .replace('_', ' ')
+                      .toUpperCase()} - ${orderDetail.appliedCoupon.code.toUpperCase()}`
+                  : `${product.flowerType.replace('_', ' ').toUpperCase()}`
+              }
               descriptionStyle={{ color: productColor, fontWeight: 'bold' }}
               titleNumberOfLines={2}
               descriptionNumberOfLines={2}
               right={() => (
                 <View style={{ alignSelf: 'flex-end' }}>
-                  <Text>${orderDetail.pricePreDiscount}</Text>
+                  <Text
+                    style={
+                      orderDetail.discount !== 0 ? { textDecorationLine: 'line-through' } : null
+                    }
+                  >
+                    ${orderDetail.pricePreDiscount}
+                  </Text>
+                  {orderDetail.discount !== 0 && (
+                    <Text>${orderDetail.pricePreDiscount - orderDetail.discount}</Text>
+                  )}
                 </View>
               )}
             />

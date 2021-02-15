@@ -3,9 +3,9 @@ import { Text, View, Alert } from 'react-native';
 import { DsprDriver } from '../store/reduxStoreState';
 import { useTheme, Switch } from 'react-native-paper';
 
-type SwitchProps = { dsprDriver: DsprDriver; setDriverOnCallState };
+type SwitchProps = { dsprDriver: DsprDriver; setDriverOnCallState; isLoading };
 
-const OnCallSwitch = ({ dsprDriver, setDriverOnCallState }: SwitchProps) => {
+const OnCallSwitch = ({ dsprDriver, setDriverOnCallState, isLoading }: SwitchProps) => {
   const { colors } = useTheme();
   const [isOnCall, setIsOnCall] = useState<boolean | undefined>(false);
 
@@ -27,7 +27,12 @@ const OnCallSwitch = ({ dsprDriver, setDriverOnCallState }: SwitchProps) => {
 
   return (
     <View style={{ alignItems: 'center', paddingVertical: 12 }}>
-      <Switch color={colors.primary} onValueChange={toggleSwitch} value={isOnCall} />
+      <Switch
+        disabled={isLoading ? true : false}
+        color={colors.primary}
+        onValueChange={toggleSwitch}
+        value={isOnCall}
+      />
       <Text>{isOnCall ? 'On Call' : 'Not on Call'}</Text>
     </View>
   );

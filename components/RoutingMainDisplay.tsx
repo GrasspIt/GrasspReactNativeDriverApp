@@ -66,7 +66,7 @@ const RoutingMainDisplay = ({
               mode='text'
               labelStyle={{ color: colors.primary, fontSize: 14 }}
               onPress={() => setOrderSelectionModalOpen(true)}
-              disabled={isLoading}
+              disabled={isLoading ? true : false}
             >
               New Route
             </Button>
@@ -86,6 +86,7 @@ const RoutingMainDisplay = ({
           <RouteViewButtons routeView={routeView} setRouteView={setRouteView} />
           {routeView === 'list' ? (
             <RouteListView
+              isLoading={isLoading}
               navigation={navigation}
               ordersForRoute={driver.currentRoute.legs}
               orderIdsInRoute={orderIdsInRoute}
@@ -111,6 +112,7 @@ const RoutingMainDisplay = ({
             orderIdsInRoute={orderIdsInRoute}
             completeOrder={completeOrder}
             progressDSPRDriverRoute={progressDSPRDriverRoute}
+            isLoading={isLoading}
           />
         </View>
       ) : (
@@ -125,6 +127,7 @@ const RoutingMainDisplay = ({
         </View>
       )}
       <OrderSelectionModal
+        isLoading={isLoading}
         orderSelectionModalOpen={orderSelectionModalOpen}
         setOrderSelectionModalOpen={setOrderSelectionModalOpen}
         maxOrdersPerRoute={maxOrdersPerRoute}

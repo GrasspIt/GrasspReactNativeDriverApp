@@ -5,6 +5,7 @@ import InProcessOrderItem from '../components/InProcessOrderItem';
 import OrderItem from '../components/OrderItem';
 
 type Props = {
+  isLoading;
   navigation;
   ordersForRoute;
   orderIdsInRoute;
@@ -16,6 +17,7 @@ type Props = {
 };
 
 const RouteListView = ({
+  isLoading,
   navigation,
   ordersForRoute,
   orderIdsInRoute,
@@ -58,6 +60,7 @@ const RouteListView = ({
           data={queuedOrders}
           renderItem={(item) => (
             <OrderItem
+              isLoading={isLoading}
               ordersForRoute={ordersForRoute}
               orderInfo={item.item.order}
               navigation={navigation}

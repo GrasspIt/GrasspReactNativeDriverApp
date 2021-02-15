@@ -3,6 +3,7 @@ import { Text, Alert, View, StyleSheet } from 'react-native';
 import { useTheme, Button, Card, IconButton } from 'react-native-paper';
 
 type Props = {
+  isLoading;
   index;
   orderInfo;
   navigation;
@@ -16,6 +17,7 @@ type Props = {
 };
 
 const OrderItem = ({
+  isLoading,
   index,
   orderInfo,
   navigation,
@@ -119,6 +121,7 @@ const OrderItem = ({
         <Card.Actions style={{ padding: 0 }}>
           {orderList && orderList.includes(orderInfo) ? (
             <Button
+              disabled={isLoading ? true : false}
               icon='map-minus'
               mode='contained'
               color={colors.error}
@@ -130,6 +133,7 @@ const OrderItem = ({
             </Button>
           ) : (
             <Button
+              disabled={isLoading ? true : false}
               icon='cancel'
               mode='contained'
               color={colors.error}
@@ -141,6 +145,7 @@ const OrderItem = ({
             </Button>
           )}
           <Button
+            disabled={isLoading ? true : false}
             mode='contained'
             icon='autorenew'
             color={colors.primary}

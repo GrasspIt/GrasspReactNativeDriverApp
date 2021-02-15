@@ -201,18 +201,25 @@ const OrderDetailsDisplay = ({
                   />
                 )}
 
-                {order.orderDetails &&
-                  order.orderDetails.map((detail) => (
+                {order.calculatedOrderDetails &&
+                  order.calculatedOrderDetails.map((detail) => (
                     <OrderDetailListItem
-                      key={`${detail.product.id}-${detail.unit || '0'}`}
+                      key={`${detail.product.id}-${detail.unit || '0'}-${
+                        (detail.appliedCoupon && detail.appliedCoupon.code) || 'none'
+                      }`}
                       orderDetail={detail}
                     />
                   ))}
                 <Divider />
 
-                {order.coupon && (
+                {order.coupons && order.coupons.length > 0 && (
                   <>
-                    <List.Item title='Code' description={`${order.coupon.code}`} />
+                    <List.Item
+                      title={order.coupons.length === 1 ? 'Code' : 'Codes'}
+                      description={order.coupons
+                        .map((couponFromList) => couponFromList.code)
+                        .join('\n')}
+                    />
                     <List.Item title='Discount' description={`$${order.discountTotal}`} />
                   </>
                 )}
@@ -244,6 +251,7 @@ const OrderDetailsDisplay = ({
             </Card>
             {order.orderStatus && (
               <OrderButtons
+                isLoading={isLoading}
                 orderId={orderId}
                 orderStatus={order.orderStatus}
                 orderIdsInRoute={orderIdsInRoute}

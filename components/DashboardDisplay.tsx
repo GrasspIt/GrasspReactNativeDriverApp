@@ -32,13 +32,17 @@ const DashboardDisplay = ({
         <View style={{ flex: 1, backgroundColor: colors.background }}>
           <Text style={styles.dsprTitle}>{dspr.name}</Text>
           {dsprDriver && (
-            <OnCallSwitch setDriverOnCallState={setDriverOnCallState} dsprDriver={dsprDriver} />
+            <OnCallSwitch
+              isLoading={isLoading}
+              setDriverOnCallState={setDriverOnCallState}
+              dsprDriver={dsprDriver}
+            />
           )}
         </View>
       ) : (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
           <Text>Unable to fetch driver data.</Text>
-          <Button mode='text' onPress={getDriverData}>
+          <Button disabled={isLoading ? true : false} mode='text' onPress={getDriverData}>
             Try Again
           </Button>
         </View>

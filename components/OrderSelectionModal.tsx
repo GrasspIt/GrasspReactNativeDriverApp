@@ -4,6 +4,7 @@ import { Dialog, useTheme, Divider, IconButton, FAB } from 'react-native-paper';
 import OrderItemBasic from './OrderItemBasic';
 
 const OrderSelectionModal = ({
+  isLoading,
   orderSelectionModalOpen,
   setOrderSelectionModalOpen,
   maxOrdersPerRoute,
@@ -14,7 +15,6 @@ const OrderSelectionModal = ({
 
   const [selectedOrdersForRoute, setSelectedOrdersForRoute] = useState<any>();
   const [finalOrderForRoute, setFinalOrderForRoute] = useState<any>();
-  const [disableButton, setDisableButton] = useState<boolean>(false);
 
   const handleSelectOrder = (selectedOrder) => {
     //if item is included in selectedOrdersList, remove it
@@ -150,7 +150,7 @@ const OrderSelectionModal = ({
         icon='check'
         onPress={() => confirmCreateRoute()}
         style={styles.fab}
-        disabled={disableButton}
+        disabled={isLoading ? true : false}
       />
     </Modal>
   );

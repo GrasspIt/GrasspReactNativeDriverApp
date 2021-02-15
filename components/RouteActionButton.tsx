@@ -3,6 +3,7 @@ import { Alert, StyleSheet } from 'react-native';
 import { useTheme, FAB } from 'react-native-paper';
 
 const RouteActionButton = ({
+  isLoading,
   driver,
   currentInProcessOrderInActiveRoute,
   ordersForRoute,
@@ -74,6 +75,7 @@ const RouteActionButton = ({
 
   return (
     <FAB
+      disabled={isLoading ? true : false}
       style={styles.fab}
       color={colors.surface}
       label={!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}

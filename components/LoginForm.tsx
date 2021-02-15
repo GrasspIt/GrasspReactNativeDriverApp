@@ -86,6 +86,7 @@ const LoginForm = ({
                 </Card.Content>
                 <Card.Actions>
                   <Button
+                    disabled={isLoading ? true : false}
                     mode='contained'
                     loading={isLoading}
                     onPress={handleSubmit}

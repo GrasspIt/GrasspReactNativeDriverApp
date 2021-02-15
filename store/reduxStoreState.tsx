@@ -356,11 +356,13 @@ export interface Order {
   cashTotal: number;
   userFirstTimeOrderWithDSPR: false;
   orderDetails: OrderDetail[];
+  calculatedOrderDetails: CalculatedOrderDetail[];
   orderTaxDetails: OrderTaxDetail[];
   createdTime: string;
   updatedTime: string;
   specialInstructions?: string;
   coupon?: Partial<Coupon>;
+  coupons?: Partial<Coupon>[];
   medicalRecommendation?: MedicalRecommendation;
 }
 
@@ -372,6 +374,17 @@ export interface OrderDetail {
   unit: string;
   pricePreDiscount: number;
   discount: number;
+}
+
+export interface CalculatedOrderDetail {
+  id: number;
+  product: SearchProduct;
+  priceHistory: DsprProductPriceHistory;
+  quantity: number;
+  unit: string;
+  pricePreDiscount: number;
+  discount: number;
+  appliedCoupon: Coupon;
 }
 
 export interface Address {

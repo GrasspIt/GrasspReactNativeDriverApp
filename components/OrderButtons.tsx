@@ -3,6 +3,7 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 
 type Props = {
+  isLoading;
   orderId;
   orderStatus;
   orderIdsInRoute;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 const OrderButtons = ({
+  isLoading,
   orderId,
   orderStatus,
   orderIdsInRoute,
@@ -91,6 +93,7 @@ const OrderButtons = ({
   return (
     <View>
       <Button
+        disabled={isLoading ? true : false}
         icon='cancel'
         mode='contained'
         color={colors.error}
@@ -103,6 +106,7 @@ const OrderButtons = ({
 
       {orderIdsInRoute && orderIdsInRoute.includes(orderId) && (
         <Button
+          disabled={isLoading ? true : false}
           icon='map-minus'
           mode='contained'
           color={colors.error}
@@ -116,6 +120,7 @@ const OrderButtons = ({
 
       {orderStatus == 'in_process' ? (
         <Button
+          disabled={isLoading ? true : false}
           icon='check'
           mode='contained'
           color={colors.primary}
@@ -127,6 +132,7 @@ const OrderButtons = ({
         </Button>
       ) : (
         <Button
+          disabled={isLoading ? true : false}
           mode='contained'
           icon='autorenew'
           color={colors.primary}
