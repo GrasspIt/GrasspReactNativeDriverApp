@@ -15,6 +15,3 @@ web-build/
 .DS_Store
 
 # api keys and certs
-app.config.ts
-GrasspDriverApp_upload_cert.pem
-google-services.json
