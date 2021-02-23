@@ -173,7 +173,8 @@ const RoutingScreen = ({
       driver.currentRoute &&
       driver.currentRoute.active &&
       driver.currentRoute.legs &&
-      driver.currentRoute.legs.length
+      driver.currentRoute.legs.length &&
+      driver.currentRoute.legs.includes(currentlyActiveRouteLegIndex)
     ) {
       createOrderPolyline();
     } else {
