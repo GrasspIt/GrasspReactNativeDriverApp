@@ -34,7 +34,7 @@ const ManageNotesDisplay = ({
                   <Card.Content>
                     <List.Item
                       key={userNote.id}
-                      title={`${userNote.note}`}
+                      title={<Text>{userNote.note}</Text>}
                       description={`${Moment(userNote.createdTimestamp).format(
                         'MMMM Do YYYY, h:mm a'
                       )}`}

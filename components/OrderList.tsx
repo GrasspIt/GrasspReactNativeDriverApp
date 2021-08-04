@@ -62,6 +62,7 @@ const OrderList = ({
             data={dsprDriver.queuedOrders}
             renderItem={(item) => (
               <OrderItem
+                isLoading={false}
                 orderInfo={item.item}
                 index={dsprDriver.queuedOrders.indexOf(item.item)}
                 navigation={navigation}

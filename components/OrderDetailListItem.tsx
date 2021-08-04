@@ -31,13 +31,13 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
           <View>
             <Divider />
             <List.Item
-              title={`${orderDetail.quantity} ${unit} ${product.name}`}
-              description={
+              title={<View><Text>{orderDetail.quantity} {unit} {product.name}</Text></View>}
+              description={ () => (
                 orderDetail.appliedCoupon
-                  ? `${product.flowerType
-                      .replace('_', ' ')
-                      .toUpperCase()} - ${orderDetail.appliedCoupon.code.toUpperCase()}`
-                  : `${product.flowerType.replace('_', ' ').toUpperCase()}`
+                  ? <Text>{product.flowerType
+                    .replace('_', ' ')
+                    .toUpperCase()} - {orderDetail?.appliedCoupon?.code?.toUpperCase() || undefined}</Text>
+                  : <Text>{product.flowerType.replace('_', ' ').toUpperCase()}</Text>)
               }
               descriptionStyle={{ color: productColor, fontWeight: 'bold' }}
               titleNumberOfLines={2}
@@ -51,9 +51,10 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
                   >
                     ${orderDetail.pricePreDiscount}
                   </Text>
-                  {orderDetail.discount !== 0 && (
-                    <Text>${orderDetail.pricePreDiscount - orderDetail.discount}</Text>
-                  )}
+                  <Text>
+                  {orderDetail && orderDetail.pricePreDiscount && orderDetail.discount && orderDetail.discount !== 0 ? (
+                    "$" + (orderDetail.pricePreDiscount - (orderDetail?.discount || 0))) : null}
+                  </Text>
                 </View>
               )}
             />

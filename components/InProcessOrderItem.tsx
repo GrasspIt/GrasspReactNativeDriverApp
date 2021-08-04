@@ -36,7 +36,7 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
             />
             {orderInfo.address.aptNumber ? (
               <List.Item
-                title={`${orderInfo.address.street}, ${orderInfo.address.zipCode}, Unit ${orderInfo.address.aptNumber}`}
+                title={<Text>{orderInfo.address.street}, {orderInfo.address.zipCode}, Unit {orderInfo.address.aptNumber}</Text>}
                 titleNumberOfLines={2}
                 style={{ padding: 0 }}
                 left={() => (
@@ -50,7 +50,7 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
               />
             ) : (
               <List.Item
-                title={`${orderInfo.address.street}, ${orderInfo.address.zipCode}`}
+                title={<Text>{orderInfo.address.street}, {orderInfo.address.zipCode}</Text>}
                 titleNumberOfLines={2}
                 style={{ padding: 0 }}
                 left={() => (
@@ -64,7 +64,7 @@ const InProcessOrderItem = ({ orderInfo, navigation }) => {
               />
             )}
             <List.Item
-              title={`${formatPhone(orderInfo.user.phoneNumber)}`}
+              title={<Text>{formatPhone(orderInfo.user.phoneNumber)}</Text>}
               titleNumberOfLines={2}
               style={{ padding: 0 }}
               left={() => (

@@ -7,8 +7,9 @@ import { IconButton } from 'react-native-paper';
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
 import ManageNotesScreen from '../screens/ManageNotesScreen';
 import OrderListScreen from '../screens/OrderListScreen';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 
-type OrderListNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Orders'>;
+type OrderListNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'Orders'>;
 type Props = {
   navigation: OrderListNavigationProp;
   route;

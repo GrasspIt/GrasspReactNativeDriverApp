@@ -1,11 +1,11 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import DashboardScreen from '../screens/DashboardScreen';
 import { IconButton } from 'react-native-paper';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 
-type DashboardNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Dashboard'>;
+type DashboardNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'Dashboard'>;
 type Props = {
   navigation: DashboardNavigationProp;
   route;

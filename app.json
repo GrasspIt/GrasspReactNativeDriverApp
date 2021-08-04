@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "Grassp Driver App",
+    "owner": "grassphealth",
     "slug": "GrasspDriverApp",
     "version": "1.0.0",
     "platforms": ["ios", "android"],

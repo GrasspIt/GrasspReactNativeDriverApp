@@ -86,7 +86,7 @@ const OrderDetailsDisplay = ({
                     .map((userNote) => (
                       <List.Item
                         key={userNote.id}
-                        title={`${userNote.note}`}
+                        title={<Text>{userNote.note}</Text>}
                         description={`${Moment(userNote.createdTimestamp).format(
                           'MMMM Do YYYY, h:mm a'
                         )}`}
@@ -95,7 +95,7 @@ const OrderDetailsDisplay = ({
                       />
                     ))
                 ) : (
-                  <List.Item title='No active notes.' />
+                  <List.Item title={<Text>No active notes.</Text>}/>
                 )}
               </Card.Content>
               <Card.Actions style={{ alignSelf: 'flex-end' }}>
@@ -123,16 +123,16 @@ const OrderDetailsDisplay = ({
               {order.userFirstTimeOrderWithDSPR && <Card.Title title='FIRST TIME ORDER' />}
               <Card.Content>
                 {medicalRecommendation ? (
-                  <List.Item title='Medical User' titleStyle={{ fontWeight: 'bold' }} />
+                  <List.Item title={<Text>Medical User</Text>} titleStyle={{ fontWeight: 'bold' }} />
                 ) : (
-                  <List.Item title='Adult User' titleStyle={{ fontWeight: 'bold' }} />
+                  <List.Item title={<Text>Adult User</Text>} titleStyle={{ fontWeight: 'bold' }} />
                 )}
 
-                {orderDate && <List.Item title={`${orderDate}`} />}
+                {orderDate && <List.Item title={<Text>{orderDate}</Text>} />}
 
                 {user && (
                   <List.Item
-                    title={`${user.firstName} ${user.lastName}, ${formatPhone(user.phoneNumber)}`}
+                    title={<Text>{user.firstName} {user.lastName}, {formatPhone(user.phoneNumber)}</Text>}
                     titleNumberOfLines={2}
                     right={() => (
                       <IconButton
@@ -146,21 +146,21 @@ const OrderDetailsDisplay = ({
                 )}
 
                 {idDocument && (
-                  <>
+                  <View>
                     <List.Item
-                      title='Identification Document:'
+                      title={<Text>Identification Document:</Text>}
                       description={`${idDocument.idNumber}`}
                     />
                     <List.Item
-                      title='Birth Date:'
+                      title={<Text>Birth Date:</Text>}
                       description={`${birthDate ? birthDate : 'Not provided'}`}
                     />
-                  </>
+                  </View>
                 )}
 
                 {medicalRecommendation && (
                   <List.Item
-                    title='Medical ID'
+                    title={<Text>Medical ID</Text>}
                     description={`${medicalRecommendation.idNumber}`}
                     right={() => (
                       <IconButton
@@ -175,7 +175,7 @@ const OrderDetailsDisplay = ({
 
                 {address && address.aptNumber ? (
                   <List.Item
-                    title={`${address.street}, ${address.zipCode}, Unit ${address.aptNumber}`}
+                    title={<Text>{address.street}, {address.zipCode}, Unit {address.aptNumber}</Text>}
                     titleNumberOfLines={2}
                     right={() => (
                       <IconButton
@@ -188,7 +188,7 @@ const OrderDetailsDisplay = ({
                   />
                 ) : (
                   <List.Item
-                    title={`${address.street}, ${address.zipCode}`}
+                    title={<Text>{address.street}, {address.zipCode}</Text>}
                     titleNumberOfLines={2}
                     right={() => (
                       <IconButton
@@ -213,20 +213,20 @@ const OrderDetailsDisplay = ({
                 <Divider />
 
                 {order.coupons && order.coupons.length > 0 && (
-                  <>
+                  <View>
                     <List.Item
-                      title={order.coupons.length === 1 ? 'Code' : 'Codes'}
+                      title={order.coupons.length === 1 ? <Text>Code</Text> : <Text>Codes</Text>}
                       description={order.coupons
                         .map((couponFromList) => couponFromList.code)
                         .join('\n')}
                     />
-                    <List.Item title='Discount' description={`$${order.discountTotal}`} />
-                  </>
+                    <List.Item title={<Text>Discount</Text>} description={`$${order.discountTotal}`} />
+                  </View>
                 )}
 
                 {order.cashTotalPreTaxesAndFees && (
                   <List.Item
-                    title='Subtotal'
+                    title={<Text>Subtotal</Text>}
                     description={`$${order.cashTotalPreTaxesAndFees.toFixed(2)}`}
                   />
                 )}
@@ -238,15 +238,15 @@ const OrderDetailsDisplay = ({
                     .map((detail) => (
                       <List.Item
                         key={detail.name + detail.amount.toString()}
-                        title={`${detail.name} : ${detail.rate}%`}
+                        title={<Text>{detail.name} : {detail.rate}%</Text>}
                         description={`$${detail.amount.toFixed(2)}`}
                       />
                     ))
                 ) : (
-                  <List.Item key='Tax0' title='Tax' description='$0.00' />
+                  <List.Item key='Tax0' title={<Text>Tax</Text>} description='$0.00' />
                 )}
-                <List.Item title='Delivery Fee' description={`$${order.deliveryFee.toFixed(2)}`} />
-                <List.Item title={`Total: $${order.cashTotal.toFixed(2)}`} />
+                <List.Item title={<Text>Delivery Fee</Text>} description={`$${order.deliveryFee.toFixed(2)}`} />
+                <List.Item title={<Text>Total: ${order.cashTotal.toFixed(2)}</Text>} />
               </Card.Content>
             </Card>
             {order.orderStatus && (

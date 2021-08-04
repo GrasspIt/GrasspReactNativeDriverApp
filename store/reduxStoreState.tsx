@@ -366,6 +366,17 @@ export interface Order {
   medicalRecommendation?: MedicalRecommendation;
 }
 
+export interface CalculatedOrderDetail {
+  id: number;
+  product: SearchProduct;
+  priceHistory: DsprProductPriceHistory;
+  quantity: number;
+  unit: string;
+  pricePreDiscount: number;
+  discount: number;
+  appliedCoupon: Partial<Coupon>;
+}
+
 export interface OrderDetail {
   id: number;
   product: SearchProduct;
@@ -384,7 +395,7 @@ export interface CalculatedOrderDetail {
   unit: string;
   pricePreDiscount: number;
   discount: number;
-  appliedCoupon: Coupon;
+  appliedCoupon: Partial<Coupon>;
 }
 
 export interface Address {

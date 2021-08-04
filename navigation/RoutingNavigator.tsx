@@ -1,14 +1,14 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
 import { IconButton } from 'react-native-paper';
 
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
 import ManageNotesScreen from '../screens/ManageNotesScreen';
 import RoutingScreen from '../screens/RoutingScreen';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 
-type RoutingNavigationProp = StackNavigationProp<DrawerStackParamsList, 'Routing'>;
+type RoutingNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'Routing'>;
 type Props = {
   navigation: RoutingNavigationProp;
   route;
