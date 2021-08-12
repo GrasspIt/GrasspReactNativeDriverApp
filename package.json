@@ -36,7 +36,7 @@
     "Base64": "^1.1.0",
     "deepmerge": "^4.2.2",
     "expo": "^39.0.0",
-    "expo-cli": "^4.0.12",
+    "expo-cli": "^4.10.0",
     "expo-clipboard": "^1.0.1",
     "expo-constants": "~9.2.0",
     "expo-linking": "^1.0.3",
