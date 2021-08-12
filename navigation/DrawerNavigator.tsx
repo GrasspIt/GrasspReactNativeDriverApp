@@ -52,12 +52,13 @@ const DrawerNavigator = ({ navigation, route, dsprDrivers, logout }: Props) => {
 
   return (
     <Drawer.Navigator
-      drawerContentOptions={{
-        labelStyle: { fontSize: 16 },
-        activeTintColor: colors.surface,
-        activeBackgroundColor: colors.primary,
-      }}
-      drawerContent={(props) => {
+        screenOptions={{
+            drawerActiveTintColor: colors.surface,
+            drawerActiveBackgroundColor: colors.primary,
+            drawerLabelStyle: {fontSize: 16},
+            headerShown: false
+         }}
+        drawerContent={(props) => {
         return (
           <DrawerContentScrollView {...props}>
             <DrawerItemList {...props} />
