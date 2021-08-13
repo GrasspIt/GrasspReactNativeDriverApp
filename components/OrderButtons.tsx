@@ -13,6 +13,7 @@ type Props = {
   markOrderInProcess;
   removeOrderAndRefreshRoute;
   deactivateDriverRoute;
+  navigation;
 };
 
 const OrderButtons = ({
@@ -26,6 +27,7 @@ const OrderButtons = ({
   markOrderInProcess,
   removeOrderAndRefreshRoute,
   deactivateDriverRoute,
+  navigation
 }: Props) => {
   const { colors } = useTheme();
 
@@ -117,6 +119,20 @@ const OrderButtons = ({
           Remove from Route
         </Button>
       )}
+
+      {/*TODO: For Drivers required to scan Metrc, Complete Order button should not show up - instead - Scan Products, or someting like that*/}
+      {/*Alternatively, complete order should direct the driver to the Scanner screen*/}
+      <Button
+          disabled={isLoading ? true : false}
+          icon={'barcode-scan'}
+          mode={'contained'}
+          color={colors.primary}
+          style={styles.buttons}
+          labelStyle={{ paddingVertical: 4, color: colors.surface }}
+          onPress={() => navigation.navigate('OrderToScan', { orderId })}
+      >
+        Scan Order
+      </Button>
 
       {orderStatus == 'in_process' ? (
         <Button
