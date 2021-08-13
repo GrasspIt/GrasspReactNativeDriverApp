@@ -261,6 +261,7 @@ const OrderDetailsDisplay = ({
                 markOrderInProcess={markOrderInProcess}
                 removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
                 deactivateDriverRoute={deactivateDriverRoute}
+                navigation={navigation}
               />
             )}
           </ScrollView>
