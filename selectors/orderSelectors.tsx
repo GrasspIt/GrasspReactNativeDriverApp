@@ -87,12 +87,12 @@ export const getProductsInOrderFromProps = (state: State, orderId: number): Prod
     const orders = state.api?.entities?.orders[orderId];
 
     return orders.orderDetails?.map(orderDetail => {
-        const { id: productId, name, quantity } = orderDetail.product;
+        const { id: productId, name } = orderDetail.product;
         return {
             orderDetailId: orderDetail.id,
             productId,
             name,
-            quantity
+            quantity: orderDetail.quantity,
         }
     })
 }
