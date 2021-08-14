@@ -34,7 +34,7 @@ const CombinedDefaultTheme = {
     surface: PaperDefaultTheme.colors.surface,
     error: PaperDefaultTheme.colors.error,
     text: PaperDefaultTheme.colors.text,
-    onBackground: PaperDefaultTheme.colors.onBackground,
+    onBackground: PaperDefaultTheme.colors.background,
     onSurface: PaperDefaultTheme.colors.onSurface,
     notification: PaperDefaultTheme.colors.notification,
     disabled: PaperDefaultTheme.colors.disabled,
