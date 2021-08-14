@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { ProductsInOrder } from "../selectors/orderSelectors";
-import { Card, useTheme } from "react-native-paper";
+import { Card, Divider, useTheme, List } from "react-native-paper";
 
 type OrderToScanProps = {
     orderId: number;
@@ -14,23 +14,43 @@ const OrderToScan = ({
                      }: OrderToScanProps) => {
     const {colors} = useTheme();
 
-    const renderItem = ({item}) => (
-        <View key={item.orderDetailId}>
-            <Text>{item.name}</Text>
-            <Text>{item.quantity}</Text>
-        </View>
-    )
+    //const renderItemPrev = ({item}) => (
+    //    <View key={item.orderDetailId}>
+    //        <Text>{item.name}</Text>
+    //        <Text>{item.quantity}</Text>
+    //    </View>
+    //)
+    //
+    //const listHeader = (
+    //    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+    //        <Text>Name</Text>
+    //        <Text>Quantity</Text>
+    //    </View>
+    //)
 
-    const listHeader = (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text>Name</Text>
-            <Text>Quantity</Text>
-        </View>
+    const renderItem = ({item}) => (
+        <React.Fragment>
+            <Divider/>
+            <List.Item
+                title={item.name}
+                titleNumberOfLines={2}
+                titleStyle={{fontSize: 14}}
+                description={ () => (
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10}}>
+                        <Text style={{color: colors.backdrop}}>Quantity: {item.quantity}</Text>
+                        <Text style={{color: colors.backdrop}}>Scanned: 0</Text>
+                    </View>
+                )}
+            >
+
+            </List.Item>
+            <Divider />
+        </React.Fragment>
     )
 
     return (
         <SafeAreaView style={{flex: 1}}>
-            <View style={{flex: 1,backgroundColor: colors.background}}>
+            <View style={{flex: 1, backgroundColor: colors.background}}>
                 <Card style={[styles.cardContainer]}>
                     <Card.Title title='Order Id'/>
                     <Card.Content>
@@ -45,9 +65,6 @@ const OrderToScan = ({
                         <FlatList
                             data={products}
                             renderItem={renderItem}
-                            horizontal={false}
-                            numColumns={2}
-                            ListHeaderComponent={listHeader}
                         />
                     </Card.Content>
                 </Card>
