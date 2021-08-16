@@ -82,7 +82,7 @@ export const getOrdersWithAddressesAndUsers = createSelector(
   }
 );
 
-export const getProductsInOrderFromProps = (state: State, props: { orderId: number }): ProductsInOrder[] => {
+export const getProductsInOrderFromProps = (state: State, props: { orderId: number }): ProductInOrder[] => {
     //const orders = state.api && state.api.entities && state.api.entities.orders ? state.api.entities.orders[orderId] : undefined;
     const orders = state.api?.entities?.orders[props.orderId];
 
@@ -97,7 +97,7 @@ export const getProductsInOrderFromProps = (state: State, props: { orderId: numb
     })
 }
 
-export interface ProductsInOrder {
+export interface ProductInOrder {
     orderDetailId: number,
     productId: number;
     name: string;

@@ -2,7 +2,7 @@ import React from 'react';
 
 import OrderToScan from '../components/OrderToScan';
 import { shallowEqual, useSelector } from "react-redux";
-import { getProductsInOrderFromProps, ProductsInOrder } from "../selectors/orderSelectors";
+import { getProductsInOrderFromProps, ProductInOrder } from "../selectors/orderSelectors";
 import { State } from "../store/reduxStoreState";
 
 const OrderToScanScreen = ({
@@ -11,7 +11,7 @@ const OrderToScanScreen = ({
 }) => {
     const { orderId } = route.params;
 
-    const productsInOrder = useSelector<State, ProductsInOrder[]>(
+    const productsInOrder = useSelector<State, ProductInOrder[]>(
         state => orderId && getProductsInOrderFromProps(state, {orderId}),
         shallowEqual)
 
