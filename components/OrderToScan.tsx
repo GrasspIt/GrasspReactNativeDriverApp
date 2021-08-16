@@ -45,10 +45,10 @@ const OrderToScan = ({
     //)
 
     const renderItem = ({item}) => (
-        <React.Fragment>
+        <React.Fragment key={item.productId}>
             <Divider/>
             <Pressable
-                onPress={() => navigation.navigate('MetrcTagScannerScreen')}
+                onPress={() => navigation.navigate('MetrcTagScannerScreen', {productName: item.name, productId: item.productId})}
             >
                 <List.Item
                     title={item.name}
