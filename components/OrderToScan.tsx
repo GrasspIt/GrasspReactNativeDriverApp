@@ -1,11 +1,18 @@
 import React from 'react';
 import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import { ProductsInOrder } from "../selectors/orderSelectors";
+import { ProductInOrder } from "../selectors/orderSelectors";
 import { Card, Divider, useTheme, List } from "react-native-paper";
 
+/**
+ * check, check-bold
+ *
+ * barcode-scan
+ *
+ * alert-circle, alert-circle-outline
+ * */
 type OrderToScanProps = {
     orderId: number;
-    products: ProductsInOrder[]
+    products: ProductInOrder[]
 }
 
 const OrderToScan = ({
@@ -35,16 +42,25 @@ const OrderToScan = ({
                 title={item.name}
                 titleNumberOfLines={2}
                 titleStyle={{fontSize: 14}}
-                description={ () => (
+                style={{paddingLeft: 0}}
+                left={props => (
+                    <List.Icon {...props}
+                               icon={item.orderDetailId % 3 === 0 ? "alert-circle" : item.orderDetailId % 2 === 0 ? 'check' : 'barcode-scan'}
+                               color={item.orderDetailId % 3 === 0 ? colors.error : item.orderDetailId % 2 === 0 ? colors.primary : colors.backdrop}
+                               style={{alignSelf: 'center', marginRight: 10}}
+                    />
+                )}
+                description={() => (
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10}}>
                         <Text style={{color: colors.backdrop}}>Quantity: {item.quantity}</Text>
-                        <Text style={{color: colors.backdrop}}>Scanned: 0</Text>
+                        {/*TODO - remove hard coded icons and scanned totals once backend endpoints are avaiable*/}
+                        <Text style={{color: colors.backdrop}}>Scanned: {item.orderDetailId % 3 === 0 ? 100 : item.orderDetailId % 2 === 0 ? item.quantity : 0}</Text>
                     </View>
                 )}
             >
 
             </List.Item>
-            <Divider />
+            <Divider/>
         </React.Fragment>
     )
 
