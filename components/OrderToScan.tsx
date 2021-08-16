@@ -1,5 +1,12 @@
 import React from 'react';
-import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+    FlatList,
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    View,
+    Pressable
+} from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
 import { Card, Divider, useTheme, List } from "react-native-paper";
 
@@ -12,12 +19,14 @@ import { Card, Divider, useTheme, List } from "react-native-paper";
  * */
 type OrderToScanProps = {
     orderId: number;
-    products: ProductInOrder[]
+    products: ProductInOrder[];
+    navigation;
 }
 
 const OrderToScan = ({
                          orderId,
-                         products
+                         products,
+                         navigation
                      }: OrderToScanProps) => {
     const {colors} = useTheme();
 
@@ -38,28 +47,32 @@ const OrderToScan = ({
     const renderItem = ({item}) => (
         <React.Fragment>
             <Divider/>
-            <List.Item
-                title={item.name}
-                titleNumberOfLines={2}
-                titleStyle={{fontSize: 14}}
-                style={{paddingLeft: 0}}
-                left={props => (
-                    <List.Icon {...props}
-                               icon={item.orderDetailId % 3 === 0 ? "alert-circle" : item.orderDetailId % 2 === 0 ? 'check' : 'barcode-scan'}
-                               color={item.orderDetailId % 3 === 0 ? colors.error : item.orderDetailId % 2 === 0 ? colors.primary : colors.backdrop}
-                               style={{alignSelf: 'center', marginRight: 10}}
-                    />
-                )}
-                description={() => (
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10}}>
-                        <Text style={{color: colors.backdrop}}>Quantity: {item.quantity}</Text>
-                        {/*TODO - remove hard coded icons and scanned totals once backend endpoints are avaiable*/}
-                        <Text style={{color: colors.backdrop}}>Scanned: {item.orderDetailId % 3 === 0 ? 100 : item.orderDetailId % 2 === 0 ? item.quantity : 0}</Text>
-                    </View>
-                )}
+            <Pressable
+                onPress={() => navigation.navigate('MetrcTagScannerScreen')}
             >
+                <List.Item
+                    title={item.name}
+                    titleNumberOfLines={2}
+                    titleStyle={{fontSize: 14}}
+                    style={{paddingLeft: 0}}
+                    left={props => (
+                        <List.Icon {...props}
+                                   icon={item.orderDetailId % 3 === 0 ? "alert-circle" : item.orderDetailId % 2 === 0 ? 'check' : 'barcode-scan'}
+                                   color={item.orderDetailId % 3 === 0 ? colors.error : item.orderDetailId % 2 === 0 ? colors.primary : colors.backdrop}
+                                   style={{alignSelf: 'center', marginRight: 10}}
+                        />
+                    )}
+                    description={() => (
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10}}>
+                            <Text style={{color: colors.backdrop}}>Quantity: {item.quantity}</Text>
+                            {/*TODO - remove hard coded icons and scanned totals once backend endpoints are avaiable*/}
+                            <Text style={{color: colors.backdrop}}>Scanned: {item.orderDetailId % 3 === 0 ? 100 : item.orderDetailId % 2 === 0 ? item.quantity : 0}</Text>
+                        </View>
+                    )}
+                >
 
-            </List.Item>
+                </List.Item>
+            </Pressable>
             <Divider/>
         </React.Fragment>
     )
