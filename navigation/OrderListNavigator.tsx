@@ -8,6 +8,7 @@ import OrderDetailsScreen from '../screens/OrderDetailsScreen';
 import ManageNotesScreen from '../screens/ManageNotesScreen';
 import OrderListScreen from '../screens/OrderListScreen';
 import OrderToScanScreen from "../screens/OrderToScanScreen";
+import MetrcTagScannerScreen from "../screens/MetrcTagScannerScreen";
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 
 type OrderListNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'Orders'>;
@@ -21,6 +22,7 @@ export type OrderListStackParamsList = {
     Details: { orderId: number };
     Notes: any;
     OrderToScan: { orderId: number };
+    MetrcTagScannerScreen: {  productName: string, productId: number };
 };
 
 const OrderListStack = createStackNavigator<OrderListStackParamsList>();
@@ -62,6 +64,11 @@ const OrderListNavigator = ({route, navigation}: Props) => {
                 component={OrderToScanScreen}
                 options={{title: 'Scan Order'}}
                 initialParams={{ orderId: 42 }}
+            />
+            <OrderListStack.Screen
+                name={'MetrcTagScannerScreen'}
+                component={MetrcTagScannerScreen}
+                options={({ route }) => ({title: route.params.productName})}
             />
         </OrderListStack.Navigator>
     );

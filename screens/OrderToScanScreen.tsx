@@ -18,6 +18,7 @@ const OrderToScanScreen = ({
     return <OrderToScan
         products={productsInOrder}
         orderId={orderId}
+        navigation={navigation}
     />
 }
 
