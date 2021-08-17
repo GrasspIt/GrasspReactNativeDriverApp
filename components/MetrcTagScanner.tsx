@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     },
     layerTop: {
         flex: 2,
-        backgroundColor: opacity
+        backgroundColor: opacity,
     },
     layerCenter: {
         flex: 1,
@@ -104,10 +104,12 @@ const styles = StyleSheet.create({
     },
     layerLeft: {
         flex: 1,
-        backgroundColor: opacity
+        backgroundColor: opacity,
     },
     focused: {
-        flex: 10
+        flex: 10,
+        borderColor: 'white',
+        borderWidth: 4,
     },
     layerRight: {
         flex: 1,
