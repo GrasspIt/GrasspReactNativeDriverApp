@@ -93,6 +93,7 @@ const OrderToScan = ({
                             renderItem={renderItem}
                             keyExtractor={(item) => item.name}
                         />
+                        <Divider/>
                     </Card.Content>
                 </Card>
             </View>
