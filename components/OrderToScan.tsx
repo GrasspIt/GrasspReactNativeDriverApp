@@ -5,7 +5,7 @@ import {
     StyleSheet,
     Text,
     View,
-    Pressable
+    Pressable, TouchableHighlight, TouchableOpacity
 } from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
 import { Card, Divider, useTheme, List } from "react-native-paper";
@@ -30,26 +30,22 @@ const OrderToScan = ({
                      }: OrderToScanProps) => {
     const {colors} = useTheme();
 
-    //const renderItemPrev = ({item}) => (
-    //    <View key={item.orderDetailId}>
-    //        <Text>{item.name}</Text>
-    //        <Text>{item.quantity}</Text>
-    //    </View>
-    //)
-    //
-    //const listHeader = (
-    //    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-    //        <Text>Name</Text>
-    //        <Text>Quantity</Text>
-    //    </View>
-    //)
-
     const renderItem = ({item}) => (
         <React.Fragment key={item.productId}>
             <Divider/>
             <Pressable
                 onPress={() => navigation.navigate('MetrcTagScannerScreen', {productName: item.name, productId: item.productId})}
+                style={({ pressed }) => [
+                    {
+                        opacity: pressed
+                            ? .2
+                            : 1,
+                    },
+                ]}
             >
+            {/*<TouchableOpacity*/}
+            {/*        onPress={() => navigation.navigate('MetrcTagScannerScreen', {productName: item.name, productId: item.productId})}*/}
+            {/*>*/}
                 <List.Item
                     title={item.name}
                     titleNumberOfLines={2}
@@ -72,6 +68,7 @@ const OrderToScan = ({
                 >
 
                 </List.Item>
+            {/*</TouchableOpacity>*/}
             </Pressable>
             <Divider/>
         </React.Fragment>
@@ -94,6 +91,7 @@ const OrderToScan = ({
                         <FlatList
                             data={products}
                             renderItem={renderItem}
+                            keyExtractor={(item) => item.name}
                         />
                     </Card.Content>
                 </Card>
