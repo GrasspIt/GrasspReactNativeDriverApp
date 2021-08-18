@@ -10,6 +10,7 @@ import OrderListScreen from '../screens/OrderListScreen';
 import OrderToScanScreen from "../screens/OrderToScanScreen";
 import MetrcTagScannerScreen from "../screens/MetrcTagScannerScreen";
 import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { fetchUpdateAsync } from "expo-updates";
 
 type OrderListNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'Orders'>;
 type Props = {
@@ -68,7 +69,8 @@ const OrderListNavigator = ({route, navigation}: Props) => {
             <OrderListStack.Screen
                 name={'MetrcTagScannerScreen'}
                 component={MetrcTagScannerScreen}
-                options={({ route }) => ({title: route.params.productName})}
+                //options={({ route }) => ({title: route.params.productName})}
+                options={{headerShown: false}}
             />
         </OrderListStack.Navigator>
     );
