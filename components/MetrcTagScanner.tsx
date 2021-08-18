@@ -8,9 +8,10 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 type MetrcTagScannerProps = {
     navigation;
     productName: string;
+    scanSubmit: (data) => any;
 }
 
-const MetrcTagScanner = ({ navigation, productName }: MetrcTagScannerProps) => {
+const MetrcTagScanner = ({ navigation, productName, scanSubmit }: MetrcTagScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
     const [scanned, setScanned] = useState<boolean>(false);
@@ -32,7 +33,7 @@ const MetrcTagScanner = ({ navigation, productName }: MetrcTagScannerProps) => {
         }
     }, [])
 
-    const handleBarCodeScanned = (result) => {
+    const handleScanSubmit = (result) => {
         setScanned(true);
 
         const {type, data} = result;
@@ -40,6 +41,11 @@ const MetrcTagScanner = ({ navigation, productName }: MetrcTagScannerProps) => {
         console.log('Result from barcode scanner:', result);
         console.log('Barcode Type:', BarCodeScanner.Constants.BarCodeType[type]);
         alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+
+    //    Call scanSubmit
+    //    if response.error => show error
+    //    if response.success && no more to scan => show check animation and then close (or close and then show check animation?)
+    //    if response.success && quantity remains to scan => show check animation, (update title ?), allow user to keep scanning
     };
 
     if (hasPermission === 'requesting-permission') {
@@ -57,7 +63,7 @@ const MetrcTagScanner = ({ navigation, productName }: MetrcTagScannerProps) => {
             {/*Expo's implementation*/}
             <View style={styles.scannerContainer}>
             <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                onBarCodeScanned={scanned ? undefined : handleScanSubmit}
                 style={[StyleSheet.absoluteFill]}
             >
                 <View style={styles.layerTop} />
@@ -96,7 +102,7 @@ const MetrcTagScanner = ({ navigation, productName }: MetrcTagScannerProps) => {
 
             {/*Alternative Implementation*/}
             {/*<BarCodeScanner*/}
-            {/*    onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}*/}
+            {/*    onBarCodeScanned={scanned ? undefined : handleScanSubmit}*/}
             {/*    style={StyleSheet.absoluteFillObject}*/}
             {/*/>*/}
 

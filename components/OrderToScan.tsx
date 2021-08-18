@@ -74,6 +74,9 @@ const OrderToScan = ({
         </React.Fragment>
     )
 
+    //TODO: create complete order button
+    // button is disabled if order has not been fully scanned
+
     return (
         <SafeAreaView style={{flex: 1}}>
             <View style={{flex: 1, backgroundColor: colors.background}}>

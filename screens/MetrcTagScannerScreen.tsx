@@ -13,11 +13,17 @@ const MetrcTagScannerScreen = ({
     //TODO: decide which props you actually need, based on what you will need to pass to the backend
     const { productId, orderDetailId, productName } = route.params;
 
+    //TODO: get selector for orderDetailId
 
-    //TODO: Ensure Barcode Scanner / MetrcTagScanner is unmounted once you navigate away from it - see React Navigation docs
+    const scanSubmit = (data) => {
+    //    dispatch action to call backend
+    //    return response
+    }
+
     return <MetrcTagScanner
         navigation={navigation}
         productName={productName}
+        scanSubmit={scanSubmit}
     />
 }
 
