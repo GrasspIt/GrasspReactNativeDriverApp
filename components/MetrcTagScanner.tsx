@@ -55,9 +55,10 @@ const MetrcTagScanner = ({ navigation, productName }: MetrcTagScannerProps) => {
                 <Text style={styles.title}>{productName}</Text>
             </View>
             {/*Expo's implementation*/}
+            <View style={styles.scannerContainer}>
             <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                style={[StyleSheet.absoluteFill, styles.scannerContainer]}
+                style={[StyleSheet.absoluteFill]}
             >
                 <View style={styles.layerTop} />
                 <View style={styles.layerCenter}>
@@ -68,6 +69,8 @@ const MetrcTagScanner = ({ navigation, productName }: MetrcTagScannerProps) => {
                 <View style={styles.layerBottom} />
 
                 {scanned && <Button onPress={() => setScanned(false)}> Tap to Scan Again </ Button>}
+            </BarCodeScanner>
+            </View>
                 <View style={styles.buttonsContainer}>
                     <View style={styles.buttonContainer}>
                     <IconButton
@@ -90,7 +93,6 @@ const MetrcTagScanner = ({ navigation, productName }: MetrcTagScannerProps) => {
                     </View>
 
                 </View>
-            </BarCodeScanner>
 
             {/*Alternative Implementation*/}
             {/*<BarCodeScanner*/}
@@ -115,7 +117,7 @@ const MetrcTagScanner = ({ navigation, productName }: MetrcTagScannerProps) => {
         </SafeAreaView>
     );
 }
-
+//TODO: Remove commented out stylings
 //Expo Implementation Styles
 const opacity = 'rgba(0, 0, 0, .6)';
 const styles = StyleSheet.create({
@@ -126,57 +128,57 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         alignItems: 'center',
-        flex: .125,
-        zIndex: 2,
+        flex: 1,
         justifyContent: 'center',
-        backgroundColor: 'violet'
+        //backgroundColor: 'violet',
+        backgroundColor: opacity
     },
     title: {
         fontSize: 16,
         color: 'white',
     },
     scannerContainer: {
-        flex: 1,
+        flex: 9,
         flexDirection: 'column',
-        borderWidth: 2,
-        borderColor: 'white',
+        //borderWidth: 2,
+        //borderColor: 'white',
     },
     layerTop: {
         flex: 2,
-        backgroundColor: 'green',
+        //backgroundColor: 'lightgreen',
     },
     layerCenter: {
         flex: 2,
         flexDirection: 'row',
-        backgroundColor: 'blue',
+        //backgroundColor: 'blue',
     },
     layerLeft: {
         flex: 1,
-        //backgroundColor: opacity,
-        backgroundColor: 'silver'
+        backgroundColor: opacity,
+        //backgroundColor: 'silver',
     },
     focused: {
         flex: 10,
         borderColor: 'white',
         borderWidth: 4,
-        backgroundColor: 'teal',
+        //backgroundColor: 'teal',
     },
     layerRight: {
         flex: 1,
-        //backgroundColor: opacity
-        backgroundColor: 'brown'
+        backgroundColor: opacity
+        //backgroundColor: 'brown'
     },
     layerBottom: {
         flex: 2,
-        //backgroundColor: opacity,
-        backgroundColor: 'green',
+        backgroundColor: opacity,
+        //backgroundColor: 'green',
 
     },
     buttonsContainer: {
-        flex: 1,
+        flex: 2,
         flexDirection: 'row',
-        //backgroundColor: opacity,
-        backgroundColor: 'tomato',
+        backgroundColor: opacity,
+        //backgroundColor: 'tomato',
     },
     buttonContainer: {
         flex: 1, justifyContent: 'center', alignItems: 'center'
