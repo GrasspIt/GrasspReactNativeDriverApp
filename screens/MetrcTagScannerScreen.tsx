@@ -23,6 +23,8 @@ const MetrcTagScannerScreen = ({
     return <MetrcTagScanner
         navigation={navigation}
         productName={productName}
+        productId={productId}
+        orderDetailId={orderDetailId}
         scanSubmit={scanSubmit}
     />
 }

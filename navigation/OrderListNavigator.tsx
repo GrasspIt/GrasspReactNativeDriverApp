@@ -11,6 +11,7 @@ import OrderToScanScreen from "../screens/OrderToScanScreen";
 import MetrcTagScannerScreen from "../screens/MetrcTagScannerScreen";
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { fetchUpdateAsync } from "expo-updates";
+import MetrcTagManualEntryScreen from "../screens/MetrcTagManualEntryScreen";
 
 type OrderListNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'Orders'>;
 type Props = {
@@ -18,12 +19,14 @@ type Props = {
     route;
 };
 
+//TODO: determine which parameters are
 export type OrderListStackParamsList = {
     Orders: any;
     Details: { orderId: number };
     Notes: any;
     OrderToScan: { orderId: number };
-    MetrcTagScannerScreen: {  productName: string, productId: number };
+    MetrcTagScanner: {  productName: string, productId: number, orderDetailId: number };
+    MetrcTagManualEntry: {  productName: string, productId: number, orderDetailId: number };
 };
 
 const OrderListStack = createStackNavigator<OrderListStackParamsList>();
@@ -67,10 +70,15 @@ const OrderListNavigator = ({route, navigation}: Props) => {
                 initialParams={{ orderId: 42 }}
             />
             <OrderListStack.Screen
-                name={'MetrcTagScannerScreen'}
+                name={'MetrcTagScanner'}
                 component={MetrcTagScannerScreen}
                 //options={({ route }) => ({title: route.params.productName})}
                 options={{headerShown: false}}
+            />
+            <OrderListStack.Screen
+                name={'MetrcTagManualEntry'}
+                component={MetrcTagManualEntryScreen}
+                options={{ presentation: 'modal', headerShown: false}}
             />
         </OrderListStack.Navigator>
     );

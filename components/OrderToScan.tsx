@@ -34,7 +34,7 @@ const OrderToScan = ({
         <React.Fragment key={item.productId}>
             <Divider/>
             <Pressable
-                onPress={() => navigation.navigate('MetrcTagScannerScreen', {productName: item.name, productId: item.productId})}
+                onPress={() => navigation.navigate('MetrcTagScanner', {productName: item.name, productId: item.productId, orderDetailId: item.orderDetailId})}
                 style={({ pressed }) => [
                     {
                         opacity: pressed
@@ -44,7 +44,7 @@ const OrderToScan = ({
                 ]}
             >
             {/*<TouchableOpacity*/}
-            {/*        onPress={() => navigation.navigate('MetrcTagScannerScreen', {productName: item.name, productId: item.productId})}*/}
+            {/*        onPress={() => navigation.navigate('MetrcTagScanner', {productName: item.name, productId: item.productId})}*/}
             {/*>*/}
                 <List.Item
                     title={item.name}
