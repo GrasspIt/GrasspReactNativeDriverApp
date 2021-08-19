@@ -11,10 +11,11 @@ type MetrcTagScannerProps = {
     productName: string;
     orderDetailId: string;
     productId: string;
+    orderId: string;
     scanSubmit: (data) => any;
 }
 
-const MetrcTagScanner = ({ navigation, productName, scanSubmit, productId, orderDetailId }: MetrcTagScannerProps) => {
+const MetrcTagScanner = ({ navigation, productName, scanSubmit, productId, orderDetailId, orderId }: MetrcTagScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
     const [scanned, setScanned] = useState<boolean>(false);
@@ -109,7 +110,7 @@ const MetrcTagScanner = ({ navigation, productName, scanSubmit, productId, order
                             size={40}
                             color={'white'}
                             style={{margin: 0}}
-                            onPress={() => navigation.navigate('MetrcTagManualEntry', { productName, productId, orderDetailId })}
+                            onPress={() => navigation.navigate('MetrcTagManualEntry', { productName, productId, orderDetailId, orderId })}
                         />
                         <Text style={styles.buttonText}>Manual Entry</Text>
                     </View>

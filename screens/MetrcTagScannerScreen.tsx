@@ -11,7 +11,7 @@ const MetrcTagScannerScreen = ({
                                }) => {
 
     //TODO: decide which props you actually need, based on what you will need to pass to the backend
-    const { productId, orderDetailId, productName } = route.params;
+    const { productId, orderDetailId, productName, orderId } = route.params;
 
     //TODO: get selector for orderDetailId
 
@@ -25,6 +25,7 @@ const MetrcTagScannerScreen = ({
         productName={productName}
         productId={productId}
         orderDetailId={orderDetailId}
+        orderId={orderId}
         scanSubmit={scanSubmit}
     />
 }

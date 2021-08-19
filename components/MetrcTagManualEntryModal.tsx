@@ -6,10 +6,13 @@ import { Button, Caption, Card, IconButton, Paragraph, TextInput, Title, useThem
 interface MetrcTagManualEntryModalProps {
     submitTagEntry: (data) => any;
     productName: string;
+    productId: string;
+    orderDetailid: string;
+    orderId: string;
     navigation;
 }
 
-const MetrcTagManualEntryModal = ({ submitTagEntry, productName, navigation }: MetrcTagManualEntryModalProps) => {
+const MetrcTagManualEntryModal = ({ submitTagEntry, productName, productId, orderDetailid, orderId, navigation }: MetrcTagManualEntryModalProps) => {
     const { colors } = useTheme();
 
     const [text, setText] = useState('');
@@ -28,7 +31,7 @@ const MetrcTagManualEntryModal = ({ submitTagEntry, productName, navigation }: M
     return (
         <SafeAreaView style={styles.componentContainer}>
             <Card style={styles.card}>
-                <Card.Title title="Metrc Tag Manual Entry" />
+                <Card.Title title="Metrc Tag Manual Entry" subtitle={productName} />
                 <Card.Content style={styles.cardContent}>
                     {/*<Title>Card title</Title>*/}
                     <Paragraph style={{ fontSize: 16}}>Please enter the Metrc Tag below:</Paragraph>
@@ -71,6 +74,7 @@ const MetrcTagManualEntryModal = ({ submitTagEntry, productName, navigation }: M
                             mode={'contained'}
                             labelStyle={{ padding: 4, color: colors.surface }}
                             style={{width: '50%',}}
+                            onPress={() => navigation.navigate('OrderToScan', { orderId })}
                         >
                             Submit
                         </Button>

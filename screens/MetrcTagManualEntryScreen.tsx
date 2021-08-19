@@ -3,7 +3,7 @@ import React from 'react';
 import MetrcTagManualEntryModal from "../components/MetrcTagManualEntryModal";
 
 const MetrcTagManualEntryScreen = ({ navigation, route }) => {
-    const { productName, productId, orderDetailId } = route.params;
+    const { productName, productId, orderDetailId, orderId } = route.params;
 
     const submitTagEntry = (data) => {
     //    call backend with tag data
@@ -16,6 +16,9 @@ const MetrcTagManualEntryScreen = ({ navigation, route }) => {
     return <MetrcTagManualEntryModal
         submitTagEntry={submitTagEntry}
         productName={productName}
+        orderId={orderId}
+        orderDetailid={orderDetailId}
+        productId={productId}
         navigation={navigation}
     />
 }
