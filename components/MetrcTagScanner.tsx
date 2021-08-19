@@ -3,7 +3,6 @@ import { SafeAreaView, Text, StyleSheet, View, Platform, StatusBar, Vibration } 
 import { ProductInOrder } from "../selectors/orderSelectors";
 import { useTheme, Button, IconButton, Caption } from "react-native-paper";
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import MetrcTagEntryModal from "./MetrcTagEntryModal";
 
 
 type MetrcTagScannerProps = {
@@ -19,7 +18,6 @@ const MetrcTagScanner = ({ navigation, productName, scanSubmit, productId, order
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
     const [scanned, setScanned] = useState<boolean>(false);
-    const [modalVisible, setModalVisible] = useState<boolean>(false);
 
     const {colors} = useTheme();
 
@@ -37,10 +35,6 @@ const MetrcTagScanner = ({ navigation, productName, scanSubmit, productId, order
             console.log('Scanner has unmounted!!!!');
         }
     }, [])
-
-    const toggleModalVisibility = () => {
-        setModalVisible(!modalVisible);
-    }
 
     //TODO ensure function can handle scanData passed from either Expo Scanner or Manual Entry Modal
     const handleScanSubmit = (scanData) => {
@@ -69,10 +63,6 @@ const MetrcTagScanner = ({ navigation, productName, scanSubmit, productId, order
 
     return (
         <SafeAreaView style={styles.componentContainer}>
-            {modalVisible && <MetrcTagEntryModal isVisible={modalVisible} toggleModalVisibility={toggleModalVisibility} /> }
-
-            {!modalVisible &&
-            <React.Fragment>
 
                 <View style={styles.headerContainer}>
                     <Text style={styles.title}>{productName}</Text>
@@ -117,28 +107,6 @@ const MetrcTagScanner = ({ navigation, productName, scanSubmit, productId, order
                     </View>
 
                 </View>
-            </React.Fragment>
-            }
-            {/*Alternative Implementation*/}
-            {/*<BarCodeScanner*/}
-            {/*    onBarCodeScanned={scanned ? undefined : handleScanSubmit}*/}
-            {/*    style={StyleSheet.absoluteFillObject}*/}
-            {/*/>*/}
-
-            {/*<View style={styles.overlay}>*/}
-            {/*    <View style={styles.unfocusedContainer} />*/}
-            {/*    <View style={styles.middleContainer}>*/}
-            {/*        <View style={styles.unfocusedContainer} />*/}
-
-            {/*        /!*SCAN AREA*!/*/}
-            {/*        <View style={styles.focusedContainer} />*/}
-
-            {/*        <View style={styles.unfocusedContainer} />*/}
-            {/*    </View>*/}
-            {/*    <View style={styles.unfocusedContainer} />*/}
-            {/*</View>*/}
-
-            {/*{scanned && <Button onPress={() => setScanned(false)}> Tap to Scan Again </ Button>}*/}
         </SafeAreaView>
     );
 }
@@ -214,32 +182,5 @@ const styles = StyleSheet.create({
         color: 'white',
     }
 });
-
-//Alternative Implementation Styles
-//const styles = StyleSheet.create({
-//    container: {
-//        flex: 1,
-//    },
-//
-//    overlay: {
-//        position: 'absolute',
-//        top: 0,
-//        left: 0,
-//        right: 0,
-//        bottom: 0,
-//    },
-//    unfocusedContainer: {
-//        flex: 1,
-//        backgroundColor: 'rgba(0,0,0,0.7)',
-//    },
-//    middleContainer: {
-//        flexDirection: 'row',
-//        flex: 1.5,
-//    },
-//    focusedContainer: {
-//        flex: 6,
-//    },
-//});
-
 
 export default MetrcTagScanner;
