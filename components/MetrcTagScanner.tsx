@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Text, StyleSheet, View, Platform, StatusBar } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, Platform, StatusBar, Vibration } from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
 import { useTheme, Button, IconButton, Caption } from "react-native-paper";
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -45,6 +45,7 @@ const MetrcTagScanner = ({ navigation, productName, scanSubmit, productId, order
     //TODO ensure function can handle scanData passed from either Expo Scanner or Manual Entry Modal
     const handleScanSubmit = (scanData) => {
         setScanned(true);
+        Vibration.vibrate();
 
         const {type, data} = scanData;
 
