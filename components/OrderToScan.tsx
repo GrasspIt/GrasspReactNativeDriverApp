@@ -33,7 +33,17 @@ const OrderToScan = ({
     /**Add menu button to header
      *  - created here, rather than in OrderListNavigator, so the onPress property has access to this component's functions
      * */
-    //useLayoutEffect(() => )
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <IconButton
+                    icon={'dots-vertical'}
+                    onPress={() => alert('Pressed Header Button!')}
+                    style={{alignSelf: 'center', marginLeft: 'auto', }}
+                />
+            ),
+        })
+    })
 
 
     /**Creates a touchable row for each product in the order
@@ -96,13 +106,6 @@ const OrderToScan = ({
     return (
         <SafeAreaView style={{flex: 1}}>
             <View style={{flex: 1, backgroundColor: colors.background}}>
-                <Card style={[styles.cardContainer]}>
-                    <Card.Title title='Order Id'/>
-                    <Card.Content>
-                        <Text>Hi!</Text>
-                        <Text>The Order Id is {orderId}</Text>
-                    </Card.Content>
-                </Card>
 
                 <Card style={[styles.cardContainer, {flex: 1}]}>
                         <Card.Title title={'Products to Scan'} />
