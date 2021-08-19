@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import {
     FlatList,
     SafeAreaView,
@@ -8,7 +8,7 @@ import {
     Pressable, TouchableHighlight, TouchableOpacity
 } from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
-import { Card, Divider, useTheme, List } from "react-native-paper";
+import { Card, Divider, useTheme, List, IconButton } from "react-native-paper";
 
 /**
  * check, check-bold
@@ -30,7 +30,16 @@ const OrderToScan = ({
                      }: OrderToScanProps) => {
     const {colors} = useTheme();
 
-    const renderItem = ({item}) => (
+    /**Add menu button to header
+     *  - created here, rather than in OrderListNavigator, so the onPress property has access to this component's functions
+     * */
+    //useLayoutEffect(() => )
+
+
+    /**Creates a touchable row for each product in the order
+     *  tapping a row opens up the scanner
+     * */
+    const renderProductRow = ({item}) => (
         <React.Fragment key={item.productId}>
             <Divider/>
             <Pressable
@@ -50,7 +59,7 @@ const OrderToScan = ({
                     title={item.name}
                     titleNumberOfLines={2}
                     titleStyle={{fontSize: 14}}
-                    style={{paddingLeft: 0}}
+                    style={{paddingLeft: 0, paddingRight: 0}}
                     left={props => (
                         <List.Icon {...props}
                                    icon={item.orderDetailId % 3 === 0 ? "alert-circle" : item.orderDetailId % 2 === 0 ? 'check' : 'barcode-scan'}
@@ -58,11 +67,18 @@ const OrderToScan = ({
                                    style={{alignSelf: 'center', marginRight: 10}}
                         />
                     )}
+                    right={() => (
+                        <IconButton
+                            icon={'dots-vertical'}
+                            onPress={() => alert('Pressed!')}
+                            style={{alignSelf: 'center', marginRight: 0}}
+                        />
+                    )}
                     description={() => (
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10}}>
                             <Text style={{color: colors.backdrop}}>Quantity: {item.quantity}</Text>
                             {/*TODO - remove hard coded icons and scanned totals once backend endpoints are avaiable*/}
-                            <Text style={{color: colors.backdrop}}>Scanned: {item.orderDetailId % 3 === 0 ? 100 : item.orderDetailId % 2 === 0 ? item.quantity : 0}</Text>
+                            <Text style={{color: colors.backdrop, marginRight: 16}}>Scanned: {item.orderDetailId % 3 === 0 ? 100 : item.orderDetailId % 2 === 0 ? item.quantity : 0}</Text>
                         </View>
                     )}
                 >
@@ -89,11 +105,11 @@ const OrderToScan = ({
                 </Card>
 
                 <Card style={[styles.cardContainer, {flex: 1}]}>
-                    <Card.Title title={'Products to Scan'}/>
+                        <Card.Title title={'Products to Scan'} />
                     <Card.Content>
                         <FlatList
                             data={products}
-                            renderItem={renderItem}
+                            renderItem={renderProductRow}
                             keyExtractor={(item) => item.name}
                         />
                         <Divider/>
