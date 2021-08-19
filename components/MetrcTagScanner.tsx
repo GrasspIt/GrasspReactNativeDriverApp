@@ -168,10 +168,12 @@ const styles = StyleSheet.create({
     },
     layerTop: {
         flex: 2,
+        backgroundColor: opacity,
         //backgroundColor: 'lightgreen',
     },
     layerCenter: {
-        flex: 2,
+        //having flex: 2 produced a visual artifact, setting flex: 2.1 cleans this up
+        flex: 2.1,
         flexDirection: 'row',
         //backgroundColor: 'blue',
     },
