@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
 import { Button, Caption, Card, IconButton, Paragraph, TextInput, Title, useTheme, } from "react-native-paper";
 
@@ -13,6 +13,17 @@ const MetrcTagManualEntryModal = ({ submitTagEntry, productName, navigation }: M
     const { colors } = useTheme();
 
     const [text, setText] = useState('');
+    const textInputRef = useRef<any>(null);
+
+    useEffect(() => {
+        //if (textInputRef !== null) {
+        //    //textInputRef.current.focus()
+        //    alert(`The component is focused. : ${textInputRef.current.isFocused()}`)
+        //}
+        Platform.OS === 'ios'
+            ? textInputRef.current.focus()
+            : setTimeout(() => textInputRef.current.focus(), 40)
+    }, [])
 
     return (
         <SafeAreaView style={styles.componentContainer}>
@@ -21,6 +32,7 @@ const MetrcTagManualEntryModal = ({ submitTagEntry, productName, navigation }: M
                 <Card.Content style={styles.cardContent}>
                     {/*<Title>Card title</Title>*/}
                     <Paragraph style={{ fontSize: 16}}>Please enter the Metrc Tag below:</Paragraph>
+                    <Caption>Note: text will autocapitalize</Caption>
 
                     <View style={{ marginTop: 16}}>
                         <TextInput
@@ -28,7 +40,12 @@ const MetrcTagManualEntryModal = ({ submitTagEntry, productName, navigation }: M
                             value={text}
                             onChangeText={text => setText(text)}
                             placeholder={'1A40A03000005DD000003479'}
-                            //right={() => <IconButton icon={'close'} color={'black'} size={50} onPress={() => setText('')} />}
+                            ref={textInputRef}
+                            autoCapitalize={'characters'}
+                            autoCorrect={false}
+                            autoFocus={true}
+                            returnKeyType={'done'}
+                            textContentType={'none'}
                             right={<TextInput.Icon
                                 name={'close-circle'}
                                 onPress={() => setText('')}
@@ -37,21 +54,23 @@ const MetrcTagManualEntryModal = ({ submitTagEntry, productName, navigation }: M
                         />
                     </View>
                     <View style={{ marginTop: 16}}>
-                        <Caption style={{marginTop: 10}}>This will sometimes be labeled with 'PKID'</Caption>
+                        <Caption style={{marginTop: 10}}>Metrc tag will sometimes be labeled with 'PKID'</Caption>
                         <Caption>The tag will be long - about 24 characters</Caption>
                     </View>
 
                     <Card.Actions style={styles.cardActions}>
                         <Button
                             onPress={() => navigation.goBack()}
-                            mode={'outlined'}
-                            labelStyle={{ padding: 4, color: 'black', opacity: .8 }}
+                            mode={'contained'}
+                            labelStyle={{ padding: 4, color: 'black' }}
+                            style={{backgroundColor: '#FFBBAD', }}
                         >
                             Cancel
                         </Button>
                         <Button
                             mode={'contained'}
                             labelStyle={{ padding: 4, color: colors.surface }}
+                            style={{width: '50%',}}
                         >
                             Submit
                         </Button>
