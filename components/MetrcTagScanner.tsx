@@ -3,18 +3,22 @@ import { SafeAreaView, Text, StyleSheet, View, Platform, StatusBar } from "react
 import { ProductInOrder } from "../selectors/orderSelectors";
 import { useTheme, Button, IconButton, Caption } from "react-native-paper";
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import MetrcTagEntryModal from "./MetrcTagEntryModal";
 
 
 type MetrcTagScannerProps = {
     navigation;
     productName: string;
+    orderDetailId: string;
+    productId: string;
     scanSubmit: (data) => any;
 }
 
-const MetrcTagScanner = ({ navigation, productName, scanSubmit }: MetrcTagScannerProps) => {
+const MetrcTagScanner = ({ navigation, productName, scanSubmit, productId, orderDetailId }: MetrcTagScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
     const [scanned, setScanned] = useState<boolean>(false);
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
 
     const {colors} = useTheme();
 
@@ -33,12 +37,17 @@ const MetrcTagScanner = ({ navigation, productName, scanSubmit }: MetrcTagScanne
         }
     }, [])
 
-    const handleScanSubmit = (result) => {
+    const toggleModalVisibility = () => {
+        setModalVisible(!modalVisible);
+    }
+
+    //TODO ensure function can handle scanData passed from either Expo Scanner or Manual Entry Modal
+    const handleScanSubmit = (scanData) => {
         setScanned(true);
 
-        const {type, data} = result;
+        const {type, data} = scanData;
 
-        console.log('Result from barcode scanner:', result);
+        console.log('Result from barcode scanner:', scanData);
         console.log('Barcode Type:', BarCodeScanner.Constants.BarCodeType[type]);
         alert(`Bar code with type ${type} and data ${data} has been scanned!`);
 
@@ -55,37 +64,43 @@ const MetrcTagScanner = ({ navigation, productName, scanSubmit }: MetrcTagScanne
         return <Text>No access to camera</Text>;
     }
 
+
     return (
         <SafeAreaView style={styles.componentContainer}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.title}>{productName}</Text>
-            </View>
-            {/*Expo's implementation*/}
-            <View style={styles.scannerContainer}>
-            <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleScanSubmit}
-                style={[StyleSheet.absoluteFill]}
-            >
-                <View style={styles.layerTop} />
-                <View style={styles.layerCenter}>
-                    <View style={styles.layerLeft} />
-                    <View style={styles.focused} />
-                    <View style={styles.layerRight} />
-                </View>
-                <View style={styles.layerBottom} />
+            {modalVisible && <MetrcTagEntryModal isVisible={modalVisible} toggleModalVisibility={toggleModalVisibility} /> }
 
-                {scanned && <Button onPress={() => setScanned(false)}> Tap to Scan Again </ Button>}
-            </BarCodeScanner>
-            </View>
+            {!modalVisible &&
+            <React.Fragment>
+
+                <View style={styles.headerContainer}>
+                    <Text style={styles.title}>{productName}</Text>
+                </View>
+                {/*Expo's implementation*/}
+                <View style={styles.scannerContainer}>
+                    <BarCodeScanner
+                        onBarCodeScanned={scanned ? undefined : handleScanSubmit}
+                        style={[StyleSheet.absoluteFill]}
+                    >
+                        <View style={styles.layerTop}/>
+                        <View style={styles.layerCenter}>
+                            <View style={styles.layerLeft}/>
+                            <View style={styles.focused}/>
+                            <View style={styles.layerRight}/>
+                        </View>
+                        <View style={styles.layerBottom}/>
+
+                        {scanned && <Button onPress={() => setScanned(false)}> Tap to Scan Again </ Button>}
+                    </BarCodeScanner>
+                </View>
                 <View style={styles.buttonsContainer}>
                     <View style={styles.buttonContainer}>
-                    <IconButton
-                        icon={'close-circle'}
-                        size={40}
-                        color={'white'}
-                        style={{margin: 0}}
-                        onPress={() => navigation.goBack()}
-                    />
+                        <IconButton
+                            icon={'close-circle'}
+                            size={40}
+                            color={'white'}
+                            style={{margin: 0}}
+                            onPress={() => navigation.goBack()}
+                        />
                         <Text style={styles.buttonText}>Close</Text>
                     </View>
                     <View style={styles.buttonContainer}>
@@ -94,12 +109,14 @@ const MetrcTagScanner = ({ navigation, productName, scanSubmit }: MetrcTagScanne
                             size={40}
                             color={'white'}
                             style={{margin: 0}}
+                            onPress={() => navigation.navigate('MetrcTagManualEntry', { productName, productId, orderDetailId })}
                         />
                         <Text style={styles.buttonText}>Manual Entry</Text>
                     </View>
 
                 </View>
-
+            </React.Fragment>
+            }
             {/*Alternative Implementation*/}
             {/*<BarCodeScanner*/}
             {/*    onBarCodeScanned={scanned ? undefined : handleScanSubmit}*/}
