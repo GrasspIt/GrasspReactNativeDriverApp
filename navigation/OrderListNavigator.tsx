@@ -66,7 +66,7 @@ const OrderListNavigator = ({route, navigation}: Props) => {
             <OrderListStack.Screen
                 name={'OrderToScan'}
                 component={OrderToScanScreen}
-                options={{title: 'Scan Order'}}
+                options={{title: 'Package Order'}}
                 initialParams={{ orderId: 42 }}
             />
             <OrderListStack.Screen
