@@ -33,15 +33,24 @@ const OrderToScan = ({
 
     const [productMenuVisible, setProductMenuVisible] = useState<number | null>(null);
     const [orderMenuVisible, setOrderMenuVisible] = useState<boolean>(false);
-    const [productResetDialog, setProductResetDialog] = useState<{id: number, name: string} | null>(null);
-    //const [productResetDialog, setProductResetDialog] = useState<{id: number, name: string} | null>(null);
+    const [productResetDialogVisible, setProductResetDialogVisible] = useState<boolean>(false);
+    const [productToReset, setProductToReset] = useState<{id: number, name: string} | null>(null);
+    const [orderResetDialogVisible, setOrderResetDialogVisible] = useState(false);
 
-    const openProductMenu = (id) => setProductMenuVisible(id);
+    const openProductMenu = (id: number) => setProductMenuVisible(id);
     const openOrderMenu = () => setOrderMenuVisible(true);
     const closeProductMenu = () => setProductMenuVisible(null);
     const closeOrderMenu = () => setOrderMenuVisible(false);
-    const showProductResetDialog = (id, name) => setProductResetDialog({id, name});
-    const hideProductResetDialog = () => setProductResetDialog(null);
+    const showProductResetDialog = (id: number, name: string) => {
+        setProductResetDialogVisible(true);
+        setProductToReset({id, name});
+    }
+    const hideProductResetDialog = () => {
+        setProductResetDialogVisible(false);
+        setProductToReset(null)
+    }
+    const showOrderResetDialog = () => setOrderResetDialogVisible(true);
+    const hideOrderResetDialog = () => setOrderResetDialogVisible(false);
 
     /**Add menu button to header
      *  - created here, rather than in OrderListNavigator, so the onPress property has access to this component's functions
@@ -62,7 +71,10 @@ const OrderToScan = ({
                     >
                     <Menu.Item
                         icon={'refresh'}
-                        onPress={() => alert('Reset Order Scans?')}
+                        onPress={() => {
+                            closeOrderMenu();
+                            showOrderResetDialog();
+                        }}
                         title={'Reset Order Scans'}
                     />
                 </Menu>
@@ -170,10 +182,10 @@ const OrderToScan = ({
 
             <Portal>
                 {/*Reset Product Dialog*/}
-                <Dialog visible={productResetDialog !== null} onDismiss={hideProductResetDialog}>
+                <Dialog visible={productResetDialogVisible} onDismiss={hideProductResetDialog}>
                     <Dialog.Title>Reset all scans for this product?</Dialog.Title>
                     <Dialog.Content>
-                        <Paragraph>This action will reset {productResetDialog?.name} scans to 0</Paragraph>
+                        <Paragraph>This action will reset {productToReset && productToReset.name} scans to 0</Paragraph>
                     </Dialog.Content>
                     <Dialog.Actions style={{flexDirection: 'row', justifyContent: 'space-around'}}>
                         <Button onPress={hideProductResetDialog} color={colors.backdrop}>Cancel</Button>
@@ -182,13 +194,13 @@ const OrderToScan = ({
                 </Dialog>
 
                 {/*Reset Order Dialog*/}
-                <Dialog visible={productResetDialog !== null} onDismiss={hideProductResetDialog}>
-                    <Dialog.Title>Reset all scans for this product?</Dialog.Title>
+                <Dialog visible={orderResetDialogVisible} onDismiss={hideOrderResetDialog}>
+                    <Dialog.Title>Reset all scans for this order?</Dialog.Title>
                     <Dialog.Content>
-                        <Paragraph>This action will reset {productResetDialog?.name} scans to 0</Paragraph>
+                        <Paragraph>This action will reset order scans to 0</Paragraph>
                     </Dialog.Content>
                     <Dialog.Actions style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-                        <Button onPress={hideProductResetDialog} color={colors.backdrop}>Cancel</Button>
+                        <Button onPress={hideOrderResetDialog} color={colors.backdrop}>Cancel</Button>
                         <Button onPress={() => {}}>Reset</Button>
                     </Dialog.Actions>
                 </Dialog>
@@ -197,8 +209,6 @@ const OrderToScan = ({
         </SafeAreaView>
     )
 }
-
-const [orderResetDialogVisible, setOrderResetDialogVisible] = useState(false);
 
 const styles = StyleSheet.create({
     cardContainer: {
