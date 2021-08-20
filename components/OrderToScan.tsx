@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
 import { Card, Divider, useTheme, List, IconButton, Menu, Dialog, Portal, Paragraph, Button } from "react-native-paper";
+import { number } from "prop-types";
 
 /**
  * check, check-bold
@@ -30,9 +31,10 @@ const OrderToScan = ({
                      }: OrderToScanProps) => {
     const {colors} = useTheme();
 
-    const [productMenuVisible, setProductMenuVisible] = useState(null);
-    const [orderMenuVisible, setOrderMenuVisible] = useState(false);
+    const [productMenuVisible, setProductMenuVisible] = useState<number | null>(null);
+    const [orderMenuVisible, setOrderMenuVisible] = useState<boolean>(false);
     const [productResetDialog, setProductResetDialog] = useState<{id: number, name: string} | null>(null);
+    //const [productResetDialog, setProductResetDialog] = useState<{id: number, name: string} | null>(null);
 
     const openProductMenu = (id) => setProductMenuVisible(id);
     const openOrderMenu = () => setOrderMenuVisible(true);
@@ -105,16 +107,25 @@ const OrderToScan = ({
                             visible={productMenuVisible !== null && productMenuVisible === item.productId}
                             onDismiss={closeProductMenu}
                             anchor={
-                                <IconButton
-                                    icon={'dots-vertical'}
-                                    onPress={() => openProductMenu(item.productId)}
-                                    style={{alignSelf: 'center', marginRight: 0}}
-                                />
+                                <View
+                                    onTouchEnd={(e) => e.stopPropagation()}
+                                >
+                                    <IconButton
+                                        icon={'dots-vertical'}
+                                        onPress={() => {
+                                            openProductMenu(item.productId)
+                                        }}
+                                        style={{alignSelf: 'center', marginRight: 0}}
+                                    />
+                                </View>
                             }
                         >
                             <Menu.Item
                                 icon={'refresh'}
-                                onPress={() => showProductResetDialog(item.productId, item.name)}
+                                onPress={() => {
+                                    setProductMenuVisible(null);
+                                    showProductResetDialog(item.productId, item.name)
+                                }}
                                 title={'Reset Product Scans'}
                             />
                         </Menu>
@@ -138,6 +149,8 @@ const OrderToScan = ({
     //TODO: create complete order button
     // button is disabled if order has not been fully scanned
 
+    //TODO: create runing tally next to header of total scans (2/7 Products Scanned)
+
     return (
         <SafeAreaView style={{flex: 1}}>
             <View style={{flex: 1, backgroundColor: colors.background}}>
@@ -156,19 +169,36 @@ const OrderToScan = ({
             </View>
 
             <Portal>
+                {/*Reset Product Dialog*/}
                 <Dialog visible={productResetDialog !== null} onDismiss={hideProductResetDialog}>
-                    <Dialog.Title>{productResetDialog?.name}</Dialog.Title>
+                    <Dialog.Title>Reset all scans for this product?</Dialog.Title>
                     <Dialog.Content>
-                        <Paragraph>This is the product id: {productResetDialog?.id}</Paragraph>
+                        <Paragraph>This action will reset {productResetDialog?.name} scans to 0</Paragraph>
                     </Dialog.Content>
-                    <Dialog.Actions>
-                        <Button onPress={hideProductResetDialog}>Done</Button>
+                    <Dialog.Actions style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+                        <Button onPress={hideProductResetDialog} color={colors.backdrop}>Cancel</Button>
+                        <Button onPress={() => {}}>Reset</Button>
                     </Dialog.Actions>
                 </Dialog>
+
+                {/*Reset Order Dialog*/}
+                <Dialog visible={productResetDialog !== null} onDismiss={hideProductResetDialog}>
+                    <Dialog.Title>Reset all scans for this product?</Dialog.Title>
+                    <Dialog.Content>
+                        <Paragraph>This action will reset {productResetDialog?.name} scans to 0</Paragraph>
+                    </Dialog.Content>
+                    <Dialog.Actions style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+                        <Button onPress={hideProductResetDialog} color={colors.backdrop}>Cancel</Button>
+                        <Button onPress={() => {}}>Reset</Button>
+                    </Dialog.Actions>
+                </Dialog>
+
             </Portal>
         </SafeAreaView>
     )
 }
+
+const [orderResetDialogVisible, setOrderResetDialogVisible] = useState(false);
 
 const styles = StyleSheet.create({
     cardContainer: {
