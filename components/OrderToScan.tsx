@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import {
     FlatList,
     SafeAreaView,
@@ -8,7 +8,7 @@ import {
     Pressable, TouchableHighlight, TouchableOpacity
 } from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
-import { Card, Divider, useTheme, List, IconButton } from "react-native-paper";
+import { Card, Divider, useTheme, List, IconButton, Menu, Dialog, Portal, Paragraph, Button } from "react-native-paper";
 
 /**
  * check, check-bold
@@ -30,17 +30,40 @@ const OrderToScan = ({
                      }: OrderToScanProps) => {
     const {colors} = useTheme();
 
+    const [productMenuVisible, setProductMenuVisible] = useState(null);
+    const [orderMenuVisible, setOrderMenuVisible] = useState(false);
+    const [productResetDialog, setProductResetDialog] = useState<{id: number, name: string} | null>(null);
+
+    const openProductMenu = (id) => setProductMenuVisible(id);
+    const openOrderMenu = () => setOrderMenuVisible(true);
+    const closeProductMenu = () => setProductMenuVisible(null);
+    const closeOrderMenu = () => setOrderMenuVisible(false);
+    const showProductResetDialog = (id, name) => setProductResetDialog({id, name});
+    const hideProductResetDialog = () => setProductResetDialog(null);
+
     /**Add menu button to header
      *  - created here, rather than in OrderListNavigator, so the onPress property has access to this component's functions
      * */
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <IconButton
-                    icon={'dots-vertical'}
-                    onPress={() => alert('Pressed Header Button!')}
-                    style={{alignSelf: 'center', marginLeft: 'auto', }}
-                />
+                <Menu
+                    visible={orderMenuVisible}
+                    onDismiss={closeOrderMenu}
+                    anchor={
+                        <IconButton
+                            icon={'dots-vertical'}
+                            onPress={openOrderMenu}
+                            style={{alignSelf: 'center', marginLeft: 'auto', }}
+                        />
+                    }
+                    >
+                    <Menu.Item
+                        icon={'refresh'}
+                        onPress={() => alert('Reset Order Scans?')}
+                        title={'Reset Order Scans'}
+                    />
+                </Menu>
             ),
         })
     })
@@ -78,11 +101,23 @@ const OrderToScan = ({
                         />
                     )}
                     right={() => (
-                        <IconButton
-                            icon={'dots-vertical'}
-                            onPress={() => alert('Pressed!')}
-                            style={{alignSelf: 'center', marginRight: 0}}
-                        />
+                        <Menu
+                            visible={productMenuVisible !== null && productMenuVisible === item.productId}
+                            onDismiss={closeProductMenu}
+                            anchor={
+                                <IconButton
+                                    icon={'dots-vertical'}
+                                    onPress={() => openProductMenu(item.productId)}
+                                    style={{alignSelf: 'center', marginRight: 0}}
+                                />
+                            }
+                        >
+                            <Menu.Item
+                                icon={'refresh'}
+                                onPress={() => showProductResetDialog(item.productId, item.name)}
+                                title={'Reset Product Scans'}
+                            />
+                        </Menu>
                     )}
                     description={() => (
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10}}>
@@ -119,6 +154,18 @@ const OrderToScan = ({
                     </Card.Content>
                 </Card>
             </View>
+
+            <Portal>
+                <Dialog visible={productResetDialog !== null} onDismiss={hideProductResetDialog}>
+                    <Dialog.Title>{productResetDialog?.name}</Dialog.Title>
+                    <Dialog.Content>
+                        <Paragraph>This is the product id: {productResetDialog?.id}</Paragraph>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={hideProductResetDialog}>Done</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
         </SafeAreaView>
     )
 }
