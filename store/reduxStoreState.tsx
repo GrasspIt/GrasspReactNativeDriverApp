@@ -343,10 +343,12 @@ export interface Coupon {
 export interface Order {
   id: number;
   dsprDriver: number;
+  dspr: number;
   user: number;
   userMedicalRecommendation: number;
   userIdentificationDocument: number;
   address: number;
+  couponCodes?: string[];
   orderStatus: string;
   cashTotalPreDiscounts: number;
   discountTotal: number;
@@ -354,16 +356,23 @@ export interface Order {
   taxesTotal: number;
   deliveryFee: number;
   cashTotal: number;
-  userFirstTimeOrderWithDSPR: false;
+  grossProfit: number;
+  grossProfitMargin: number;
+  userFirstTimeOrderWithDSPR: boolean;
   orderDetails: OrderDetail[];
   calculatedOrderDetails: CalculatedOrderDetail[];
   orderTaxDetails: OrderTaxDetail[];
   createdTime: string;
   updatedTime: string;
+  originalOrderCreatedTime?: string;
+  lastStatusChangeTime?: string;
   specialInstructions?: string;
   coupon?: Partial<Coupon>;
   coupons?: Partial<Coupon>[];
   medicalRecommendation?: MedicalRecommendation;
+  //TODO: Normalize modifiedOrder and modifiedByManager
+  modifiedOrder?: {id: number, dsprDriver: { id: number, currentInProcessOrder: {id: number}}, dspr: {id: 1}};
+  modifiedByManager?: {id: number};
 }
 
 export interface CalculatedOrderDetail {
