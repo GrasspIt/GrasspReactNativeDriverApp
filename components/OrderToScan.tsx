@@ -22,12 +22,14 @@ type OrderToScanProps = {
     orderId: number;
     products: ProductInOrder[];
     navigation;
+    handleCompleteOrder: () => any;
 }
 
 const OrderToScan = ({
                          orderId,
                          products,
-                         navigation
+                         navigation,
+                         handleCompleteOrder
                      }: OrderToScanProps) => {
     const {colors} = useTheme();
 
@@ -35,7 +37,10 @@ const OrderToScan = ({
     const [orderMenuVisible, setOrderMenuVisible] = useState<boolean>(false);
     const [productResetDialogVisible, setProductResetDialogVisible] = useState<boolean>(false);
     const [productToReset, setProductToReset] = useState<{id: number, name: string} | null>(null);
-    const [orderResetDialogVisible, setOrderResetDialogVisible] = useState(false);
+    const [orderResetDialogVisible, setOrderResetDialogVisible] = useState<boolean>(false);
+    
+    //TODO: Decide how you want to determine when scans are complete. Selector? State?
+    const [scansComplete, setScansComplete] = useState<boolean>(false);
 
     const openProductMenu = (id: number) => setProductMenuVisible(id);
     const openOrderMenu = () => setOrderMenuVisible(true);
@@ -180,6 +185,20 @@ const OrderToScan = ({
                 </Card>
             </View>
 
+            <View>
+                <Button
+                    disabled={!scansComplete}
+                    icon='check'
+                    mode='contained'
+                    color={colors.primary}
+                    style={styles.buttons}
+                    labelStyle={{ paddingVertical: 4, color: colors.surface }}
+                    onPress={handleCompleteOrder}
+                >
+                    Complete Order
+                </Button>
+            </View>
+
             <Portal>
                 {/*Reset Product Dialog*/}
                 <Dialog visible={productResetDialogVisible} onDismiss={hideProductResetDialog}>
@@ -226,6 +245,13 @@ const styles = StyleSheet.create({
     empty: {
         justifyContent: 'center',
         padding: 14,
+    },
+    buttons: {
+        flex: 1,
+        marginHorizontal: 10,
+        marginBottom: 10,
+        borderRadius: 50,
+        elevation: 2,
     },
 });
 
