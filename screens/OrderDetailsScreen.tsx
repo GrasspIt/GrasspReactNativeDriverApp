@@ -18,6 +18,8 @@ import { getOrderFromProps } from '../selectors/orderSelectors';
 import { getAddressFromProps } from '../selectors/addressSelectors';
 import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 import OrderDetailsDisplay from '../components/OrderDetailsDisplay';
+import { getDSPRFromProps } from "../selectors/dsprSelectors";
+import { DSPR } from "../store/reduxStoreState";
 
 type DetailsScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Details'>;
 
@@ -39,6 +41,7 @@ type Props = {
   markOrderInProcess;
   removeOrderAndRefreshRoute;
   deactivateDriverRoute;
+  dspr?: DSPR;
 };
 const OrderDetailsScreen = ({
   navigation,
@@ -58,9 +61,16 @@ const OrderDetailsScreen = ({
   markOrderInProcess,
   removeOrderAndRefreshRoute,
   deactivateDriverRoute,
+  dspr,
 }: Props) => {
   const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
   const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
+
+  //TODO: Finish implementing determination for if an order requires a metrc scan.
+  //confirm property name for metrcLicense on DSPR object
+  //update DSPR interface in reduxStore
+
+  //const requiresMetrcScan: boolean = dspr && 'metrcLicense' in dspr && dspr.metrcLicense === true;
 
   const handleNavigate = () => {
     if (order && order.status) {
@@ -91,6 +101,10 @@ const OrderDetailsScreen = ({
     Alert.alert('Copied to clipboard.');
   };
 
+  console.log('order:', order);
+
+  //TODO - pass requiresMetrcScan to OrderDetailsDisplay to determine if the 'Scan Order Button' should show instead of the complete order button (if all scans have NOT been completed)
+  //if all scans have been completed, should the Complete Order Button render and the scan order button not render - or  should both render?
   return (
     <OrderDetailsDisplay
       navigation={navigation}
@@ -141,6 +155,7 @@ const mapStateToProps = (state, route) => {
   const activeRouteLegs =
     activeRoute && routeLegs && routeLegs.filter((leg) => activeRoute.legs.includes(leg.id));
   const orderIdsInRoute = activeRouteLegs && activeRouteLegs.map((leg) => leg.order);
+  const dspr = order && getDSPRFromProps(state, {dsprId: order.dspr})
   return {
     order,
     orderId,
@@ -152,6 +167,7 @@ const mapStateToProps = (state, route) => {
     isLoading,
     orderIdsInRoute,
     activeRoute,
+    dspr
   };
 };
 
