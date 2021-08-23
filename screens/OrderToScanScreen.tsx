@@ -29,10 +29,18 @@ const OrderToScanScreen = ({
     // update scanned column for each item based on selector
     // if all items have been scanned in order, enable complete order button
 
+
+    //TODO write function that completes order after all Metrc tags have been scanned
+    //see if this needs to be any different / requires a different endpoint than thehandleCompleteOrder function used in Arizona
+    const handleCompleteOrder = () => {
+        return;
+    }
+
     return <OrderToScan
         products={productsInOrder}
         orderId={orderId}
         navigation={navigation}
+        handleCompleteOrder={handleCompleteOrder}
     />
 }
 

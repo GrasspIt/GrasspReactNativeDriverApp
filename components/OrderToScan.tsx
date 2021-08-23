@@ -38,7 +38,7 @@ const OrderToScan = ({
     const [productResetDialogVisible, setProductResetDialogVisible] = useState<boolean>(false);
     const [productToReset, setProductToReset] = useState<{id: number, name: string} | null>(null);
     const [orderResetDialogVisible, setOrderResetDialogVisible] = useState<boolean>(false);
-    
+
     //TODO: Decide how you want to determine when scans are complete. Selector? State?
     const [scansComplete, setScansComplete] = useState<boolean>(false);
 
