@@ -3,7 +3,6 @@ import { Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react
 import { Button, Caption, Card, IconButton, Paragraph, TextInput, Title, useTheme, } from "react-native-paper";
 import AlertSuccess from "./AlertSuccess";
 
-
 interface MetrcTagManualEntryModalProps {
     submitTagEntry: (data) => any;
     productName: string;
@@ -42,6 +41,14 @@ const MetrcTagManualEntryModal = ({
             : setTimeout(() => textInputRef.current.focus(), 40)
     }, [])
 
+    const handleSubmit = () => {
+        if (text.trim() === '') {
+            alert('A tag must be inputted!')
+        } else {
+            submitTagEntry(text);
+        }
+    }
+
     return (
         <SafeAreaView style={styles.componentContainer}>
             <Card style={styles.card}>
@@ -58,7 +65,6 @@ const MetrcTagManualEntryModal = ({
                             onChangeText={text => setText(text)}
                             placeholder={'1A40A03000005DD000003479'}
                             ref={textInputRef}
-                            autoCapitalize={'characters'}
                             autoCorrect={false}
                             autoFocus={true}
                             returnKeyType={'done'}
@@ -88,7 +94,7 @@ const MetrcTagManualEntryModal = ({
                             mode={'contained'}
                             labelStyle={{padding: 4, color: colors.surface}}
                             style={{width: '50%',}}
-                            onPress={() => submitTagEntry(text)}
+                            onPress={handleSubmit}
                         >
                             Submit
                         </Button>
