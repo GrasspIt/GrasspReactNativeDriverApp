@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
 import { Button, Caption, Card, IconButton, Paragraph, TextInput, Title, useTheme, } from "react-native-paper";
+import AlertSuccess from "./AlertSuccess";
 
 
 interface MetrcTagManualEntryModalProps {
@@ -10,12 +11,25 @@ interface MetrcTagManualEntryModalProps {
     orderDetailid: string;
     orderId: string;
     navigation;
+    successAlertVisible: boolean;
+    errorAlertVisible: boolean;
+    closeSuccessAlert: () => any;
 }
 
-const MetrcTagManualEntryModal = ({ submitTagEntry, productName, productId, orderDetailid, orderId, navigation }: MetrcTagManualEntryModalProps) => {
-    const { colors } = useTheme();
+const MetrcTagManualEntryModal = ({
+                                      submitTagEntry,
+                                      productName,
+                                      productId,
+                                      orderDetailid,
+                                      orderId,
+                                      navigation,
+                                      successAlertVisible,
+                                      errorAlertVisible,
+                                      closeSuccessAlert
+                                  }: MetrcTagManualEntryModalProps) => {
+    const {colors} = useTheme();
 
-    const [text, setText] = useState('');
+    const [text, setText] = useState<string>('');
     const textInputRef = useRef<any>(null);
 
     useEffect(() => {
@@ -31,13 +45,13 @@ const MetrcTagManualEntryModal = ({ submitTagEntry, productName, productId, orde
     return (
         <SafeAreaView style={styles.componentContainer}>
             <Card style={styles.card}>
-                <Card.Title title="Metrc Tag Manual Entry" subtitle={productName} />
+                <Card.Title title="Metrc Tag Manual Entry" subtitle={productName}/>
                 <Card.Content style={styles.cardContent}>
                     {/*<Title>Card title</Title>*/}
-                    <Paragraph style={{ fontSize: 16}}>Please enter the Metrc Tag below:</Paragraph>
+                    <Paragraph style={{fontSize: 16}}>Please enter the Metrc Tag below:</Paragraph>
                     <Caption>Note: text will autocapitalize</Caption>
 
-                    <View style={{ marginTop: 16}}>
+                    <View style={{marginTop: 16}}>
                         <TextInput
                             //label={'Metrc Tag'}
                             value={text}
@@ -56,7 +70,7 @@ const MetrcTagManualEntryModal = ({ submitTagEntry, productName, productId, orde
                             />}
                         />
                     </View>
-                    <View style={{ marginTop: 16}}>
+                    <View style={{marginTop: 16}}>
                         <Caption style={{marginTop: 10}}>Metrc tag will sometimes be labeled with 'PKID'</Caption>
                         <Caption>The tag will be long - about 24 characters</Caption>
                     </View>
@@ -65,16 +79,16 @@ const MetrcTagManualEntryModal = ({ submitTagEntry, productName, productId, orde
                         <Button
                             onPress={() => navigation.goBack()}
                             mode={'contained'}
-                            labelStyle={{ padding: 4, color: 'black' }}
-                            style={{backgroundColor: '#FFBBAD', }}
+                            labelStyle={{padding: 4, color: 'black'}}
+                            style={{backgroundColor: '#FFBBAD',}}
                         >
                             Cancel
                         </Button>
                         <Button
                             mode={'contained'}
-                            labelStyle={{ padding: 4, color: colors.surface }}
+                            labelStyle={{padding: 4, color: colors.surface}}
                             style={{width: '50%',}}
-                            onPress={() => navigation.navigate('OrderToScan', { orderId })}
+                            onPress={() => submitTagEntry(text)}
                         >
                             Submit
                         </Button>
@@ -82,6 +96,13 @@ const MetrcTagManualEntryModal = ({ submitTagEntry, productName, productId, orde
                 </Card.Content>
 
             </Card>
+
+            <AlertSuccess isVisible={successAlertVisible}
+                          onDismiss={closeSuccessAlert}
+                          title={'Success!'}
+                          buttonOnPressSubmit={closeSuccessAlert}
+                          message={`The Metrc Tag for ${productName} has been successfully entered`}
+            />
 
         </SafeAreaView>
     )

@@ -10,6 +10,7 @@ type AlertSuccessProps = {
     message: string;
     isLoading?: boolean;
     buttonText?: string;
+    buttonOnPressSubmit: () => any;
 }
 
 const AlertSuccess = ({
@@ -17,6 +18,7 @@ const AlertSuccess = ({
                           onDismiss,
                           title,
                           message,
+                          buttonOnPressSubmit,
                           isLoading = false,
                           buttonText = 'Ok'
                       }: AlertSuccessProps) => {
@@ -40,7 +42,7 @@ const AlertSuccess = ({
                         </Dialog.Content>
 
                         <Dialog.Actions>
-                            <Button mode={'contained'}>{buttonText}</Button>
+                            <Button mode={'contained'} onPress={buttonOnPressSubmit}>{buttonText}</Button>
                         </Dialog.Actions>
                     </React.Fragment>
                 }

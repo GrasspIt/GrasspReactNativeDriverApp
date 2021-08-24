@@ -166,7 +166,7 @@ const OrderToScan = ({
     //TODO: create complete order button
     // button is disabled if order has not been fully scanned
 
-    //TODO: create runing tally next to header of total scans (2/7 Products Scanned)
+    //TODO: create running tally next to header of total scans (2/7 Products Scanned)
 
     return (
         <SafeAreaView style={{flex: 1}}>
