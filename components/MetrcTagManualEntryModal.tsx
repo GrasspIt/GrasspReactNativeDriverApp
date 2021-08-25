@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
 import { Button, Caption, Card, IconButton, Paragraph, TextInput, Title, useTheme, } from "react-native-paper";
-import AlertSuccess from "./AlertSuccess";
+import AlertSuccessOrError from "./AlertSuccessOrError";
 
 interface MetrcTagManualEntryModalProps {
     submitTagEntry: (data) => any;
@@ -13,6 +13,7 @@ interface MetrcTagManualEntryModalProps {
     successAlertVisible: boolean;
     errorAlertVisible: boolean;
     closeSuccessAlert: () => any;
+    closeErrorAlert: () => any;
 }
 
 const MetrcTagManualEntryModal = ({
@@ -24,7 +25,8 @@ const MetrcTagManualEntryModal = ({
                                       navigation,
                                       successAlertVisible,
                                       errorAlertVisible,
-                                      closeSuccessAlert
+                                      closeSuccessAlert,
+                                      closeErrorAlert,
                                   }: MetrcTagManualEntryModalProps) => {
     const {colors} = useTheme();
 
@@ -45,6 +47,7 @@ const MetrcTagManualEntryModal = ({
         if (text.trim() === '') {
             alert('A tag must be inputted!')
         } else {
+            textInputRef.current.blur();
             submitTagEntry(text);
         }
     }
@@ -66,6 +69,8 @@ const MetrcTagManualEntryModal = ({
                             ref={textInputRef}
                             autoCorrect={false}
                             autoFocus={true}
+                            //blurOnSubmit={true}
+                            onSubmitEditing={handleSubmit}
                             returnKeyType={'done'}
                             textContentType={'none'}
                             right={<TextInput.Icon
@@ -102,11 +107,24 @@ const MetrcTagManualEntryModal = ({
 
             </Card>
 
-            <AlertSuccess isVisible={successAlertVisible}
-                          onDismiss={closeSuccessAlert}
-                          title={'Success!'}
-                          buttonOnPressSubmit={closeSuccessAlert}
-                          message={`The Metrc Tag for ${productName} has been successfully entered`}
+            {/*Success Alert*/}
+            <AlertSuccessOrError isVisible={successAlertVisible}
+                                 onDismiss={closeSuccessAlert}
+                                 title={'Success!'}
+                                 message={`The Metrc Tag for ${productName} has been successfully entered`}
+                                 buttonOnPressSubmit={closeSuccessAlert}
+            />
+
+            {/*TODO - Test for different errors. Change error message to be whatever is returned from the backend*/}
+            {/*Error Alert*/}
+            <AlertSuccessOrError
+                isVisible={errorAlertVisible}
+                onDismiss={closeErrorAlert}
+                title={'Error Encountered!'}
+                message={`The Metrc tag submission for ${productName} was not successful`}
+                buttonText={'Retry'}
+                buttonOnPressSubmit={closeErrorAlert}
+                isError={true}
             />
 
         </SafeAreaView>

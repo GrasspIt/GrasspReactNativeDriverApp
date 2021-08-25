@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import MetrcTagManualEntryModal from "../components/MetrcTagManualEntryModal";
 
-const MetrcTagManualEntryScreen = ({ navigation, route }) => {
-    const { productName, productId, orderDetailId, orderId } = route.params;
+const MetrcTagManualEntryScreen = ({navigation, route}) => {
+    const {productName, productId, orderDetailId, orderId} = route.params;
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
     const [errorAlertVisible, setErrorAlertVisible] = useState<boolean>(false);
@@ -18,14 +18,18 @@ const MetrcTagManualEntryScreen = ({ navigation, route }) => {
         //navigation.navigate('OrderToScan', {orderId})
     }
 
+    const showErrorAlert = () => setErrorAlertVisible(true);
+    const closeErrorAlert = () => setErrorAlertVisible(false);
+
     const submitTagEntry = (text) => {
-    //    call backend with tag text
-    //    Before submitting text to backend, capitalize it
-    //    if response is successful and there are remaining scans in the orderDetail, return to scanner
-    //    if response is successful and there are not any more scans remaining in the orderDetail, return to OrderToScan
-    //    In either case, for a successful response, show success message
-    //    if there is an error, show an error message
-        showSuccessAlert();
+        //    call backend with tag text
+        //    Before submitting text to backend, capitalize it
+        //    if response is successful and there are remaining scans in the orderDetail, return to scanner
+        //    if response is successful and there are not any more scans remaining in the orderDetail, return to OrderToScan
+        //    In either case, for a successful response, show success message
+        //    if there is an error, show an error message
+            showSuccessAlert();
+        //showErrorAlert()
     }
 
     return <MetrcTagManualEntryModal
@@ -38,6 +42,7 @@ const MetrcTagManualEntryScreen = ({ navigation, route }) => {
         successAlertVisible={successAlertVisible}
         errorAlertVisible={errorAlertVisible}
         closeSuccessAlert={closeSuccessAlert}
+        closeErrorAlert={closeErrorAlert}
     />
 }
 

@@ -5,7 +5,7 @@ import {
     StyleSheet,
     Text,
     View,
-    Pressable, TouchableHighlight, TouchableOpacity
+    Pressable
 } from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
 import { Card, Divider, useTheme, List, IconButton, Menu, Dialog, Portal, Paragraph, Button } from "react-native-paper";
@@ -171,7 +171,6 @@ const OrderToScan = ({
     return (
         <SafeAreaView style={{flex: 1}}>
             <View style={{flex: 1, backgroundColor: colors.background}}>
-
                 <Card style={[styles.cardContainer, {flex: 1}]}>
                         <Card.Title title={'Products to Scan'} />
                     <Card.Content>
