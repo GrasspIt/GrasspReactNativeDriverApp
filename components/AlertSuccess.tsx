@@ -27,45 +27,53 @@ const AlertSuccess = ({
     return (
         <Portal>
             <Dialog visible={isVisible} onDismiss={onDismiss} style={styles.dialogContainer}>
-                {isLoading
-                    ? <ActivityIndicator size='large' color={colors.primary}/>
-                    :
-                    <React.Fragment>
-                        <Dialog.Title style={styles.title}>{title}</Dialog.Title>
+                <Dialog.Title style={styles.title}>{title}</Dialog.Title>
 
-                        <Dialog.Content>
-                                <LottieView
-                                    //source={require('../assets/success-check-mark-animated-grassp.json')}
-                                    source={'../assets/success-check-mark-animated-grassp'}
-                                    autoPlay={true}
-                                    style={styles.animation}
-                                />
-                            <Paragraph>{message}</Paragraph>
-                        </Dialog.Content>
+                <Dialog.Content>
+                        <LottieView
+                            source={require('../assets/success-check-mark-animated-grassp.json')}
+                            //source={'../assets/success-check-mark-animated-grassp'}
+                            autoPlay={true}
+                            loop={false}
+                            //progress={0}
+                            speed={2}
+                            style={styles.animation}
+                            //style={styles.animation}
+                        />
+                    <Paragraph>{message}</Paragraph>
+                </Dialog.Content>
 
-                        <Dialog.Actions>
-                            <Button mode={'contained'} onPress={buttonOnPressSubmit}>{buttonText}</Button>
-                        </Dialog.Actions>
-                    </React.Fragment>
-                }
-            </Dialog>
-        </Portal>
-    )
+                <Dialog.Actions style={styles.actions}>
+                    <Button mode={'contained'} onPress={buttonOnPressSubmit} style={styles.button} labelStyle={{color: 'white'}}>{buttonText}</Button>
+                </Dialog.Actions>
+        </Dialog>
+</Portal>
+)
 }
 
 //TODO: Style button
 
 const styles = StyleSheet.create({
     dialogContainer: {
-      //flex: 1,
         flexDirection: 'column',
+        paddingBottom: 10
     },
     title: {
         textAlign: 'center',
+        marginBottom: 20,
+    },
+    actions: {
+        flexDirection: 'column'
     },
     animation: {
-        flex: 1,
-        position: 'relative'
+        width: 100,
+        height: 100,
+        alignSelf: 'center',
+        marginBottom: 20
+    },
+    button: {
+        alignSelf: 'center',
+        width: '75%',
     }
 });
 
