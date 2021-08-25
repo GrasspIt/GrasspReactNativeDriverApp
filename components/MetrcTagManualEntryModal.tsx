@@ -56,9 +56,8 @@ const MetrcTagManualEntryModal = ({
                 <Card.Content style={styles.cardContent}>
                     {/*<Title>Card title</Title>*/}
                     <Paragraph style={{fontSize: 16}}>Please enter the Metrc Tag below:</Paragraph>
-                    <Caption>Note: text will autocapitalize</Caption>
 
-                    <View style={{marginTop: 16}}>
+                    <View style={{marginTop: 20}}>
                         <TextInput
                             //label={'Metrc Tag'}
                             value={text}

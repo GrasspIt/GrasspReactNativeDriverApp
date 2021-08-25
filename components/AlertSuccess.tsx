@@ -1,7 +1,7 @@
 import React from 'react';
 import LottieView from 'lottie-react-native';
 import { ActivityIndicator, Button, Dialog, Paragraph, Portal, useTheme } from "react-native-paper";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 type AlertSuccessProps = {
     isVisible: boolean;
@@ -26,18 +26,20 @@ const AlertSuccess = ({
 
     return (
         <Portal>
-            <Dialog visible={isVisible} onDismiss={onDismiss}>
+            <Dialog visible={isVisible} onDismiss={onDismiss} style={styles.dialogContainer}>
                 {isLoading
                     ? <ActivityIndicator size='large' color={colors.primary}/>
                     :
                     <React.Fragment>
-                        <Dialog.Title>{title}</Dialog.Title>
+                        <Dialog.Title style={styles.title}>{title}</Dialog.Title>
 
                         <Dialog.Content>
-                            <LottieView
-                                //source={require('../assets/success-check-mark-animated-grassp.json')}
-                                source={'../assets/success-check-mark-animated-grassp.json'}
-                            />
+                                <LottieView
+                                    //source={require('../assets/success-check-mark-animated-grassp.json')}
+                                    source={'../assets/success-check-mark-animated-grassp'}
+                                    autoPlay={true}
+                                    style={styles.animation}
+                                />
                             <Paragraph>{message}</Paragraph>
                         </Dialog.Content>
 
@@ -51,7 +53,20 @@ const AlertSuccess = ({
     )
 }
 
+//TODO: Style button
+
 const styles = StyleSheet.create({
+    dialogContainer: {
+      //flex: 1,
+        flexDirection: 'column',
+    },
+    title: {
+        textAlign: 'center',
+    },
+    animation: {
+        flex: 1,
+        position: 'relative'
+    }
 });
 
 export default AlertSuccess;

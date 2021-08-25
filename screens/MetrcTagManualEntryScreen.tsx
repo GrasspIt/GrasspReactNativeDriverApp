@@ -18,8 +18,9 @@ const MetrcTagManualEntryScreen = ({ navigation, route }) => {
         //navigation.navigate('OrderToScan', {orderId})
     }
 
-    const submitTagEntry = (data) => {
-    //    call backend with tag data
+    const submitTagEntry = (text) => {
+    //    call backend with tag text
+    //    Before submitting text to backend, capitalize it
     //    if response is successful and there are remaining scans in the orderDetail, return to scanner
     //    if response is successful and there are not any more scans remaining in the orderDetail, return to OrderToScan
     //    In either case, for a successful response, show success message
