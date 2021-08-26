@@ -91,7 +91,11 @@ export interface Entities {
     metrics: {
         usersMetrics: UsersMetrics;
     };
-    metrcTagsForOrder: { [orderId: number]: MetrcTag[] }
+    //TODO: consider below:
+    //Also - should we keep this nested? Alternatively, we can also have a MetrcTag array (populated only with MetcTag strings) within each OrderDetails object. This could be another way of counting scans.
+    //The way it is currently implemented, while nested, allows us to avoid filtering OrderDetails in Orders for a specific OrderDetailId, while still making it easy to get MetrcTags for a specific OrderDetail
+    //However, the way it is currently implemented makes it more cumbersome to get MetrcTag data for an entire order
+    metrcTagsForOrder: { [orderId: number]: { [orderDetailId: number]: MetrcTag[]} };
 }
 
 export interface User {
