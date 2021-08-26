@@ -67,6 +67,7 @@ export const initialState = {
   dsprDriverRouteLegDirections: {},
   dsprDriverRouteLocations: {},
   dsprDriverRouteMetrics: {},
+  metrcTagsForOrder: {},
 };
 
 export const overwriteArray = (objValue, srcValue) => {
@@ -164,7 +165,75 @@ export default (state = initialState, action) => {
       if (routeId !== undefined) oldRoutes[routeId] = {};
       state = { ...state, dsprDrivers: oldDsprDrivers, dsprDriverRoutes: oldRoutes };
       return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
+
+    case SCAN_METRC_TAG_SUCCESS:
+      if (responseEntities) {
+        const {orderId, orderDetailId} = responseEntities;
+
+        const modifiedState = {...state};
+
+        modifiedState.metrcTagsForOrder = {
+          ...modifiedState.metrcTagsForOrder,
+          [orderId]: {
+            ...modifiedState[orderId],
+            [orderDetailId]: modifiedState[orderId][orderDetailId].isArray() === true
+                ? modifiedState[orderId][orderDetailId].push(responseEntities)
+                : modifiedState[orderId][orderDetailId] = [responseEntities];
+          }
+        }
+
+        //TODO: See if this updates correctly with multiple scans for the same product and for different products
+        //(for testing purposes - metrcTag can be orderDetailId, createdTimestamp can be Date.getTime()
+        return modifiedState;
+      }
+
+        //return {
+        //  ...state,
+        //    metrcTagsForOrder: {
+        //      ...state.metrcTagsForOrder,
+        //      [orderId]: {
+        //        ...state.metrcTagsForOrder[orderId],
+        //        [orderDetailId]: state.metrcTagsForOrder[orderId][orderDetailId].push(responseEntities)
+        //      }
+        //    }
+        //}
+
+        //if (metrcTagsForOrder[orderId] && metrcTagsForOrder[orderId][orderDetailId]) {
+        //  return {
+        //    ...state,
+        //      metrcTagsForOrder: {
+        //        ...metrcTagsForOrder,
+        //        [orderId]: {
+        //          ...metrcTagsForOrder[orderId],
+        //          [orderDetailId]: metrcTagsForOrder[orderId][orderDetailId].push(responseEntities)
+        //        }
+        //      }
+        //  }
+        //} else if (metrcTagsForOrder[orderId]) {
+        //  return {
+        //    ...state,
+        //      metrcTagsForOrder: {
+        //        ...metrcTagsForOrder,
+        //        [orderId]: {
+        //          ...metrcTagsForOrder[orderId],
+        //          [orderDetailId]: {responseEntities}
+        //        }
+        //      }
+        //    }
+        //  } else {
+        //    return
+        //  }
+
+        }
+        //metrcTagsForOrder[orderId] && metrcTagsForOrder[orderId][orderDetailId]
+        //    ? metrcTagsForOrder[orderId][orderDetailId].push(responseEntities)
+        //    : metrcTagsForOrder[orderId][orderDetailId] = [responseEntities];
+        return state;
     default:
       return state;
   }
+
+
+
+  //TODO: When clearing scans for OrderDetail or Order, replace Metrc array with an empty array
 };
