@@ -177,7 +177,7 @@ export default (state = initialState, action) => {
         modifiedState.metrcTagsForOrder = {
           ...modifiedState.metrcTagsForOrder,
           [orderId]: {
-            ...modifiedState[orderId],
+            ...modifiedState.metrcTagsForOrder[orderId],
             [orderDetailId] : modifiedState.metrcTagsForOrder[orderId] && modifiedState.metrcTagsForOrder[orderId][orderDetailId]
                 ? [...modifiedState.metrcTagsForOrder[orderId][orderDetailId], responseEntities]
                 : new Array(responseEntities)
