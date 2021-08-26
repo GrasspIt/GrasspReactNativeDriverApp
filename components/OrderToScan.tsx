@@ -10,6 +10,9 @@ import {
 import { ProductInOrder } from "../selectors/orderSelectors";
 import { Card, Divider, useTheme, List, IconButton, Menu, Dialog, Portal, Paragraph, Button } from "react-native-paper";
 import { number } from "prop-types";
+import { shallowEqual, useSelector } from "react-redux";
+import { getMetrcScanCountForOrderDetailFromProps, getMetrcScansForOrderFromProps } from "../selectors/metrcSelectors";
+import { MetrcTag, State } from "../store/reduxStoreState";
 
 /**
  * check, check-bold
@@ -38,6 +41,8 @@ const OrderToScan = ({
     const [productResetDialogVisible, setProductResetDialogVisible] = useState<boolean>(false);
     const [productToReset, setProductToReset] = useState<{id: number, name: string} | null>(null);
     const [orderResetDialogVisible, setOrderResetDialogVisible] = useState<boolean>(false);
+
+    const metrcScansForOrder = useSelector<State, {[orderDetailId: number]: MetrcTag[]}>(state => getMetrcScansForOrderFromProps(state, {orderId}), shallowEqual);
 
     //TODO: Decide how you want to determine when scans are complete. Selector? State?
     const [scansComplete, setScansComplete] = useState<boolean>(false);
@@ -87,81 +92,104 @@ const OrderToScan = ({
         })
     })
 
+    //TODO: figure out how to show an error icon if there is an error with the product scan.
+    //What kinds of errors could we have that would show up on this screen? If there is a scanning error, the user would retry on the scanner page. In this scenario, this page can still show the scanner icon.
+    //So far, the only weird case I can imagine where an error icon is necessary is scanCount > item.quantity.
+    //TODO: If there is an error - the driver should not be allowed to complete the order
 
     /**Creates a touchable row for each product in the order
      *  tapping a row opens up the scanner
      * */
-    const renderProductRow = ({item}) => (
-        <React.Fragment key={item.productId}>
-            <Divider/>
-            <Pressable
-                onPress={() => navigation.navigate('MetrcTagScanner', {productName: item.name, productId: item.productId, orderDetailId: item.orderDetailId, orderId})}
-                style={({ pressed }) => [
-                    {
-                        opacity: pressed
-                            ? .2
-                            : 1,
-                    },
-                ]}
-            >
-            {/*<TouchableOpacity*/}
-            {/*        onPress={() => navigation.navigate('MetrcTagScanner', {productName: item.name, productId: item.productId})}*/}
-            {/*>*/}
-                <List.Item
-                    title={item.name}
-                    titleNumberOfLines={2}
-                    titleStyle={{fontSize: 14}}
-                    style={{paddingLeft: 0, paddingRight: 0}}
-                    left={props => (
-                        <List.Icon {...props}
-                                   icon={item.orderDetailId % 3 === 0 ? "alert-circle" : item.orderDetailId % 2 === 0 ? 'check' : 'barcode-scan'}
-                                   color={item.orderDetailId % 3 === 0 ? colors.error : item.orderDetailId % 2 === 0 ? colors.primary : colors.backdrop}
-                                   style={{alignSelf: 'center', marginRight: 10}}
-                        />
-                    )}
-                    right={() => (
-                        <Menu
-                            visible={productMenuVisible !== null && productMenuVisible === item.productId}
-                            onDismiss={closeProductMenu}
-                            anchor={
-                                <View
-                                    onTouchEnd={(e) => e.stopPropagation()}
-                                >
-                                    <IconButton
-                                        icon={'dots-vertical'}
-                                        onPress={() => {
-                                            openProductMenu(item.productId)
-                                        }}
-                                        style={{alignSelf: 'center', marginRight: 0}}
-                                    />
-                                </View>
-                            }
-                        >
-                            <Menu.Item
-                                icon={'refresh'}
-                                onPress={() => {
-                                    setProductMenuVisible(null);
-                                    showProductResetDialog(item.productId, item.name)
-                                }}
-                                title={'Reset Product Scans'}
-                            />
-                        </Menu>
-                    )}
-                    description={() => (
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10}}>
-                            <Text style={{color: colors.backdrop}}>Quantity: {item.quantity}</Text>
-                            {/*TODO - remove hard coded icons and scanned totals once backend endpoints are avaiable*/}
-                            <Text style={{color: colors.backdrop, marginRight: 16}}>Scanned: {item.orderDetailId % 3 === 0 ? 100 : item.orderDetailId % 2 === 0 ? item.quantity : 0}</Text>
-                        </View>
-                    )}
-                >
+    const renderProductRow = ({item}) => {
+        const scanCountForItem = metrcScansForOrder[item.orderDetailId] ? metrcScansForOrder[item.orderDetailId].length : 0;
 
-                </List.Item>
-            {/*</TouchableOpacity>*/}
-            </Pressable>
-            <Divider/>
-        </React.Fragment>
-    )
+        const determineListProps = () => {
+            if (scanCountForItem > item.quantity) return {icon: 'alert-circle', color: colors.error};
+            if (scanCountForItem === item.quantity) return {icon: 'check', color: colors.primary};
+            if (scanCountForItem > 0 && scanCountForItem < item.quantity) return {icon: 'alert-plus-outline', color: 'yellow'};
+            return {icon: 'barcode', color: colors.backdrop};
+        }
+
+        const { icon: listIcon, color: iconColor } = determineListProps();
+
+        return (
+            <React.Fragment key={item.productId}>
+                <Divider/>
+                <Pressable
+                    onPress={() => navigation.navigate('MetrcTagScanner', {
+                        productName: item.name,
+                        productId: item.productId,
+                        orderDetailId: item.orderDetailId,
+                        orderId
+                    })}
+                    disabled={scanCountForItem >= item.quantity}
+                    style={({pressed}) => [
+                        {
+                            opacity: pressed
+                                ? .2
+                                : 1,
+                        },
+                    ]}
+                >
+                    <List.Item
+                        title={item.name}
+                        titleNumberOfLines={2}
+                        titleStyle={{fontSize: 14}}
+                        style={{paddingLeft: 0, paddingRight: 0}}
+                        left={props => (
+                            <List.Icon {...props}
+                                       //icon={item.orderDetailId % 3 === 0 ? "alert-circle" : item.orderDetailId % 2 === 0 ? 'check' : 'barcode-scan'}
+                                       icon={listIcon}
+                                       color={iconColor}
+                                       style={{alignSelf: 'center', marginRight: 10}}
+                            />
+                        )}
+                        right={() => (
+                            <Menu
+                                visible={productMenuVisible !== null && productMenuVisible === item.productId}
+                                onDismiss={closeProductMenu}
+                                anchor={
+                                    <View
+                                        onTouchEnd={(e) => e.stopPropagation()}
+                                    >
+                                        <IconButton
+                                            icon={'dots-vertical'}
+                                            onPress={() => {
+                                                openProductMenu(item.productId)
+                                            }}
+                                            style={{alignSelf: 'center', marginRight: 0}}
+                                        />
+                                    </View>
+                                }
+                            >
+                                <Menu.Item
+                                    icon={'refresh'}
+                                    onPress={() => {
+                                        setProductMenuVisible(null);
+                                        showProductResetDialog(item.productId, item.name)
+                                    }}
+                                    title={'Reset Product Scans'}
+                                />
+                            </Menu>
+                        )}
+                        description={() => (
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10}}>
+                                <Text style={{color: colors.backdrop}}>Quantity: {item.quantity}</Text>
+                                {/*TODO - remove hard coded icons and scanned totals once backend endpoints are avaiable*/}
+                                <Text style={{
+                                    color: colors.backdrop,
+                                    marginRight: 16
+                                }}>Scanned: {scanCountForItem}</Text>
+                            </View>
+                        )}
+                    >
+
+                    </List.Item>
+                </Pressable>
+                <Divider/>
+            </React.Fragment>
+        )
+    }
 
     //TODO: create complete order button
     // button is disabled if order has not been fully scanned
