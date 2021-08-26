@@ -169,6 +169,7 @@ export default (state = initialState, action) => {
 
     case SCAN_METRC_TAG_SUCCESS:
       if (responseEntities) {
+        console.log('In Reducer!!!!');
         const {orderId, orderDetailId} = responseEntities;
 
         const modifiedState = {...state};
@@ -177,9 +178,9 @@ export default (state = initialState, action) => {
           ...modifiedState.metrcTagsForOrder,
           [orderId]: {
             ...modifiedState[orderId],
-            [orderDetailId]: modifiedState[orderId][orderDetailId].isArray() === true
-                ? modifiedState[orderId][orderDetailId].push(responseEntities)
-                : modifiedState[orderId][orderDetailId] = [responseEntities]
+            [orderDetailId] : modifiedState.metrcTagsForOrder[orderId] && modifiedState.metrcTagsForOrder[orderId][orderDetailId]
+                ? [...modifiedState.metrcTagsForOrder[orderId][orderDetailId], responseEntities]
+                : new Array(responseEntities)
           }
         }
 
