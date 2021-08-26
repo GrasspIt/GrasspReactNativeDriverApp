@@ -30,6 +30,7 @@ import {
   CANCEL_ORDER_SUCCESS,
   GET_ORDER_DETAILS_WITH_ID_SUCCESS,
 } from '../actions/orderActions';
+import { SCAN_METRC_TAG_SUCCESS } from "../actions/metrcActions";
 
 export const initialState = {
   users: {},
@@ -178,7 +179,7 @@ export default (state = initialState, action) => {
             ...modifiedState[orderId],
             [orderDetailId]: modifiedState[orderId][orderDetailId].isArray() === true
                 ? modifiedState[orderId][orderDetailId].push(responseEntities)
-                : modifiedState[orderId][orderDetailId] = [responseEntities];
+                : modifiedState[orderId][orderDetailId] = [responseEntities]
           }
         }
 
@@ -224,7 +225,6 @@ export default (state = initialState, action) => {
         //    return
         //  }
 
-        }
         //metrcTagsForOrder[orderId] && metrcTagsForOrder[orderId][orderDetailId]
         //    ? metrcTagsForOrder[orderId][orderDetailId].push(responseEntities)
         //    : metrcTagsForOrder[orderId][orderDetailId] = [responseEntities];
