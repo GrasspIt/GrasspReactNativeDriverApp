@@ -45,7 +45,7 @@ const AlertSuccessOrError = ({
                 <Dialog.Actions style={styles.actions}>
                     <Button mode={'contained'}
                             onPress={buttonOnPressSubmit}
-                            style={[styles.button, {backgroundColor: isError ? colors.error : colors.primary}]}
+                            style={[styles.button, {backgroundColor: isError ? colors.error : colors.primary, marginBottom: isError ? 0 : 20}]}
                             labelStyle={{color: 'white'}}>{buttonText}</Button>
                 </Dialog.Actions>
             </Dialog>
@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         alignSelf: 'center',
-        marginBottom: 20,
     },
     button: {
         alignSelf: 'center',
