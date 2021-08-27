@@ -103,14 +103,17 @@ const OrderToScan = ({
     const renderProductRow = ({item}) => {
         const scanCountForItem = metrcScansForOrder[item.orderDetailId] ? metrcScansForOrder[item.orderDetailId].length : 0;
 
-        const determineListProps = () => {
+        /**Determines which icon to render for an item, depending upon its scan progress (complete, in-progress, not-started, error)*/
+        const determineListIcon = () => {
             if (scanCountForItem > item.quantity) return {icon: 'alert-circle', color: colors.error};
-            if (scanCountForItem === item.quantity) return {icon: 'check', color: colors.primary};
-            if (scanCountForItem > 0 && scanCountForItem < item.quantity) return {icon: 'alert-plus-outline', color: 'yellow'};
-            return {icon: 'barcode', color: colors.backdrop};
+            if (scanCountForItem === item.quantity) return {icon: 'check-circle-outline', color: colors.primary};
+            //alternative color for dots-horizontal: #FFB800
+            if (scanCountForItem > 0 && scanCountForItem < item.quantity) return {icon: 'dots-horizontal-circle-outline', color: '#f8b302'};
+            //if the switch is made to qr codes, use the icon 'data-matrix-scan'
+            return {icon: 'barcode-scan', color: colors.backdrop};
         }
 
-        const { icon: listIcon, color: iconColor } = determineListProps();
+        const { icon: listIcon, color: listIconColor } = determineListIcon();
 
         return (
             <React.Fragment key={item.productId}>
@@ -140,7 +143,7 @@ const OrderToScan = ({
                             <List.Icon {...props}
                                        //icon={item.orderDetailId % 3 === 0 ? "alert-circle" : item.orderDetailId % 2 === 0 ? 'check' : 'barcode-scan'}
                                        icon={listIcon}
-                                       color={iconColor}
+                                       color={listIconColor}
                                        style={{alignSelf: 'center', marginRight: 10}}
                             />
                         )}
