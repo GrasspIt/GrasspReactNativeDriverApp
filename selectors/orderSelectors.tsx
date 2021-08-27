@@ -10,6 +10,11 @@ export const getOrders = (state: State) =>
 export const getOrderFromProps = (state: State, props) =>
   state.api && state.api.entities ? state.api.entities.orders[props.orderId] : undefined;
 
+export const getOrderDetailFromProps = (state: State, {orderId, orderDetailId}) => {
+    const order = getOrderFromProps(state, {orderId});
+    return order?.orderDetails.find(orderDetail => orderDetail.id === orderDetailId);
+}
+
 export const getOrdersForUser = (state: State, props) => {
   const orders = state.api.entities.orders;
   const addresses = getAddresses(state);
