@@ -44,13 +44,15 @@ const OrderToScan = ({
 
     const metrcScansForOrder = useSelector<State, {[orderDetailId: number]: MetrcTag[]}>(state => getMetrcScansForOrderFromProps(state, {orderId}), shallowEqual);
 
-    const currentNumberOfScansForOrder = useMemo(() => {
-        let totalScans = 0;
-        for (let orderDetail in metrcScansForOrder) {
-            totalScans += metrcScansForOrder[orderDetail].length;
-        }
-        return totalScans;
-    }, [metrcScansForOrder])
+    //const currentNumberOfScansForOrder = useMemo(() => {
+    //    let totalScans = 0;
+    //    for (let orderDetail in metrcScansForOrder) {
+    //        totalScans += metrcScansForOrder[orderDetail].length;
+    //    }
+    //    return totalScans;
+    //}, [metrcScansForOrder])
+
+    const currentNumberOfScansForOrder = useMemo(() => Object.values(metrcScansForOrder).reduce(((acc, currVal) => acc + currVal.length), 0), [metrcScansForOrder])
     const totalRequiredScansForOrder = useMemo(() => products.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
 
     //TODO: Decide how you want to determine when scans are complete. Selector? State?
