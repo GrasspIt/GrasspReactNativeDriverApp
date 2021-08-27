@@ -17,13 +17,16 @@ export const getMetrcScansForOrderFromProps = (state: State, {orderId}): { [orde
 }
 
 export const getMetrcScanCountForOrderFromProps = (state: State, {orderId}): number => {
+    console.log('getMetrcScanCountForOrderFromProps Running!!!')
     const metrcScansForOrder = getMetrcScansForOrderFromProps(state, {orderId});
-    let scanCount = 0;
 
-    if (metrcScansForOrder && Object.keys(metrcScansForOrder).length > 0) {
-        for (let orderDetailId in metrcScansForOrder) {
-            scanCount += metrcScansForOrder[orderDetailId].length;
-        }
-    }
-    return scanCount;
+    return Object.values(metrcScansForOrder).reduce(((acc, currVal) => acc + currVal.length), 0)
+    //let scanCount = 0;
+    //
+    //if (metrcScansForOrder && Object.keys(metrcScansForOrder).length > 0) {
+    //    for (let orderDetailId in metrcScansForOrder) {
+    //        scanCount += metrcScansForOrder[orderDetailId].length;
+    //    }
+    //}
+    //return scanCount;
 }
