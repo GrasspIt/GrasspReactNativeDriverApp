@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useState } from 'react';
 import {
     FlatList,
     SafeAreaView,
@@ -43,6 +43,15 @@ const OrderToScan = ({
     const [orderResetDialogVisible, setOrderResetDialogVisible] = useState<boolean>(false);
 
     const metrcScansForOrder = useSelector<State, {[orderDetailId: number]: MetrcTag[]}>(state => getMetrcScansForOrderFromProps(state, {orderId}), shallowEqual);
+
+    const currentNumberOfScansForOrder = useMemo(() => {
+        let totalScans = 0;
+        for (let orderDetail in metrcScansForOrder) {
+            totalScans += metrcScansForOrder[orderDetail].length;
+        }
+        return totalScans;
+    }, [metrcScansForOrder])
+    const totalRequiredScansForOrder = useMemo(() => products.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
 
     //TODO: Decide how you want to determine when scans are complete. Selector? State?
     const [scansComplete, setScansComplete] = useState<boolean>(false);
@@ -203,7 +212,10 @@ const OrderToScan = ({
         <SafeAreaView style={{flex: 1}}>
             <View style={{flex: 1, backgroundColor: colors.background}}>
                 <Card style={[styles.cardContainer, {flex: 1}]}>
-                        <Card.Title title={'Products to Scan'} />
+                        <Card.Title
+                            title={'Products to Scan'}
+                            subtitle={`Scanned: ${currentNumberOfScansForOrder}/${totalRequiredScansForOrder}`}
+                        />
                     <Card.Content>
                         <FlatList
                             data={products}
