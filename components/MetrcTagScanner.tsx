@@ -3,6 +3,8 @@ import { SafeAreaView, Text, StyleSheet, View, Platform, StatusBar, Vibration } 
 import { ProductInOrder } from "../selectors/orderSelectors";
 import { useTheme, Button, IconButton, Caption } from "react-native-paper";
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { OrderDetail } from "../store/reduxStoreState";
+import AlertSuccessOrError from "./AlertSuccessOrError";
 
 
 type MetrcTagScannerProps = {
@@ -12,9 +14,28 @@ type MetrcTagScannerProps = {
     productId: string;
     orderId: string;
     scanSubmit: (data) => any;
+    scanCountForOrderDetail: number;
+    orderDetail: OrderDetail | undefined;
+    successAlertVisible: boolean;
+    errorAlertVisible: boolean;
+    closeSuccessAlert: () => any;
+    closeErrorAlert: () => any;
 }
 
-const MetrcTagScanner = ({ navigation, productName, scanSubmit, productId, orderDetailId, orderId }: MetrcTagScannerProps) => {
+const MetrcTagScanner = ({
+                             navigation,
+                             productName,
+                             scanSubmit,
+                             productId,
+                             orderDetailId,
+                             orderId,
+                             scanCountForOrderDetail,
+                             orderDetail,
+                             successAlertVisible,
+                             errorAlertVisible,
+                             closeSuccessAlert,
+                             closeErrorAlert
+                         }: MetrcTagScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
     const [scanned, setScanned] = useState<boolean>(false);
@@ -45,12 +66,15 @@ const MetrcTagScanner = ({ navigation, productName, scanSubmit, productId, order
 
         console.log('Result from barcode scanner:', scanData);
         console.log('Barcode Type:', BarCodeScanner.Constants.BarCodeType[type]);
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+        //alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+        scanSubmit(data);
 
-    //    Call scanSubmit
-    //    if response.error => show error
-    //    if response.success && no more to scan => show check animation and then close (or close and then show check animation?)
-    //    if response.success && quantity remains to scan => show check animation, (update title ?), allow user to keep scanning
+        //    Call scanSubmit
+        //    if response.error => show error
+        //    if response.success && no more to scan => show check animation and then close (or close and then show check animation?)
+        //    if response.success && quantity remains to scan => show check animation, (update title ?), allow user to keep scanning
+
+
     };
 
     if (hasPermission === 'requesting-permission') {
@@ -64,49 +88,74 @@ const MetrcTagScanner = ({ navigation, productName, scanSubmit, productId, order
     return (
         <SafeAreaView style={styles.componentContainer}>
 
-                <View style={styles.headerContainer}>
-                    <Text style={styles.title}>{productName}</Text>
-                </View>
-                {/*Expo's implementation*/}
-                <View style={styles.scannerContainer}>
-                    <BarCodeScanner
-                        onBarCodeScanned={scanned ? undefined : handleScanSubmit}
-                        style={[StyleSheet.absoluteFill]}
-                    >
-                        <View style={styles.layerTop}/>
-                        <View style={styles.layerCenter}>
-                            <View style={styles.layerLeft}/>
-                            <View style={styles.focused}/>
-                            <View style={styles.layerRight}/>
-                        </View>
-                        <View style={styles.layerBottom}/>
-
-                        {scanned && <Button onPress={() => setScanned(false)}> Tap to Scan Again </ Button>}
-                    </BarCodeScanner>
-                </View>
-                <View style={styles.buttonsContainer}>
-                    <View style={styles.buttonContainer}>
-                        <IconButton
-                            icon={'close-circle'}
-                            size={40}
-                            color={'white'}
-                            style={{margin: 0}}
-                            onPress={() => navigation.goBack()}
-                        />
-                        <Text style={styles.buttonText}>Close</Text>
+            <View style={styles.headerContainer}>
+                <Text style={styles.title}>{productName}</Text>
+            </View>
+            {/*Expo's implementation*/}
+            <View style={styles.scannerContainer}>
+                <BarCodeScanner
+                    onBarCodeScanned={scanned ? undefined : handleScanSubmit}
+                    style={[StyleSheet.absoluteFill]}
+                >
+                    <View style={styles.layerTop}/>
+                    <View style={styles.layerCenter}>
+                        <View style={styles.layerLeft}/>
+                        <View style={styles.focused}/>
+                        <View style={styles.layerRight}/>
                     </View>
-                    <View style={styles.buttonContainer}>
-                        <IconButton
-                            icon={'keyboard-outline'}
-                            size={40}
-                            color={'white'}
-                            style={{margin: 0}}
-                            onPress={() => navigation.navigate('MetrcTagManualEntry', { productName, productId, orderDetailId, orderId })}
-                        />
-                        <Text style={styles.buttonText}>Manual Entry</Text>
-                    </View>
+                    <View style={styles.layerBottom}/>
 
+                    {scanned && <Button onPress={() => setScanned(false)}> Tap to Scan Again </ Button>}
+                </BarCodeScanner>
+            </View>
+            <View style={styles.buttonsContainer}>
+                <View style={styles.buttonContainer}>
+                    <IconButton
+                        icon={'close-circle'}
+                        size={40}
+                        color={'white'}
+                        style={{margin: 0}}
+                        onPress={() => navigation.goBack()}
+                    />
+                    <Text style={styles.buttonText}>Close</Text>
                 </View>
+                <View style={styles.buttonContainer}>
+                    <IconButton
+                        icon={'keyboard-outline'}
+                        size={40}
+                        color={'white'}
+                        style={{margin: 0}}
+                        onPress={() => navigation.navigate('MetrcTagManualEntry', {
+                            productName,
+                            productId,
+                            orderDetailId,
+                            orderId
+                        })}
+                    />
+                    <Text style={styles.buttonText}>Manual Entry</Text>
+                </View>
+
+            </View>
+
+            {/*Success Alert*/}
+            <AlertSuccessOrError isVisible={successAlertVisible}
+                                 onDismiss={closeSuccessAlert}
+                                 title={'Success!'}
+                                 message={`The Metrc Tag for ${productName} has been successfully entered`}
+                                 buttonOnPressSubmit={closeSuccessAlert}
+            />
+
+            {/*TODO - Test for different errors. Change error message to be whatever is returned from the backend*/}
+            {/*Error Alert*/}
+            <AlertSuccessOrError
+                isVisible={errorAlertVisible}
+                onDismiss={closeErrorAlert}
+                title={'Error Encountered!'}
+                message={`The Metrc tag submission for ${productName} was not successful`}
+                buttonText={'Retry'}
+                buttonOnPressSubmit={closeErrorAlert}
+                isError={true}
+            />
         </SafeAreaView>
     );
 }
