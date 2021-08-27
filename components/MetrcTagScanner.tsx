@@ -91,7 +91,8 @@ const MetrcTagScanner = ({
         <SafeAreaView style={styles.componentContainer}>
 
             <View style={styles.headerContainer}>
-                <Text style={styles.title}>{productName}</Text>
+                <Text style={styles.title} numberOfLines={2}>{productName}</Text>
+                <Text style={styles.subtitle}>Scans: {scanCountForOrderDetail}/{orderDetail?.quantity}</Text>
             </View>
             {/*Expo's implementation*/}
             <View style={styles.scannerContainer}>
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         alignItems: 'center',
-        flex: 1,
+        flex: 2,
         justifyContent: 'center',
         //backgroundColor: 'violet',
         backgroundColor: opacity
@@ -181,6 +182,14 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 16,
         color: 'white',
+        //paddingTop: 8,
+        paddingRight: 8,
+        paddingLeft: 8
+    },
+    subtitle: {
+        color: 'white',
+        fontSize: 14,
+        marginTop: 14,
     },
     scannerContainer: {
         flex: 9,
