@@ -20,6 +20,7 @@ type MetrcTagScannerProps = {
     errorAlertVisible: boolean;
     closeSuccessAlert: () => any;
     closeErrorAlert: () => any;
+    successAlertButtonText: string;
 }
 
 const MetrcTagScanner = ({
@@ -34,7 +35,8 @@ const MetrcTagScanner = ({
                              successAlertVisible,
                              errorAlertVisible,
                              closeSuccessAlert,
-                             closeErrorAlert
+                             closeErrorAlert,
+                             successAlertButtonText,
                          }: MetrcTagScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
@@ -142,6 +144,7 @@ const MetrcTagScanner = ({
                                  onDismiss={closeSuccessAlert}
                                  title={'Success!'}
                                  message={`The Metrc Tag for ${productName} has been successfully entered`}
+                                 buttonText={successAlertButtonText}
                                  buttonOnPressSubmit={closeSuccessAlert}
             />
 

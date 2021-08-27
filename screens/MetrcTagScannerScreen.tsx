@@ -42,7 +42,9 @@ const MetrcTagScannerScreen = ({
 
         if (orderDetail && scanCountForOrderDetail >= orderDetail.quantity) {
             navigation.goBack();
+            return;
         }
+        setSuccessAlertButtonText('Complete Product Scans')
     }
     const showErrorAlert = () => setErrorAlertVisible(true);
     const closeErrorAlert = () => setErrorAlertVisible(false);
@@ -84,7 +86,7 @@ const MetrcTagScannerScreen = ({
         errorAlertVisible={errorAlertVisible}
         closeSuccessAlert={closeSuccessAlert}
         closeErrorAlert={closeErrorAlert}
-        //successAlertButtonText={successAlertButtonText}
+        successAlertButtonText={successAlertButtonText}
     />
 }
 
