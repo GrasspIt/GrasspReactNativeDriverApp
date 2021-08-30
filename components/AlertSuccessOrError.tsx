@@ -12,18 +12,20 @@ type AlertSuccessOrErrorProps = {
     isLoading?: boolean;
     buttonText?: string;
     isError?: boolean;
+    buttonsContainer?: JSX.Element;
 }
 
 const AlertSuccessOrError = ({
-                          isVisible,
-                          onDismiss,
-                          title,
-                          message,
-                          buttonOnPressSubmit,
-                          isLoading = false,
-                          buttonText = 'Ok',
-                          isError = false,
-                      }: AlertSuccessOrErrorProps) => {
+                                 isVisible,
+                                 onDismiss,
+                                 title,
+                                 message,
+                                 buttonOnPressSubmit,
+                                 isLoading = false,
+                                 buttonText = 'Ok',
+                                 isError = false,
+                                 buttonsContainer
+                             }: AlertSuccessOrErrorProps) => {
     const {colors} = useTheme();
 
     return (
@@ -43,10 +45,25 @@ const AlertSuccessOrError = ({
                 </Dialog.Content>
 
                 <Dialog.Actions style={styles.actions}>
-                    <Button mode={'contained'}
-                            onPress={buttonOnPressSubmit}
-                            style={[styles.button, {backgroundColor: isError ? colors.error : colors.primary, marginBottom: isError ? 0 : 20}]}
-                            labelStyle={{color: 'white'}}>{buttonText}</Button>
+                    {
+                        buttonsContainer
+                            ? buttonsContainer
+
+                            : <Button mode={'contained'}
+                                onPress={buttonOnPressSubmit}
+                                style={[styles.button, {
+                                    backgroundColor: isError ? colors.error : colors.primary,
+                                    marginBottom: isError ? 0 : 20
+                                }]}
+                                labelStyle={{color: 'white'}}>{buttonText}</Button>
+                    }
+                    {/*<Button mode={'contained'}*/}
+                    {/*        onPress={buttonOnPressSubmit}*/}
+                    {/*        style={[styles.button, {*/}
+                    {/*            backgroundColor: isError ? colors.error : colors.primary,*/}
+                    {/*            marginBottom: isError ? 0 : 20*/}
+                    {/*        }]}*/}
+                    {/*        labelStyle={{color: 'white'}}>{buttonText}</Button>*/}
                 </Dialog.Actions>
             </Dialog>
         </Portal>

@@ -86,6 +86,26 @@ const MetrcTagScanner = ({
         return <Text>No access to camera</Text>;
     }
 
+    /**Buttons container with 2 buttons: 'Continue Scanning' and 'Go Back'
+     * -> rendered in AlertSuccessOrError if the item has remaining quantity to scan
+     * */
+    const successButtonsForRemainingScans = (
+        <View>
+            <Button
+                mode={'contained'}
+                onPress={() => navigation.goBack()}
+            >Go Back
+            </Button>
+            <Button mode={'contained'}
+                    onPress={closeSuccessAlert}
+                    style={[styles.successButtons, {
+                        backgroundColor: colors.primary,
+                        marginBottom: 20
+                    }]}
+                    labelStyle={{color: 'white'}}>Continue Scanning</Button>
+        </View>
+    )
+
 
     return (
         <SafeAreaView style={styles.componentContainer}>
@@ -147,6 +167,7 @@ const MetrcTagScanner = ({
                                  message={`The Metrc Tag for ${productName} has been successfully entered`}
                                  buttonText={successAlertButtonText}
                                  buttonOnPressSubmit={closeSuccessAlert}
+                                 buttonsContainer={(orderDetail && scanCountForOrderDetail < orderDetail?.quantity) ? successButtonsForRemainingScans : undefined}
             />
 
             {/*TODO - Test for different errors. Change error message to be whatever is returned from the backend*/}
@@ -241,6 +262,9 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
+    },
+    successButtons: {
+        width: '25%',
     }
 });
 
