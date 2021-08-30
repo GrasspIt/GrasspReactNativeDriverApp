@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, StyleSheet, View, Platform, StatusBar, Vibration } from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
-import { useTheme, Button, IconButton, Caption } from "react-native-paper";
+import { useTheme, Button, IconButton, Caption, TouchableRipple } from "react-native-paper";
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { OrderDetail } from "../store/reduxStoreState";
 import AlertSuccessOrError from "./AlertSuccessOrError";
@@ -90,19 +90,25 @@ const MetrcTagScanner = ({
      * -> rendered in AlertSuccessOrError if the item has remaining quantity to scan
      * */
     const successButtonsForRemainingScans = (
-        <View>
+        <View style={{flexDirection: 'row', justifyContent: 'space-around', width: '100%'}}>
             <Button
-                mode={'contained'}
+                mode={'outlined'}
                 onPress={() => navigation.goBack()}
-            >Go Back
+                style={{marginBottom: 20,}}
+                //labelStyle={{color: colors.text}}
+                color={colors.text}
+            >
+                Go Back
             </Button>
             <Button mode={'contained'}
                     onPress={closeSuccessAlert}
-                    style={[styles.successButtons, {
+                    style={{
                         backgroundColor: colors.primary,
-                        marginBottom: 20
-                    }]}
-                    labelStyle={{color: 'white'}}>Continue Scanning</Button>
+                        marginBottom: 20,
+                    }}
+                    labelStyle={{color: 'white'}}
+            >Scan Another</Button>
+            {/*Continue Scanning 17 vs Scan Another 12*/}
         </View>
     )
 
@@ -163,7 +169,7 @@ const MetrcTagScanner = ({
             {/*Success Alert*/}
             <AlertSuccessOrError isVisible={successAlertVisible}
                                  onDismiss={closeSuccessAlert}
-                                 title={'Success!'}
+                                 title={'Scan Successful!'}
                                  message={`The Metrc Tag for ${productName} has been successfully entered`}
                                  buttonText={successAlertButtonText}
                                  buttonOnPressSubmit={closeSuccessAlert}
@@ -264,9 +270,6 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
     },
-    successButtons: {
-        width: '25%',
-    }
 });
 
 export default MetrcTagScanner;
