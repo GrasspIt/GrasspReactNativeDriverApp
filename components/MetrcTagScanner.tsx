@@ -242,11 +242,12 @@ const styles = StyleSheet.create({
     },
     layerRight: {
         flex: 1,
-        backgroundColor: opacity
+        backgroundColor: opacity,
         //backgroundColor: 'brown'
     },
     layerBottom: {
-        flex: 2,
+        //having flex: 2 produced a visual artifact, setting flex: 2.1 cleans this up
+        flex: 2.1,
         backgroundColor: opacity,
         //backgroundColor: 'green',
 
