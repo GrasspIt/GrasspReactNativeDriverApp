@@ -44,36 +44,28 @@ const OrderToScan = ({
                      }: OrderToScanProps) => {
     const {colors} = useTheme();
 
-    const [productMenuVisible, setProductMenuVisible] = useState<number | null>(null);
-    const [orderMenuVisible, setOrderMenuVisible] = useState<boolean>(false);
-    const [productResetDialogVisible, setProductResetDialogVisible] = useState<boolean>(false);
-    const [productToReset, setProductToReset] = useState<{id: number, name: string} | null>(null);
-    const [orderResetDialogVisible, setOrderResetDialogVisible] = useState<boolean>(false);
-
     const metrcScansForOrder = useSelector<State, {[orderDetailId: number]: MetrcTag[]}>(state => getMetrcScansForOrderFromProps(state, {orderId}), shallowEqual);
     const currentNumberOfScansForOrder = useSelector<State, number>(state => getMetrcScanCountForOrderFromProps(state, {orderId}), shallowEqual);
 
-    //const currentNumberOfScansForOrder = useMemo(() => {
-    //    let totalScans = 0;
-    //    for (let orderDetail in metrcScansForOrder) {
-    //        totalScans += metrcScansForOrder[orderDetail].length;
-    //    }
-    //    return totalScans;
-    //}, [metrcScansForOrder])
-
     const totalRequiredScansForOrder = useMemo(() => products.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
-    //const currentNumberOfScansForOrder = useMemo(() => Object.values(metrcScansForOrder).reduce(((acc, currVal) => acc + currVal.length), 0), [metrcScansForOrder])
+
+    const [productMenuVisible, setProductMenuVisible] = useState<number | null>(null);
+    const [orderMenuVisible, setOrderMenuVisible] = useState<boolean>(false);
+    const [productResetDialogVisible, setProductResetDialogVisible] = useState<boolean>(false);
+    const [productToReset, setProductToReset] = useState<{id: number, name: string, orderDetailId: number} | null>(null);
+    const [orderResetDialogVisible, setOrderResetDialogVisible] = useState<boolean>(false);
 
     //TODO: Decide how you want to determine when scans are complete. Selector? State?
+    //used to determine whether or not complete order button is disabled
     const [scansComplete, setScansComplete] = useState<boolean>(false);
 
     const openProductMenu = (id: number) => setProductMenuVisible(id);
     const openOrderMenu = () => setOrderMenuVisible(true);
     const closeProductMenu = () => setProductMenuVisible(null);
     const closeOrderMenu = () => setOrderMenuVisible(false);
-    const showProductResetDialog = (id: number, name: string) => {
+    const showProductResetDialog = (id: number, name: string, orderDetailId: number) => {
         setProductResetDialogVisible(true);
-        setProductToReset({id, name});
+        setProductToReset({id, name, orderDetailId});
     }
     const hideProductResetDialog = () => {
         setProductResetDialogVisible(false);
@@ -116,6 +108,17 @@ const OrderToScan = ({
     //What kinds of errors could we have that would show up on this screen? If there is a scanning error, the user would retry on the scanner page. In this scenario, this page can still show the scanner icon.
     //So far, the only weird case I can imagine where an error icon is necessary is scanCount > item.quantity.
     //TODO: If there is an error - the driver should not be allowed to complete the order
+
+    /**Resets scans for an Order Detail and closes the reset order detail scans dialog*/
+    const handleResetScansForOrderDetail = () => {
+        productToReset && resetOrderDetailScans(orderId.toString(), productToReset.orderDetailId?.toString());
+        hideProductResetDialog();
+    }
+
+    /**Resets scans for an order and closes the reset order scans dialog*/
+    const handleResetScansForOrder = () => {
+
+    }
 
     /**Creates a touchable row for each product in the order
      *  tapping a row opens up the scanner
@@ -189,7 +192,7 @@ const OrderToScan = ({
                                     icon={'refresh'}
                                     onPress={() => {
                                         setProductMenuVisible(null);
-                                        showProductResetDialog(item.productId, item.name)
+                                        showProductResetDialog(item.productId, item.name, item.orderDetailId)
                                     }}
                                     title={'Reset Product Scans'}
                                 />
@@ -231,7 +234,7 @@ const OrderToScan = ({
                         <FlatList
                             data={products}
                             renderItem={renderProductRow}
-                            keyExtractor={(item) => item.name}
+                            keyExtractor={(item: ProductInOrder) => item.name}
                         />
                         <Divider/>
                     </Card.Content>
@@ -261,7 +264,7 @@ const OrderToScan = ({
                     </Dialog.Content>
                     <Dialog.Actions style={{flexDirection: 'row', justifyContent: 'space-around'}}>
                         <Button onPress={hideProductResetDialog} color={colors.backdrop}>Cancel</Button>
-                        <Button onPress={() => productToReset && resetOrderDetailScans(orderId.toString(), productToReset.id?.toString())}>Reset</Button>
+                        <Button onPress={handleResetScansForOrderDetail}>Reset</Button>
                     </Dialog.Actions>
                 </Dialog>
 
@@ -273,7 +276,7 @@ const OrderToScan = ({
                     </Dialog.Content>
                     <Dialog.Actions style={{flexDirection: 'row', justifyContent: 'space-around'}}>
                         <Button onPress={hideOrderResetDialog} color={colors.backdrop}>Cancel</Button>
-                        <Button onPress={() => {}}>Reset</Button>
+                        <Button onPress={handleResetScansForOrder}>Reset</Button>
                     </Dialog.Actions>
                 </Dialog>
 
