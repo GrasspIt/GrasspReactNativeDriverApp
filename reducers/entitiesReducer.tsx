@@ -30,7 +30,11 @@ import {
   CANCEL_ORDER_SUCCESS,
   GET_ORDER_DETAILS_WITH_ID_SUCCESS,
 } from '../actions/orderActions';
-import { SCAN_METRC_TAG_SUCCESS } from "../actions/metrcActions";
+import {
+  RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS,
+  RESET_METRC_ORDER_SCANS_SUCCESS,
+  SCAN_METRC_TAG_SUCCESS
+} from "../actions/metrcActions";
 
 export const initialState = {
   users: {},
@@ -169,7 +173,6 @@ export default (state = initialState, action) => {
 
     case SCAN_METRC_TAG_SUCCESS:
       if (responseEntities) {
-        console.log('In Reducer!!!!');
         const {orderId, orderDetailId} = responseEntities;
 
         const modifiedState = {...state};
@@ -188,48 +191,28 @@ export default (state = initialState, action) => {
         //(for testing purposes - metrcTag can be orderDetailId, createdTimestamp can be Date.getTime()
         return modifiedState;
       }
-
-        //return {
-        //  ...state,
-        //    metrcTagsForOrder: {
-        //      ...state.metrcTagsForOrder,
-        //      [orderId]: {
-        //        ...state.metrcTagsForOrder[orderId],
-        //        [orderDetailId]: state.metrcTagsForOrder[orderId][orderDetailId].push(responseEntities)
-        //      }
-        //    }
-        //}
-
-        //if (metrcTagsForOrder[orderId] && metrcTagsForOrder[orderId][orderDetailId]) {
-        //  return {
-        //    ...state,
-        //      metrcTagsForOrder: {
-        //        ...metrcTagsForOrder,
-        //        [orderId]: {
-        //          ...metrcTagsForOrder[orderId],
-        //          [orderDetailId]: metrcTagsForOrder[orderId][orderDetailId].push(responseEntities)
-        //        }
-        //      }
-        //  }
-        //} else if (metrcTagsForOrder[orderId]) {
-        //  return {
-        //    ...state,
-        //      metrcTagsForOrder: {
-        //        ...metrcTagsForOrder,
-        //        [orderId]: {
-        //          ...metrcTagsForOrder[orderId],
-        //          [orderDetailId]: {responseEntities}
-        //        }
-        //      }
-        //    }
-        //  } else {
-        //    return
-        //  }
-
-        //metrcTagsForOrder[orderId] && metrcTagsForOrder[orderId][orderDetailId]
-        //    ? metrcTagsForOrder[orderId][orderDetailId].push(responseEntities)
-        //    : metrcTagsForOrder[orderId][orderDetailId] = [responseEntities];
         return state;
+    case RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS:
+      if (responseEntities) {
+        const {orderId, orderDetailId} = responseEntities;
+        const modifiedState = {...state};
+
+        if (modifiedState.metrcTagsForOrder[orderId][orderDetailId]) {
+          delete modifiedState.metrcTagsForOrder[orderId][orderDetailId];
+        }
+        return modifiedState;
+      }
+      return state;
+    case RESET_METRC_ORDER_SCANS_SUCCESS:
+      if (responseEntities) {
+        const {orderId, orderDetailId} = responseEntities;
+        const modifiedState = {...state};
+        if (modifiedState.metrcTagsForOrder[orderId]) {
+          delete modifiedState.metrcTagsForOrder[orderId];
+        }
+        return modifiedState;
+      }
+      return state;
     default:
       return state;
   }

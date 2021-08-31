@@ -30,13 +30,17 @@ type OrderToScanProps = {
     products: ProductInOrder[];
     navigation;
     handleCompleteOrder: () => any;
+    resetOrderDetailScans: (orderId: string, orderDetailId: string) => any;
+    resetOrderScans: (orderId: string) => any;
 }
 
 const OrderToScan = ({
                          orderId,
                          products,
                          navigation,
-                         handleCompleteOrder
+                         handleCompleteOrder,
+                         resetOrderDetailScans,
+                         resetOrderScans,
                      }: OrderToScanProps) => {
     const {colors} = useTheme();
 
@@ -257,7 +261,7 @@ const OrderToScan = ({
                     </Dialog.Content>
                     <Dialog.Actions style={{flexDirection: 'row', justifyContent: 'space-around'}}>
                         <Button onPress={hideProductResetDialog} color={colors.backdrop}>Cancel</Button>
-                        <Button onPress={() => {}}>Reset</Button>
+                        <Button onPress={() => productToReset && resetOrderDetailScans(orderId.toString(), productToReset.id?.toString())}>Reset</Button>
                     </Dialog.Actions>
                 </Dialog>
 

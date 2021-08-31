@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react';
 
 import OrderToScan from '../components/OrderToScan';
-import { shallowEqual, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { getProductsInOrderFromProps, ProductInOrder } from "../selectors/orderSelectors";
 import { State } from "../store/reduxStoreState";
+import { RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS, RESET_METRC_ORDER_SCANS_SUCCESS } from "../actions/metrcActions";
 
 const OrderToScanScreen = ({
     navigation,
     route
 }) => {
     const { orderId } = route.params;
+    const dispatch = useDispatch();
 
     useEffect(() => {
         console.log('OrderToScanScreen has mounted!!!');
@@ -36,11 +38,34 @@ const OrderToScanScreen = ({
         return;
     }
 
+    /**Delete all scans made for a specific orderDetail*/
+    const resetOrderDetailScans = (orderId:string, orderDetailId: string) => {
+        dispatch({
+            type: RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS,
+            response: {
+                orderId,
+                orderDetailId,
+            }
+        })
+    }
+
+    /**Delete all scans made for a specific order*/
+    const resetOrderScans = (orderId: string) => {
+        dispatch({
+            type: RESET_METRC_ORDER_SCANS_SUCCESS,
+            response: {
+                orderId,
+            }
+        })
+    }
+
     return <OrderToScan
         products={productsInOrder}
         orderId={orderId}
         navigation={navigation}
         handleCompleteOrder={handleCompleteOrder}
+        resetOrderDetailScans={resetOrderDetailScans}
+        resetOrderScans={resetOrderScans}
     />
 }
 
