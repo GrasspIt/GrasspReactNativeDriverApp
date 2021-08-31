@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, StyleSheet, View, Platform, StatusBar, Vibration } from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
-import { useTheme, Button, IconButton, Caption, TouchableRipple } from "react-native-paper";
+import { useTheme, Button, IconButton, Caption, TouchableRipple, Paragraph, Subheading } from "react-native-paper";
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { OrderDetail } from "../store/reduxStoreState";
 import AlertSuccessOrError from "./AlertSuccessOrError";
@@ -112,6 +112,20 @@ const MetrcTagScanner = ({
         </View>
     )
 
+    /**Message to display when a scan is successful*/
+    const successAlertMessage = (
+        //<View style={{alignItems: 'center', marginTop: 12}}>
+        <View style={{alignSelf: 'center', flexDirection: 'column', alignItems: 'center', marginTop: 12, backgroundColor: '#f5f5f5', borderRadius: 5, padding: 12}}>
+            {/*<Subheading>{productName}</Subheading>*/}
+            {/*<View style={{backgroundColor: '#e0dede', width: '75%', borderRadius: 5, alignItems: 'center', marginTop: 10, padding: 4,}}>*/}
+            {/*    <Paragraph>{scanCountForOrderDetail} of {orderDetail?.quantity} Scanned</Paragraph>*/}
+            {/*</View>*/}
+            <Subheading style={{textAlign: 'center', marginBottom: 4}}>{productName}</Subheading>
+            <Paragraph>-- {scanCountForOrderDetail} of {orderDetail?.quantity} Scanned --</Paragraph>
+            {/*</View>*/}
+        </View>
+    )
+
 
     return (
         <SafeAreaView style={styles.componentContainer}>
@@ -170,10 +184,11 @@ const MetrcTagScanner = ({
             <AlertSuccessOrError isVisible={successAlertVisible}
                                  onDismiss={closeSuccessAlert}
                                  title={'Scan Successful!'}
-                                 message={`The Metrc Tag for ${productName} has been successfully entered`}
+                                 message={successAlertMessage}
                                  buttonText={successAlertButtonText}
                                  buttonOnPressSubmit={closeSuccessAlert}
                                  buttonsContainer={(orderDetail && scanCountForOrderDetail < orderDetail?.quantity) ? successButtonsForRemainingScans : undefined}
+                                 //subtitle={`Scans Completed for Product: ${scanCountForOrderDetail}/${orderDetail?.quantity}`}
             />
 
             {/*TODO - Test for different errors. Change error message to be whatever is returned from the backend*/}
