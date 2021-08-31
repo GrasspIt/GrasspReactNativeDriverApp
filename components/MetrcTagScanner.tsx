@@ -20,7 +20,6 @@ type MetrcTagScannerProps = {
     errorAlertVisible: boolean;
     closeSuccessAlert: () => any;
     closeErrorAlert: () => any;
-    successAlertButtonText: string;
 }
 
 const MetrcTagScanner = ({
@@ -36,7 +35,6 @@ const MetrcTagScanner = ({
                              errorAlertVisible,
                              closeSuccessAlert,
                              closeErrorAlert,
-                             successAlertButtonText,
                          }: MetrcTagScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
@@ -61,7 +59,6 @@ const MetrcTagScanner = ({
 
     //TODO ensure function can handle scanData passed from either Expo Scanner or Manual Entry Modal
     const handleScanSubmit = (scanData) => {
-        setScanned(true);
         Vibration.vibrate();
 
         const {type, data} = scanData;
@@ -69,6 +66,8 @@ const MetrcTagScanner = ({
         console.log('Result from barcode scanner:', scanData);
         console.log('Barcode Type:', BarCodeScanner.Constants.BarCodeType[type]);
         //alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+
+        setScanned(true);
         scanSubmit(data);
 
         //    Call scanSubmit
@@ -115,7 +114,15 @@ const MetrcTagScanner = ({
     /**Message to display when a scan is successful*/
     const successAlertMessage = (
         //<View style={{alignItems: 'center', marginTop: 12}}>
-        <View style={{alignSelf: 'center', flexDirection: 'column', alignItems: 'center', marginTop: 12, backgroundColor: '#f5f5f5', borderRadius: 5, padding: 12}}>
+        <View style={{
+            alignSelf: 'center',
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginTop: 12,
+            backgroundColor: '#f5f5f5',
+            borderRadius: 5,
+            padding: 12
+        }}>
             {/*<Subheading>{productName}</Subheading>*/}
             {/*<View style={{backgroundColor: '#e0dede', width: '75%', borderRadius: 5, alignItems: 'center', marginTop: 10, padding: 4,}}>*/}
             {/*    <Paragraph>{scanCountForOrderDetail} of {orderDetail?.quantity} Scanned</Paragraph>*/}
@@ -185,10 +192,9 @@ const MetrcTagScanner = ({
                                  onDismiss={closeSuccessAlert}
                                  title={'Scan Successful!'}
                                  message={successAlertMessage}
-                                 buttonText={successAlertButtonText}
                                  buttonOnPressSubmit={closeSuccessAlert}
                                  buttonsContainer={(orderDetail && scanCountForOrderDetail < orderDetail?.quantity) ? successButtonsForRemainingScans : undefined}
-                                 //subtitle={`Scans Completed for Product: ${scanCountForOrderDetail}/${orderDetail?.quantity}`}
+                //subtitle={`Scans Completed for Product: ${scanCountForOrderDetail}/${orderDetail?.quantity}`}
             />
 
             {/*TODO - Test for different errors. Change error message to be whatever is returned from the backend*/}

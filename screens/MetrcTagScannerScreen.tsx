@@ -29,7 +29,6 @@ const MetrcTagScannerScreen = ({
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
     const [errorAlertVisible, setErrorAlertVisible] = useState<boolean>(false);
-    const [successAlertButtonText, setSuccessAlertButtonText] = useState('Ok');
 
     const showSuccessAlert = () => setSuccessAlertVisible(true);
     const closeSuccessAlert = () => {
@@ -44,7 +43,6 @@ const MetrcTagScannerScreen = ({
             navigation.goBack();
             return;
         }
-        setSuccessAlertButtonText('Complete Product Scans')
     }
     const showErrorAlert = () => setErrorAlertVisible(true);
     const closeErrorAlert = () => setErrorAlertVisible(false);
@@ -70,7 +68,8 @@ const MetrcTagScannerScreen = ({
         //alert(`orderDetailQuantity: ${orderDetail?.quantity}, scanCount: ${scanCountForOrderDetail}`)
 
     //    assuming dispatch is successful
-        showSuccessAlert();
+        //showSuccessAlert();
+        showErrorAlert();
     }
 
     return <MetrcTagScanner
@@ -86,7 +85,6 @@ const MetrcTagScannerScreen = ({
         errorAlertVisible={errorAlertVisible}
         closeSuccessAlert={closeSuccessAlert}
         closeErrorAlert={closeErrorAlert}
-        successAlertButtonText={successAlertButtonText}
     />
 }
 
