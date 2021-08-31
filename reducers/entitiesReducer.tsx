@@ -195,6 +195,7 @@ export default (state = initialState, action) => {
     case RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS:
       if (responseEntities) {
         const {orderId, orderDetailId} = responseEntities;
+        console.log('In ENTITIES REDUCER - RESET ORDER DETAIL SCAN! orderId:', orderId, 'orderDetailId:', orderDetailId)
         const modifiedState = {...state};
 
         if (modifiedState.metrcTagsForOrder[orderId][orderDetailId]) {
