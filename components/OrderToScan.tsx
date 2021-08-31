@@ -117,7 +117,8 @@ const OrderToScan = ({
 
     /**Resets scans for an order and closes the reset order scans dialog*/
     const handleResetScansForOrder = () => {
-
+        resetOrderScans(orderId.toString());
+        hideOrderResetDialog();
     }
 
     /**Creates a touchable row for each product in the order

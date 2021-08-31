@@ -56,7 +56,9 @@ const OrderToScanScreen = ({
         dispatch({
             type: RESET_METRC_ORDER_SCANS_SUCCESS,
             response: {
-                orderId,
+                entities: {
+                    orderId,
+                }
             }
         })
     }
