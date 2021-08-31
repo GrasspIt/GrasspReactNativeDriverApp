@@ -1,13 +1,13 @@
 import React from 'react';
 import LottieView from 'lottie-react-native';
-import { ActivityIndicator, Button, Dialog, Paragraph, Portal, useTheme } from "react-native-paper";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, Button, Dialog, Paragraph, Portal, Title, useTheme } from "react-native-paper";
+import { StyleSheet, Text, View } from "react-native";
 
 type AlertSuccessOrErrorProps = {
     isVisible: boolean;
     onDismiss: () => any;
     title: string;
-    message: string;
+    message: string | JSX.Element;
     buttonOnPressSubmit: () => any;
     isLoading?: boolean;
     buttonText?: string;
@@ -24,69 +24,67 @@ const AlertSuccessOrError = ({
                                  isLoading = false,
                                  buttonText = 'Ok',
                                  isError = false,
-                                 buttonsContainer
+                                 buttonsContainer,
                              }: AlertSuccessOrErrorProps) => {
     const {colors} = useTheme();
 
     return (
         <Portal>
             <Dialog visible={isVisible} onDismiss={onDismiss} style={styles.dialogContainer}>
-                <Dialog.Title style={styles.title}>{title}</Dialog.Title>
 
-                <Dialog.Content>
-                    <LottieView
-                        source={isError ? require('../assets/error-message-lottie-grassp.json') : require('../assets/success-check-mark-animated-grassp.json')}
-                        autoPlay={true}
-                        loop={isError ? true : false}
-                        speed={1}
-                        style={[styles.animation, {width: isError ? 150 : 100, height: isError ? 150 : 100}]}
-                    />
-                    <Paragraph>{message}</Paragraph>
+                <Dialog.Content style={{paddingBottom: 20}}>
+                    <View style={[styles.animation, {width: isError ? 150 : 100, height: isError ? 150 : 100}]}>
+                        <LottieView
+                            source={isError ? require('../assets/error-message-lottie-grassp.json') : require('../assets/success-check-mark-animated-grassp.json')}
+                            autoPlay={true}
+                            loop={isError ? true : false}
+                            speed={1}
+                        />
+                    </View>
+                    <Title style={styles.title}>{title}</Title>
+                    {
+                        typeof message === 'string'
+                            ? <Paragraph style={styles.message}>{message}</Paragraph>
+                            : message
+                    }
                 </Dialog.Content>
 
                 <Dialog.Actions style={styles.actions}>
                     {
                         buttonsContainer
                             ? buttonsContainer
-
                             : <Button mode={'contained'}
-                                onPress={buttonOnPressSubmit}
-                                style={[styles.button, {
-                                    backgroundColor: isError ? colors.error : colors.primary,
-                                    marginBottom: isError ? 0 : 20
-                                }]}
-                                labelStyle={{color: 'white'}}>{buttonText}</Button>
+                                      onPress={buttonOnPressSubmit}
+                                      style={[styles.button, {
+                                          backgroundColor: isError ? colors.error : colors.primary,
+                                          marginBottom: isError ? 0 : 20
+                                      }]}
+                                      labelStyle={{color: 'white'}}>{buttonText}</Button>
                     }
-                    {/*<Button mode={'contained'}*/}
-                    {/*        onPress={buttonOnPressSubmit}*/}
-                    {/*        style={[styles.button, {*/}
-                    {/*            backgroundColor: isError ? colors.error : colors.primary,*/}
-                    {/*            marginBottom: isError ? 0 : 20*/}
-                    {/*        }]}*/}
-                    {/*        labelStyle={{color: 'white'}}>{buttonText}</Button>*/}
                 </Dialog.Actions>
+
             </Dialog>
         </Portal>
     )
 }
 
-//TODO: Style button
 const styles = StyleSheet.create({
     dialogContainer: {
         flexDirection: 'column',
-        paddingBottom: 10
     },
     title: {
         textAlign: 'center',
-        marginBottom: 20,
+        //marginBottom: 20,
+    },
+    message: {
+        textAlign: 'center',
     },
     actions: {
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     animation: {
-        width: 100,
-        height: 100,
         alignSelf: 'center',
+        //marginBottom: 10,
     },
     button: {
         alignSelf: 'center',
