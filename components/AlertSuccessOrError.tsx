@@ -57,7 +57,7 @@ const AlertSuccessOrError = ({
                                       onPress={buttonOnPressSubmit}
                                       style={[styles.button, {
                                           backgroundColor: isError ? colors.error : colors.primary,
-                                          marginBottom: isError ? 0 : 20
+                                          marginBottom: 20
                                       }]}
                                       labelStyle={{color: 'white'}}>{buttonText}</Button>
                     }
