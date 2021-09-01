@@ -135,19 +135,19 @@ const MetrcTagManualEntryModal = ({
 const styles = StyleSheet.create({
     componentContainer: {
         flex: 1,
-        borderColor: 'green',
-        borderWidth: 4,
+        //borderColor: 'green',
+        //borderWidth: 4,
         marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     },
     card: {
         flex: 1,
-        borderColor: 'blue',
-        borderWidth: 2,
+        //borderColor: 'blue',
+        //borderWidth: 2,
     },
     cardContent: {
         marginTop: 16,
-        borderColor: 'tomato',
-        borderWidth: 2,
+        //borderColor: 'tomato',
+        //borderWidth: 2,
         flex: 1
     },
     cardActions: {
@@ -155,49 +155,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 32,
-        borderColor: 'brown',
-        borderWidth: 2,
+        //borderColor: 'brown',
+        //borderWidth: 2,
         paddingLeft: 0,
         paddingRight: 0,
     }
-    //centeredView: {
-    //    flex: 1,
-    //    justifyConstent: "center",
-    //    alignItems: "center",
-    //    borderColor: 'tomato',
-    //    borderWidth: 4,
-    //    marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-    //},
-    //modalView: {
-    //    //height: '100%',
-    //    //width: '100%',
-    //    //margin: 20,
-    //    backgroundColor: "blue",
-    //    //borderRadius: 20,
-    //    padding: 35,
-    //    alignItems: "center",
-    //    justifyContent: 'center',
-    //},
-    //button: {
-    //    borderRadius: 20,
-    //    padding: 10,
-    //    elevation: 2
-    //},
-    //buttonOpen: {
-    //    backgroundColor: "#F194FF",
-    //},
-    //buttonClose: {
-    //    backgroundColor: "#2196F3",
-    //},
-    //textStyle: {
-    //    color: "white",
-    //    fontWeight: "bold",
-    //    textAlign: "center"
-    //},
-    //modalText: {
-    //    marginBottom: 15,
-    //    textAlign: "center"
-    //}
 });
 
 export default MetrcTagManualEntryModal;
