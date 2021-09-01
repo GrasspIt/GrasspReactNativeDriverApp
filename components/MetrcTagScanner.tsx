@@ -5,6 +5,7 @@ import { useTheme, Button, IconButton, Caption, TouchableRipple, Paragraph, Subh
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { OrderDetail } from "../store/reduxStoreState";
 import AlertSuccessOrError from "./AlertSuccessOrError";
+import AlertSuccessButtonsForRemainingScans from "./buttons/AlertSuccessButtonsForRemainingScans";
 
 
 type MetrcTagScannerProps = {
@@ -94,7 +95,6 @@ const MetrcTagScanner = ({
                 mode={'outlined'}
                 onPress={() => navigation.goBack()}
                 style={{marginBottom: 20,}}
-                //labelStyle={{color: colors.text}}
                 color={colors.text}
             >
                 Go Back
@@ -106,8 +106,9 @@ const MetrcTagScanner = ({
                         marginBottom: 20,
                     }}
                     labelStyle={{color: 'white'}}
-            >Scan Another</Button>
-            {/*Continue Scanning 17 vs Scan Another 12*/}
+            >
+                Scan Another
+            </Button>
         </View>
     )
 
@@ -123,13 +124,8 @@ const MetrcTagScanner = ({
             borderRadius: 5,
             padding: 12
         }}>
-            {/*<Subheading>{productName}</Subheading>*/}
-            {/*<View style={{backgroundColor: '#e0dede', width: '75%', borderRadius: 5, alignItems: 'center', marginTop: 10, padding: 4,}}>*/}
-            {/*    <Paragraph>{scanCountForOrderDetail} of {orderDetail?.quantity} Scanned</Paragraph>*/}
-            {/*</View>*/}
             <Subheading style={{textAlign: 'center', marginBottom: 4}}>{productName}</Subheading>
             <Paragraph>-- {scanCountForOrderDetail} of {orderDetail?.quantity} Scanned --</Paragraph>
-            {/*</View>*/}
         </View>
     )
 
@@ -193,7 +189,12 @@ const MetrcTagScanner = ({
                                  title={'Scan Successful!'}
                                  message={successAlertMessage}
                                  buttonOnPressSubmit={closeSuccessAlert}
-                                 buttonsContainer={(orderDetail && scanCountForOrderDetail < orderDetail?.quantity) ? successButtonsForRemainingScans : undefined}
+                                 buttonsContainer={(orderDetail && scanCountForOrderDetail < orderDetail?.quantity)
+                                     ? <AlertSuccessButtonsForRemainingScans
+                                         navigation={navigation}
+                                         closeSuccessAlert={closeSuccessAlert}
+                                     />
+                                     : undefined}
                 //subtitle={`Scans Completed for Product: ${scanCountForOrderDetail}/${orderDetail?.quantity}`}
             />
 
