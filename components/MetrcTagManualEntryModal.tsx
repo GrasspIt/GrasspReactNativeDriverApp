@@ -1,7 +1,19 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
-import { Button, Caption, Card, IconButton, Paragraph, TextInput, Title, useTheme, } from "react-native-paper";
+import {
+    Button,
+    Caption,
+    Card,
+    IconButton,
+    Paragraph,
+    Subheading,
+    TextInput,
+    Title,
+    useTheme,
+} from "react-native-paper";
 import AlertSuccessOrError from "./AlertSuccessOrError";
+import { successAlertMessageStyle } from "./MetrcTagScanner";
+import AlertSuccessButtonsForRemainingScans from "./buttons/AlertSuccessButtonsForRemainingScans";
 
 interface MetrcTagManualEntryModalProps {
     submitTagEntry: (data) => any;
@@ -14,6 +26,8 @@ interface MetrcTagManualEntryModalProps {
     errorAlertVisible: boolean;
     closeSuccessAlert: () => any;
     closeErrorAlert: () => any;
+    scanCountForOrderDetail: number;
+    orderDetailQuantity: number | undefined;
 }
 
 const MetrcTagManualEntryModal = ({
@@ -27,6 +41,8 @@ const MetrcTagManualEntryModal = ({
                                       errorAlertVisible,
                                       closeSuccessAlert,
                                       closeErrorAlert,
+                                      scanCountForOrderDetail,
+                                      orderDetailQuantity,
                                   }: MetrcTagManualEntryModalProps) => {
     const {colors} = useTheme();
 
@@ -51,6 +67,15 @@ const MetrcTagManualEntryModal = ({
             submitTagEntry(text);
         }
     }
+
+    //TODO: Change 'Scanned' to another word?
+    /**Message to display when a tag submission is successful*/
+    const successAlertMessage = (
+        <View style={successAlertMessageStyle.view}>
+            <Subheading style={successAlertMessageStyle.subheading}>{productName}</Subheading>
+            <Paragraph>-- {scanCountForOrderDetail} of {orderDetailQuantity} Scanned --</Paragraph>
+        </View>
+    )
 
     return (
         <SafeAreaView style={styles.componentContainer}>
@@ -110,9 +135,15 @@ const MetrcTagManualEntryModal = ({
             {/*Success Alert*/}
             <AlertSuccessOrError isVisible={successAlertVisible}
                                  onDismiss={closeSuccessAlert}
-                                 title={'Success!'}
-                                 message={`The Metrc Tag for ${productName} has been successfully entered`}
+                                 title={'Tag Submission Successful!'}
+                                 message={successAlertMessage}
                                  buttonOnPressSubmit={closeSuccessAlert}
+                                 buttonsContainer={(orderDetailQuantity && scanCountForOrderDetail < orderDetailQuantity)
+                                     ? <AlertSuccessButtonsForRemainingScans
+                                         navigation={navigation}
+                                         closeSuccessAlert={closeSuccessAlert}
+                                     />
+                                     : undefined}
             />
 
             {/*TODO - Test for different errors. Change error message to be whatever is returned from the backend*/}
