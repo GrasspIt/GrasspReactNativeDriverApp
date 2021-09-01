@@ -86,45 +86,10 @@ const MetrcTagScanner = ({
         return <Text>No access to camera</Text>;
     }
 
-    /**Buttons container with 2 buttons: 'Continue Scanning' and 'Go Back'
-     * -> rendered in AlertSuccessOrError if the item has remaining quantity to scan
-     * */
-    const successButtonsForRemainingScans = (
-        <View style={{flexDirection: 'row', justifyContent: 'space-around', width: '100%'}}>
-            <Button
-                mode={'outlined'}
-                onPress={() => navigation.goBack()}
-                style={{marginBottom: 20,}}
-                color={colors.text}
-            >
-                Go Back
-            </Button>
-            <Button mode={'contained'}
-                    onPress={closeSuccessAlert}
-                    style={{
-                        backgroundColor: colors.primary,
-                        marginBottom: 20,
-                    }}
-                    labelStyle={{color: 'white'}}
-            >
-                Scan Another
-            </Button>
-        </View>
-    )
-
     /**Message to display when a scan is successful*/
     const successAlertMessage = (
-        //<View style={{alignItems: 'center', marginTop: 12}}>
-        <View style={{
-            alignSelf: 'center',
-            flexDirection: 'column',
-            alignItems: 'center',
-            marginTop: 12,
-            backgroundColor: '#f5f5f5',
-            borderRadius: 5,
-            padding: 12
-        }}>
-            <Subheading style={{textAlign: 'center', marginBottom: 4}}>{productName}</Subheading>
+        <View style={successAlertMessageStyle.view}>
+            <Subheading style={successAlertMessageStyle.subheading}>{productName}</Subheading>
             <Paragraph>-- {scanCountForOrderDetail} of {orderDetail?.quantity} Scanned --</Paragraph>
         </View>
     )
@@ -212,6 +177,22 @@ const MetrcTagScanner = ({
         </SafeAreaView>
     );
 }
+
+export const successAlertMessageStyle = StyleSheet.create({
+    view: {
+        alignSelf: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginTop: 12,
+        backgroundColor: '#f5f5f5',
+        borderRadius: 5,
+        padding: 12
+    },
+    subheading: {
+        textAlign: 'center', marginBottom: 4
+    }
+})
+
 //TODO: Remove commented out stylings
 //Expo Implementation Styles
 const opacity = 'rgba(0, 0, 0, .6)';
