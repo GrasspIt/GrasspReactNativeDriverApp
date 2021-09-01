@@ -121,7 +121,7 @@ const OrderToScan = ({
         hideOrderResetDialog();
     }
 
-    /**Creates a touchable row for each product in the order
+    /**Creates a touchable row for each product in the order.
      *  tapping a row opens up the scanner
      * */
     const renderProductRow = ({item}) => {

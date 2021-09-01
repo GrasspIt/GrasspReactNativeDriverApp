@@ -19,7 +19,6 @@ type Props = {
     route;
 };
 
-//TODO: determine which parameters are
 export type OrderListStackParamsList = {
     Orders: any;
     Details: { orderId: number };

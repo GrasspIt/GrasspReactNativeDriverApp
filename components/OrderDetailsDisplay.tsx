@@ -13,7 +13,7 @@ import OrderDetailListItem from '../components/OrderDetailListItem';
 import Moment from 'moment';
 import { formatPhone, handleMap, handlePhone } from '../utils/util';
 
-import OrderButtons from '../components/OrderButtons';
+import OrderButtons from './buttons/OrderButtons';
 
 type Props = {
   navigation;
