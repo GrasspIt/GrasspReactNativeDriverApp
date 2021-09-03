@@ -18,7 +18,7 @@ const metrcTagSubmitter = (metrcTag: string, orderId: number, productId: number,
                 productId,
                 orderDetailId
             },
-            schema: Schemas.ORDER,
+            schema: Schemas.METRC_TAG,
         },
     }
 }

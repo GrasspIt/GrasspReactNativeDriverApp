@@ -361,6 +361,14 @@ const routeMetricSchema = new schema.Entity(
   }
 );
 
+const metrcTagSchema = new schema.Entity(
+    'metrcTagForOrder',
+    {},
+    {
+      idAttribute: metrcTag => metrcTag.id,
+    }
+)
+
 dsprDriverRouteSchema.define({
   dsprDriver: dsprDriverSchema,
   startLocation: routeLocationSchema,
@@ -537,6 +545,10 @@ userSchema.define({
   userNotes: [userNoteSchema],
 });
 
+metrcTagSchema.define( {
+  order: orderSchema,
+})
+
 // Schemas for Grassp API responses.
 export const Schemas = {
   PUSH_TOKEN: pushTokenSchema,
@@ -601,6 +613,8 @@ export const Schemas = {
   DSPR_DRIVER_ROUTE_LEG_ARRAY: [dsprDriverRouteLegSchema],
   DSPR_DRIVER_ROUTE_LEG_DIRECTION: dsprDriverRouteLegDirectionSchema,
   DSPR_DRIVER_ROUTE_LEG_DIRECTION_ARRAY: [dsprDriverRouteLegDirectionSchema],
+  METRC_TAG: metrcTagSchema,
+  METRC_TAG_ARRAY: [metrcTagSchema],
   EMPTY: [], // <-- newly added to satisfy TypeScript. Might cause errors, need to investigate
 };
 
