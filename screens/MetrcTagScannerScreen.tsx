@@ -4,7 +4,11 @@ import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import { DspProduct, MetrcTag, OrderDetail, State } from "../store/reduxStoreState";
 import MetrcTagScanner from '../components/MetrcTagScanner';
 import { getOrderDetailFromProps, getProductsInOrderFromProps, ProductInOrder } from "../selectors/orderSelectors";
-import { SCAN_METRC_TAG_SUCCESS } from "../actions/metrcActions";
+import {
+    RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS,
+    RESET_METRC_ORDER_SCANS_SUCCESS,
+    METRC_TAG_SUBMIT_SUCCESS
+} from "../actions/metrcActions";
 import {
     getMetrcScanCountForOrderDetailFromProps, getMetrcScanCountForOrderFromProps,
     getMetrcScansForOrderDetailFromProps,
@@ -20,6 +24,7 @@ const MetrcTagScannerScreen = ({
 
     //TODO: decide which props you actually need, based on what you will need to pass to the backend
     const {productId, orderDetailId, productName, orderId} = route.params;
+    const dispatch = useDispatch();
 
     const orderDetail = useSelector<State, OrderDetail | undefined>(state => getOrderDetailFromProps(state, {orderId, orderDetailId}), shallowEqual)
     const scanCountForOrderDetail = useSelector<State, number>(state => orderId && orderDetailId && getMetrcScanCountForOrderDetailFromProps(state, {
@@ -47,16 +52,12 @@ const MetrcTagScannerScreen = ({
     const showErrorAlert = () => setErrorAlertVisible(true);
     const closeErrorAlert = () => setErrorAlertVisible(false);
 
-
-    const dispatch = useDispatch();
-
-    //TODO: get selector for orderDetailId
-
+    /**Submit a scanned tag to backend*/
     const scanSubmit = (data) => {
         //    dispatch action to call backend
         //    return response
         dispatch({
-            type: SCAN_METRC_TAG_SUCCESS, response: {
+            type: METRC_TAG_SUBMIT_SUCCESS, response: {
                 entities: {
                     orderId,
                     orderDetailId,
@@ -68,8 +69,8 @@ const MetrcTagScannerScreen = ({
         //alert(`orderDetailQuantity: ${orderDetail?.quantity}, scanCount: ${scanCountForOrderDetail}`)
 
     //    assuming dispatch is successful
-        //showSuccessAlert();
-        showErrorAlert();
+        showSuccessAlert();
+    //    showErrorAlert();
     }
 
     return <MetrcTagScanner

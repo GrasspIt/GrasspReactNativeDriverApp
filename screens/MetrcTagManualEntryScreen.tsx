@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import MetrcTagManualEntryModal from "../components/MetrcTagManualEntryModal";
-import { SCAN_METRC_TAG_SUCCESS } from "../actions/metrcActions";
+import { METRC_TAG_SUBMIT_SUCCESS } from "../actions/metrcActions";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { OrderDetail, State } from "../store/reduxStoreState";
 import { getOrderDetailFromProps } from "../selectors/orderSelectors";
@@ -56,7 +56,7 @@ const MetrcTagManualEntryScreen = ({navigation, route}) => {
 
         const metrcTag = text.toUpperCase();
         dispatch({
-            type: SCAN_METRC_TAG_SUCCESS, response: {
+            type: METRC_TAG_SUBMIT_SUCCESS, response: {
                 entities: {
                     orderId,
                     orderDetailId,

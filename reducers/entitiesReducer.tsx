@@ -33,7 +33,7 @@ import {
 import {
   RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS,
   RESET_METRC_ORDER_SCANS_SUCCESS,
-  SCAN_METRC_TAG_SUCCESS
+  METRC_TAG_SUBMIT_SUCCESS
 } from "../actions/metrcActions";
 
 export const initialState = {
@@ -171,7 +171,7 @@ export default (state = initialState, action) => {
       state = { ...state, dsprDrivers: oldDsprDrivers, dsprDriverRoutes: oldRoutes };
       return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
 
-    case SCAN_METRC_TAG_SUCCESS:
+    case METRC_TAG_SUBMIT_SUCCESS:
       if (responseEntities) {
         const {orderId, orderDetailId} = responseEntities;
 
