@@ -62,7 +62,9 @@ const MetrcTagScanner = ({
         }
     }, [])
 
-    //TODO ensure function can handle scanData passed from either Expo Scanner or Manual Entry Modal
+    /**Submit scanned Metrc Tag data
+     *  phone vibrates on scan
+     * */
     const handleScanSubmit = (scanData) => {
         Vibration.vibrate();
 
@@ -163,7 +165,7 @@ const MetrcTagScanner = ({
                 isVisible={errorAlertVisible}
                 onDismiss={closeErrorAlert}
                 title={'Metrc Tag Submission Failed!'}
-                message={errorText || `The Metrc tag submission for ${productName} was not successful`}
+                message={errorText || `The Metrc tag submission for "${productName}" was not successful`}
                 buttonText={'Retry'}
                 buttonOnPressSubmit={closeErrorAlert}
                 isError={true}

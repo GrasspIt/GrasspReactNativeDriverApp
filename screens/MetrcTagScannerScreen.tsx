@@ -58,13 +58,13 @@ const MetrcTagScannerScreen = ({
 
     /**Submit a scanned metrc tag to backend*/
     const scanSubmit = (tag) => {
+        //Scanner is disabled until whatever alert is shown from the dispatch response is closed
         setScannerDisabled(true);
 
-        //console.log('Scan Data:', tag);
         //TODO: Test the value of tag when you are using actual Metrc tags
-        return dispatch<any>(submitMetrcTag(tag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
+        //console.log('Scan Data:', tag);
+        dispatch<any>(submitMetrcTag(tag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
             .then((response) => {
-                console.log('RESPONSE FROM DISPATCH IN METRC SCAN SCREEN:', response)
                 if (response.type === METRC_TAG_SUBMIT_SUCCESS) {
                     showSuccessAlert();
                 }
@@ -72,7 +72,6 @@ const MetrcTagScannerScreen = ({
                     showErrorAlert()
                     setErrorText(response.error)
                 }
-                return response;
             })
     }
 
