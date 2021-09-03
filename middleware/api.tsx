@@ -362,10 +362,10 @@ const routeMetricSchema = new schema.Entity(
 );
 
 const metrcTagSchema = new schema.Entity(
-    'metrcTagForOrder',
+    'metrcTag',
     {},
     {
-      idAttribute: metrcTag => metrcTag.id,
+      idAttribute: tag => tag.id,
     }
 )
 
