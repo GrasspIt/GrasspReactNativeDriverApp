@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import MetrcTagManualEntryModal from "../components/MetrcTagManualEntryModal";
-import { METRC_TAG_SUBMIT_SUCCESS } from "../actions/metrcActions";
+import { METRC_TAG_SUBMIT_FAILURE, METRC_TAG_SUBMIT_SUCCESS, submitMetrcTag } from "../actions/metrcActions";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { OrderDetail, State } from "../store/reduxStoreState";
 import { getOrderDetailFromProps } from "../selectors/orderSelectors";
@@ -11,7 +11,10 @@ const MetrcTagManualEntryScreen = ({navigation, route}) => {
     const {productName, productId, orderDetailId, orderId} = route.params;
     const dispatch = useDispatch();
 
-    const orderDetail = useSelector<State, OrderDetail | undefined>(state => getOrderDetailFromProps(state, {orderId, orderDetailId}), shallowEqual)
+    const orderDetail = useSelector<State, OrderDetail | undefined>(state => getOrderDetailFromProps(state, {
+        orderId,
+        orderDetailId
+    }), shallowEqual)
     const scanCountForOrderDetail = useSelector<State, number>(state => orderId && orderDetailId && getMetrcScanCountForOrderDetailFromProps(state, {
         orderId,
         orderDetailId
@@ -19,6 +22,7 @@ const MetrcTagManualEntryScreen = ({navigation, route}) => {
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
     const [errorAlertVisible, setErrorAlertVisible] = useState<boolean>(false);
+    const [errorText, setErrorText] = useState<string>('');
 
     const showSuccessAlert = () => setSuccessAlertVisible(true);
 
@@ -45,8 +49,8 @@ const MetrcTagManualEntryScreen = ({navigation, route}) => {
     const showErrorAlert = () => setErrorAlertVisible(true);
     const closeErrorAlert = () => setErrorAlertVisible(false);
 
-    const submitTagEntry = (text) => {
-        //    call backend with tag text
+    const submitTagEntry = (tagText) => {
+        //    call backend with tag tagText
         //    Before submitting text to backend, capitalize it
         //    if response is successful and there are remaining scans in the orderDetail, return to scanner (handled in buttons passed to alert)
         //    if response is successful and there are not any more scans remaining in the orderDetail, return to OrderToScan (handled by closeSuccessAlert)
@@ -54,19 +58,18 @@ const MetrcTagManualEntryScreen = ({navigation, route}) => {
         //    if there is an error, show an error message
         //    showSuccessAlert();
 
-        const metrcTag = text.toUpperCase();
-        dispatch({
-            type: METRC_TAG_SUBMIT_SUCCESS, response: {
-                entities: {
-                    orderId,
-                    orderDetailId,
-                    metrcTag,
-                    createdTimestamp: new Date().getTime()
+        const metrcTag = tagText.toUpperCase();
+        return dispatch<any>(submitMetrcTag(metrcTag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
+            .then((response) => {
+                if (response.type === METRC_TAG_SUBMIT_SUCCESS) {
+                    showSuccessAlert();
                 }
-            }
-        })
-
-        showSuccessAlert();
+                if (response.type === METRC_TAG_SUBMIT_FAILURE) {
+                    showErrorAlert()
+                    setErrorText(response.error)
+                }
+                return response;
+            })
     }
 
     return <MetrcTagManualEntryModal
@@ -82,6 +85,7 @@ const MetrcTagManualEntryScreen = ({navigation, route}) => {
         closeErrorAlert={closeErrorAlert}
         scanCountForOrderDetail={scanCountForOrderDetail}
         orderDetailQuantity={orderDetail?.quantity}
+        errorText={errorText}
     />
 }
 

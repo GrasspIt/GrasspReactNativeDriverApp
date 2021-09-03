@@ -28,14 +28,12 @@ interface MetrcTagManualEntryModalProps {
     closeErrorAlert: () => any;
     scanCountForOrderDetail: number;
     orderDetailQuantity: number | undefined;
+    errorText: string;
 }
 
 const MetrcTagManualEntryModal = ({
                                       submitTagEntry,
                                       productName,
-                                      productId,
-                                      orderDetailid,
-                                      orderId,
                                       navigation,
                                       successAlertVisible,
                                       errorAlertVisible,
@@ -43,22 +41,24 @@ const MetrcTagManualEntryModal = ({
                                       closeErrorAlert,
                                       scanCountForOrderDetail,
                                       orderDetailQuantity,
+                                      errorText,
                                   }: MetrcTagManualEntryModalProps) => {
     const {colors} = useTheme();
 
     const [text, setText] = useState<string>('');
     const textInputRef = useRef<any>(null);
 
+    /**On Mount, focus the TextInput*/
     useEffect(() => {
-        //if (textInputRef !== null) {
-        //    //textInputRef.current.focus()
-        //    alert(`The component is focused. : ${textInputRef.current.isFocused()}`)
-        //}
         Platform.OS === 'ios'
             ? textInputRef.current.focus()
             : setTimeout(() => textInputRef.current.focus(), 40)
     }, [])
 
+    /**Submit metrc tag entry
+     *  if there is no text inputed, an alert is shown and nothing is submitted
+     *  on submit, the textInput is blurred
+     * */
     const handleSubmit = () => {
         if (text.trim() === '') {
             alert('A tag must be inputted!')
@@ -152,7 +152,7 @@ const MetrcTagManualEntryModal = ({
                 isVisible={errorAlertVisible}
                 onDismiss={closeErrorAlert}
                 title={'Error Encountered!'}
-                message={`The Metrc tag submission for ${productName} was not successful`}
+                message={errorText || `The Metrc tag submission for "${productName}" was not successful`}
                 buttonText={'Retry'}
                 buttonOnPressSubmit={closeErrorAlert}
                 isError={true}
