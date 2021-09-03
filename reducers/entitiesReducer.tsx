@@ -173,17 +173,26 @@ export default (state = initialState, action) => {
 
     case METRC_TAG_SUBMIT_SUCCESS:
       if (responseEntities) {
-        const {orderId, orderDetailId} = responseEntities;
-
         const modifiedState = {...state};
+        console.log('action for METRC_TAG_SUCCESS:', action);
+        console.log('responseEntities for METRC_TAG_SUCCESS:', responseEntities);
+
+        const tagId = action.response?.result;
+        const metrcTagResponse = responseEntities.metrcTag[tagId];
+        const { id, createdTime, updatedTime, order, orderDetail } = metrcTagResponse;
+        const { metrcTag, productId, dsprId } = metrcTagResponse.metrcTagProductAssociation;
+        const orderId = order;
+        const orderDetailId = orderDetail.id;
+
+        const metrcTagInfoToStore = { id, metrcTag, orderId, orderDetailId, productId, dsprId, createdTime, updatedTime }
 
         modifiedState.metrcTagsForOrder = {
           ...modifiedState.metrcTagsForOrder,
           [orderId]: {
             ...modifiedState.metrcTagsForOrder[orderId],
             [orderDetailId] : modifiedState.metrcTagsForOrder[orderId] && modifiedState.metrcTagsForOrder[orderId][orderDetailId]
-                ? [...modifiedState.metrcTagsForOrder[orderId][orderDetailId], responseEntities]
-                : new Array(responseEntities)
+                ? [...modifiedState.metrcTagsForOrder[orderId][orderDetailId], metrcTagInfoToStore]
+                : new Array(metrcTagInfoToStore)
           }
         }
 
