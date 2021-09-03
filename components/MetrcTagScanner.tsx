@@ -21,6 +21,8 @@ type MetrcTagScannerProps = {
     errorAlertVisible: boolean;
     closeSuccessAlert: () => any;
     closeErrorAlert: () => any;
+    scannerDisabled: boolean;
+    errorText: string;
 }
 
 const MetrcTagScanner = ({
@@ -36,6 +38,8 @@ const MetrcTagScanner = ({
                              errorAlertVisible,
                              closeSuccessAlert,
                              closeErrorAlert,
+                             scannerDisabled,
+                             errorText,
                          }: MetrcTagScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
@@ -66,17 +70,8 @@ const MetrcTagScanner = ({
 
         console.log('Result from barcode scanner:', scanData);
         console.log('Barcode Type:', BarCodeScanner.Constants.BarCodeType[type]);
-        //alert(`Bar code with type ${type} and data ${data} has been scanned!`);
 
-        setScanned(true);
         scanSubmit(data);
-
-        //    Call scanSubmit
-        //    if response.error => show error
-        //    if response.success && no more to scan => show check animation and then close (or close and then show check animation?)
-        //    if response.success && quantity remains to scan => show check animation, (update title ?), allow user to keep scanning
-
-
     };
 
     if (hasPermission === 'requesting-permission') {
@@ -105,7 +100,7 @@ const MetrcTagScanner = ({
             {/*Expo's implementation*/}
             <View style={styles.scannerContainer}>
                 <BarCodeScanner
-                    onBarCodeScanned={scanned ? undefined : handleScanSubmit}
+                    onBarCodeScanned={scannerDisabled ? undefined : handleScanSubmit}
                     style={[StyleSheet.absoluteFill]}
                 >
                     <View style={styles.layerTop}/>
@@ -116,7 +111,7 @@ const MetrcTagScanner = ({
                     </View>
                     <View style={styles.layerBottom}/>
 
-                    {scanned && <Button onPress={() => setScanned(false)}> Tap to Scan Again </ Button>}
+                    {/*{scanned && <Button onPress={() => setScanned(false)}> Tap to Scan Again </ Button>}*/}
                 </BarCodeScanner>
             </View>
             <View style={styles.buttonsContainer}>
@@ -160,7 +155,6 @@ const MetrcTagScanner = ({
                                          closeSuccessAlert={closeSuccessAlert}
                                      />
                                      : undefined}
-                //subtitle={`Scans Completed for Product: ${scanCountForOrderDetail}/${orderDetail?.quantity}`}
             />
 
             {/*TODO - Test for different errors. Change error message to be whatever is returned from the backend*/}
@@ -168,8 +162,8 @@ const MetrcTagScanner = ({
             <AlertSuccessOrError
                 isVisible={errorAlertVisible}
                 onDismiss={closeErrorAlert}
-                title={'Error Encountered!'}
-                message={`The Metrc tag submission for ${productName} was not successful`}
+                title={'Metrc Tag Submission Failed!'}
+                message={errorText || `The Metrc tag submission for ${productName} was not successful`}
                 buttonText={'Retry'}
                 buttonOnPressSubmit={closeErrorAlert}
                 isError={true}

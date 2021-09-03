@@ -25,11 +25,10 @@ const metrcTagSubmitter = (metrcTag: string, orderId: number, productId: number,
 
 export const submitMetrcTag = (metrcTag: string, orderId: number, productId: number, orderDetailId: number) => (dispatch) => {
     dispatch({type: METRC_TAG_SUBMIT_PENDING});
-    dispatch(metrcTagSubmitter(metrcTag, orderId, productId, orderDetailId))
+    return dispatch(metrcTagSubmitter(metrcTag, orderId, productId, orderDetailId))
         .then((response) => {
-            if (response.type === METRC_TAG_SUBMIT_FAILURE) {
-                Alert.alert('Failed to Submit Metrc Tag', response.error);
-            }
+            //IMPORTANT: errors are handled in the screens and components that dispatch this action
+            return {type: response.type, error: response.error};
         })
         .catch((error) => Alert.alert('Network error:', error));
 }

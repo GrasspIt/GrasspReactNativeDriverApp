@@ -7,7 +7,7 @@ import { getOrderDetailFromProps, getProductsInOrderFromProps, ProductInOrder } 
 import {
     RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS,
     RESET_METRC_ORDER_SCANS_SUCCESS,
-    METRC_TAG_SUBMIT_SUCCESS
+    METRC_TAG_SUBMIT_SUCCESS, submitMetrcTag, METRC_TAG_SUBMIT, METRC_TAG_SUBMIT_FAILURE
 } from "../actions/metrcActions";
 import {
     getMetrcScanCountForOrderDetailFromProps, getMetrcScanCountForOrderFromProps,
@@ -22,11 +22,13 @@ const MetrcTagScannerScreen = ({
                                    route
                                }) => {
 
-    //TODO: decide which props you actually need, based on what you will need to pass to the backend
     const {productId, orderDetailId, productName, orderId} = route.params;
     const dispatch = useDispatch();
 
-    const orderDetail = useSelector<State, OrderDetail | undefined>(state => getOrderDetailFromProps(state, {orderId, orderDetailId}), shallowEqual)
+    const orderDetail = useSelector<State, OrderDetail | undefined>(state => getOrderDetailFromProps(state, {
+        orderId,
+        orderDetailId
+    }), shallowEqual)
     const scanCountForOrderDetail = useSelector<State, number>(state => orderId && orderDetailId && getMetrcScanCountForOrderDetailFromProps(state, {
         orderId,
         orderDetailId
@@ -34,43 +36,44 @@ const MetrcTagScannerScreen = ({
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
     const [errorAlertVisible, setErrorAlertVisible] = useState<boolean>(false);
+    const [errorText, setErrorText] = useState<string>('');
+    const [scannerDisabled, setScannerDisabled] = useState<boolean>(false);
+
 
     const showSuccessAlert = () => setSuccessAlertVisible(true);
     const closeSuccessAlert = () => {
-        setSuccessAlertVisible(false);
-
-        //TODO: Decide where to send the user
-        // -> if scans need to still be completed for the product, send driver back to scanner page
-        // -> if scans are done for the product, send driver back to OrdersToScan page
-        //navigation.navigate('OrderToScan', {orderId})
-
         if (orderDetail && scanCountForOrderDetail >= orderDetail.quantity) {
             navigation.goBack();
             return;
         }
+        setSuccessAlertVisible(false);
+        setScannerDisabled(false);
     }
+
     const showErrorAlert = () => setErrorAlertVisible(true);
-    const closeErrorAlert = () => setErrorAlertVisible(false);
+    const closeErrorAlert = () => {
+        setErrorAlertVisible(false);
+        setScannerDisabled(false);
+    }
 
-    /**Submit a scanned tag to backend*/
-    const scanSubmit = (data) => {
-        //    dispatch action to call backend
-        //    return response
-        dispatch({
-            type: METRC_TAG_SUBMIT_SUCCESS, response: {
-                entities: {
-                    orderId,
-                    orderDetailId,
-                    metrcTag: data,
-                    createdTimestamp: new Date().getTime()
+    /**Submit a scanned metrc tag to backend*/
+    const scanSubmit = (tag) => {
+        setScannerDisabled(true);
+
+        //console.log('Scan Data:', tag);
+        //TODO: Test the value of tag when you are using actual Metrc tags
+        return dispatch<any>(submitMetrcTag(tag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
+            .then((response) => {
+                console.log('RESPONSE FROM DISPATCH IN METRC SCAN SCREEN:', response)
+                if (response.type === METRC_TAG_SUBMIT_SUCCESS) {
+                    showSuccessAlert();
                 }
-            }
-        })
-        //alert(`orderDetailQuantity: ${orderDetail?.quantity}, scanCount: ${scanCountForOrderDetail}`)
-
-    //    assuming dispatch is successful
-        showSuccessAlert();
-    //    showErrorAlert();
+                if (response.type === METRC_TAG_SUBMIT_FAILURE) {
+                    showErrorAlert()
+                    setErrorText(response.error)
+                }
+                return response;
+            })
     }
 
     return <MetrcTagScanner
@@ -86,6 +89,8 @@ const MetrcTagScannerScreen = ({
         errorAlertVisible={errorAlertVisible}
         closeSuccessAlert={closeSuccessAlert}
         closeErrorAlert={closeErrorAlert}
+        scannerDisabled={scannerDisabled}
+        errorText={errorText}
     />
 }
 
