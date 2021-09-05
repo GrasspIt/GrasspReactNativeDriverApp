@@ -5,6 +5,7 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { getProductsInOrderFromProps, ProductInOrder } from "../selectors/orderSelectors";
 import { State } from "../store/reduxStoreState";
 import { RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS, RESET_METRC_ORDER_SCANS_SUCCESS } from "../actions/metrcActions";
+import { completeOrder } from "../actions/orderActions";
 
 const OrderToScanScreen = ({
     navigation,
@@ -32,10 +33,9 @@ const OrderToScanScreen = ({
     // if all items have been scanned in order, enable complete order button
 
 
-    //TODO write function that completes order after all Metrc tags have been scanned
-    //see if this needs to be any different / requires a different endpoint than thehandleCompleteOrder function used in Arizona
-    const handleCompleteOrder = () => {
-        return;
+    //TODO: Eventually, utilized animated alerts, like in MetrcScanScreen, MetrcScan
+    const handleCompleteOrder = (orderId) => {
+        dispatch(completeOrder(orderId));
     }
 
     /**Delete all scans made for a specific orderDetail*/

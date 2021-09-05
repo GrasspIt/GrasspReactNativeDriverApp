@@ -29,7 +29,7 @@ type OrderToScanProps = {
     orderId: number;
     products: ProductInOrder[];
     navigation;
-    handleCompleteOrder: () => any;
+    handleCompleteOrder: (orderId) => any;
     resetOrderDetailScans: (orderId: string, orderDetailId: string) => any;
     resetOrderScans: (orderId: string) => any;
 }
@@ -49,6 +49,8 @@ const OrderToScan = ({
 
     const totalRequiredScansForOrder = useMemo(() => products.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
 
+    const scanningComplete: boolean = currentNumberOfScansForOrder === totalRequiredScansForOrder;
+
     const [productMenuVisible, setProductMenuVisible] = useState<number | null>(null);
     const [orderMenuVisible, setOrderMenuVisible] = useState<boolean>(false);
     const [productResetDialogVisible, setProductResetDialogVisible] = useState<boolean>(false);
@@ -57,7 +59,6 @@ const OrderToScan = ({
 
     //TODO: Decide how you want to determine when scans are complete. Selector? State?
     //used to determine whether or not complete order button is disabled
-    const [scansComplete, setScansComplete] = useState<boolean>(false);
 
     const openProductMenu = (id: number) => setProductMenuVisible(id);
     const openOrderMenu = () => setOrderMenuVisible(true);
@@ -239,21 +240,21 @@ const OrderToScan = ({
                         />
                         <Divider/>
                     </Card.Content>
-                </Card>
-            </View>
 
-            <View>
-                <Button
-                    disabled={!scansComplete}
-                    icon='check'
-                    mode='contained'
-                    color={colors.primary}
-                    style={styles.buttons}
-                    labelStyle={{ paddingVertical: 4, color: colors.surface }}
-                    onPress={handleCompleteOrder}
-                >
-                    Complete Order
-                </Button>
+                    <View style={{marginTop: 'auto'}}>
+                        <Button
+                            disabled={!scanningComplete}
+                            icon='check'
+                            mode='contained'
+                            color={colors.primary}
+                            labelStyle={{ paddingVertical: 4, color: !scanningComplete ? colors.disabled : colors.surface }}
+                            style={styles.buttons}
+                            onPress={() => handleCompleteOrder(orderId)}
+                        >
+                            Complete Order
+                        </Button>
+                    </View>
+                </Card>
             </View>
 
             <Portal>
@@ -304,7 +305,6 @@ const styles = StyleSheet.create({
         padding: 14,
     },
     buttons: {
-        flex: 1,
         marginHorizontal: 10,
         marginBottom: 10,
         borderRadius: 50,
