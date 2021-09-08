@@ -178,6 +178,7 @@ export interface DSPR {
         quarters: Analytic[];
         years: Analytic[];
     };
+    metrcLicense?: string;
 }
 
 export interface Analytic {
