@@ -5,9 +5,9 @@ import { DspProduct, MetrcTag, OrderDetail, State } from "../store/reduxStoreSta
 import MetrcTagScanner from '../components/MetrcTagScanner';
 import { getOrderDetailFromProps, getProductsInOrderFromProps, ProductInOrder } from "../selectors/orderSelectors";
 import {
-    RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS,
-    RESET_METRC_ORDER_SCANS_SUCCESS,
-    METRC_TAG_SUBMIT_SUCCESS, submitMetrcTag, METRC_TAG_SUBMIT, METRC_TAG_SUBMIT_FAILURE
+    RESET_ORDER_DETAIL_SCANS_SUCCESS,
+    RESET_ORDER_SCANS_SUCCESS,
+    ORDER_SCAN_SUBMIT_SUCCESS, submitMetrcTag, ORDER_SCAN_SUBMIT, ORDER_SCAN_SUBMIT_FAILURE
 } from "../actions/metrcActions";
 import {
     getMetrcScanCountForOrderDetailFromProps, getMetrcScanCountForOrderFromProps,
@@ -65,10 +65,10 @@ const MetrcTagScannerScreen = ({
         //console.log('Scan Data:', tag);
         dispatch<any>(submitMetrcTag(tag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
             .then((response) => {
-                if (response.type === METRC_TAG_SUBMIT_SUCCESS) {
+                if (response.type === ORDER_SCAN_SUBMIT_SUCCESS) {
                     showSuccessAlert();
                 }
-                if (response.type === METRC_TAG_SUBMIT_FAILURE) {
+                if (response.type === ORDER_SCAN_SUBMIT_FAILURE) {
                     showErrorAlert()
                     setErrorText(response.error)
                 }

@@ -31,9 +31,9 @@ import {
     GET_ORDER_DETAILS_WITH_ID_SUCCESS,
 } from '../actions/orderActions';
 import {
-    RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS,
-    RESET_METRC_ORDER_SCANS_SUCCESS,
-    METRC_TAG_SUBMIT_SUCCESS
+    RESET_ORDER_DETAIL_SCANS_SUCCESS,
+    RESET_ORDER_SCANS_SUCCESS,
+    ORDER_SCAN_SUBMIT_SUCCESS
 } from "../actions/metrcActions";
 
 export const initialState = {
@@ -171,7 +171,7 @@ export default (state = initialState, action) => {
             state = {...state, dsprDrivers: oldDsprDrivers, dsprDriverRoutes: oldRoutes};
             return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
 
-        case METRC_TAG_SUBMIT_SUCCESS:
+        case ORDER_SCAN_SUBMIT_SUCCESS:
             if (responseEntities) {
                 const modifiedState = {...state};
                 console.log('action for METRC_TAG_SUCCESS:', action);
@@ -209,7 +209,7 @@ export default (state = initialState, action) => {
                 return modifiedState;
             }
             return state;
-        case RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS:
+        case RESET_ORDER_DETAIL_SCANS_SUCCESS:
             if (responseEntities) {
                 const {orderId, orderDetailId} = responseEntities;
                 console.log('In ENTITIES REDUCER - RESET ORDER DETAIL SCAN! orderId:', orderId, 'orderDetailId:', orderDetailId)
@@ -221,7 +221,7 @@ export default (state = initialState, action) => {
                 return modifiedState;
             }
             return state;
-        case RESET_METRC_ORDER_SCANS_SUCCESS:
+        case RESET_ORDER_SCANS_SUCCESS:
             if (responseEntities) {
                 const {orderId, orderDetailId} = responseEntities;
                 const modifiedState = {...state};

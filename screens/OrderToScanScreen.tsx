@@ -4,7 +4,7 @@ import OrderToScan from '../components/OrderToScan';
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { getProductsInOrderFromProps, ProductInOrder } from "../selectors/orderSelectors";
 import { State } from "../store/reduxStoreState";
-import { RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS, RESET_METRC_ORDER_SCANS_SUCCESS } from "../actions/metrcActions";
+import { RESET_ORDER_DETAIL_SCANS_SUCCESS, RESET_ORDER_SCANS_SUCCESS } from "../actions/metrcActions";
 import { completeOrder } from "../actions/orderActions";
 
 const OrderToScanScreen = ({
@@ -41,7 +41,7 @@ const OrderToScanScreen = ({
     /**Delete all scans made for a specific orderDetail*/
     const resetOrderDetailScans = (orderId:string, orderDetailId: string) => {
         dispatch({
-            type: RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS,
+            type: RESET_ORDER_DETAIL_SCANS_SUCCESS,
             response: {
                 entities: {
                     orderId,
@@ -54,7 +54,7 @@ const OrderToScanScreen = ({
     /**Delete all scans made for a specific order*/
     const resetOrderScans = (orderId: string) => {
         dispatch({
-            type: RESET_METRC_ORDER_SCANS_SUCCESS,
+            type: RESET_ORDER_SCANS_SUCCESS,
             response: {
                 entities: {
                     orderId,

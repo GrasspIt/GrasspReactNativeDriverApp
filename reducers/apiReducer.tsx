@@ -59,9 +59,9 @@ import {
   MARK_IN_PROCESS_PENDING,
 } from '../actions/orderActions';
 import {
-  RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS,
-  RESET_METRC_ORDER_SCANS_SUCCESS,
-  METRC_TAG_SUBMIT_SUCCESS
+  RESET_ORDER_DETAIL_SCANS_SUCCESS,
+  RESET_ORDER_SCANS_SUCCESS,
+  ORDER_SCAN_SUBMIT_SUCCESS
 } from "../actions/metrcActions";
 
 import entitiesReducer, { initialState as entitiesInitialState } from './entitiesReducer';
@@ -139,9 +139,9 @@ export default (state = initialState, action) => {
     case PROGRESS_DSPR_DRIVER_ROUTE_SUCCESS:
     case CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS:
     case DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS:
-    case METRC_TAG_SUBMIT_SUCCESS:
-    case RESET_METRC_ORDER_DETAIL_SCANS_SUCCESS:
-    case RESET_METRC_ORDER_SCANS_SUCCESS:
+    case ORDER_SCAN_SUBMIT_SUCCESS:
+    case RESET_ORDER_DETAIL_SCANS_SUCCESS:
+    case RESET_ORDER_SCANS_SUCCESS:
       const newState = { ...state, isLoading: false, entities: { ...entitiesInitialState } };
       return _.merge({}, newState, {
         entities: entitiesReducer(state.entities, action),

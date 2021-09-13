@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import MetrcTagManualEntryModal from "../components/MetrcTagManualEntryModal";
-import { METRC_TAG_SUBMIT_FAILURE, METRC_TAG_SUBMIT_SUCCESS, submitMetrcTag } from "../actions/metrcActions";
+import { ORDER_SCAN_SUBMIT_FAILURE, ORDER_SCAN_SUBMIT_SUCCESS, submitMetrcTag } from "../actions/metrcActions";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { OrderDetail, State } from "../store/reduxStoreState";
 import { getOrderDetailFromProps } from "../selectors/orderSelectors";
@@ -61,10 +61,10 @@ const MetrcTagManualEntryScreen = ({navigation, route}) => {
         const metrcTag = tagText.toUpperCase();
         return dispatch<any>(submitMetrcTag(metrcTag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
             .then((response) => {
-                if (response.type === METRC_TAG_SUBMIT_SUCCESS) {
+                if (response.type === ORDER_SCAN_SUBMIT_SUCCESS) {
                     showSuccessAlert();
                 }
-                if (response.type === METRC_TAG_SUBMIT_FAILURE) {
+                if (response.type === ORDER_SCAN_SUBMIT_FAILURE) {
                     showErrorAlert()
                     setErrorText(response.error)
                 }
