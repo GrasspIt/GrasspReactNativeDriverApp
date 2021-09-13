@@ -552,7 +552,7 @@ export type OrderWithAddressAndUser = Omit<Omit<Order, 'address'>, 'user'> & {
     user: User;
 };
 
-interface OrderScan {
+export interface OrderScan {
     id: number;
     isOrderComplete: number;
     order: number;
