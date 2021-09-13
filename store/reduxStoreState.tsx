@@ -91,11 +91,13 @@ export interface Entities {
     metrics: {
         usersMetrics: UsersMetrics;
     };
-    //TODO: consider below:
-    //Also - should we keep this nested? Alternatively, we can also have a MetrcTag array (populated only with MetcTag strings) within each OrderDetails object. This could be another way of counting scans.
-    //The way it is currently implemented, while nested, allows us to avoid filtering OrderDetails in Orders for a specific OrderDetailId, while still making it easy to get MetrcTags for a specific OrderDetail
-    //However, the way it is currently implemented makes it more cumbersome to get MetrcTag data for an entire order
-    metrcTagsForOrder: { [orderId: number]: { [orderDetailId: number]: MetrcTag[]} };
+    dsprMetrcTags: {
+        [dsprId: number]: MetrcTag[]
+    };
+    orderScans: {
+        [tagId: number]: OrderScan;
+    };
+    //metrcTagsForOrder: { [orderId: number]: { [orderDetailId: number]: MetrcTag[]} };
 }
 
 export interface User {
@@ -378,9 +380,9 @@ export interface Order {
     coupon?: Partial<Coupon>;
     coupons?: Partial<Coupon>[];
     medicalRecommendation?: MedicalRecommendation;
-    //TODO: Normalize modifiedOrder and modifiedByManager
     modifiedOrder?: { id: number, dsprDriver: { id: number, currentInProcessOrder: { id: number } }, dspr: { id: 1 } };
     modifiedByManager?: { id: number };
+    metrcOrderDetailAssociationScans?: number[];
 }
 
 export interface CalculatedOrderDetail {
@@ -554,11 +556,29 @@ export type OrderWithAddressAndUser = Omit<Omit<Order, 'address'>, 'user'> & {
     user: User;
 };
 
-//TODO: confirm this has not been changed by backend implementation
 export interface MetrcTag {
+    id: number;
     metrcTag: string;
-    orderId: number;
-    orderDetailId: number;
-    createdTimestamp: string;
-    updatedTimestamp?: string;
+    metrcItemName: string;
+    productId: number;
+    dsprId: number;
+    isActive: boolean;
+    quantityOfEighths: number;
+    convertToShake: boolean;
+}
+
+interface OrderScan {
+    id: number;
+    isOrderComplete: number;
+    order: number;
+    orderDetail: number;
+    isActive: boolean;
+    createdTime: string;
+    updatedTime: string;
+    metrcTag: string;
+    metrcItemName: string;
+    productId: number;
+    dsprId: number;
+    quantityOfEighths: number;
+    convertToShake: boolean;
 }
