@@ -438,6 +438,7 @@ orderSchema.define({
   userMedicalRecommendation: userMedicalRecommendationSchema,
   userIdentificationDocument: userIdDocumentSchema,
   dspr: dsprSchema,
+  metrcOrderDetailAssociationsScans: [orderScansSchema],
 });
 
 couponSchema.define({
