@@ -361,13 +361,16 @@ const routeMetricSchema = new schema.Entity(
   }
 );
 
-const metrcTagSchema = new schema.Entity(
-    'metrcTag',
-    {},
-    {
-      idAttribute: tag => tag.id,
-    }
-)
+//Process strategy used to avoid a nested objects within the orderScans object. Normalizes orderDetailId as well
+const orderScansSchema = new schema.Entity('orderScans', {}, {
+  idAttribute: orderScan => orderScan.id,
+  processStrategy: (entity) => {
+    const modifiedEntity = {...entity, ...entity.metrcTagProductAssociation};
+    modifiedEntity.orderDetail = modifiedEntity.orderDetail.id;
+    delete modifiedEntity.metrcTagProductAssociation;
+    return modifiedEntity;
+  }
+})
 
 dsprDriverRouteSchema.define({
   dsprDriver: dsprDriverSchema,
@@ -545,9 +548,9 @@ userSchema.define({
   userNotes: [userNoteSchema],
 });
 
-metrcTagSchema.define( {
+orderScansSchema.define({
   order: orderSchema,
-})
+});
 
 // Schemas for Grassp API responses.
 export const Schemas = {
@@ -613,8 +616,8 @@ export const Schemas = {
   DSPR_DRIVER_ROUTE_LEG_ARRAY: [dsprDriverRouteLegSchema],
   DSPR_DRIVER_ROUTE_LEG_DIRECTION: dsprDriverRouteLegDirectionSchema,
   DSPR_DRIVER_ROUTE_LEG_DIRECTION_ARRAY: [dsprDriverRouteLegDirectionSchema],
-  METRC_TAG: metrcTagSchema,
-  METRC_TAG_ARRAY: [metrcTagSchema],
+  ORDER_SCAN: orderScansSchema,
+  ORDER_SCAN_ARRAY: [orderScansSchema],
   EMPTY: [], // <-- newly added to satisfy TypeScript. Might cause errors, need to investigate
 };
 
