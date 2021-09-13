@@ -91,13 +91,9 @@ export interface Entities {
     metrics: {
         usersMetrics: UsersMetrics;
     };
-    dsprMetrcTags: {
-        [dsprId: number]: MetrcTag[]
-    };
     orderScans: {
         [tagId: number]: OrderScan;
     };
-    //metrcTagsForOrder: { [orderId: number]: { [orderDetailId: number]: MetrcTag[]} };
 }
 
 export interface User {
@@ -555,17 +551,6 @@ export type OrderWithAddressAndUser = Omit<Omit<Order, 'address'>, 'user'> & {
     address: Address;
     user: User;
 };
-
-export interface MetrcTag {
-    id: number;
-    metrcTag: string;
-    metrcItemName: string;
-    productId: number;
-    dsprId: number;
-    isActive: boolean;
-    quantityOfEighths: number;
-    convertToShake: boolean;
-}
 
 interface OrderScan {
     id: number;
