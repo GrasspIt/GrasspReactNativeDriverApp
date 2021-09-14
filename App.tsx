@@ -47,6 +47,9 @@ const CombinedDefaultTheme = {
   },
 };
 
+//workaround - unable to add 'info' property to ThemeColors in types.tsx and have it be accepted as a propert on the interface
+export const infoColor = '#2196f3';
+
 //create a ref to the main navigator to access from anywhere in the app
 const navigationRef: React.RefObject<any> = React.createRef();
 export const navigate = (name, params) => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
+import { infoColor } from "../../App";
 
 type Props = {
     isLoading;
@@ -99,7 +100,7 @@ const OrderButtons = ({
     return (
         <View>
             <Button
-                disabled={isLoading ? true : false}
+                disabled={isLoading}
                 icon='cancel'
                 mode='contained'
                 color={colors.error}
@@ -112,7 +113,7 @@ const OrderButtons = ({
 
             {orderIdsInRoute && orderIdsInRoute.includes(orderId) && (
                 <Button
-                    disabled={isLoading ? true : false}
+                    disabled={isLoading}
                     icon='map-minus'
                     mode='contained'
                     color={colors.error}
@@ -129,12 +130,12 @@ const OrderButtons = ({
                 disabled={!!isLoading}
                 icon={'barcode-scan'}
                 mode={'contained'}
-                color={colors.primary}
+                color={isScanningComplete ? infoColor : colors.primary}
                 style={styles.buttons}
                 labelStyle={{paddingVertical: 4, color: colors.surface}}
                 onPress={() => navigation.navigate('OrderToScan', {orderId})}
             >
-                Scan Order
+                {isScanningComplete ? 'Review Scans' : 'Scan Order'}
             </Button>
             }
 
@@ -153,7 +154,7 @@ const OrderButtons = ({
                 </Button>
             ) : (
                 <Button
-                    disabled={isLoading ? true : false}
+                    disabled={isLoading}
                     mode='contained'
                     icon='autorenew'
                     color={colors.primary}
