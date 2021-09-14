@@ -5,7 +5,7 @@ import { ORDER_SCAN_SUBMIT_FAILURE, ORDER_SCAN_SUBMIT_SUCCESS, submitMetrcTag } 
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { OrderDetail, State } from "../store/reduxStoreState";
 import { getOrderDetailFromProps } from "../selectors/orderSelectors";
-import { getMetrcScanCountForOrderDetailFromProps } from "../selectors/metrcSelectors";
+import { getOrderScanCountForOrderDetailFromProps } from "../selectors/metrcSelectors";
 
 const MetrcTagManualEntryScreen = ({navigation, route}) => {
     const {productName, productId, orderDetailId, orderId} = route.params;
@@ -15,7 +15,7 @@ const MetrcTagManualEntryScreen = ({navigation, route}) => {
         orderId,
         orderDetailId
     }), shallowEqual)
-    const scanCountForOrderDetail = useSelector<State, number>(state => orderId && orderDetailId && getMetrcScanCountForOrderDetailFromProps(state, {
+    const scanCountForOrderDetail = useSelector<State, number>(state => orderId && orderDetailId && getOrderScanCountForOrderDetailFromProps(state, {
         orderId,
         orderDetailId
     }), shallowEqual)

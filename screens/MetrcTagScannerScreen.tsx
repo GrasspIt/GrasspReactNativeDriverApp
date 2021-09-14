@@ -10,9 +10,9 @@ import {
     ORDER_SCAN_SUBMIT_SUCCESS, submitMetrcTag, ORDER_SCAN_SUBMIT, ORDER_SCAN_SUBMIT_FAILURE
 } from "../actions/metrcActions";
 import {
-    getMetrcScanCountForOrderDetailFromProps, getMetrcScanCountForOrderFromProps,
-    getMetrcScansForOrderDetailFromProps,
-    getMetrcScansForOrderFromProps
+    getOrderScanCountForOrderDetailFromProps, getMetrcScanCountForOrderFromProps,
+    getOrderScansForOrderDetailFromProps,
+    getOrderScansForOrderFromProps
 } from "../selectors/metrcSelectors";
 import { shallow } from "@testing-library/react-native";
 import { getDSPProductFromProps } from "../selectors/dspProductSelector";
@@ -29,7 +29,7 @@ const MetrcTagScannerScreen = ({
         orderId,
         orderDetailId
     }), shallowEqual)
-    const scanCountForOrderDetail = useSelector<State, number>(state => orderId && orderDetailId && getMetrcScanCountForOrderDetailFromProps(state, {
+    const scanCountForOrderDetail = useSelector<State, number>(state => orderId && orderDetailId && getOrderScanCountForOrderDetailFromProps(state, {
         orderId,
         orderDetailId
     }), shallowEqual)

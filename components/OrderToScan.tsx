@@ -9,22 +9,14 @@ import {
 } from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
 import { Card, Divider, useTheme, List, IconButton, Menu, Dialog, Portal, Paragraph, Button } from "react-native-paper";
-import { number } from "prop-types";
 import { shallowEqual, useSelector } from "react-redux";
 import {
-    getMetrcScanCountForOrderDetailFromProps,
+    getOrderScanCountForOrderDetailFromProps,
     getMetrcScanCountForOrderFromProps,
-    getMetrcScansForOrderFromProps
+    getOrderScansForOrderFromProps
 } from "../selectors/metrcSelectors";
 import { OrderScan, State } from "../store/reduxStoreState";
 
-/**
- * check, check-bold
- *
- * barcode-scan
- *
- * alert-circle, alert-circle-outline
- * */
 type OrderToScanProps = {
     orderId: number;
     products: ProductInOrder[];
@@ -44,7 +36,7 @@ const OrderToScan = ({
                      }: OrderToScanProps) => {
     const {colors} = useTheme();
 
-    const metrcScansForOrder = useSelector<State, {[orderDetailId: number]: OrderScan[]}>(state => getMetrcScansForOrderFromProps(state, {orderId}), shallowEqual);
+    const metrcScansForOrder = useSelector<State, {[orderDetailId: number]: OrderScan[]}>(state => getOrderScansForOrderFromProps(state, {orderId}), shallowEqual);
     const currentNumberOfScansForOrder = useSelector<State, number>(state => getMetrcScanCountForOrderFromProps(state, {orderId}), shallowEqual);
 
     const totalRequiredScansForOrder = useMemo(() => products.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);

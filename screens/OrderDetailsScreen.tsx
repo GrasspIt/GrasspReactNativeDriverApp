@@ -21,7 +21,7 @@ import OrderDetailsDisplay from '../components/OrderDetailsDisplay';
 import { getDSPRFromProps, isMetrcLicenseHeldByDSPRFromProps } from "../selectors/dsprSelectors";
 import { DSPR, MetrcTag, State } from "../store/reduxStoreState";
 import { number } from "prop-types";
-import { getMetrcScanCountForOrderFromProps, getMetrcScansForOrderFromProps } from "../selectors/metrcSelectors";
+import { getMetrcScanCountForOrderFromProps, getOrderScansForOrderFromProps } from "../selectors/metrcSelectors";
 
 type DetailsScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Details'>;
 
