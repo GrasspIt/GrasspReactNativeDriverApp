@@ -4,7 +4,7 @@ import { getOrderFromProps } from "./orderSelectors";
 /**Return an object of Order Scans, with each property being the orderScanId
  * {[orderScanId]: OrderScan,...}
  * */
-export const getOrderScans = (state: State): {[orderScanId: number]: OrderScan} => {
+export const getOrderScans = (state: State): { [orderScanId: number]: OrderScan } => {
     return state.api.entities.orderScans;
 }
 
@@ -17,17 +17,6 @@ const getOrderScanIdsForOrderFromProps = (state: State, {orderId}): number[] => 
 /**Returns count of scans for an order*/
 export const getOrderScanCountForOrderFromProps = (state: State, {orderId}): number => {
     return getOrderScanIdsForOrderFromProps(state, {orderId}).length;
-}
-
-/**Returns an array of OrderScan objects for a particular order detail*/
-export const getOrderScansForOrderDetailFromProps = (state: State, {orderId, orderDetailId}): OrderScan[] => {
-    const orderScans = getOrderScansForOrderFromProps(state, {orderId});
-    return orderScans && orderScans[orderDetailId] ? orderScans[orderDetailId] : [];
-}
-
-/**Returns count of scans for a particular order detail*/
-export const getOrderScanCountForOrderDetailFromProps = (state: State, {orderId, orderDetailId}): number => {
-    return getOrderScansForOrderDetailFromProps(state, {orderId, orderDetailId}).length;
 }
 
 /**Returns an object of orderDetailIds and OrderScan objects {[orderDetailId]: [OrderScan]}*/
@@ -47,4 +36,21 @@ export const getOrderScansForOrderFromProps = (state: State, {orderId}): { [orde
         return scansForOrder;
     }
     return {};
+}
+
+/**Returns an array of OrderScan objects for a particular order detail
+ * WARNING: unless only one order detail is needed, it is most efficient to simply use the getOrderScansForOrderFromProps Selector
+ * and then derive the needed information (this way, only one object needs to be created)
+ * */
+export const getOrderScansForOrderDetailFromProps = (state: State, {orderId, orderDetailId}): OrderScan[] => {
+    const orderScans = getOrderScansForOrderFromProps(state, {orderId});
+    return orderScans && orderScans[orderDetailId] ? orderScans[orderDetailId] : [];
+}
+
+/**Returns count of scans for a particular order detail
+ * WARNING: unless info for only one order detail is needed, it is most efficient to simply use the getOrderScansForOrderFromProps Selector
+ * and then derive the needed information (this way, only one object needs to be created)
+ * */
+export const getOrderScanCountForOrderDetailFromProps = (state: State, {orderId, orderDetailId}): number => {
+    return getOrderScansForOrderDetailFromProps(state, {orderId, orderDetailId}).length;
 }
