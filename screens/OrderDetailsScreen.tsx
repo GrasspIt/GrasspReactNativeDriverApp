@@ -19,9 +19,8 @@ import { getAddressFromProps } from '../selectors/addressSelectors';
 import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 import OrderDetailsDisplay from '../components/OrderDetailsDisplay';
 import { getDSPRFromProps, isMetrcLicenseHeldByDSPRFromProps } from "../selectors/dsprSelectors";
-import { DSPR, MetrcTag, State } from "../store/reduxStoreState";
-import { number } from "prop-types";
-import { getMetrcScanCountForOrderFromProps, getOrderScansForOrderFromProps } from "../selectors/metrcSelectors";
+import { DSPR, State } from "../store/reduxStoreState";
+import { getOrderScanCountForOrderFromProps } from "../selectors/metrcSelectors";
 
 type DetailsScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Details'>;
 
@@ -71,14 +70,13 @@ const OrderDetailsScreen = ({
     const isMetrcDSPR = useSelector<State, boolean | undefined>(state => dspr && isMetrcLicenseHeldByDSPRFromProps(state, {dsprId: dspr.id}), shallowEqual)
     const productsInOrder = useSelector<State, ProductInOrder[]>(state => orderId && getProductsInOrderFromProps(state, {orderId}), shallowEqual)
 
-    const currentNumberOfScansForOrder = useSelector<State, number>(state => getMetrcScanCountForOrderFromProps(state, {orderId}), shallowEqual);
+    const currentNumberOfScansForOrder = useSelector<State, number>(state => getOrderScanCountForOrderFromProps(state, {orderId}), shallowEqual);
+
+    console.log('currentNumberOfScansForOrder:', currentNumberOfScansForOrder)
     const totalRequiredScansForOrder = useMemo(() => productsInOrder.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
+    console.log('totalRequiredScansForOrder:', totalRequiredScansForOrder);
 
     const isScanningComplete: boolean = isMetrcDSPR ? currentNumberOfScansForOrder === totalRequiredScansForOrder : true;
-
-    //TODO: Finish implementing determination for if an order requires a metrc scan.
-    //confirm property name for metrcLicense on DSPR object
-    //TODO update DSPR interface in reduxStore
 
     const handleNavigate = () => {
         if (order && order.status) {
@@ -109,9 +107,7 @@ const OrderDetailsScreen = ({
         Alert.alert('Copied to clipboard.');
     };
 
-    console.log('order:', order);
-
-    //TODO - pass requiresMetrcScan to OrderDetailsDisplay to determine if the 'Scan Order Button' should show instead of the complete order button (if all scans have NOT been completed)
+    //TODO - pass isScanningComplete to OrderDetailsDisplay to determine if the 'Scan Order Button' should show instead of the complete order button (if all scans have NOT been completed)
     //if all scans have been completed, should the Complete Order Button render and the scan order button not render - or  should both render?
     return (
         <OrderDetailsDisplay

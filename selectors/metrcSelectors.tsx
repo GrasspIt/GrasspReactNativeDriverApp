@@ -11,11 +11,11 @@ export const getOrderScans = (state: State): {[orderScanId: number]: OrderScan} 
 /**Returns an array of Order Scan Ids*/
 const getOrderScanIdsForOrderFromProps = (state: State, {orderId}): number[] => {
     const order = getOrderFromProps(state, {orderId});
-    return order && order.metrcOrderDetailAssociationScans ? order.metrcOrderDetailAssociationScans : [];
+    return order && order.metrcOrderDetailAssociationsScans ? order.metrcOrderDetailAssociationsScans : [];
 }
 
 /**Returns count of scans for an order*/
-export const getMetrcScanCountForOrderFromProps = (state: State, {orderId}): number => {
+export const getOrderScanCountForOrderFromProps = (state: State, {orderId}): number => {
     return getOrderScanIdsForOrderFromProps(state, {orderId}).length;
 }
 

@@ -12,7 +12,7 @@ import { Card, Divider, useTheme, List, IconButton, Menu, Dialog, Portal, Paragr
 import { shallowEqual, useSelector } from "react-redux";
 import {
     getOrderScanCountForOrderDetailFromProps,
-    getMetrcScanCountForOrderFromProps,
+    getOrderScanCountForOrderFromProps,
     getOrderScansForOrderFromProps
 } from "../selectors/metrcSelectors";
 import { OrderScan, State } from "../store/reduxStoreState";
@@ -37,7 +37,7 @@ const OrderToScan = ({
     const {colors} = useTheme();
 
     const metrcScansForOrder = useSelector<State, {[orderDetailId: number]: OrderScan[]}>(state => getOrderScansForOrderFromProps(state, {orderId}), shallowEqual);
-    const currentNumberOfScansForOrder = useSelector<State, number>(state => getMetrcScanCountForOrderFromProps(state, {orderId}), shallowEqual);
+    const currentNumberOfScansForOrder = useSelector<State, number>(state => getOrderScanCountForOrderFromProps(state, {orderId}), shallowEqual);
 
     const totalRequiredScansForOrder = useMemo(() => products.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
 

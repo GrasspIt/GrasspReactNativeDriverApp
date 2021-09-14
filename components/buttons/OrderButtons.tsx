@@ -141,7 +141,7 @@ const OrderButtons = ({
             {/*Complete button is disabled if scanning is incomplete or component is loading*/}
             {orderStatus == 'in_process' ? (
                 <Button
-                    disabled={isMetrcDSPR ? !isScanningComplete || isLoading : isLoading}
+                    disabled={isMetrcDSPR ? (!isScanningComplete || isLoading) : isLoading}
                     icon='check'
                     mode='contained'
                     color={colors.primary}

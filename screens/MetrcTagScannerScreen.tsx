@@ -10,7 +10,7 @@ import {
     ORDER_SCAN_SUBMIT_SUCCESS, submitMetrcTag, ORDER_SCAN_SUBMIT, ORDER_SCAN_SUBMIT_FAILURE
 } from "../actions/metrcActions";
 import {
-    getOrderScanCountForOrderDetailFromProps, getMetrcScanCountForOrderFromProps,
+    getOrderScanCountForOrderDetailFromProps, getOrderScanCountForOrderFromProps,
     getOrderScansForOrderDetailFromProps,
     getOrderScansForOrderFromProps
 } from "../selectors/metrcSelectors";
