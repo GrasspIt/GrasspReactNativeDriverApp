@@ -361,14 +361,22 @@ const routeMetricSchema = new schema.Entity(
   }
 );
 
-//Process strategy used to avoid a nested objects within the orderScans object. Normalizes orderDetailId as well
+//Process strategy used to avoid a nested objects within the orderScans object
+// -> orderDetailId is normalized
+// -> if metrcTagProductAssociation: all properties in metrcTagProductAssociation is merged with the top level of the object.
 const orderScansSchema = new schema.Entity('orderScans', {}, {
   idAttribute: orderScan => orderScan.id,
   processStrategy: (entity) => {
-    const modifiedEntity = {...entity, ...entity.metrcTagProductAssociation};
-    modifiedEntity.orderDetail = modifiedEntity.orderDetail.id;
-    delete modifiedEntity.metrcTagProductAssociation;
-    return modifiedEntity;
+    if (entity.metrcTagProductAssociation) {
+      const modifiedEntity = {...entity, ...entity.metrcTagProductAssociation};
+      modifiedEntity.orderDetail = modifiedEntity.orderDetail.id;
+      delete modifiedEntity.metrcTagProductAssociation;
+      return modifiedEntity;
+    } else {
+      const modifiedEntity = { ...entity};
+      modifiedEntity.orderDetail = modifiedEntity.orderDetail.id;
+      return modifiedEntity;
+    }
   }
 })
 
@@ -438,7 +446,7 @@ orderSchema.define({
   userMedicalRecommendation: userMedicalRecommendationSchema,
   userIdentificationDocument: userIdDocumentSchema,
   dspr: dsprSchema,
-  metrcOrderDetailAssociationsScans: [orderScansSchema],
+  scannedProductOrderDetailAssociationsScans: [orderScansSchema],
 });
 
 couponSchema.define({
@@ -551,6 +559,7 @@ userSchema.define({
 
 orderScansSchema.define({
   order: orderSchema,
+  product: dspProductSchema,
 });
 
 // Schemas for Grassp API responses.
