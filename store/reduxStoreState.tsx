@@ -566,4 +566,5 @@ export interface OrderScan {
     dsprId: number;
     quantityOfEighths: number;
     convertToShake: boolean;
+    product: number;
 }
