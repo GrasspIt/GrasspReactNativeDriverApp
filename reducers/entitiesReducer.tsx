@@ -72,7 +72,8 @@ export const initialState = {
     dsprDriverRouteLegDirections: {},
     dsprDriverRouteLocations: {},
     dsprDriverRouteMetrics: {},
-    metrcTagsForOrder: {},
+    dspProducts: {},
+    orderScans: {},
 };
 
 export const overwriteArray = (objValue, srcValue) => {
