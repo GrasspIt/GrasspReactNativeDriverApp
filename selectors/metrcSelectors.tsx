@@ -11,7 +11,7 @@ export const getOrderScans = (state: State): { [orderScanId: number]: OrderScan 
 /**Returns an array of Order Scan Ids*/
 const getOrderScanIdsForOrderFromProps = (state: State, {orderId}): number[] => {
     const order = getOrderFromProps(state, {orderId});
-    return order && order.metrcOrderDetailAssociationsScans ? order.metrcOrderDetailAssociationsScans : [];
+    return order && order.scannedProductOrderDetailAssociationsScans ? order.scannedProductOrderDetailAssociationsScans : [];
 }
 
 /**Returns count of scans for an order*/
@@ -22,16 +22,20 @@ export const getOrderScanCountForOrderFromProps = (state: State, {orderId}): num
 /**Returns an object of orderDetailIds and OrderScan objects {[orderDetailId]: [OrderScan]}*/
 export const getOrderScansForOrderFromProps = (state: State, {orderId}): { [orderDetailId: number]: OrderScan[] } => {
     const orderScanIds = getOrderScanIdsForOrderFromProps(state, {orderId});
+    console.log('orderScanIds in selector:', orderScanIds);
     const allOrderScans = getOrderScans(state);
 
     if (orderScanIds.length > 0 && orderScanIds.length > 0) {
         const scansForOrder = {};
         orderScanIds.forEach(scanId => {
             const orderScan = allOrderScans[scanId];
+            console.log('orderScan object for scanId:', orderScan);
             const orderDetailId = orderScan.orderDetail;
-            scansForOrder[orderDetailId]
+            console.log('orderDetailId from orderScan object:', orderDetailId);
+            scansForOrder[orderDetailId] = scansForOrder[orderDetailId]
                 ? scansForOrder[orderDetailId] = scansForOrder[orderDetailId].push(orderScan)
                 : [orderScan];
+            console.log('! scansForOrder after getting specific orderScan object:', scansForOrder);
         })
         return scansForOrder;
     }
