@@ -1,3 +1,5 @@
+import { createSelector } from 'reselect';
+
 import { OrderScan, State } from '../store/reduxStoreState';
 import { getOrderFromProps } from "./orderSelectors";
 import { createDeepEqualSelector } from "./utilSelectors";
@@ -10,7 +12,7 @@ export const getOrderScans = (state: State): { [orderScanId: number]: OrderScan 
 }
 
 /**Returns an array of Order Scan Ids*/
-const getOrderScanIdsForOrderFromProps = createDeepEqualSelector([getOrderFromProps], (order): number[] => {
+const getOrderScanIdsForOrderFromProps = createSelector([getOrderFromProps], (order): number[] => {
     console.log('#### create selector getOrderScanIdsForOrderFromProps is running!!!!');
     return order && order.scannedProductOrderDetailAssociationsScans ? order.scannedProductOrderDetailAssociationsScans : [];
 })
