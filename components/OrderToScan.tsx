@@ -24,6 +24,10 @@ type OrderToScanProps = {
     handleCompleteOrder: (orderId) => any;
     resetOrderDetailScans: (orderId: string, orderDetailId: string) => any;
     resetOrderScans: (orderId: string) => any;
+    isScanningComplete: boolean;
+    totalRequiredScansForOrder: number;
+    currentNumberOfScansForOrder: number;
+    orderScans: { [orderDetailId: number]: OrderScan[] };
 }
 
 const OrderToScan = ({
@@ -33,21 +37,20 @@ const OrderToScan = ({
                          handleCompleteOrder,
                          resetOrderDetailScans,
                          resetOrderScans,
+                         isScanningComplete,
+                         totalRequiredScansForOrder,
+                         currentNumberOfScansForOrder,
+                         orderScans,
                      }: OrderToScanProps) => {
     const {colors} = useTheme();
-
-    const metrcScansForOrder = useSelector<State, {[orderDetailId: number]: OrderScan[]}>(state => getOrderScansForOrderFromProps(state, {orderId}), shallowEqual);
-    const currentNumberOfScansForOrder = useSelector<State, number>(state => getOrderScanCountForOrderFromProps(state, {orderId}), shallowEqual);
-
-    const totalRequiredScansForOrder = useMemo(() => products.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
-
-    const scanningComplete: boolean = currentNumberOfScansForOrder === totalRequiredScansForOrder;
 
     const [productMenuVisible, setProductMenuVisible] = useState<number | null>(null);
     const [orderMenuVisible, setOrderMenuVisible] = useState<boolean>(false);
     const [productResetDialogVisible, setProductResetDialogVisible] = useState<boolean>(false);
-    const [productToReset, setProductToReset] = useState<{id: number, name: string, orderDetailId: number} | null>(null);
+    const [productToReset, setProductToReset] = useState<{ id: number, name: string, orderDetailId: number } | null>(null);
     const [orderResetDialogVisible, setOrderResetDialogVisible] = useState<boolean>(false);
+
+    console.log('orderScans:', orderScans);
 
     //TODO: Decide how you want to determine when scans are complete. Selector? State?
     //used to determine whether or not complete order button is disabled
@@ -80,10 +83,10 @@ const OrderToScan = ({
                         <IconButton
                             icon={'dots-vertical'}
                             onPress={openOrderMenu}
-                            style={{alignSelf: 'center', marginLeft: 'auto', }}
+                            style={{alignSelf: 'center', marginLeft: 'auto',}}
                         />
                     }
-                    >
+                >
                     <Menu.Item
                         icon={'refresh'}
                         onPress={() => {
@@ -118,19 +121,22 @@ const OrderToScan = ({
      *  tapping a row opens up the scanner
      * */
     const renderProductRow = ({item}) => {
-        const scanCountForItem = metrcScansForOrder[item.orderDetailId] ? metrcScansForOrder[item.orderDetailId].length : 0;
+        const scanCountForItem = orderScans[item.orderDetailId] ? orderScans[item.orderDetailId].length : 0;
 
         /**Determines which icon to render for an item, depending upon its scan progress (complete, in-progress, not-started, error)*/
         const determineListIcon = () => {
             if (scanCountForItem > item.quantity) return {icon: 'alert-circle', color: colors.error};
             if (scanCountForItem === item.quantity) return {icon: 'check-circle-outline', color: colors.primary};
             //alternative color for dots-horizontal: #FFB800
-            if (scanCountForItem > 0 && scanCountForItem < item.quantity) return {icon: 'dots-horizontal-circle-outline', color: '#f8b302'};
+            if (scanCountForItem > 0 && scanCountForItem < item.quantity) return {
+                icon: 'dots-horizontal-circle-outline',
+                color: '#f8b302'
+            };
             //if the switch is made to qr codes, use the icon 'data-matrix-scan'
             return {icon: 'barcode-scan', color: colors.backdrop};
         }
 
-        const { icon: listIcon, color: listIconColor } = determineListIcon();
+        const {icon: listIcon, color: listIconColor} = determineListIcon();
 
         return (
             <React.Fragment key={item.productId}>
@@ -158,7 +164,7 @@ const OrderToScan = ({
                         style={{paddingLeft: 0, paddingRight: 0}}
                         left={props => (
                             <List.Icon {...props}
-                                       //icon={item.orderDetailId % 3 === 0 ? "alert-circle" : item.orderDetailId % 2 === 0 ? 'check' : 'barcode-scan'}
+                                //icon={item.orderDetailId % 3 === 0 ? "alert-circle" : item.orderDetailId % 2 === 0 ? 'check' : 'barcode-scan'}
                                        icon={listIcon}
                                        color={listIconColor}
                                        style={{alignSelf: 'center', marginRight: 10}}
@@ -220,10 +226,10 @@ const OrderToScan = ({
         <SafeAreaView style={{flex: 1}}>
             <View style={{flex: 1, backgroundColor: colors.background}}>
                 <Card style={[styles.cardContainer, {flex: 1}]}>
-                        <Card.Title
-                            title={'Products to Scan'}
-                            subtitle={`Scanned: ${currentNumberOfScansForOrder}/${totalRequiredScansForOrder}`}
-                        />
+                    <Card.Title
+                        title={'Products to Scan'}
+                        subtitle={`Scanned: ${currentNumberOfScansForOrder}/${totalRequiredScansForOrder}`}
+                    />
                     <Card.Content>
                         <FlatList
                             data={products}
@@ -235,11 +241,14 @@ const OrderToScan = ({
 
                     <View style={{marginTop: 'auto'}}>
                         <Button
-                            disabled={!scanningComplete}
+                            disabled={!isScanningComplete}
                             icon='check'
                             mode='contained'
                             color={colors.primary}
-                            labelStyle={{ paddingVertical: 4, color: !scanningComplete ? colors.disabled : colors.surface }}
+                            labelStyle={{
+                                paddingVertical: 4,
+                                color: !isScanningComplete ? colors.disabled : colors.surface
+                            }}
                             style={styles.buttons}
                             onPress={() => handleCompleteOrder(orderId)}
                         >

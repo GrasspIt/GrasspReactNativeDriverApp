@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import OrderToScan from '../components/OrderToScan';
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { getProductsInOrderFromProps, ProductInOrder } from "../selectors/orderSelectors";
-import { State } from "../store/reduxStoreState";
+import { OrderScan, State } from "../store/reduxStoreState";
 import { RESET_ORDER_DETAIL_SCANS_SUCCESS, RESET_ORDER_SCANS_SUCCESS } from "../actions/metrcActions";
 import { completeOrder } from "../actions/orderActions";
+import { getOrderScanCountForOrderFromProps, getOrderScansForOrderFromProps } from "../selectors/metrcSelectors";
 
 const OrderToScanScreen = ({
-    navigation,
-    route
-}) => {
-    const { orderId } = route.params;
+                               navigation,
+                               route
+                           }) => {
+    const {orderId} = route.params;
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -25,6 +26,11 @@ const OrderToScanScreen = ({
     const productsInOrder = useSelector<State, ProductInOrder[]>(
         state => orderId && getProductsInOrderFromProps(state, {orderId}),
         shallowEqual)
+    const currentNumberOfScansForOrder = useSelector<State, number>(state => getOrderScanCountForOrderFromProps(state, {orderId}), shallowEqual);
+    const orderScans = useSelector<State, { [orderDetailId: number]: OrderScan[] }>(state => getOrderScansForOrderFromProps(state, {orderId}), shallowEqual);
+
+    const totalRequiredScansForOrder = useMemo(() => productsInOrder.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
+    const isScanningComplete: boolean = currentNumberOfScansForOrder === totalRequiredScansForOrder;
 
     //TODO: Write useEffect that fetches any previous scans made for order
 
@@ -39,7 +45,7 @@ const OrderToScanScreen = ({
     }
 
     /**Delete all scans made for a specific orderDetail*/
-    const resetOrderDetailScans = (orderId:string, orderDetailId: string) => {
+    const resetOrderDetailScans = (orderId: string, orderDetailId: string) => {
         dispatch({
             type: RESET_ORDER_DETAIL_SCANS_SUCCESS,
             response: {
@@ -70,6 +76,10 @@ const OrderToScanScreen = ({
         handleCompleteOrder={handleCompleteOrder}
         resetOrderDetailScans={resetOrderDetailScans}
         resetOrderScans={resetOrderScans}
+        isScanningComplete={isScanningComplete}
+        totalRequiredScansForOrder={totalRequiredScansForOrder}
+        currentNumberOfScansForOrder={currentNumberOfScansForOrder}
+        orderScans={orderScans}
     />
 }
 
