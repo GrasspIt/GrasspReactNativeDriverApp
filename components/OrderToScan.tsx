@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import {
     FlatList,
     SafeAreaView,
@@ -9,13 +9,7 @@ import {
 } from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
 import { Card, Divider, useTheme, List, IconButton, Menu, Dialog, Portal, Paragraph, Button } from "react-native-paper";
-import { shallowEqual, useSelector } from "react-redux";
-import {
-    getOrderScanCountForOrderDetailFromProps,
-    getOrderScanCountForOrderFromProps,
-    getOrderScansForOrderFromProps
-} from "../selectors/metrcSelectors";
-import { OrderScan, State } from "../store/reduxStoreState";
+import { OrderScan } from "../store/reduxStoreState";
 
 type OrderToScanProps = {
     orderId: number;
