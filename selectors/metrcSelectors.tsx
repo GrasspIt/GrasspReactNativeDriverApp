@@ -29,13 +29,10 @@ export const getOrderScansForOrderFromProps = (state: State, {orderId}): { [orde
         const scansForOrder = {};
         orderScanIds.forEach(scanId => {
             const orderScan = allOrderScans[scanId];
-            console.log('orderScan object for scanId:', orderScan);
             const orderDetailId = orderScan.orderDetail;
-            console.log('orderDetailId from orderScan object:', orderDetailId);
             scansForOrder[orderDetailId] = scansForOrder[orderDetailId]
-                ? scansForOrder[orderDetailId] = scansForOrder[orderDetailId].push(orderScan)
+                ? scansForOrder[orderDetailId] = [...scansForOrder[orderDetailId], orderScan]
                 : [orderScan];
-            console.log('! scansForOrder after getting specific orderScan object:', scansForOrder);
         })
         return scansForOrder;
     }

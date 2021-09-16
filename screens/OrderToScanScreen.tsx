@@ -15,6 +15,7 @@ const OrderToScanScreen = ({
     const {orderId} = route.params;
     const dispatch = useDispatch();
 
+    //TODO: Remove this useEffect
     useEffect(() => {
         console.log('OrderToScanScreen has mounted!!!');
 

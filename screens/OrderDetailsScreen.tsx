@@ -71,11 +71,7 @@ const OrderDetailsScreen = ({
     const productsInOrder = useSelector<State, ProductInOrder[]>(state => orderId && getProductsInOrderFromProps(state, {orderId}), shallowEqual)
 
     const currentNumberOfScansForOrder = useSelector<State, number>(state => getOrderScanCountForOrderFromProps(state, {orderId}), shallowEqual);
-
-    console.log('currentNumberOfScansForOrder:', currentNumberOfScansForOrder)
     const totalRequiredScansForOrder = useMemo(() => productsInOrder.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
-    console.log('totalRequiredScansForOrder:', totalRequiredScansForOrder);
-
     const isScanningComplete: boolean = isMetrcDSPR ? currentNumberOfScansForOrder === totalRequiredScansForOrder : true;
 
     const handleNavigate = () => {
