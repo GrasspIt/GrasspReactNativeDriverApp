@@ -8,9 +8,9 @@ import {
     deactivateOrderScans,
     RESET_ORDER_DETAIL_SCANS_SUCCESS, RESET_ORDER_SCANS_FAILURE,
     RESET_ORDER_SCANS_SUCCESS
-} from "../actions/metrcActions";
+} from "../actions/scanActions";
 import { completeOrder } from "../actions/orderActions";
-import { getOrderScanCountForOrderFromProps, getOrderScansForOrderFromProps } from "../selectors/metrcSelectors";
+import { getOrderScanCountForOrderFromProps, getOrderScansForOrderFromProps } from "../selectors/scanSelectors";
 
 const OrderToScanScreen = ({
                                navigation,

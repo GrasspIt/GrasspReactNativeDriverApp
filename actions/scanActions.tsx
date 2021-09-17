@@ -61,6 +61,7 @@ export const RESET_ORDER_SCANS_SUCCESS = 'RESET_ORDER_SCANS_SUCCESS';
 export const RESET_ORDER_SCANS_FAILURE = 'RESET_ORDER_SCANS_FAILURE';
 
 const orderScansDeactivator = (orderId: number) => {
+    //TODO: Update Schema
     return {
         [CALL_API]: {
             httpAction: 'POST',
@@ -79,6 +80,7 @@ export const deactivateOrderScans = (orderId: number) => (dispatch) => {
     dispatch(orderScansDeactivator(orderId))
         .then(response => {
             if (response.type === RESET_ORDER_SCANS_SUCCESS) {
+                //TODO: Test that scannedProductOrderDetailAssociationsScans is also updated. May need to update in the reducer
                 dispatch(getAlreadyScannedForOrder(orderId));
             }
 

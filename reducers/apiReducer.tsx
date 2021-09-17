@@ -62,7 +62,7 @@ import {
   RESET_ORDER_DETAIL_SCANS_SUCCESS,
   RESET_ORDER_SCANS_SUCCESS,
   ORDER_SCAN_SUBMIT_SUCCESS, RESET_ORDER_SCANS_PENDING, ORDER_SCAN_SUBMIT_PENDING
-} from "../actions/metrcActions";
+} from "../actions/scanActions";
 
 import entitiesReducer, { initialState as entitiesInitialState } from './entitiesReducer';
 

@@ -20,7 +20,7 @@ import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 import OrderDetailsDisplay from '../components/OrderDetailsDisplay';
 import { getDSPRFromProps, isMetrcLicenseHeldByDSPRFromProps } from "../selectors/dsprSelectors";
 import { DSPR, State } from "../store/reduxStoreState";
-import { getOrderScanCountForOrderFromProps } from "../selectors/metrcSelectors";
+import { getOrderScanCountForOrderFromProps } from "../selectors/scanSelectors";
 
 type DetailsScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Details'>;
 

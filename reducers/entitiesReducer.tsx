@@ -34,7 +34,7 @@ import {
     RESET_ORDER_DETAIL_SCANS_SUCCESS,
     RESET_ORDER_SCANS_SUCCESS,
     ORDER_SCAN_SUBMIT_SUCCESS
-} from "../actions/metrcActions";
+} from "../actions/scanActions";
 
 export const initialState = {
     users: {},

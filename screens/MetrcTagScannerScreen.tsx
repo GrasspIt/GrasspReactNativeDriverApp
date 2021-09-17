@@ -13,12 +13,12 @@ import {
     ORDER_SCAN_SUBMIT_FAILURE,
     deactivateOrderScans,
     RESET_ORDER_SCANS_FAILURE
-} from "../actions/metrcActions";
+} from "../actions/scanActions";
 import {
     getOrderScanCountForOrderDetailFromProps, getOrderScanCountForOrderFromProps,
     getOrderScansForOrderDetailFromProps,
     getOrderScansForOrderFromProps
-} from "../selectors/metrcSelectors";
+} from "../selectors/scanSelectors";
 
 const MetrcTagScannerScreen = ({
                                    navigation,
