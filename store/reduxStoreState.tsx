@@ -378,7 +378,7 @@ export interface Order {
     medicalRecommendation?: MedicalRecommendation;
     modifiedOrder?: { id: number, dsprDriver: { id: number, currentInProcessOrder: { id: number } }, dspr: { id: 1 } };
     modifiedByManager?: { id: number };
-    metrcOrderDetailAssociationsScans?: number[];
+    scannedProductOrderDetailAssociationsScans?: number[];
 }
 
 export interface CalculatedOrderDetail {
