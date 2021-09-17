@@ -42,13 +42,14 @@ const MetrcTagManualEntryModal = ({
                                       scanCountForOrderDetail,
                                       orderDetailQuantity,
                                       errorText,
+                                      orderId
                                   }: MetrcTagManualEntryModalProps) => {
     const {colors} = useTheme();
 
     const [text, setText] = useState<string>('');
     const textInputRef = useRef<any>(null);
 
-    /**On Mount, focus the TextInput*/
+    /**On Mount, focus the TextInput to show keyboard*/
     useEffect(() => {
         Platform.OS === 'ios'
             ? textInputRef.current.focus()
@@ -68,7 +69,6 @@ const MetrcTagManualEntryModal = ({
         }
     }
 
-    //TODO: Change 'Scanned' to another word?
     /**Message to display when a tag submission is successful*/
     const successAlertMessage = (
         <View style={successAlertMessageStyle.view}>
@@ -82,19 +82,17 @@ const MetrcTagManualEntryModal = ({
             <Card style={styles.card}>
                 <Card.Title title="Metrc Tag Manual Entry" subtitle={productName}/>
                 <Card.Content style={styles.cardContent}>
-                    {/*<Title>Card title</Title>*/}
+
                     <Paragraph style={{fontSize: 16}}>Please enter the Metrc Tag below:</Paragraph>
 
                     <View style={{marginTop: 20}}>
                         <TextInput
-                            //label={'Metrc Tag'}
                             value={text}
                             onChangeText={text => setText(text)}
                             placeholder={'1A40A03000005DD000003479'}
                             ref={textInputRef}
                             autoCorrect={false}
                             autoFocus={true}
-                            //blurOnSubmit={true}
                             onSubmitEditing={handleSubmit}
                             returnKeyType={'done'}
                             textContentType={'none'}
@@ -142,11 +140,11 @@ const MetrcTagManualEntryModal = ({
                                      ? <AlertSuccessButtonsForRemainingScans
                                          navigation={navigation}
                                          closeSuccessAlert={closeSuccessAlert}
+                                         goBackOnPress={() => navigation.navigate('OrderToScan', {orderId})}
                                      />
                                      : undefined}
             />
 
-            {/*TODO - Test for different errors. Change error message to be whatever is returned from the backend*/}
             {/*Error Alert*/}
             <AlertSuccessOrError
                 isVisible={errorAlertVisible}
