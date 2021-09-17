@@ -38,7 +38,7 @@ export const GET_CURRENT_ORDER_SCANS_FOR_ORDER = 'GET_CURRENT_ORDER_SCANS_FOR_OR
 export const GET_CURRENT_ORDER_SCANS_FOR_ORDER_SUCCESS = 'GET_CURRENT_ORDER_SCANS_FOR_ORDER_SUCCESS';
 export const GET_CURRENT_ORDER_SCANS_FOR_ORDER_FAILURE = 'GET_CURRENT_ORDER_SCANS_FOR_ORDER_FAILURE';
 
-const alreadyScannedForOrderGetter = (orderId: number) => (dispatch) => {
+const alreadyScannedForOrderGetter = (orderId: number) => {
     return {
         [CALL_API]: {
             httpAction: 'GET',
@@ -60,7 +60,7 @@ export const RESET_ORDER_SCANS = 'RESET_ORDER_SCANS';
 export const RESET_ORDER_SCANS_SUCCESS = 'RESET_ORDER_SCANS_SUCCESS';
 export const RESET_ORDER_SCANS_FAILURE = 'RESET_ORDER_SCANS_FAILURE';
 
-const orderScansDeactivator = (orderId: number) => (dispatch) => {
+const orderScansDeactivator = (orderId: number) => {
     return {
         [CALL_API]: {
             httpAction: 'POST',
@@ -87,7 +87,6 @@ export const deactivateOrderScans = (orderId: number) => (dispatch) => {
             }
         })
         .catch((error) => Alert.alert('Network error:', error));
-
 }
 
 export const RESET_ORDER_DETAIL_SCANS = 'RESET_ORDER_DETAIL_SCANS';
