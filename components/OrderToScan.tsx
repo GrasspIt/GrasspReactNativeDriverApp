@@ -10,6 +10,7 @@ import {
 import { ProductInOrder } from "../selectors/orderSelectors";
 import { Card, Divider, useTheme, List, IconButton, Menu, Dialog, Portal, Paragraph, Button } from "react-native-paper";
 import { OrderScan } from "../store/reduxStoreState";
+import { infoColor } from "../App";
 
 type OrderToScanProps = {
     orderId: number;
@@ -235,18 +236,16 @@ const OrderToScan = ({
 
                     <View style={{marginTop: 'auto'}}>
                         <Button
-                            disabled={!isScanningComplete}
-                            icon='check'
-                            mode='contained'
-                            color={colors.primary}
+                            icon='arrow-left'
+                            mode='outlined'
+                            color={infoColor}
                             labelStyle={{
                                 paddingVertical: 4,
-                                color: !isScanningComplete ? colors.disabled : colors.surface
                             }}
                             style={styles.buttons}
-                            onPress={() => handleCompleteOrder(orderId)}
+                            onPress={() => navigation.goBack()}
                         >
-                            Complete Order
+                            Back to Order Details
                         </Button>
                     </View>
                 </Card>
