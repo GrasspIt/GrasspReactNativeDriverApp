@@ -78,16 +78,6 @@ const MetrcTagScannerScreen = ({
             })
     }
 
-    const resetOrderScans = () => {
-        dispatch<any>(deactivateOrderScans(parseInt(orderId)))
-        .then(response => {
-            if (response.type === RESET_ORDER_SCANS_FAILURE) {
-                showErrorAlert();
-                setErrorText(response.error);
-            }
-        })
-    }
-
     return <MetrcTagScanner
         navigation={navigation}
         productName={productName}

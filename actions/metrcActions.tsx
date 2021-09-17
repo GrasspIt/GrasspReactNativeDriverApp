@@ -76,14 +76,14 @@ const orderScansDeactivator = (orderId: number) => (dispatch) => {
 
 export const deactivateOrderScans = (orderId: number) => (dispatch) => {
     dispatch({type: RESET_ORDER_SCANS_PENDING});
-    return dispatch(orderScansDeactivator(orderId))
+    dispatch(orderScansDeactivator(orderId))
         .then(response => {
             if (response.type === RESET_ORDER_SCANS_SUCCESS) {
                 dispatch(getAlreadyScannedForOrder(orderId));
             }
 
             if (response.type === RESET_ORDER_SCANS_FAILURE) {
-                return {type: response.type, error: response.error};
+                Alert.alert('Failed to cancel order:', response.error);
             }
         })
         .catch((error) => Alert.alert('Network error:', error));

@@ -4,7 +4,11 @@ import OrderToScan from '../components/OrderToScan';
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { getProductsInOrderFromProps, ProductInOrder } from "../selectors/orderSelectors";
 import { OrderScan, State } from "../store/reduxStoreState";
-import { RESET_ORDER_DETAIL_SCANS_SUCCESS, RESET_ORDER_SCANS_SUCCESS } from "../actions/metrcActions";
+import {
+    deactivateOrderScans,
+    RESET_ORDER_DETAIL_SCANS_SUCCESS, RESET_ORDER_SCANS_FAILURE,
+    RESET_ORDER_SCANS_SUCCESS
+} from "../actions/metrcActions";
 import { completeOrder } from "../actions/orderActions";
 import { getOrderScanCountForOrderFromProps, getOrderScansForOrderFromProps } from "../selectors/metrcSelectors";
 
@@ -45,7 +49,7 @@ const OrderToScanScreen = ({
         dispatch(completeOrder(orderId));
     }
 
-    /**Delete all scans made for a specific orderDetail*/
+    /**Deactivate all scans for an order detail*/
     const resetOrderDetailScans = (orderId: string, orderDetailId: string) => {
         dispatch({
             type: RESET_ORDER_DETAIL_SCANS_SUCCESS,
@@ -58,16 +62,9 @@ const OrderToScanScreen = ({
         })
     }
 
-    /**Delete all scans made for a specific order*/
-    const resetOrderScans = (orderId: string) => {
-        dispatch({
-            type: RESET_ORDER_SCANS_SUCCESS,
-            response: {
-                entities: {
-                    orderId,
-                }
-            }
-        })
+    /**Deactivate all scans for an order*/
+    const resetOrderScans = () => {
+        dispatch<any>(deactivateOrderScans(parseInt(orderId)))
     }
 
     return <OrderToScan
