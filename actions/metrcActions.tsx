@@ -83,7 +83,7 @@ export const deactivateOrderScans = (orderId: number) => (dispatch) => {
             }
 
             if (response.type === RESET_ORDER_SCANS_FAILURE) {
-                Alert.alert('Failed to cancel order:', response.error);
+                Alert.alert('Failed to reset order scans:', response.error);
             }
         })
         .catch((error) => Alert.alert('Network error:', error));
