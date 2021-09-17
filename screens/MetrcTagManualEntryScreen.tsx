@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import MetrcTagManualEntryModal from "../components/MetrcTagManualEntryModal";
-import { ORDER_SCAN_SUBMIT_FAILURE, ORDER_SCAN_SUBMIT_SUCCESS, submitMetrcTag } from "../actions/metrcActions";
+import { ORDER_SCAN_SUBMIT_FAILURE, ORDER_SCAN_SUBMIT_SUCCESS, submitBarcodeScan } from "../actions/metrcActions";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { OrderDetail, State } from "../store/reduxStoreState";
 import { getOrderDetailFromProps } from "../selectors/orderSelectors";
@@ -59,7 +59,7 @@ const MetrcTagManualEntryScreen = ({navigation, route}) => {
         //    showSuccessAlert();
 
         const metrcTag = tagText.toUpperCase();
-        return dispatch<any>(submitMetrcTag(metrcTag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
+        return dispatch<any>(submitBarcodeScan(metrcTag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
             .then((response) => {
                 if (response.type === ORDER_SCAN_SUBMIT_SUCCESS) {
                     showSuccessAlert();

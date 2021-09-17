@@ -63,9 +63,6 @@ const MetrcTagScannerScreen = ({
     const scanSubmit = (tag) => {
         //Scanner is disabled until whatever alert is shown from the dispatch response is closed
         setScannerDisabled(true);
-
-        //TODO: Test the value of tag when you are using actual Metrc tags
-        //console.log('Scan Data:', tag);
         dispatch<any>(submitBarcodeScan(tag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
             .then((response) => {
                 if (response.type === ORDER_SCAN_SUBMIT_SUCCESS) {

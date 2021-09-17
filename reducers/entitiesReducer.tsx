@@ -74,6 +74,7 @@ export const initialState = {
     dsprDriverRouteMetrics: {},
     dspProducts: {},
     orderScans: {},
+    count: 0
 };
 
 export const overwriteArray = (objValue, srcValue) => {
@@ -141,6 +142,7 @@ export default (state = initialState, action) => {
         case CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS:
         case CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS:
         case DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS:
+        case RESET_ORDER_SCANS_SUCCESS:
             return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
         case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
             const dsprServiceAreaFromResponse: any =
@@ -171,67 +173,42 @@ export default (state = initialState, action) => {
             if (routeId !== undefined) oldRoutes[routeId] = {};
             state = {...state, dsprDrivers: oldDsprDrivers, dsprDriverRoutes: oldRoutes};
             return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
-
         case ORDER_SCAN_SUBMIT_SUCCESS:
             if (responseEntities) {
                 const modifiedState = {...state};
-                console.log('action for METRC_TAG_SUCCESS:', action);
-                console.log('responseEntities for METRC_TAG_SUCCESS:', responseEntities);
+                const barcodeId = action.response.result;
+                const orderId = responseEntities.orderScans[barcodeId].order;
 
-                const tagId = action.response?.result;
-                const metrcTagResponse = responseEntities.metrcTag[tagId];
-                const {id, createdTime, updatedTime, order, orderDetail} = metrcTagResponse;
-                const {metrcTag, productId, dsprId, isActive} = metrcTagResponse.metrcTagProductAssociation;
-                const orderId = order;
-                const orderDetailId = orderDetail.id;
+                //Update scannedProductOrderDetailAssociationScans in order object
+                const orderProductAssociations = modifiedState.orders[orderId].scannedProductOrderDetailAssociationsScans;
+                modifiedState.orders[orderId].scannedProductOrderDetailAssociationsScans = orderProductAssociations ? [...orderProductAssociations, barcodeId] : [barcodeId];
 
-                const metrcTagInfoToStore = {
-                    id,
-                    metrcTag,
-                    orderId,
-                    orderDetailId,
-                    productId,
-                    dsprId,
-                    createdTime,
-                    updatedTime,
-                    isActive
-                }
-
-                modifiedState.metrcTagsForOrder = {
-                    ...modifiedState.metrcTagsForOrder,
-                    [orderId]: {
-                        ...modifiedState.metrcTagsForOrder[orderId],
-                        [orderDetailId]: modifiedState.metrcTagsForOrder[orderId] && modifiedState.metrcTagsForOrder[orderId][orderDetailId]
-                            ? [...modifiedState.metrcTagsForOrder[orderId][orderDetailId], metrcTagInfoToStore]
-                            : new Array(metrcTagInfoToStore)
-                    }
-                }
-                //TODO: See if this updates correctly with multiple scans for the same product and for different products
-                return modifiedState;
+                return appendAndUpdateEntitiesFromResponse(modifiedState, responseEntities);
             }
             return state;
-        case RESET_ORDER_DETAIL_SCANS_SUCCESS:
-            if (responseEntities) {
-                const {orderId, orderDetailId} = responseEntities;
-                console.log('In ENTITIES REDUCER - RESET ORDER DETAIL SCAN! orderId:', orderId, 'orderDetailId:', orderDetailId)
-                const modifiedState = {...state};
+        //case RESET_ORDER_DETAIL_SCANS_SUCCESS:
+        //    if (responseEntities) {
+        //        const {orderId, orderDetailId} = responseEntities;
+        //        console.log('In ENTITIES REDUCER - RESET ORDER DETAIL SCAN! orderId:', orderId, 'orderDetailId:', orderDetailId)
+        //        const modifiedState = {...state};
+        //
+        //        if (modifiedState.metrcTagsForOrder[orderId][orderDetailId]) {
+        //            delete modifiedState.metrcTagsForOrder[orderId][orderDetailId];
+        //        }
+        //        return modifiedState;
+        //    }
+        //    return state;
+        //case RESET_ORDER_SCANS_SUCCESS:
+        //    if (responseEntities) {
+        //        const {orderId, orderDetailId} = responseEntities;
+        //        const modifiedState = {...state};
+        //        if (modifiedState.metrcTagsForOrder[orderId]) {
+        //            delete modifiedState.metrcTagsForOrder[orderId];
+        //        }
+        //        return modifiedState;
+        //    }
+        //    return state;
 
-                if (modifiedState.metrcTagsForOrder[orderId][orderDetailId]) {
-                    delete modifiedState.metrcTagsForOrder[orderId][orderDetailId];
-                }
-                return modifiedState;
-            }
-            return state;
-        case RESET_ORDER_SCANS_SUCCESS:
-            if (responseEntities) {
-                const {orderId, orderDetailId} = responseEntities;
-                const modifiedState = {...state};
-                if (modifiedState.metrcTagsForOrder[orderId]) {
-                    delete modifiedState.metrcTagsForOrder[orderId];
-                }
-                return modifiedState;
-            }
-            return state;
         default:
             return state;
     }
