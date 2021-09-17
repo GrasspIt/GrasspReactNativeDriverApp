@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
 
-import { DspProduct, MetrcTag, OrderDetail, State } from "../store/reduxStoreState";
+import { OrderDetail, State } from "../store/reduxStoreState";
 import MetrcTagScanner from '../components/MetrcTagScanner';
 import { getOrderDetailFromProps, getProductsInOrderFromProps, ProductInOrder } from "../selectors/orderSelectors";
 import {
     RESET_ORDER_DETAIL_SCANS_SUCCESS,
     RESET_ORDER_SCANS_SUCCESS,
-    ORDER_SCAN_SUBMIT_SUCCESS, submitMetrcTag, ORDER_SCAN_SUBMIT, ORDER_SCAN_SUBMIT_FAILURE
+    ORDER_SCAN_SUBMIT_SUCCESS,
+    submitBarcodeScan,
+    ORDER_SCAN_SUBMIT,
+    ORDER_SCAN_SUBMIT_FAILURE,
+    deactivateOrderScans,
+    RESET_ORDER_SCANS_FAILURE
 } from "../actions/metrcActions";
 import {
     getOrderScanCountForOrderDetailFromProps, getOrderScanCountForOrderFromProps,
     getOrderScansForOrderDetailFromProps,
     getOrderScansForOrderFromProps
 } from "../selectors/metrcSelectors";
-import { shallow } from "@testing-library/react-native";
-import { getDSPProductFromProps } from "../selectors/dspProductSelector";
 
 const MetrcTagScannerScreen = ({
                                    navigation,
@@ -63,7 +66,7 @@ const MetrcTagScannerScreen = ({
 
         //TODO: Test the value of tag when you are using actual Metrc tags
         //console.log('Scan Data:', tag);
-        dispatch<any>(submitMetrcTag(tag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
+        dispatch<any>(submitBarcodeScan(tag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
             .then((response) => {
                 if (response.type === ORDER_SCAN_SUBMIT_SUCCESS) {
                     showSuccessAlert();
@@ -73,6 +76,16 @@ const MetrcTagScannerScreen = ({
                     setErrorText(response.error)
                 }
             })
+    }
+
+    const resetOrderScans = () => {
+        dispatch<any>(deactivateOrderScans(parseInt(orderId)))
+        .then(response => {
+            if (response.type === RESET_ORDER_SCANS_FAILURE) {
+                showErrorAlert();
+                setErrorText(response.error);
+            }
+        })
     }
 
     return <MetrcTagScanner

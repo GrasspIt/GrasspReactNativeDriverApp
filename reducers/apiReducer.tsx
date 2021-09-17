@@ -61,7 +61,7 @@ import {
 import {
   RESET_ORDER_DETAIL_SCANS_SUCCESS,
   RESET_ORDER_SCANS_SUCCESS,
-  ORDER_SCAN_SUBMIT_SUCCESS
+  ORDER_SCAN_SUBMIT_SUCCESS, RESET_ORDER_SCANS_PENDING, ORDER_SCAN_SUBMIT_PENDING
 } from "../actions/metrcActions";
 
 import entitiesReducer, { initialState as entitiesInitialState } from './entitiesReducer';
@@ -87,6 +87,8 @@ export default (state = initialState, action) => {
     case CREATE_NEW_DSPR_DRIVER_ROUTE_PENDING:
     case PROGRESS_DSPR_DRIVER_ROUTE_PENDING:
     case REMOVE_ORDER_AND_REFRESH_ROUTE_PENDING:
+    case ORDER_SCAN_SUBMIT_PENDING:
+    case RESET_ORDER_SCANS_PENDING:
       return { ...state, isLoading: true };
 
     // actions failed
