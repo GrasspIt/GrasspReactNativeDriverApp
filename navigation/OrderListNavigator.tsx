@@ -1,7 +1,7 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
+import { CompositeNavigationProp } from '@react-navigation/native';
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
+import { DrawerStackParamsList } from './DrawerNavigator';
 import { IconButton } from 'react-native-paper';
 
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
@@ -10,10 +10,13 @@ import OrderListScreen from '../screens/OrderListScreen';
 import OrderToScanScreen from "../screens/OrderToScanScreen";
 import MetrcTagScannerScreen from "../screens/MetrcTagScannerScreen";
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { fetchUpdateAsync } from "expo-updates";
 import MetrcTagManualEntryScreen from "../screens/MetrcTagManualEntryScreen";
 
-type OrderListNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'OrdersNav'>;
+type OrderListNavigationProp = CompositeNavigationProp<
+    DrawerNavigationProp<DrawerStackParamsList, 'OrdersNav'>,
+    StackNavigationProp<OrderListStackParamsList>
+    >;
+
 type Props = {
     navigation: OrderListNavigationProp;
     route;

@@ -1,6 +1,7 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
+import { CompositeNavigationProp } from '@react-navigation/native';
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
+import { DrawerStackParamsList } from './DrawerNavigator';
 import { IconButton } from 'react-native-paper';
 
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
@@ -8,7 +9,11 @@ import ManageNotesScreen from '../screens/ManageNotesScreen';
 import RoutingScreen from '../screens/RoutingScreen';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 
-type RoutingNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'RoutingNav'>;
+type RoutingNavigationProp = CompositeNavigationProp<
+    DrawerNavigationProp<DrawerStackParamsList, 'RoutingNav'>,
+    StackNavigationProp<RoutingStackParamsList>
+    >;
+
 type Props = {
   navigation: RoutingNavigationProp;
   route;
