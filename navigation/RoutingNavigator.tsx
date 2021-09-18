@@ -8,7 +8,7 @@ import ManageNotesScreen from '../screens/ManageNotesScreen';
 import RoutingScreen from '../screens/RoutingScreen';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 
-type RoutingNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'Routing'>;
+type RoutingNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'RoutingNav'>;
 type Props = {
   navigation: RoutingNavigationProp;
   route;

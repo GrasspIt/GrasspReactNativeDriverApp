@@ -34,9 +34,9 @@ type Props = {
 
 export type DrawerStackParamsList = {
     DSPRs: any;
-    Dashboard: any;
-    Routing: any;
-    Orders: any;
+    DashboardNav: any;
+    RoutingNav: any;
+    OrdersNav: any;
 };
 
 const Drawer = createDrawerNavigator<DrawerStackParamsList>();
@@ -83,9 +83,10 @@ const DrawerNavigator = ({navigation, route, dsprDrivers, logout}: Props) => {
             }}
         >
             {drivers.length > 1 ? <Drawer.Screen name='DSPRs' component={DSPRScreen}/> : null}
-            <Drawer.Screen name='Dashboard' component={DashboardNavigator}/>
-            <Drawer.Screen name='Orders' component={OrderListNavigator}/>
-            <Drawer.Screen name='Routing' component={RoutingNavigator}/>
+            {/*Avoids nested screen names (the various navigators have 'Dashboard', 'Orders', and 'Routing' names)*/}
+            <Drawer.Screen name='DashboardNav' options={{drawerLabel: 'Dashboard'}} component={DashboardNavigator}/>
+            <Drawer.Screen name='OrdersNav' options={{drawerLabel: 'Orders'}} component={OrderListNavigator}/>
+            <Drawer.Screen name='RoutingNav' options={{drawerLabel: 'Routing'}} component={RoutingNavigator}/>
         </Drawer.Navigator>
     );
 };

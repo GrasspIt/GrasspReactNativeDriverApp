@@ -5,7 +5,7 @@ import DashboardScreen from '../screens/DashboardScreen';
 import { IconButton } from 'react-native-paper';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 
-type DashboardNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'Dashboard'>;
+type DashboardNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'DashboardNav'>;
 type Props = {
   navigation: DashboardNavigationProp;
   route;

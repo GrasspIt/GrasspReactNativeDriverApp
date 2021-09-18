@@ -13,7 +13,7 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { fetchUpdateAsync } from "expo-updates";
 import MetrcTagManualEntryScreen from "../screens/MetrcTagManualEntryScreen";
 
-type OrderListNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'Orders'>;
+type OrderListNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'OrdersNav'>;
 type Props = {
     navigation: OrderListNavigationProp;
     route;
