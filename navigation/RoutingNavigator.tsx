@@ -16,8 +16,8 @@ type Props = {
 
 export type RoutingStackParamsList = {
   Details: { orderId: number };
-  Notes: any;
-  Routing: any;
+  Notes: undefined;
+  Routing: undefined;
 };
 
 const RoutingStack = createStackNavigator<RoutingStackParamsList>();

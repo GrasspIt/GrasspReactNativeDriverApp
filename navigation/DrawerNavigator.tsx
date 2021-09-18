@@ -33,10 +33,10 @@ type Props = {
 };
 
 export type DrawerStackParamsList = {
-    DSPRs: any;
-    DashboardNav: any;
-    RoutingNav: any;
-    OrdersNav: any;
+    DSPRs: undefined;
+    DashboardNav: undefined;
+    RoutingNav: undefined;
+    OrdersNav: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerStackParamsList>();

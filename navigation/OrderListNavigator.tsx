@@ -20,9 +20,9 @@ type Props = {
 };
 
 export type OrderListStackParamsList = {
-    Orders: any;
+    Orders: undefined;
     Details: { orderId: number };
-    Notes: any;
+    Notes: undefined;
     OrderToScan: { orderId: number };
     MetrcTagScanner: {  productName: string, productId: number, orderDetailId: number };
     MetrcTagManualEntry: {  productName: string, productId: number, orderDetailId: number };

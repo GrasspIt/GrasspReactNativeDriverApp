@@ -12,7 +12,7 @@ type Props = {
 };
 
 export type DashboardStackParamsList = {
-  Dashboard: any;
+  Dashboard: undefined;
 };
 
 const DashboardStack = createStackNavigator<DashboardStackParamsList>();
