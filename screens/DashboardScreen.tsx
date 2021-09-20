@@ -123,15 +123,25 @@ const DashboardScreen = ({
     let tracking = await Location.hasStartedLocationUpdatesAsync('location-tracking');
     console.log('tracking', tracking);
     if (dsprDriver) {
-      //permissions for location tracking
-      let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted' && dsprDriver.onCall === true) {
+      //request foreground location permissions. If denied, show alert
+      let { status:foregroundStatus } = await Location.requestForegroundPermissionsAsync();
+      if (foregroundStatus !== 'granted' && dsprDriver.onCall === true) {
         Alert.alert(
           'Location updates are disabled. Please go to device Settings and give Grassp Driver App permission to track your location.'
         );
       }
-      //start updates if onCall, stop updates if not
-      if (status === 'granted' && !tracking && dsprDriver.onCall === true) startLocationUpdates();
+
+      //request background permissions. If denied, show alert
+      let { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
+      if (foregroundStatus === 'granted' && backgroundStatus !== 'granted' && dsprDriver.onCall === true) {
+        Alert.alert(
+            'Background location updates are disabled. Please go to device Settings and give Grassp Driver App permission to track your location.',
+            'Background Location updates ensure orders will be assigned to the right driver'
+        )
+      }
+
+      //start updates if onCall and location tracking is enabled, stop updates if not
+      if (foregroundStatus === 'granted' && backgroundStatus === 'granted' && !tracking && dsprDriver.onCall === true) startLocationUpdates();
       if (tracking && dsprDriver.onCall === false) stopLocationUpdates();
     }
     if (tracking && !dsprDriver) stopLocationUpdates();
