@@ -183,7 +183,7 @@ const registerForPushNotificationsAsync = async () => {
   }
 
   if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
+    await Notifications.setNotificationChannelAsync('default', {
       name: 'default',
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
@@ -199,6 +199,7 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
   const movingDriverId = store.getState().api.dsprDriverId;
   const movingDsprDriver = store.getState().api.entities.dsprDrivers[movingDriverId];
   if (error) {
+    console.log('ERROR in TaskManager (DashboardScreen:', error);
     Alert.alert('Error: ', error.message);
     return;
   }
