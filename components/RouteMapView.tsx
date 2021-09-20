@@ -168,6 +168,7 @@ const RouteMapView: React.FC<RouteMapViewProps> = ({
             geodesic={true}
             strokeColor='#03adfc'
             strokeWidth={5}
+            lineDashPattern={[0]}
           />
         ) : (
           <Polyline
@@ -175,6 +176,7 @@ const RouteMapView: React.FC<RouteMapViewProps> = ({
             geodesic={true}
             strokeColor='#03adfc'
             strokeWidth={5}
+            lineDashPattern={[0]}
           />
         )}
         {orderMarkers && orderMarkers.length > 0 && orderMarkers}
