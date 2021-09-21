@@ -12,7 +12,7 @@ type Props = {
   navigation;
   driver;
   createDSPRDriverRoute: any;
-  isLoading;
+  isLoading: boolean;
   orderIdsInRoute;
   activeRoute;
   routeView;
@@ -66,7 +66,7 @@ const RoutingMainDisplay = ({
               mode='text'
               labelStyle={{ color: colors.primary, fontSize: 14 }}
               onPress={() => setOrderSelectionModalOpen(true)}
-              disabled={isLoading ? true : false}
+              disabled={isLoading}
             >
               New Route
             </Button>

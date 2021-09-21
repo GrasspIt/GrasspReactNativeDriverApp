@@ -124,7 +124,7 @@ const RoutingScreen = ({
         setCurrentInProcessOrderInActiveRoute(true);
         setCurrentlyActiveRouteLegIndex(
           driver.currentRoute.legs.findIndex(
-            (leg: any) => leg.legOrder === ordersInRoute[driver.currentInProcessOrder.id]
+            (leg: any) => driver.currentInProcessOrder && leg.legOrder === ordersInRoute[driver.currentInProcessOrder.id]
           )
         );
       } else {
