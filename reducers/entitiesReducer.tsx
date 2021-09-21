@@ -128,7 +128,6 @@ export default (state = initialState, action) => {
         case GET_USER_MEDICAL_RECOMMENDATION_SUCCESS:
         case CANCEL_ORDER_SUCCESS:
         case CREATE_USER_NOTE_SUCCESS:
-        case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
         case HIDE_USER_NOTE_SUCCESS:
         case UNHIDE_USER_NOTE_SUCCESS:
         case HIDE_USER_DOCUMENT_SUCCESS:
@@ -143,6 +142,7 @@ export default (state = initialState, action) => {
         case CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS:
         case DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS:
         case RESET_ORDER_SCANS_SUCCESS:
+        case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
             return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
         case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
             const dsprServiceAreaFromResponse: any =
