@@ -25,7 +25,7 @@ type Props = {
 export type OrderListStackParamsList = {
     Orders: undefined;
     Details: { orderId: number };
-    Notes: undefined;
+    Notes: {userId: number, dsprDriverId: number, userNotes?: any};
     OrderToScan: { orderId: number };
     MetrcTagScanner: {  productName: string, productId: number, orderDetailId: number };
     MetrcTagManualEntry: {  productName: string, productId: number, orderDetailId: number };
