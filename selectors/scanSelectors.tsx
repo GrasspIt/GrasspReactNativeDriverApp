@@ -41,6 +41,19 @@ export const getOrderScansForOrderFromProps = createDeepEqualSelector(
         return {};
     })
 
+/**Return true if scans for each orderDetail match the quantity of each orderDetail. Otherwise return false*/
+export const isScanningCompleteForOrderFromProps = createSelector([getOrderScansForOrderFromProps, getOrderFromProps], (orderScans, order): boolean => {
+    console.log('isScanningCompleteForOrderFromProps running!');
+
+    if (order && order.orderDetails) {
+        order.orderDetails.forEach(orderDetail => {
+            if ( orderScans[orderDetail.id] && orderScans[orderDetail.id].length !== orderDetail.quantity) return false
+        })
+        return true;
+    }
+    return false;
+})
+
 /**Returns an array of OrderScan objects for a particular order detail
  * WARNING: unless only one order detail is needed, it is most efficient to simply use the getOrderScansForOrderFromProps Selector
  * and then derive the needed information (this way, only one object needs to be created)
