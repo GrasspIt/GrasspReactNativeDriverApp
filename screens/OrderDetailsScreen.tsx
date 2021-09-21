@@ -20,7 +20,7 @@ import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 import OrderDetailsDisplay from '../components/OrderDetailsDisplay';
 import { getDSPRFromProps, isMetrcLicenseHeldByDSPRFromProps } from "../selectors/dsprSelectors";
 import { DSPR, State } from "../store/reduxStoreState";
-import { getOrderScanCountForOrderFromProps } from "../selectors/scanSelectors";
+import { getOrderScanCountForOrderFromProps, isScanningCompleteForOrderFromProps } from "../selectors/scanSelectors";
 
 type DetailsScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Details'>;
 
@@ -68,11 +68,7 @@ const OrderDetailsScreen = ({
     const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
     const isMetrcDSPR = useSelector<State, boolean | undefined>(state => dspr && isMetrcLicenseHeldByDSPRFromProps(state, {dsprId: dspr.id}), shallowEqual)
-    const productsInOrder = useSelector<State, ProductInOrder[]>(state => orderId && getProductsInOrderFromProps(state, {orderId}), shallowEqual)
-
-    const currentNumberOfScansForOrder = useSelector<State, number>(state => getOrderScanCountForOrderFromProps(state, {orderId}), shallowEqual);
-    const totalRequiredScansForOrder = useMemo(() => productsInOrder.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
-    const isScanningComplete: boolean = isMetrcDSPR ? currentNumberOfScansForOrder === totalRequiredScansForOrder : true;
+    const isScanningComplete = useSelector<State, boolean>(state => (isMetrcDSPR && isScanningCompleteForOrderFromProps(state, {orderId}) || true), shallowEqual);
 
     const handleNavigate = () => {
         if (order && order.status) {

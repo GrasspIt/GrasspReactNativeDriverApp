@@ -16,10 +16,8 @@ type OrderToScanProps = {
     orderId: number;
     products: ProductInOrder[];
     navigation;
-    handleCompleteOrder: (orderId) => any;
     resetOrderDetailScans: (orderId: string, orderDetailId: string) => any;
     resetOrderScans: (orderId: string) => any;
-    isScanningComplete: boolean;
     totalRequiredScansForOrder: number;
     currentNumberOfScansForOrder: number;
     orderScans: { [orderDetailId: number]: OrderScan[] };
@@ -29,10 +27,8 @@ const OrderToScan = ({
                          orderId,
                          products,
                          navigation,
-                         handleCompleteOrder,
                          resetOrderDetailScans,
                          resetOrderScans,
-                         isScanningComplete,
                          totalRequiredScansForOrder,
                          currentNumberOfScansForOrder,
                          orderScans,
