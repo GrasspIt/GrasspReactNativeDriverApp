@@ -56,6 +56,10 @@ const DashboardScreen = ({
   const notificationListener: any = useRef();
   const responseListener: any = useRef();
   const [notification, setNotification] = useState<any>(false);
+  const [showForegroundLocationPermissionMessage, setShowForegroundLocationPermissionMessage] = useState<boolean>(false);
+  const [showBackgroundLocationPermissionMessage, setShowBackgroundLocationPermissionMessage] = useState<boolean>(false);
+  const [locationPermissionMessageTitle, setLocationPermissionMessageTitle] = useState<string>('');
+  const [locationPermissionMessageText, setLocationPermissionMessageText] = useState<string>('');
 
   // polling data from API while logged in
   const refreshDriverData = () => {
@@ -103,7 +107,9 @@ const DashboardScreen = ({
     console.log('start location updates');
     await Location.startLocationUpdatesAsync('location-tracking', {
       distanceInterval: 120, //meters between updates, about .25 miles
+      //distanceInterval: 1, //meters between updates, about .25 miles
       deferredUpdatesInterval: 300000, //milliseconds between batched updates when app is backgrounded, every 5 minutes
+      //deferredUpdatesInterval: 60, //milliseconds between batched updates when app is backgrounded, every 5 minutes
       showsBackgroundLocationIndicator: true,
       foregroundService: {
         notificationTitle: 'Location Updates',
