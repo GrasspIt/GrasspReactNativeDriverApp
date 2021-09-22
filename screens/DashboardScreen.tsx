@@ -140,7 +140,7 @@ const DashboardScreen = ({
       if (foregroundStatus !== 'granted' && dsprDriver.onCall === true) {
         setShowLocationPermissionAlert(true);
         setLocationPermissionAlertTitle('Location updates are disabled.');
-        setLocationPermissionAlertText('Please go to device Settings and give Grassp Driver App permission to track your location. \n\nAlso, please enable background location updates when prompted');
+        setLocationPermissionAlertText('Please go to device Settings and give Grassp Driver App permission to track your location. \n\nAfterwards, quit and reopen the app.');
       }
 
       //request background permissions. If denied, show alert
@@ -149,7 +149,7 @@ const DashboardScreen = ({
       if (foregroundStatus === 'granted' && backgroundStatus !== 'granted' && dsprDriver.onCall === true) {
         setShowLocationPermissionAlert(true);
         setLocationPermissionAlertTitle('Background location updates are disabled.');
-        setLocationPermissionAlertText('Background location updates are required for the app to work correctly. \n\nPlease go to device Settings and set the Grassp Driver App location permission to "Always". \n\nAfterwards, quit and reopen the app.');
+        setLocationPermissionAlertText(`Background location updates are required for the app to work correctly. \n\nPlease go to device Settings and set the Grassp Driver App location permission to "${Platform.OS === 'ios' ? 'Always' : 'Allow all the time'}". \n\nAfterwards, quit and reopen the app.`);
       }
 
       //start updates if onCall and location tracking is enabled, stop updates if not
