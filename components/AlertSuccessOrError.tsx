@@ -2,6 +2,7 @@ import React from 'react';
 import LottieView from 'lottie-react-native';
 import { ActivityIndicator, Button, Dialog, Paragraph, Portal, Title, useTheme } from "react-native-paper";
 import { StyleSheet, Text, View } from "react-native";
+import lottieAssets, { LottieAnimationNames } from "../assets/lottie-animations/lottie-animation-asset-map";
 
 type AlertSuccessOrErrorProps = {
     isVisible: boolean;
@@ -13,8 +14,19 @@ type AlertSuccessOrErrorProps = {
     buttonText?: string;
     isError?: boolean;
     buttonsContainer?: JSX.Element;
+    loop?: boolean;
+    customAnimationName?: LottieAnimationNames;
+    animationViewStyles?: { [key: string]: string | number };
+    titleStyles?: { [key: string]: string | number };
+    messageTextStyles?: { [key: string]: string | number };
 }
 
+
+/**Renders animated modal
+ *
+ * -> to pass in a new animation, add the lottie JSON to assets/lottieAnimations.
+ * -> then, update lottie-animation-asset-map with the new import. Also update the LottieAnimationNames type found in that file
+ * */
 const AlertSuccessOrError = ({
                                  isVisible,
                                  onDismiss,
@@ -25,26 +37,42 @@ const AlertSuccessOrError = ({
                                  buttonText = 'Ok',
                                  isError = false,
                                  buttonsContainer,
+                                 loop,
+                                 customAnimationName,
+                                 animationViewStyles,
+                                 titleStyles,
+                                 messageTextStyles,
                              }: AlertSuccessOrErrorProps) => {
     const {colors} = useTheme();
+
+    const determineSource = () => {
+        if (customAnimationName) return lottieAssets[customAnimationName];
+        if (isError) return lottieAssets['error'];
+        return lottieAssets['checkmarkSuccess'];
+    }
+
+    const lottieSource = determineSource();
 
     return (
         <Portal>
             <Dialog visible={isVisible} onDismiss={onDismiss} style={styles.dialogContainer}>
 
                 <Dialog.Content style={{paddingBottom: 20}}>
-                    <View style={[styles.animation, {width: isError ? 150 : 100, height: isError ? 150 : 100}]}>
+                    <View style={[styles.animation, {width: isError ? 150 : 100, height: isError ? 150 : 100}, {...animationViewStyles}]}>
                         <LottieView
-                            source={isError ? require('../assets/error-message-lottie-grassp.json') : require('../assets/success-check-mark-animated-grassp.json')}
+                            //source={customAnimationFileName ? require(`../assets/${customAnimationFileName}`) : isError ? require('../assets/error-message-lottie-grassp.json') : require('../assets/success-check-mark-animated-grassp.json')}
+                            source={lottieSource}
+                            //source={require('../assets/error-message-lottie-grassp.json')}
+                            //source={require(sourceForLottie)}
                             autoPlay={true}
-                            loop={isError ? true : false}
+                            loop={loop ? loop : isError ? true : false}
                             speed={1}
                         />
                     </View>
-                    <Title style={styles.title}>{title}</Title>
+                    <Title style={[styles.title, {...titleStyles}]}>{title}</Title>
                     {
                         typeof message === 'string'
-                            ? <Paragraph style={styles.message}>{message}</Paragraph>
+                            ? <Paragraph style={[styles.message, {...messageTextStyles}]}>{message}</Paragraph>
                             : message
                     }
                 </Dialog.Content>
@@ -74,7 +102,6 @@ const styles = StyleSheet.create({
     },
     title: {
         textAlign: 'center',
-        //marginBottom: 20,
     },
     message: {
         textAlign: 'center',
@@ -84,7 +111,6 @@ const styles = StyleSheet.create({
     },
     animation: {
         alignSelf: 'center',
-        //marginBottom: 10,
     },
     button: {
         alignSelf: 'center',
