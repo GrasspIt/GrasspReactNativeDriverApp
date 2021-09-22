@@ -56,10 +56,15 @@ const DashboardScreen = ({
   const notificationListener: any = useRef();
   const responseListener: any = useRef();
   const [notification, setNotification] = useState<any>(false);
-  const [showForegroundLocationPermissionMessage, setShowForegroundLocationPermissionMessage] = useState<boolean>(false);
-  const [showBackgroundLocationPermissionMessage, setShowBackgroundLocationPermissionMessage] = useState<boolean>(false);
-  const [locationPermissionMessageTitle, setLocationPermissionMessageTitle] = useState<string>('');
-  const [locationPermissionMessageText, setLocationPermissionMessageText] = useState<string>('');
+  const [showLocationPermissionAlert, setShowLocationPermissionAlert] = useState<boolean>(false);
+  const [locationPermissionAlertTitle, setLocationPermissionAlertTitle] = useState<string>('');
+  const [locationPermissionAlertText, setLocationPermissionAlertText] = useState<string>('');
+
+  const closeLocationPermissionAlert = () => {
+    setShowLocationPermissionAlert(false);
+    setLocationPermissionAlertTitle('');
+    setLocationPermissionAlertText('');
+  }
 
   // polling data from API while logged in
   const refreshDriverData = () => {
@@ -133,20 +138,18 @@ const DashboardScreen = ({
       let { status:foregroundStatus } = await Location.requestForegroundPermissionsAsync();
       console.log('FOREGROUND LOCATION STATUS:', foregroundStatus)
       if (foregroundStatus !== 'granted' && dsprDriver.onCall === true) {
-        Alert.alert(
-          'Location updates are disabled.',
-            'Please go to device Settings and give Grassp Driver App permission to track your location.'
-        );
+        setShowLocationPermissionAlert(true);
+        setLocationPermissionAlertTitle('Location updates are disabled.');
+        setLocationPermissionAlertText('Please go to device Settings and give Grassp Driver App permission to track your location. \n\nAlso, please enable background location updates when prompted');
       }
 
       //request background permissions. If denied, show alert
       let { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
       console.log('BACKGROUND LOCATION STATUS:', backgroundStatus)
       if (foregroundStatus === 'granted' && backgroundStatus !== 'granted' && dsprDriver.onCall === true) {
-        Alert.alert(
-            'Background location updates are disabled.',
-            'Background is required for the app to work correctly. \n\nPlease go to device Settings and set the Grassp Driver App location permission to "Always". \n\nAfterwards, quit and reopen the app.'
-        )
+        setShowLocationPermissionAlert(true);
+        setLocationPermissionAlertTitle('Background location updates are disabled.');
+        setLocationPermissionAlertText('Background location updates are required for the app to work correctly. \n\nPlease go to device Settings and set the Grassp Driver App location permission to "Always". \n\nAfterwards, quit and reopen the app.');
       }
 
       //start updates if onCall and location tracking is enabled, stop updates if not
@@ -168,6 +171,10 @@ const DashboardScreen = ({
       isLoading={isLoading}
       getDriverData={getDriverData}
       setDriverOnCallState={setDriverOnCallState}
+      showLocationPermissionAlert={showLocationPermissionAlert}
+      closeLocationPermissionAlert={closeLocationPermissionAlert}
+      locationPermissionAlertTitle={locationPermissionAlertTitle}
+      locationPermissionAlertText={locationPermissionAlertText}
     />
   );
 };

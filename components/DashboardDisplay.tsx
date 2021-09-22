@@ -4,13 +4,18 @@ import { Button, useTheme, ActivityIndicator } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 
 import OnCallSwitch from './OnCallSwitch';
+import AlertSuccessOrError from "./AlertSuccessOrError";
 
 type Props = {
   dspr;
   dsprDriver;
-  isLoading;
+  isLoading: boolean;
   getDriverData;
   setDriverOnCallState;
+  showLocationPermissionAlert: boolean;
+  closeLocationPermissionAlert: () => any;
+  locationPermissionAlertTitle: string;
+  locationPermissionAlertText: string;
 };
 
 const DashboardDisplay = ({
@@ -19,6 +24,10 @@ const DashboardDisplay = ({
   isLoading,
   getDriverData,
   setDriverOnCallState,
+  showLocationPermissionAlert,
+  closeLocationPermissionAlert,
+  locationPermissionAlertTitle,
+  locationPermissionAlertText
 }: Props) => {
   const { colors } = useTheme();
 
@@ -42,12 +51,26 @@ const DashboardDisplay = ({
       ) : (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
           <Text>Unable to fetch driver data.</Text>
-          <Button disabled={isLoading ? true : false} mode='text' onPress={getDriverData}>
+          <Button disabled={isLoading} mode='text' onPress={getDriverData}>
             Try Again
           </Button>
         </View>
       )}
       <StatusBar style='dark' />
+
+      {/*Modal used to prompt users to change location permissions*/}
+      <AlertSuccessOrError
+          isVisible={showLocationPermissionAlert}
+          onDismiss={closeLocationPermissionAlert}
+          title={locationPermissionAlertTitle}
+          message={locationPermissionAlertText}
+          buttonText={'Ok'}
+          buttonOnPressSubmit={closeLocationPermissionAlert}
+          customAnimationName={'locationPermission'}
+          animationViewStyles={{marginTop: 16}}
+          titleStyles={{marginTop: 12}}
+          messageTextStyles={{marginTop: 16}}
+      />
     </SafeAreaView>
   );
 };
