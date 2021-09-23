@@ -97,7 +97,7 @@ const DashboardScreen = ({
       async (response) => {
         await getDriverData();
         RootNavigation.navigate('Main', {
-          screen: 'Orders',
+          screen: 'OrdersNav',
         });
       }
     );
