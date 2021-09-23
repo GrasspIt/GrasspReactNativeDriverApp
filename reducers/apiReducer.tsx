@@ -61,7 +61,16 @@ import {
 import {
   RESET_ORDER_DETAIL_SCANS_SUCCESS,
   RESET_ORDER_SCANS_SUCCESS,
-  ORDER_SCAN_SUBMIT_SUCCESS, RESET_ORDER_SCANS_PENDING, ORDER_SCAN_SUBMIT_PENDING
+  ORDER_SCAN_SUBMIT_SUCCESS,
+  RESET_ORDER_SCANS_PENDING,
+  ORDER_SCAN_SUBMIT_PENDING,
+  GET_CURRENT_ORDER_SCANS_FOR_ORDER_SUCCESS,
+  GET_CURRENT_ORDER_SCANS_FOR_ORDER_FAILURE,
+  RESET_ORDER_DETAIL_SCANS_PENDING,
+  GET_CURRENT_ORDER_SCANS_FOR_ORDER_PENDING,
+  ORDER_SCAN_SUBMIT_FAILURE,
+  RESET_ORDER_SCANS_FAILURE,
+  RESET_ORDER_DETAIL_SCANS_FAILURE
 } from "../actions/scanActions";
 
 import entitiesReducer, { initialState as entitiesInitialState } from './entitiesReducer';
@@ -89,6 +98,8 @@ export default (state = initialState, action) => {
     case REMOVE_ORDER_AND_REFRESH_ROUTE_PENDING:
     case ORDER_SCAN_SUBMIT_PENDING:
     case RESET_ORDER_SCANS_PENDING:
+    case GET_CURRENT_ORDER_SCANS_FOR_ORDER_PENDING:
+    case RESET_ORDER_DETAIL_SCANS_PENDING:
       return { ...state, isLoading: true };
 
     // actions failed
@@ -101,6 +112,10 @@ export default (state = initialState, action) => {
     case COMPLETE_ORDER_FAILURE:
     case CANCEL_ORDER_FAILURE:
     case CREATE_NEW_DSPR_DRIVER_ROUTE_FAILURE:
+    case ORDER_SCAN_SUBMIT_FAILURE:
+    case RESET_ORDER_SCANS_FAILURE:
+    case RESET_ORDER_DETAIL_SCANS_FAILURE:
+    case GET_CURRENT_ORDER_SCANS_FOR_ORDER_FAILURE:
       return { ...state, isLoading: false };
 
     // actions succeeded
@@ -142,8 +157,9 @@ export default (state = initialState, action) => {
     case CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS:
     case DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS:
     case ORDER_SCAN_SUBMIT_SUCCESS:
-    case RESET_ORDER_DETAIL_SCANS_SUCCESS:
     case RESET_ORDER_SCANS_SUCCESS:
+    case RESET_ORDER_DETAIL_SCANS_SUCCESS:
+    case GET_CURRENT_ORDER_SCANS_FOR_ORDER_SUCCESS:
       const newState = { ...state, isLoading: false, entities: { ...entitiesInitialState } };
       return _.merge({}, newState, {
         entities: entitiesReducer(state.entities, action),
