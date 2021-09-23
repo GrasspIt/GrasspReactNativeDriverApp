@@ -51,10 +51,12 @@ export const isScanningCompleteForOrderFromProps = createSelector([getOrderScans
     console.log('isScanningCompleteForOrderFromProps running!');
 
     if (order && order.orderDetails) {
-        order.orderDetails.forEach(orderDetail => {
+        for (let orderDetail of order.orderDetails) {
             //if orderDetailId does not exist as a key on orderScans, or the value of orderScans[orderDetailId] and orderDetailQuantity are not equal, return false
-            if (!orderScans[orderDetail.id] || orderScans[orderDetail.id] && orderScans[orderDetail.id].length !== orderDetail.quantity) return false
-        })
+            if (!orderScans[orderDetail.id] || orderScans[orderDetail.id] && orderScans[orderDetail.id].length !== orderDetail.quantity){
+                return false;
+            }
+        }
         return true;
     }
     return false;
