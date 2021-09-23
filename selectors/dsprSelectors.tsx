@@ -4,7 +4,7 @@ export const getDSPRs = (state: State) => state.api.entities.DSPRs;
 
 export const getDSPRFromProps = (state: State, props) => state.api.entities.DSPRs[props.dsprId];
 
-export const isMetrcLicenseHeldByDSPRFromProps = (state: State, props: {dsprId}) => {
+export const isMetrcLicenseHeldByDSPRFromProps = (state: State, props: {dsprId}): boolean => {
     const dspr = getDSPRFromProps(state, props);
     return !!(dspr && dspr.metrcLicense);
 }

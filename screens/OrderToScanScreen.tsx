@@ -36,7 +36,6 @@ const OrderToScanScreen = ({
         shallowEqual)
     const currentNumberOfScansForOrder = useSelector<State, number>(state => getOrderScanCountForOrderFromProps(state, {orderId}), shallowEqual);
     const orderScans = useSelector<State, { [orderDetailId: number]: OrderScan[] }>(state => getOrderScansForOrderFromProps(state, {orderId}), shallowEqual);
-    const isScanningComplete = useSelector<State, boolean>(state => isScanningCompleteForOrderFromProps(state, {orderId}), shallowEqual);
 
     const totalRequiredScansForOrder = useMemo(() => productsInOrder.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
 

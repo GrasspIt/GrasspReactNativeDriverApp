@@ -20,7 +20,7 @@ import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 import OrderDetailsDisplay from '../components/OrderDetailsDisplay';
 import { getDSPRFromProps, isMetrcLicenseHeldByDSPRFromProps } from "../selectors/dsprSelectors";
 import { DSPR, State } from "../store/reduxStoreState";
-import { getOrderScanCountForOrderFromProps, isScanningCompleteForOrderFromProps } from "../selectors/scanSelectors";
+import { isScanningCompleteForOrderFromProps } from "../selectors/scanSelectors";
 
 type DetailsScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Details'>;
 
@@ -68,7 +68,7 @@ const OrderDetailsScreen = ({
     const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
     const isMetrcDSPR = useSelector<State, boolean | undefined>(state => dspr && isMetrcLicenseHeldByDSPRFromProps(state, {dsprId: dspr.id}), shallowEqual)
-    const isScanningComplete = useSelector<State, boolean>(state => (isMetrcDSPR && isScanningCompleteForOrderFromProps(state, {orderId}) || true), shallowEqual);
+    const isScanningComplete = useSelector<State, boolean | undefined>(state => isMetrcDSPR && isScanningCompleteForOrderFromProps(state, {orderId}), shallowEqual);
 
     const handleNavigate = () => {
         if (order && order.status) {
@@ -125,8 +125,8 @@ const OrderDetailsScreen = ({
             markOrderInProcess={markOrderInProcess}
             removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
             deactivateDriverRoute={deactivateDriverRoute}
-            isMetrcDSPR={isMetrcDSPR !== undefined ? isMetrcDSPR : false}
-            isScanningComplete={isScanningComplete}
+            isMetrcDSPR={!!isMetrcDSPR}
+            isScanningComplete={!!isScanningComplete}
         />
     );
 };

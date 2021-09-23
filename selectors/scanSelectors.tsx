@@ -41,13 +41,19 @@ export const getOrderScansForOrderFromProps = createDeepEqualSelector(
         return {};
     })
 
-/**Return true if scans for each orderDetail match the quantity of each orderDetail. Otherwise return false*/
+/**Return true if scans for each orderDetail match the quantity of each orderDetail. Otherwise return false
+ * -> the results of this selector are intended to be used in conjunction with the results of other selectors (e.g. isMetrcDSPR)
+ * -> a sample flow would be: 1. check if dspr requires items to be scanned 2. if so, check if scanning is complete before showing complete order button
+ *
+ * -> in general, it does not make sense to check/use the results of isScanningComplete if the dspr does not require scans
+ * */
 export const isScanningCompleteForOrderFromProps = createSelector([getOrderScansForOrderFromProps, getOrderFromProps], (orderScans, order): boolean => {
     console.log('isScanningCompleteForOrderFromProps running!');
 
     if (order && order.orderDetails) {
         order.orderDetails.forEach(orderDetail => {
-            if ( orderScans[orderDetail.id] && orderScans[orderDetail.id].length !== orderDetail.quantity) return false
+            //if orderDetailId does not exist as a key on orderScans, or the value of orderScans[orderDetailId] and orderDetailQuantity are not equal, return false
+            if (!orderScans[orderDetail.id] || orderScans[orderDetail.id] && orderScans[orderDetail.id].length !== orderDetail.quantity) return false
         })
         return true;
     }
