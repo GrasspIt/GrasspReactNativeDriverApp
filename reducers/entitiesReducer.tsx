@@ -33,7 +33,7 @@ import {
 import {
     RESET_ORDER_DETAIL_SCANS_SUCCESS,
     RESET_ORDER_SCANS_SUCCESS,
-    ORDER_SCAN_SUBMIT_SUCCESS
+    ORDER_SCAN_SUBMIT_SUCCESS, GET_CURRENT_ORDER_SCANS_FOR_ORDER_SUCCESS
 } from "../actions/scanActions";
 
 export const initialState = {
@@ -141,7 +141,6 @@ export default (state = initialState, action) => {
         case CREATE_NEW_DSPR_DRIVER_ROUTE_SUCCESS:
         case CREATE_NEW_DSPR_DRIVER_ROUTE_WITHOUT_NOTIFICATIONS_SUCCESS:
         case DEACTIVATE_DSPR_DRIVER_ROUTE_SUCCESS:
-        case RESET_ORDER_SCANS_SUCCESS:
         case GET_ORDER_DETAILS_WITH_ID_SUCCESS:
             return appendAndUpdateEntitiesFromResponseWithArrayOverwrite(state, responseEntities);
         case CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS:
@@ -186,6 +185,15 @@ export default (state = initialState, action) => {
                 return appendAndUpdateEntitiesFromResponse(modifiedState, responseEntities);
             }
             return state;
+        case GET_CURRENT_ORDER_SCANS_FOR_ORDER_SUCCESS:
+            if (responseEntities && Object.keys(responseEntities).length > 0) {
+                console.log('in reducer for GET_CURRENT_ORDER_SCANS_FOR_ORDER_SUCCESS');
+                const modifiedState = {...state};
+                const orderId = Object.keys(responseEntities.orders)[0]
+                modifiedState.orders[orderId].scannedProductOrderDetailAssociationsScans = action.response.result;
+                return appendAndUpdateEntitiesFromResponse(modifiedState, responseEntities);
+            }
+            return state;
         //case RESET_ORDER_DETAIL_SCANS_SUCCESS:
         //    if (responseEntities) {
         //        const {orderId, orderDetailId} = responseEntities;
@@ -198,16 +206,22 @@ export default (state = initialState, action) => {
         //        return modifiedState;
         //    }
         //    return state;
-        //case RESET_ORDER_SCANS_SUCCESS:
-        //    if (responseEntities) {
-        //        const {orderId, orderDetailId} = responseEntities;
-        //        const modifiedState = {...state};
-        //        if (modifiedState.metrcTagsForOrder[orderId]) {
-        //            delete modifiedState.metrcTagsForOrder[orderId];
-        //        }
-        //        return modifiedState;
-        //    }
-        //    return state;
+        case RESET_ORDER_SCANS_SUCCESS:
+            if (responseEntities) {
+                const modifiedState = {...state};
+                const orderId = action.response.result;
+                const orderScanIdsToDelete = modifiedState.orders[orderId].scannedProductOrderDetailAssociationsScans;
+
+                //delete orderScan objects in orderScans
+                orderScanIdsToDelete.forEach(scanId => {
+                    delete modifiedState.orderScans[scanId];
+                })
+
+                //replace scannedProductOrderDetailAssociationsScans for order with empty array
+                modifiedState.orders[orderId].scannedProductOrderDetailAssociationsScans = [];
+                return modifiedState;
+            }
+            return state;
 
         default:
             return state;

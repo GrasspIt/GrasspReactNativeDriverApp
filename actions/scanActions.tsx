@@ -42,7 +42,7 @@ const alreadyScannedForOrderGetter = (orderId: number) => {
     return {
         [CALL_API]: {
             httpAction: 'GET',
-            types: [ORDER_SCAN_SUBMIT, ORDER_SCAN_SUBMIT_SUCCESS, ORDER_SCAN_SUBMIT_FAILURE],
+            types: [GET_CURRENT_ORDER_SCANS_FOR_ORDER, GET_CURRENT_ORDER_SCANS_FOR_ORDER_SUCCESS, GET_CURRENT_ORDER_SCANS_FOR_ORDER_FAILURE],
             endPoint: 'scan/already_scanned',
             schema: Schemas.ORDER_SCAN_ARRAY,
             queryParamsMap: {orderId}
@@ -51,8 +51,9 @@ const alreadyScannedForOrderGetter = (orderId: number) => {
 }
 
 /**Fetch an array of Order Scan objects for previously scanned items in an order*/
-const getAlreadyScannedForOrder = (orderId: number) => (dispatch) => {
-    return dispatch(alreadyScannedForOrderGetter(orderId));
+export const getAlreadyScannedForOrder = (orderId: number) => (dispatch) => {
+    dispatch({type: GET_CURRENT_ORDER_SCANS_FOR_ORDER_PENDING});
+    //return dispatch(alreadyScannedForOrderGetter(orderId));
 }
 
 export const RESET_ORDER_SCANS_PENDING = 'RESET_ORDER_SCANS_PENDING';
@@ -61,7 +62,6 @@ export const RESET_ORDER_SCANS_SUCCESS = 'RESET_ORDER_SCANS_SUCCESS';
 export const RESET_ORDER_SCANS_FAILURE = 'RESET_ORDER_SCANS_FAILURE';
 
 const orderScansDeactivator = (orderId: number) => {
-    //TODO: Update Schema
     return {
         [CALL_API]: {
             httpAction: 'POST',
@@ -70,11 +70,12 @@ const orderScansDeactivator = (orderId: number) => {
             body: {
                 orderId
             },
-            schema: Schemas.EMPTY,
+            schema: Schemas.ORDER,
         },
     }
 }
 
+/**Reset all order scans to 0. If call fails, an Error Alert is displayed*/
 export const deactivateOrderScans = (orderId: number) => (dispatch) => {
     dispatch({type: RESET_ORDER_SCANS_PENDING});
     dispatch(orderScansDeactivator(orderId))
@@ -91,6 +92,7 @@ export const deactivateOrderScans = (orderId: number) => (dispatch) => {
         .catch((error) => Alert.alert('Network error:', error));
 }
 
+export const RESET_ORDER_DETAIL_SCANS_PENDING = 'RESET_ORDER_DETAIL_SCANS_PENDING';
 export const RESET_ORDER_DETAIL_SCANS = 'RESET_ORDER_DETAIL_SCANS';
 export const RESET_ORDER_DETAIL_SCANS_SUCCESS = 'RESET_ORDER_DETAIL_SCANS_SUCCESS';
 export const RESET_ORDER_DETAIL_SCANS_FAILURE = 'RESET_ORDER_DETAIL_SCANS_FAILURE';

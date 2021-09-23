@@ -6,13 +6,11 @@ import { getProductsInOrderFromProps, ProductInOrder } from "../selectors/orderS
 import { OrderScan, State } from "../store/reduxStoreState";
 import {
     deactivateOrderScans,
-    RESET_ORDER_DETAIL_SCANS_SUCCESS, RESET_ORDER_SCANS_FAILURE,
-    RESET_ORDER_SCANS_SUCCESS
+    RESET_ORDER_DETAIL_SCANS_SUCCESS,
 } from "../actions/scanActions";
 import {
     getOrderScanCountForOrderFromProps,
     getOrderScansForOrderFromProps,
-    isScanningCompleteForOrderFromProps
 } from "../selectors/scanSelectors";
 
 const OrderToScanScreen = ({

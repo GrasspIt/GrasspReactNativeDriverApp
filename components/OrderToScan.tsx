@@ -41,11 +41,6 @@ const OrderToScan = ({
     const [productToReset, setProductToReset] = useState<{ id: number, name: string, orderDetailId: number } | null>(null);
     const [orderResetDialogVisible, setOrderResetDialogVisible] = useState<boolean>(false);
 
-    console.log('orderScans:', orderScans);
-
-    //TODO: Decide how you want to determine when scans are complete. Selector? State?
-    //used to determine whether or not complete order button is disabled
-
     const openProductMenu = (id: number) => setProductMenuVisible(id);
     const openOrderMenu = () => setOrderMenuVisible(true);
     const closeProductMenu = () => setProductMenuVisible(null);
