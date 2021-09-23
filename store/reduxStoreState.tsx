@@ -219,8 +219,8 @@ export interface DsprDriver {
     vehicleDescriptiveName?: string;
     vehicleLicensePlateNumber?: string;
     employeeIDExpirationDate?: number;
-    currentRoute: number;
-    serviceAreas: number[];
+    currentRoute?: number;
+    serviceAreas?: number[];
 }
 
 export interface DsprDriverLocation {
