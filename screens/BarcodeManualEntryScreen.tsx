@@ -6,11 +6,11 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Order, OrderDetail, State } from "../store/reduxStoreState";
 import { getOrderDetailFromProps, getOrderFromProps } from "../selectors/orderSelectors";
 import { getOrderScanCountForOrderDetailFromProps } from "../selectors/scanSelectors";
-import { isMetrcLicenseHeldByDSPRFromProps } from "../selectors/dsprSelectors";
+import { isMetrcLicenseHeldByDSPRFromProps, isNonMetrcScanningDSPRFromProps } from "../selectors/dsprSelectors";
 
 
 const BarcodeManualEntryScreen = ({navigation, route}) => {
-    const {productName, productId, orderDetailId, orderId} = route.params;
+    const {productName, productId, orderDetailId, orderId, dsprId} = route.params;
     const dispatch = useDispatch();
 
     const orderDetail = useSelector<State, OrderDetail | undefined>(state => getOrderDetailFromProps(state, {
@@ -22,8 +22,8 @@ const BarcodeManualEntryScreen = ({navigation, route}) => {
         orderDetailId
     }), shallowEqual)
 
-    const order = useSelector<State, Order | undefined>(state => getOrderFromProps(state, {orderId}));
-    const isMetrcDSPR = useSelector<State, boolean | undefined>(state => order && isMetrcLicenseHeldByDSPRFromProps(state, {dsprId: order.dspr}));
+    const isMetrcDSPR = useSelector<State, boolean | undefined>(state => dsprId && isMetrcLicenseHeldByDSPRFromProps(state, {dsprId}), shallowEqual);
+    const isNonMetrcScanningDSPR = useSelector<State, boolean>(state => dsprId && isNonMetrcScanningDSPRFromProps(state, {dsprId}), shallowEqual);
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
     const [errorAlertVisible, setErrorAlertVisible] = useState<boolean>(false);

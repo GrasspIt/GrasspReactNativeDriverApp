@@ -23,24 +23,26 @@ type BarcodeScannerProps = {
     closeErrorAlert: () => any;
     scannerDisabled: boolean;
     errorText: string;
+    dsprId: number;
 }
 
 const BarcodeScanner = ({
-                             navigation,
-                             productName,
-                             scanSubmit,
-                             productId,
-                             orderDetailId,
-                             orderId,
-                             scanCountForOrderDetail,
-                             orderDetail,
-                             successAlertVisible,
-                             errorAlertVisible,
-                             closeSuccessAlert,
-                             closeErrorAlert,
-                             scannerDisabled,
-                             errorText,
-                         }: BarcodeScannerProps) => {
+                            navigation,
+                            productName,
+                            scanSubmit,
+                            productId,
+                            orderDetailId,
+                            orderId,
+                            scanCountForOrderDetail,
+                            orderDetail,
+                            successAlertVisible,
+                            errorAlertVisible,
+                            closeSuccessAlert,
+                            closeErrorAlert,
+                            scannerDisabled,
+                            errorText,
+                            dsprId
+                        }: BarcodeScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
     const [scanned, setScanned] = useState<boolean>(false);
@@ -67,6 +69,8 @@ const BarcodeScanner = ({
      * */
     const handleScanSubmit = (scanData) => {
         Vibration.vibrate();
+
+        console.log('scanData in handleScanSubmit:', scanData);
 
         const {type, data} = scanData;
 
@@ -137,7 +141,8 @@ const BarcodeScanner = ({
                             productName,
                             productId,
                             orderDetailId,
-                            orderId
+                            orderId,
+                            dsprId
                         })}
                     />
                     <Text style={styles.buttonText}>Manual Entry</Text>

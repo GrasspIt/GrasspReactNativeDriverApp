@@ -10,6 +10,8 @@ import {
     ORDER_SCAN_SUBMIT_FAILURE,
 } from "../actions/scanActions";
 import { getOrderScanCountForOrderDetailFromProps } from "../selectors/scanSelectors";
+import { isMetrcLicenseHeldByDSPRFromProps } from "../selectors/dsprSelectors";
+import { shallow } from "@testing-library/react-native";
 
 
 const BarcodeScannerScreen = ({
@@ -28,6 +30,7 @@ const BarcodeScannerScreen = ({
         orderId,
         orderDetailId
     }), shallowEqual)
+    const isMetrcDSPR = useSelector<State, boolean>(state => dsprId && isMetrcLicenseHeldByDSPRFromProps(state, {dsprId}), shallowEqual);
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
     const [errorAlertVisible, setErrorAlertVisible] = useState<boolean>(false);
@@ -86,6 +89,7 @@ const BarcodeScannerScreen = ({
         closeErrorAlert={closeErrorAlert}
         scannerDisabled={scannerDisabled}
         errorText={errorText}
+        dsprId={parseInt(dsprId)}
     />
 }
 
