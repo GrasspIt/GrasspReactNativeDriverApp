@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Alert } from 'react-native';
 import Clipboard from 'expo-clipboard';
 import { connect, shallowEqual, useSelector } from 'react-redux';
@@ -70,6 +70,8 @@ const OrderDetailsScreen = ({
     const isMetrcDSPR = useSelector<State, boolean | undefined>(state => dspr && isMetrcLicenseHeldByDSPRFromProps(state, {dsprId: dspr.id}), shallowEqual)
     const isScanningComplete = useSelector<State, boolean | undefined>(state => isMetrcDSPR && isScanningCompleteForOrderFromProps(state, {orderId}), shallowEqual);
 
+    const [isLoadingOnInitialMount, setIsLoadingOnInitialMount] = useState<boolean>(true);
+
     const handleNavigate = () => {
         if (order && order.status) {
             if (order.orderStatus == 'completed' || order.orderStatus == 'canceled') navigation.goBack();
@@ -87,6 +89,7 @@ const OrderDetailsScreen = ({
     }, [orderStatusDefined]);
 
     useEffect(() => {
+        setIsLoadingOnInitialMount(false);
         getOrderDetails();
     }, []);
 
@@ -99,8 +102,6 @@ const OrderDetailsScreen = ({
         Alert.alert('Copied to clipboard.');
     };
 
-    //TODO - pass isScanningComplete to OrderDetailsDisplay to determine if the 'Scan Order Button' should show instead of the complete order button (if all scans have NOT been completed)
-    //if all scans have been completed, should the Complete Order Button render and the scan order button not render - or  should both render?
     return (
         <OrderDetailsDisplay
             navigation={navigation}
@@ -127,6 +128,7 @@ const OrderDetailsScreen = ({
             deactivateDriverRoute={deactivateDriverRoute}
             isMetrcDSPR={!!isMetrcDSPR}
             isScanningComplete={!!isScanningComplete}
+            isLoadingOnInitialMount={isLoadingOnInitialMount}
         />
     );
 };

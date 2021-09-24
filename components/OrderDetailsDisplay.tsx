@@ -40,6 +40,7 @@ type Props = {
     deactivateDriverRoute;
     isMetrcDSPR: boolean;
     isScanningComplete: boolean;
+    isLoadingOnInitialMount: boolean;
 };
 const OrderDetailsDisplay = ({
                                  navigation,
@@ -65,6 +66,7 @@ const OrderDetailsDisplay = ({
                                  deactivateDriverRoute,
                                  isMetrcDSPR,
                                  isScanningComplete,
+                                 isLoadingOnInitialMount,
                              }: Props) => {
     const {colors} = useTheme();
 
@@ -74,7 +76,7 @@ const OrderDetailsDisplay = ({
 
     return (
         <SafeAreaView style={{flex: 1}}>
-            {isLoading ? (
+            {isLoading || isLoadingOnInitialMount ? (
                 <View style={[styles.fillScreen, {backgroundColor: colors.background}]}>
                     <ActivityIndicator size='large' color={colors.primary}/>
                 </View>
