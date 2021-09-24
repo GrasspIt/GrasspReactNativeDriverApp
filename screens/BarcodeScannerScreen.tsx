@@ -17,7 +17,7 @@ const BarcodeScannerScreen = ({
                                    route
                                }) => {
 
-    const {productId, orderDetailId, productName, orderId} = route.params;
+    const {productId, orderDetailId, productName, orderId, dsprId} = route.params;
     const dispatch = useDispatch();
 
     const orderDetail = useSelector<State, OrderDetail | undefined>(state => getOrderDetailFromProps(state, {
@@ -54,8 +54,11 @@ const BarcodeScannerScreen = ({
 
     /**Submit a scanned metrc tag to backend*/
     const scanSubmit = (tag) => {
+
+        console.log('TAG in scanSubmit:', tag);
         //Scanner is disabled until whatever alert is shown from the dispatch response is closed
         setScannerDisabled(true);
+
         dispatch<any>(submitBarcodeScan(tag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
             .then((response) => {
                 if (response.type === ORDER_SCAN_SUBMIT_SUCCESS) {

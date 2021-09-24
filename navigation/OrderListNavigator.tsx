@@ -27,7 +27,7 @@ export type OrderListStackParamsList = {
     Details: { orderId: number };
     Notes: {userId: number, dsprDriverId: number, userNotes?: any};
     OrderToScan: { orderId: number };
-    BarcodeScanner: {  productName: string, productId: number, orderDetailId: number };
+    BarcodeScanner: {  productName: string, productId: number, orderDetailId: number, dsprId: number };
     BarcodeManualEntry: {  productName: string, productId: number, orderDetailId: number };
 };
 

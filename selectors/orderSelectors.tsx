@@ -89,15 +89,17 @@ export const getOrdersWithAddressesAndUsers = createSelector(
 
 export const getProductsInOrderFromProps = (state: State, props: { orderId: number }): ProductInOrder[] => {
     //const orders = state.api && state.api.entities && state.api.entities.orders ? state.api.entities.orders[orderId] : undefined;
-    const orders = state.api?.entities?.orders[props.orderId];
+    const order = state.api?.entities?.orders[props.orderId];
+    const dsprId = order?.dspr;
 
-    return orders.orderDetails?.map(orderDetail => {
+    return order.orderDetails?.map(orderDetail => {
         const { id: productId, name } = orderDetail.product;
         return {
             orderDetailId: orderDetail.id,
             productId,
             name,
             quantity: orderDetail.quantity,
+            dsprId
         }
     })
 }
@@ -107,4 +109,5 @@ export interface ProductInOrder {
     productId: number;
     name: string;
     quantity: number;
+    dsprId: number;
 }

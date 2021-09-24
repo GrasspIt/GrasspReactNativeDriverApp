@@ -129,7 +129,8 @@ const OrderToScan = ({
                         productName: item.name,
                         productId: item.productId,
                         orderDetailId: item.orderDetailId,
-                        orderId
+                        orderId,
+                        dsprId: item.dsprId
                     })}
                     disabled={scanCountForItem >= item.quantity}
                     style={({pressed}) => [
