@@ -225,7 +225,7 @@ const OrderToScan = ({
                             labelStyle={{
                                 paddingVertical: 4,
                             }}
-                            style={styles.buttons}
+                            style={[styles.buttons, {backgroundColor: colors.surface}]}
                             onPress={() => navigation.goBack()}
                         >
                             Back to Order Details
