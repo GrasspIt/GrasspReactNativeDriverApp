@@ -35,6 +35,7 @@ import {
     RESET_ORDER_SCANS_SUCCESS,
     ORDER_SCAN_SUBMIT_SUCCESS, GET_CURRENT_ORDER_SCANS_FOR_ORDER_SUCCESS
 } from "../actions/scanActions";
+import { OrderScan } from "../store/reduxStoreState";
 
 export const initialState = {
     users: {},
@@ -74,7 +75,6 @@ export const initialState = {
     dsprDriverRouteMetrics: {},
     dspProducts: {},
     orderScans: {},
-    count: 0
 };
 
 export const overwriteArray = (objValue, srcValue) => {
@@ -187,25 +187,29 @@ export default (state = initialState, action) => {
             return state;
         case GET_CURRENT_ORDER_SCANS_FOR_ORDER_SUCCESS:
             if (responseEntities && Object.keys(responseEntities).length > 0) {
-                console.log('in reducer for GET_CURRENT_ORDER_SCANS_FOR_ORDER_SUCCESS');
                 const modifiedState = {...state};
                 const orderId = Object.keys(responseEntities.orders)[0]
                 modifiedState.orders[orderId].scannedProductOrderDetailAssociationsScans = action.response.result;
                 return appendAndUpdateEntitiesFromResponse(modifiedState, responseEntities);
             }
             return state;
-        //case RESET_ORDER_DETAIL_SCANS_SUCCESS:
-        //    if (responseEntities) {
-        //        const {orderId, orderDetailId} = responseEntities;
-        //        console.log('In ENTITIES REDUCER - RESET ORDER DETAIL SCAN! orderId:', orderId, 'orderDetailId:', orderDetailId)
-        //        const modifiedState = {...state};
-        //
-        //        if (modifiedState.metrcTagsForOrder[orderId][orderDetailId]) {
-        //            delete modifiedState.metrcTagsForOrder[orderId][orderDetailId];
-        //        }
-        //        return modifiedState;
-        //    }
-        //    return state;
+        case RESET_ORDER_DETAIL_SCANS_SUCCESS:
+            if (responseEntities) {
+                const modifiedState = {...state};
+                const orderDetailId = action.response.result;
+                const scansForOrderDetail:OrderScan[] = Object.values<OrderScan>(modifiedState.orderScans).filter(orderScan => orderScan.orderDetail === orderDetailId);
+                const scanIDsForOrderDetail: number[] = scansForOrderDetail.map(scan => scan.id);
+                const orderId = scansForOrderDetail[0].order;
+                const orderToUpdate = modifiedState.orders[orderId]
+
+                //remove scanIds from order.scannedProductOrderDetailAssociationsScans that belong to the unscanned order detail
+                orderToUpdate.scannedProductOrderDetailAssociationsScans = orderToUpdate.scannedProductOrderDetailAssociationsScans.filter(scanId => !scanIDsForOrderDetail.includes(scanId));
+
+                //remove scanId properties from orderScans
+                scanIDsForOrderDetail.forEach(scanId => delete modifiedState.orderScans[scanId]);
+                return modifiedState;
+            }
+            return state;
         case RESET_ORDER_SCANS_SUCCESS:
             if (responseEntities) {
                 const modifiedState = {...state};
@@ -226,7 +230,4 @@ export default (state = initialState, action) => {
         default:
             return state;
     }
-
-
-    //TODO: When clearing scans for OrderDetail or Order, replace Metrc array with an empty array
 };

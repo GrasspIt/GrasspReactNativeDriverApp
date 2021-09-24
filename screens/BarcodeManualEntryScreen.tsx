@@ -89,7 +89,7 @@ const BarcodeManualEntryScreen = ({navigation, route}) => {
         scanCountForOrderDetail={scanCountForOrderDetail}
         orderDetailQuantity={orderDetail?.quantity}
         errorText={errorText}
-        isMetrcDSPR={!!isMetrcDSPR}
+        isMetrcDSPR={isMetrcDSPR}
     />
 }
 

@@ -98,8 +98,8 @@ export default (state = initialState, action) => {
     case REMOVE_ORDER_AND_REFRESH_ROUTE_PENDING:
     case ORDER_SCAN_SUBMIT_PENDING:
     case RESET_ORDER_SCANS_PENDING:
-    case GET_CURRENT_ORDER_SCANS_FOR_ORDER_PENDING:
     case RESET_ORDER_DETAIL_SCANS_PENDING:
+    case GET_CURRENT_ORDER_SCANS_FOR_ORDER_PENDING:
       return { ...state, isLoading: true };
 
     // actions failed

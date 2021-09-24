@@ -18,7 +18,7 @@ const DSPRScreen = ({ setDsprDriverId, dsprs, dsprDrivers }: Props) => {
   const dsprDataList:DSPR[] = Object.values(dsprs);
   const dsprDriverDataList: DsprDriver[] = dsprDrivers && Object.values(dsprDrivers);
   const dsprsUserDriversFor: number[] = dsprDriverDataList.map((dsprDriver) => dsprDriver.dspr)
-  const dsprDataListFilteredForDrivers: DSPR[] = dsprDataList.filter(dspr =>dsprsUserDriversFor.includes(dspr.id));
+  const dsprDataListFilteredForDrivers: DSPR[] = dsprDataList.filter(dspr => dsprsUserDriversFor.includes(dspr.id));
 
   const handleSelectDspr = (dsprId: number) => {
     // find the dsprDriver that matches the dsprId

@@ -44,8 +44,8 @@ const OrderToScanScreen = ({
     }
 
     /**Deactivate all scans for an order detail*/
-    const resetOrderDetailScans = (orderDetailID: number) => {
-        dispatch<any>(deactivateOrderDetailScans(orderDetailID));
+    const resetOrderDetailScans = (orderDetailId: number) => {
+        dispatch<any>(deactivateOrderDetailScans(orderDetailId));
     }
 
     return <OrderToScan
