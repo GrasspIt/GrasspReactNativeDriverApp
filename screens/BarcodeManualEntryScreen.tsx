@@ -22,8 +22,8 @@ const BarcodeManualEntryScreen = ({navigation, route}) => {
         orderDetailId
     }), shallowEqual)
 
-    const order = useSelector<State, Order>(state => getOrderFromProps(state, {orderId}));
-    const isMetrcDSPR = useSelector<State, boolean>(state => order && isMetrcLicenseHeldByDSPRFromProps(state, {orderId: order.dspr}));
+    const order = useSelector<State, Order | undefined>(state => getOrderFromProps(state, {orderId}));
+    const isMetrcDSPR = useSelector<State, boolean | undefined>(state => order && isMetrcLicenseHeldByDSPRFromProps(state, {dsprId: order.dspr}));
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
     const [errorAlertVisible, setErrorAlertVisible] = useState<boolean>(false);
@@ -89,7 +89,7 @@ const BarcodeManualEntryScreen = ({navigation, route}) => {
         scanCountForOrderDetail={scanCountForOrderDetail}
         orderDetailQuantity={orderDetail?.quantity}
         errorText={errorText}
-        isMetrcDSPR={isMetrcDSPR}
+        isMetrcDSPR={!!isMetrcDSPR}
     />
 }
 

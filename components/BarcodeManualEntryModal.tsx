@@ -80,10 +80,10 @@ const BarcodeManualEntryModal = ({
     return (
         <SafeAreaView style={styles.componentContainer}>
             <Card style={styles.card}>
-                <Card.Title title="Metrc Tag Manual Entry" subtitle={productName}/>
+                <Card.Title title={isMetrcDSPR ? 'Metrc Tag Manual Entry' : 'Barcode Manual Entry'} subtitle={productName}/>
                 <Card.Content style={styles.cardContent}>
 
-                    <Paragraph style={{fontSize: 16}}>Please enter the Metrc Tag below:</Paragraph>
+                    <Paragraph style={{fontSize: 16}}>{`Please enter the ${isMetrcDSPR ? 'Metrc Tag' : 'Barcode'} below:`}</Paragraph>
 
                     <View style={{marginTop: 20}}>
                         <TextInput
