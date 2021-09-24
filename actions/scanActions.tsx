@@ -6,26 +6,29 @@ export const ORDER_SCAN_SUBMIT = 'ORDER_SCAN_SUBMIT';
 export const ORDER_SCAN_SUBMIT_SUCCESS = 'ORDER_SCAN_SUBMIT_SUCCESS';
 export const ORDER_SCAN_SUBMIT_FAILURE = 'ORDER_SCAN_SUBMIT_FAILURE';
 
-const barcodeScanSubmitter = (metrcTag: string, orderId: number, productId: number, orderDetailId: number) => {
+export interface SubmitBarcodeScanProps {
+    metrcTag?: string;
+    orderId: number;
+    productId: number;
+    orderDetailId: number;
+}
+
+const barcodeScanSubmitter = (props: SubmitBarcodeScanProps) => {
+    console.log('!!! Props in BarcodeScan Submitter:', props);
     return {
         [CALL_API]: {
             httpAction: 'POST',
             types: [ORDER_SCAN_SUBMIT, ORDER_SCAN_SUBMIT_SUCCESS, ORDER_SCAN_SUBMIT_FAILURE],
             endPoint: 'scan/barcode',
-            body: {
-                metrcTag,
-                orderId,
-                productId,
-                orderDetailId
-            },
+            body: props,
             schema: Schemas.ORDER_SCAN,
         },
     }
 }
 
-export const submitBarcodeScan = (metrcTag: string, orderId: number, productId: number, orderDetailId: number) => (dispatch) => {
+export const submitBarcodeScan = (props: SubmitBarcodeScanProps) => (dispatch) => {
     dispatch({type: ORDER_SCAN_SUBMIT_PENDING});
-    return dispatch(barcodeScanSubmitter(metrcTag, orderId, productId, orderDetailId))
+    return dispatch(barcodeScanSubmitter(props))
         .then((response) => {
             //errors are handled in the screens and components that dispatch this action
             return {type: response.type, error: response.error};

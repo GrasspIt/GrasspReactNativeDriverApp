@@ -10,7 +10,7 @@ import {
     ORDER_SCAN_SUBMIT_FAILURE,
 } from "../actions/scanActions";
 import { getOrderScanCountForOrderDetailFromProps } from "../selectors/scanSelectors";
-import { isMetrcLicenseHeldByDSPRFromProps } from "../selectors/dsprSelectors";
+import { isMetrcLicenseHeldByDSPRFromProps, isNonMetrcScanningDSPRFromProps } from "../selectors/dsprSelectors";
 import { shallow } from "@testing-library/react-native";
 
 
@@ -31,6 +31,7 @@ const BarcodeScannerScreen = ({
         orderDetailId
     }), shallowEqual)
     const isMetrcDSPR = useSelector<State, boolean>(state => dsprId && isMetrcLicenseHeldByDSPRFromProps(state, {dsprId}), shallowEqual);
+    const isNonMetrcScanningDSPR = useSelector<State, boolean>(state => dsprId && isNonMetrcScanningDSPRFromProps(state, {dsprId}), shallowEqual);
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
     const [errorAlertVisible, setErrorAlertVisible] = useState<boolean>(false);
@@ -62,16 +63,26 @@ const BarcodeScannerScreen = ({
         //Scanner is disabled until whatever alert is shown from the dispatch response is closed
         setScannerDisabled(true);
 
-        dispatch<any>(submitBarcodeScan(tag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
-            .then((response) => {
-                if (response.type === ORDER_SCAN_SUBMIT_SUCCESS) {
-                    showSuccessAlert();
-                }
-                if (response.type === ORDER_SCAN_SUBMIT_FAILURE) {
-                    showErrorAlert()
-                    setErrorText(response.error)
-                }
-            })
+        if (isMetrcDSPR) {
+            dispatch<any>(submitBarcodeScan({metrcTag: tag, orderId: parseInt(orderId), productId: parseInt(productId), orderDetailId: parseInt(orderDetailId)}))
+                .then((response) => {
+                    if (response.type === ORDER_SCAN_SUBMIT_SUCCESS) {
+                        showSuccessAlert();
+                    }
+                    if (response.type === ORDER_SCAN_SUBMIT_FAILURE) {
+                        showErrorAlert()
+                        setErrorText(response.error)
+                    }
+                })
+        }
+
+        if (isNonMetrcScanningDSPR) {
+            //tag is productId-dsprId -> split on -
+            const splitTag = tag.split('-');
+            console.log('!!!!!splitTag in scanSubmit:', splitTag);
+            const scannedProductId = splitTag[0];
+        }
+
     }
 
     return <BarcodeScanner

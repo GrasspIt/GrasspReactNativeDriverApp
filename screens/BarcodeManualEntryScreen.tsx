@@ -59,7 +59,12 @@ const BarcodeManualEntryScreen = ({navigation, route}) => {
         //TODO: handle case for non-metrc barcode
         const metrcTag = tagText.toUpperCase();
 
-        return dispatch<any>(submitBarcodeScan(metrcTag, parseInt(orderId), parseInt(productId), parseInt(orderDetailId)))
+        return dispatch<any>(submitBarcodeScan({
+            metrcTag: metrcTag,
+            orderId: parseInt(orderId),
+            productId: parseInt(productId),
+            orderDetailId: parseInt(orderDetailId)
+        }))
             .then((response) => {
                 if (response.type === ORDER_SCAN_SUBMIT_SUCCESS) {
                     showSuccessAlert();
