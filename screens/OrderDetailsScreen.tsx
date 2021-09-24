@@ -70,6 +70,8 @@ const OrderDetailsScreen = ({
     const isMetrcDSPR = useSelector<State, boolean | undefined>(state => dspr && isMetrcLicenseHeldByDSPRFromProps(state, {dsprId: dspr.id}), shallowEqual)
     const isScanningComplete = useSelector<State, boolean | undefined>(state => isMetrcDSPR && isScanningCompleteForOrderFromProps(state, {orderId}), shallowEqual);
 
+    //passed to OrderDetailsDisplay to ensure component card does not flicker on screen before rendering the loading spinner.
+    //After component mounts, isLoadingOnInitialMount is set to false, and getOrderDetails is invoked, which sets isLoading to true
     const [isLoadingOnInitialMount, setIsLoadingOnInitialMount] = useState<boolean>(true);
 
     const handleNavigate = () => {
