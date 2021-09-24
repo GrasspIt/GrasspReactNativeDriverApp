@@ -13,7 +13,6 @@ export const getOrderScans = (state: State): { [orderScanId: number]: OrderScan 
 
 /**Returns an array of Order Scan Ids*/
 const getOrderScanIdsForOrderFromProps = createSelector([getOrderFromProps], (order): number[] => {
-    console.log('#### create selector getOrderScanIdsForOrderFromProps is running!!!!');
     return order && order.scannedProductOrderDetailAssociationsScans ? order.scannedProductOrderDetailAssociationsScans : [];
 })
 
@@ -26,7 +25,6 @@ export const getOrderScanCountForOrderFromProps = (state: State, {orderId}): num
 export const getOrderScansForOrderFromProps = createDeepEqualSelector(
     [getOrderScanIdsForOrderFromProps, getOrderScans],
     (orderScanIds, orderScans): { [orderDetailId: number]: OrderScan[] } => {
-        console.log('!!!#### createSelector getOrderscansForOrderFromProps is running!!!!');
         if (orderScanIds.length > 0 && orderScanIds.length > 0) {
             const scansForOrder = {};
             orderScanIds.forEach(scanId => {
