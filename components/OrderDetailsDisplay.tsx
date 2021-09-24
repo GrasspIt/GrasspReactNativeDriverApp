@@ -38,7 +38,7 @@ type Props = {
     markOrderInProcess;
     removeOrderAndRefreshRoute;
     deactivateDriverRoute;
-    isMetrcDSPR: boolean;
+    isScanningDSPR: boolean;
     isScanningComplete: boolean;
     isLoadingOnInitialMount: boolean;
 };
@@ -64,7 +64,7 @@ const OrderDetailsDisplay = ({
                                  markOrderInProcess,
                                  removeOrderAndRefreshRoute,
                                  deactivateDriverRoute,
-                                 isMetrcDSPR,
+                                 isScanningDSPR,
                                  isScanningComplete,
                                  isLoadingOnInitialMount,
                              }: Props) => {
@@ -272,7 +272,7 @@ const OrderDetailsDisplay = ({
                                 removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
                                 deactivateDriverRoute={deactivateDriverRoute}
                                 navigation={navigation}
-                                isMetrcDSPR={isMetrcDSPR}
+                                isScanningDSPR={isScanningDSPR}
                                 isScanningComplete={isScanningComplete}
                             />
                         )}

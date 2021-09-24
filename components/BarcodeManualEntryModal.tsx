@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
+import { Platform, SafeAreaView, StatusBar, StyleSheet, View } from "react-native";
 import {
     Button,
     Caption,

@@ -15,7 +15,7 @@ type Props = {
     removeOrderAndRefreshRoute;
     deactivateDriverRoute;
     navigation;
-    isMetrcDSPR: boolean;
+    isScanningDSPR: boolean;
     isScanningComplete: boolean;
 };
 
@@ -31,7 +31,7 @@ const OrderButtons = ({
                           removeOrderAndRefreshRoute,
                           deactivateDriverRoute,
                           navigation,
-                          isMetrcDSPR,
+                          isScanningDSPR,
                           isScanningComplete,
                       }: Props) => {
     const {colors} = useTheme();
@@ -125,7 +125,7 @@ const OrderButtons = ({
                 </Button>
             )}
 
-            {isMetrcDSPR &&
+            {isScanningDSPR &&
             <Button
                 disabled={!!isLoading}
                 icon={'barcode-scan'}
@@ -142,7 +142,7 @@ const OrderButtons = ({
             {/*Complete button is disabled if scanning is incomplete or component is loading*/}
             {orderStatus == 'in_process' ? (
                 <Button
-                    disabled={isMetrcDSPR ? (!isScanningComplete || isLoading) : isLoading}
+                    disabled={isScanningDSPR ? (!isScanningComplete || isLoading) : isLoading}
                     icon='check'
                     mode='contained'
                     color={colors.primary}

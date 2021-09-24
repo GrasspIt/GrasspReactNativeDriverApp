@@ -48,8 +48,6 @@ export const getOrderScansForOrderFromProps = createDeepEqualSelector(
  * -> in general, it does not make sense to check/use the results of isScanningComplete if the dspr does not require scans
  * */
 export const isScanningCompleteForOrderFromProps = createSelector([getOrderScansForOrderFromProps, getOrderFromProps], (orderScans, order): boolean => {
-    console.log('isScanningCompleteForOrderFromProps running!');
-
     if (order && order.orderDetails) {
         for (let orderDetail of order.orderDetails) {
             //if orderDetailId does not exist as a key on orderScans, or the value of orderScans[orderDetailId] and orderDetailQuantity are not equal, return false

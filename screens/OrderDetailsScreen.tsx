@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import Clipboard from 'expo-clipboard';
 import { connect, shallowEqual, useSelector } from 'react-redux';
@@ -14,11 +14,14 @@ import Moment from 'moment';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
-import { getOrderFromProps, getProductsInOrderFromProps, ProductInOrder } from '../selectors/orderSelectors';
+import { getOrderFromProps, } from '../selectors/orderSelectors';
 import { getAddressFromProps } from '../selectors/addressSelectors';
 import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 import OrderDetailsDisplay from '../components/OrderDetailsDisplay';
-import { getDSPRFromProps, isMetrcLicenseHeldByDSPRFromProps } from "../selectors/dsprSelectors";
+import {
+    getDSPRFromProps,
+    isScanningRequiredForDSPRFromProps
+} from "../selectors/dsprSelectors";
 import { DSPR, State } from "../store/reduxStoreState";
 import { isScanningCompleteForOrderFromProps } from "../selectors/scanSelectors";
 
@@ -67,8 +70,8 @@ const OrderDetailsScreen = ({
     const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
     const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
 
-    const isMetrcDSPR = useSelector<State, boolean | undefined>(state => dspr && isMetrcLicenseHeldByDSPRFromProps(state, {dsprId: dspr.id}), shallowEqual)
-    const isScanningComplete = useSelector<State, boolean | undefined>(state => isMetrcDSPR && isScanningCompleteForOrderFromProps(state, {orderId}), shallowEqual);
+    const isScanningDSPR = useSelector<State, boolean | undefined>(state => dspr && isScanningRequiredForDSPRFromProps(state, {dsprId: dspr.id}), shallowEqual);
+    const isScanningComplete = useSelector<State, boolean | undefined>(state => isScanningDSPR && isScanningCompleteForOrderFromProps(state, {orderId}), shallowEqual);
 
     //passed to OrderDetailsDisplay to ensure component card does not flicker on screen before rendering the loading spinner.
     //After component mounts, isLoadingOnInitialMount is set to false, and getOrderDetails is invoked, which sets isLoading to true
@@ -128,7 +131,7 @@ const OrderDetailsScreen = ({
             markOrderInProcess={markOrderInProcess}
             removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
             deactivateDriverRoute={deactivateDriverRoute}
-            isMetrcDSPR={!!isMetrcDSPR}
+            isScanningDSPR={!!isScanningDSPR}
             isScanningComplete={!!isScanningComplete}
             isLoadingOnInitialMount={isLoadingOnInitialMount}
         />
