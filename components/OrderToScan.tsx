@@ -5,10 +5,11 @@ import {
     StyleSheet,
     Text,
     View,
-    Pressable
+    Pressable,
+    Image
 } from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
-import { Card, Divider, useTheme, List, IconButton, Menu, Dialog, Portal, Paragraph, Button } from "react-native-paper";
+import { Card, Divider, useTheme, List, IconButton, Menu, Dialog, Portal, Paragraph, Button, } from "react-native-paper";
 import { OrderScan } from "../store/reduxStoreState";
 import { infoColor } from "../App";
 
@@ -16,7 +17,7 @@ type OrderToScanProps = {
     orderId: number;
     products: ProductInOrder[];
     navigation;
-    resetOrderDetailScans: (id: number) => any;
+    resetOrderDetailScans: (orderDetailId: number) => any;
     resetOrderScans: (orderId: string) => any;
     totalRequiredScansForOrder: number;
     currentNumberOfScansForOrder: number;
@@ -80,6 +81,7 @@ const OrderToScan = ({
                             showOrderResetDialog();
                         }}
                         title={'Reset Order Scans'}
+                        accessibilityLabel={'Reset Order Scans'}
                     />
                 </Menu>
             ),
@@ -176,13 +178,13 @@ const OrderToScan = ({
                                         showProductResetDialog(item.productId, item.name, item.orderDetailId)
                                     }}
                                     title={'Reset Product Scans'}
+                                    accessibilityLabel={'Reset Product Scans'}
                                 />
                             </Menu>
                         )}
                         description={() => (
                             <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10}}>
                                 <Text style={{color: colors.backdrop}}>Quantity: {item.quantity}</Text>
-                                {/*TODO - remove hard coded icons and scanned totals once backend endpoints are avaiable*/}
                                 <Text style={{
                                     color: colors.backdrop,
                                     marginRight: 16
@@ -235,9 +237,9 @@ const OrderToScan = ({
             <Portal>
                 {/*Reset Product Dialog*/}
                 <Dialog visible={productResetDialogVisible} onDismiss={hideProductResetDialog}>
-                    <Dialog.Title>Reset all scans for this product?</Dialog.Title>
-                    <Dialog.Content>
-                        <Paragraph>This action will reset {productToReset && productToReset.name} scans to 0</Paragraph>
+                    <Dialog.Title style={styles.dialogTitle}>Reset all scans for this product?</Dialog.Title>
+                    <Dialog.Content style={styles.dialogContentContainer}>
+                        <Paragraph style={styles.dialogParagraph}>This action will reset {productToReset && productToReset.name} scans to 0</Paragraph>
                     </Dialog.Content>
                     <Dialog.Actions style={{flexDirection: 'row', justifyContent: 'space-around'}}>
                         <Button onPress={hideProductResetDialog} color={colors.backdrop}>Cancel</Button>
@@ -247,9 +249,9 @@ const OrderToScan = ({
 
                 {/*Reset Order Dialog*/}
                 <Dialog visible={orderResetDialogVisible} onDismiss={hideOrderResetDialog}>
-                    <Dialog.Title>Reset all scans for this order?</Dialog.Title>
-                    <Dialog.Content>
-                        <Paragraph>This action will reset order scans to 0</Paragraph>
+                    <Dialog.Title style={styles.dialogTitle}>Reset all scans for this order?</Dialog.Title>
+                    <Dialog.Content style={styles.dialogContentContainer}>
+                        <Paragraph style={styles.dialogParagraph}>This action will reset order scans to 0</Paragraph>
                     </Dialog.Content>
                     <Dialog.Actions style={{flexDirection: 'row', justifyContent: 'space-around'}}>
                         <Button onPress={hideOrderResetDialog} color={colors.backdrop}>Cancel</Button>
@@ -284,6 +286,16 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         borderRadius: 50,
         elevation: 2,
+    },
+    dialogTitle: {
+        textAlign: 'center',
+    },
+    dialogContentContainer: {
+        marginTop: 4,
+        //alignItems: 'center',
+    },
+    dialogParagraph: {
+        textAlign: 'center',
     },
 });
 
