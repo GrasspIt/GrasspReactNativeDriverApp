@@ -198,7 +198,12 @@ export default (state = initialState, action) => {
                 const modifiedState = {...state};
                 const orderDetailId = action.response.result;
                 const scansForOrderDetail:OrderScan[] = Object.values<OrderScan>(modifiedState.orderScans).filter(orderScan => orderScan.orderDetail === orderDetailId);
+
+                //Order detail had no scans -> return state
+                if (scansForOrderDetail.length === 0) return {...state};
+
                 const scanIDsForOrderDetail: number[] = scansForOrderDetail.map(scan => scan.id);
+
                 const orderId = scansForOrderDetail[0].order;
                 const orderToUpdate = modifiedState.orders[orderId]
 
