@@ -8,9 +8,9 @@ import OrderDetailsScreen from '../screens/OrderDetailsScreen';
 import ManageNotesScreen from '../screens/ManageNotesScreen';
 import OrderListScreen from '../screens/OrderListScreen';
 import OrderToScanScreen from "../screens/OrderToScanScreen";
-import MetrcTagScannerScreen from "../screens/MetrcTagScannerScreen";
+import BarcodeScannerScreen from "../screens/BarcodeScannerScreen";
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import MetrcTagManualEntryScreen from "../screens/MetrcTagManualEntryScreen";
+import BarcodeManualEntryScreen from "../screens/BarcodeManualEntryScreen";
 
 type OrderListNavigationProp = CompositeNavigationProp<
     DrawerNavigationProp<DrawerStackParamsList, 'OrdersNav'>,
@@ -27,8 +27,8 @@ export type OrderListStackParamsList = {
     Details: { orderId: number };
     Notes: {userId: number, dsprDriverId: number, userNotes?: any};
     OrderToScan: { orderId: number };
-    MetrcTagScanner: {  productName: string, productId: number, orderDetailId: number };
-    MetrcTagManualEntry: {  productName: string, productId: number, orderDetailId: number };
+    BarcodeScanner: {  productName: string, productId: number, orderDetailId: number };
+    BarcodeManualEntry: {  productName: string, productId: number, orderDetailId: number };
 };
 
 const OrderListStack = createStackNavigator<OrderListStackParamsList>();
@@ -72,14 +72,14 @@ const OrderListNavigator = ({route, navigation}: Props) => {
                 initialParams={{ orderId: 42 }}
             />
             <OrderListStack.Screen
-                name={'MetrcTagScanner'}
-                component={MetrcTagScannerScreen}
+                name={'BarcodeScanner'}
+                component={BarcodeScannerScreen}
                 //options={({ route }) => ({title: route.params.productName})}
                 options={{headerShown: false}}
             />
             <OrderListStack.Screen
-                name={'MetrcTagManualEntry'}
-                component={MetrcTagManualEntryScreen}
+                name={'BarcodeManualEntry'}
+                component={BarcodeManualEntryScreen}
                 options={{ presentation: 'modal', headerShown: false}}
             />
         </OrderListStack.Navigator>

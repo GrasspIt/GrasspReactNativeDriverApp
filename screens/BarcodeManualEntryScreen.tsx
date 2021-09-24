@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 
-import MetrcTagManualEntryModal from "../components/MetrcTagManualEntryModal";
+import BarcodeManualEntryModal from "../components/BarcodeManualEntryModal";
 import { ORDER_SCAN_SUBMIT_FAILURE, ORDER_SCAN_SUBMIT_SUCCESS, submitBarcodeScan } from "../actions/scanActions";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { OrderDetail, State } from "../store/reduxStoreState";
-import { getOrderDetailFromProps } from "../selectors/orderSelectors";
+import { Order, OrderDetail, State } from "../store/reduxStoreState";
+import { getOrderDetailFromProps, getOrderFromProps } from "../selectors/orderSelectors";
 import { getOrderScanCountForOrderDetailFromProps } from "../selectors/scanSelectors";
+import { isMetrcLicenseHeldByDSPRFromProps } from "../selectors/dsprSelectors";
 
-const MetrcTagManualEntryScreen = ({navigation, route}) => {
+
+const BarcodeManualEntryScreen = ({navigation, route}) => {
     const {productName, productId, orderDetailId, orderId} = route.params;
     const dispatch = useDispatch();
 
@@ -19,6 +21,9 @@ const MetrcTagManualEntryScreen = ({navigation, route}) => {
         orderId,
         orderDetailId
     }), shallowEqual)
+
+    const order = useSelector<State, Order>(state => getOrderFromProps(state, {orderId}));
+    const isMetrcDSPR = useSelector<State, boolean>(state => order && isMetrcLicenseHeldByDSPRFromProps(state, {orderId: order.dspr}));
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
     const [errorAlertVisible, setErrorAlertVisible] = useState<boolean>(false);
@@ -70,7 +75,7 @@ const MetrcTagManualEntryScreen = ({navigation, route}) => {
             })
     }
 
-    return <MetrcTagManualEntryModal
+    return <BarcodeManualEntryModal
         submitTagEntry={submitTagEntry}
         productName={productName}
         orderId={orderId}
@@ -84,7 +89,8 @@ const MetrcTagManualEntryScreen = ({navigation, route}) => {
         scanCountForOrderDetail={scanCountForOrderDetail}
         orderDetailQuantity={orderDetail?.quantity}
         errorText={errorText}
+        isMetrcDSPR={!!isMetrcDSPR}
     />
 }
 
-export default MetrcTagManualEntryScreen;
+export default BarcodeManualEntryScreen;

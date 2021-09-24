@@ -5,6 +5,7 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { getProductsInOrderFromProps, ProductInOrder } from "../selectors/orderSelectors";
 import { OrderScan, State } from "../store/reduxStoreState";
 import {
+    deactivateOrderDetailScans,
     deactivateOrderScans,
     RESET_ORDER_DETAIL_SCANS_SUCCESS,
 } from "../actions/scanActions";
@@ -37,22 +38,14 @@ const OrderToScanScreen = ({
 
     const totalRequiredScansForOrder = useMemo(() => productsInOrder.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
 
-    /**Deactivate all scans for an order detail*/
-    const resetOrderDetailScans = (orderId: string, orderDetailId: string) => {
-        dispatch({
-            type: RESET_ORDER_DETAIL_SCANS_SUCCESS,
-            response: {
-                entities: {
-                    orderId,
-                    orderDetailId,
-                }
-            }
-        })
-    }
-
     /**Deactivate all scans for an order*/
     const resetOrderScans = () => {
         dispatch<any>(deactivateOrderScans(parseInt(orderId)))
+    }
+
+    /**Deactivate all scans for an order detail*/
+    const resetOrderDetailScans = (orderDetailID: number) => {
+        dispatch<any>(deactivateOrderDetailScans(orderDetailID));
     }
 
     return <OrderToScan

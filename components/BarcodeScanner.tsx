@@ -8,7 +8,7 @@ import AlertSuccessOrError from "./AlertSuccessOrError";
 import AlertSuccessButtonsForRemainingScans from "./buttons/AlertSuccessButtonsForRemainingScans";
 
 
-type MetrcTagScannerProps = {
+type BarcodeScannerProps = {
     navigation;
     productName: string;
     orderDetailId: string;
@@ -25,7 +25,7 @@ type MetrcTagScannerProps = {
     errorText: string;
 }
 
-const MetrcTagScanner = ({
+const BarcodeScanner = ({
                              navigation,
                              productName,
                              scanSubmit,
@@ -40,7 +40,7 @@ const MetrcTagScanner = ({
                              closeErrorAlert,
                              scannerDisabled,
                              errorText,
-                         }: MetrcTagScannerProps) => {
+                         }: BarcodeScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
     const [scanned, setScanned] = useState<boolean>(false);
@@ -133,7 +133,7 @@ const MetrcTagScanner = ({
                         size={40}
                         color={'white'}
                         style={{margin: 0}}
-                        onPress={() => navigation.navigate('MetrcTagManualEntry', {
+                        onPress={() => navigation.navigate('BarcodeManualEntry', {
                             productName,
                             productId,
                             orderDetailId,
@@ -271,4 +271,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default MetrcTagScanner;
+export default BarcodeScanner;

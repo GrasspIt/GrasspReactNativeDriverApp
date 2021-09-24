@@ -2,25 +2,17 @@ import React, { useState } from 'react';
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
 
 import { OrderDetail, State } from "../store/reduxStoreState";
-import MetrcTagScanner from '../components/MetrcTagScanner';
-import { getOrderDetailFromProps, getProductsInOrderFromProps, ProductInOrder } from "../selectors/orderSelectors";
+import BarcodeScanner from '../components/BarcodeScanner';
+import { getOrderDetailFromProps } from "../selectors/orderSelectors";
 import {
-    RESET_ORDER_DETAIL_SCANS_SUCCESS,
-    RESET_ORDER_SCANS_SUCCESS,
     ORDER_SCAN_SUBMIT_SUCCESS,
     submitBarcodeScan,
-    ORDER_SCAN_SUBMIT,
     ORDER_SCAN_SUBMIT_FAILURE,
-    deactivateOrderScans,
-    RESET_ORDER_SCANS_FAILURE
 } from "../actions/scanActions";
-import {
-    getOrderScanCountForOrderDetailFromProps, getOrderScanCountForOrderFromProps,
-    getOrderScansForOrderDetailFromProps,
-    getOrderScansForOrderFromProps
-} from "../selectors/scanSelectors";
+import { getOrderScanCountForOrderDetailFromProps } from "../selectors/scanSelectors";
 
-const MetrcTagScannerScreen = ({
+
+const BarcodeScannerScreen = ({
                                    navigation,
                                    route
                                }) => {
@@ -75,7 +67,7 @@ const MetrcTagScannerScreen = ({
             })
     }
 
-    return <MetrcTagScanner
+    return <BarcodeScanner
         navigation={navigation}
         productName={productName}
         productId={productId}
@@ -93,4 +85,4 @@ const MetrcTagScannerScreen = ({
     />
 }
 
-export default MetrcTagScannerScreen;
+export default BarcodeScannerScreen;

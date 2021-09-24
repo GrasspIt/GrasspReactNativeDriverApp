@@ -16,7 +16,7 @@ type OrderToScanProps = {
     orderId: number;
     products: ProductInOrder[];
     navigation;
-    resetOrderDetailScans: (orderId: string, orderDetailId: string) => any;
+    resetOrderDetailScans: (id: number) => any;
     resetOrderScans: (orderId: string) => any;
     totalRequiredScansForOrder: number;
     currentNumberOfScansForOrder: number;
@@ -86,14 +86,9 @@ const OrderToScan = ({
         })
     })
 
-    //TODO: figure out how to show an error icon if there is an error with the product scan.
-    //What kinds of errors could we have that would show up on this screen? If there is a scanning error, the user would retry on the scanner page. In this scenario, this page can still show the scanner icon.
-    //So far, the only weird case I can imagine where an error icon is necessary is scanCount > item.quantity.
-    //TODO: If there is an error - the driver should not be allowed to complete the order
-
     /**Resets scans for an Order Detail and closes the reset order detail scans dialog*/
     const handleResetScansForOrderDetail = () => {
-        productToReset && resetOrderDetailScans(orderId.toString(), productToReset.orderDetailId?.toString());
+        productToReset && resetOrderDetailScans(productToReset.orderDetailId);
         hideProductResetDialog();
     }
 
@@ -128,7 +123,7 @@ const OrderToScan = ({
             <React.Fragment key={item.productId}>
                 <Divider/>
                 <Pressable
-                    onPress={() => navigation.navigate('MetrcTagScanner', {
+                    onPress={() => navigation.navigate('BarcodeScanner', {
                         productName: item.name,
                         productId: item.productId,
                         orderDetailId: item.orderDetailId,
@@ -202,11 +197,6 @@ const OrderToScan = ({
             </React.Fragment>
         )
     }
-
-    //TODO: create complete order button
-    // button is disabled if order has not been fully scanned
-
-    //TODO: create running tally next to header of total scans (2/7 Products Scanned)
 
     return (
         <SafeAreaView style={{flex: 1}}>

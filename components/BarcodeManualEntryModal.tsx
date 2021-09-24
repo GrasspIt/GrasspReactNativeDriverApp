@@ -1,21 +1,19 @@
-import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
 import {
     Button,
     Caption,
     Card,
-    IconButton,
     Paragraph,
     Subheading,
     TextInput,
-    Title,
     useTheme,
 } from "react-native-paper";
 import AlertSuccessOrError from "./AlertSuccessOrError";
-import { successAlertMessageStyle } from "./MetrcTagScanner";
+import { successAlertMessageStyle } from "./BarcodeScanner";
 import AlertSuccessButtonsForRemainingScans from "./buttons/AlertSuccessButtonsForRemainingScans";
 
-interface MetrcTagManualEntryModalProps {
+interface BarcodeManualEntryModalProps {
     submitTagEntry: (data) => any;
     productName: string;
     productId: string;
@@ -29,21 +27,23 @@ interface MetrcTagManualEntryModalProps {
     scanCountForOrderDetail: number;
     orderDetailQuantity: number | undefined;
     errorText: string;
+    isMetrcDSPR: boolean;
 }
 
-const MetrcTagManualEntryModal = ({
-                                      submitTagEntry,
-                                      productName,
-                                      navigation,
-                                      successAlertVisible,
-                                      errorAlertVisible,
-                                      closeSuccessAlert,
-                                      closeErrorAlert,
-                                      scanCountForOrderDetail,
-                                      orderDetailQuantity,
-                                      errorText,
-                                      orderId
-                                  }: MetrcTagManualEntryModalProps) => {
+const BarcodeManualEntryModal = ({
+                                     submitTagEntry,
+                                     productName,
+                                     navigation,
+                                     successAlertVisible,
+                                     errorAlertVisible,
+                                     closeSuccessAlert,
+                                     closeErrorAlert,
+                                     scanCountForOrderDetail,
+                                     orderDetailQuantity,
+                                     errorText,
+                                     orderId,
+                                     isMetrcDSPR,
+                                 }: BarcodeManualEntryModalProps) => {
     const {colors} = useTheme();
 
     const [text, setText] = useState<string>('');
@@ -103,10 +103,11 @@ const MetrcTagManualEntryModal = ({
                             />}
                         />
                     </View>
+                    {isMetrcDSPR &&
                     <View style={{marginTop: 16}}>
-                        <Caption style={{marginTop: 10}}>Metrc tag will sometimes be labeled with 'PKID'</Caption>
-                        <Caption>The tag will be long - about 24 characters</Caption>
+                        <Caption style={{marginTop: 10}}>The tag will be long - about 24 characters</Caption>
                     </View>
+                    }
 
                     <Card.Actions style={styles.cardActions}>
                         <Button
@@ -191,4 +192,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default MetrcTagManualEntryModal;
+export default BarcodeManualEntryModal;
