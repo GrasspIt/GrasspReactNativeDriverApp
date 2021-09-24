@@ -38,6 +38,7 @@ const BarcodeScannerScreen = ({
     const showSuccessAlert = () => setSuccessAlertVisible(true);
     const closeSuccessAlert = () => {
         if (orderDetail && scanCountForOrderDetail >= orderDetail.quantity) {
+            setSuccessAlertVisible(false);
             navigation.goBack();
             return;
         }
