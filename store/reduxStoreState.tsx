@@ -177,6 +177,7 @@ export interface DSPR {
         years: Analytic[];
     };
     metrcLicense?: string;
+    isScanOrderDetail?: boolean;
 }
 
 export interface Analytic {
