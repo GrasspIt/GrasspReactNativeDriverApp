@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 
 import BarcodeManualEntryModal from "../components/BarcodeManualEntryModal";
-import { ORDER_SCAN_SUBMIT_FAILURE, ORDER_SCAN_SUBMIT_SUCCESS, submitBarcodeScan } from "../actions/scanActions";
+import {
+    ORDER_SCAN_SUBMIT_FAILURE,
+    ORDER_SCAN_SUBMIT_SUCCESS,
+    submitBarcodeScan,
+    SubmitBarcodeScanProps
+} from "../actions/scanActions";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Order, OrderDetail, State } from "../store/reduxStoreState";
 import { getOrderDetailFromProps, getOrderFromProps } from "../selectors/orderSelectors";
 import { getOrderScanCountForOrderDetailFromProps } from "../selectors/scanSelectors";
 import { isMetrcLicenseHeldByDSPRFromProps, isNonMetrcScanningDSPRFromProps } from "../selectors/dsprSelectors";
+import { split } from "lodash";
 
 
 const BarcodeManualEntryScreen = ({navigation, route}) => {
@@ -55,16 +61,26 @@ const BarcodeManualEntryScreen = ({navigation, route}) => {
      * -> if response is successful and there are not any more scans remaining in the orderDetail, return to OrderToScan (handled by closeSuccessAlert)
      * -> if there is an error, show an error message
      * */
-    const submitTagEntry = (tagText) => {
-        //TODO: handle case for non-metrc barcode
-        const metrcTag = tagText.toUpperCase();
+    const submitTagEntry = (barcodeText: string) => {
+        const metrcTag = isMetrcDSPR ? barcodeText.toUpperCase() : '';
+        //tag for non-metrc dspri is productId-dsprId -> split on -
+        const splitTag = isNonMetrcScanningDSPR ? barcodeText.split('-') : [];
+        const productIdForBarcodeSubmit = isMetrcDSPR ? parseInt(productId) : parseInt(splitTag[0]);
 
-        return dispatch<any>(submitBarcodeScan({
-            metrcTag: metrcTag,
-            orderId: parseInt(orderId),
-            productId: parseInt(productId),
-            orderDetailId: parseInt(orderDetailId)
-        }))
+        const props: SubmitBarcodeScanProps = isMetrcDSPR
+            ? {
+                metrcTag: metrcTag,
+                orderId: parseInt(orderId),
+                productId: productIdForBarcodeSubmit,
+                orderDetailId: parseInt(orderDetailId)
+            }
+            : {
+                orderId: parseInt(orderId),
+                productId: productIdForBarcodeSubmit,
+                orderDetailId: parseInt(orderDetailId)
+            };
+
+        return dispatch<any>(submitBarcodeScan(props))
             .then((response) => {
                 if (response.type === ORDER_SCAN_SUBMIT_SUCCESS) {
                     showSuccessAlert();
