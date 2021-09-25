@@ -89,7 +89,7 @@ const BarcodeManualEntryModal = ({
                         <TextInput
                             value={text}
                             onChangeText={text => setText(text)}
-                            placeholder={'1A40A03000005DD000003479'}
+                            placeholder={isMetrcDSPR ? '1A40A03000005DD000003479' : '4352-11'}
                             ref={textInputRef}
                             autoCorrect={false}
                             autoFocus={true}
@@ -165,28 +165,19 @@ const BarcodeManualEntryModal = ({
 const styles = StyleSheet.create({
     componentContainer: {
         flex: 1,
-        //borderColor: 'green',
-        //borderWidth: 4,
         marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     },
     card: {
         flex: 1,
-        //borderColor: 'blue',
-        //borderWidth: 2,
     },
     cardContent: {
         marginTop: 16,
-        //borderColor: 'tomato',
-        //borderWidth: 2,
         flex: 1
     },
     cardActions: {
-        //flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 32,
-        //borderColor: 'brown',
-        //borderWidth: 2,
         paddingLeft: 0,
         paddingRight: 0,
     }
