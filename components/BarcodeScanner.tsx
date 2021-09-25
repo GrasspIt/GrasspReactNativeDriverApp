@@ -149,6 +149,10 @@ const BarcodeScanner = ({
                                      ? <AlertSuccessButtonsForRemainingScans
                                          navigation={navigation}
                                          closeSuccessAlert={closeSuccessAlert}
+                                         goBackOnPress={() => {
+                                             closeSuccessAlert();
+                                             navigation.goBack();
+                                         }}
                                      />
                                      : undefined}
             />
