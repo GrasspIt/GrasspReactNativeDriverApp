@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, StyleSheet, View, Platform, StatusBar, Vibration } from "react-native";
-import { ProductInOrder } from "../selectors/orderSelectors";
-import { useTheme, Button, IconButton, Caption, TouchableRipple, Paragraph, Subheading } from "react-native-paper";
+import { useTheme, IconButton, Paragraph, Subheading } from "react-native-paper";
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { OrderDetail } from "../store/reduxStoreState";
 import AlertSuccessOrError from "./AlertSuccessOrError";
@@ -45,9 +44,6 @@ const BarcodeScanner = ({
                         }: BarcodeScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
-    const [scanned, setScanned] = useState<boolean>(false);
-
-    const {colors} = useTheme();
 
     useEffect(() => {
         (async () => {
@@ -56,35 +52,28 @@ const BarcodeScanner = ({
         })();
     }, []);
 
-    useEffect(() => {
-        console.log('Scanner has mounted!!!');
-
-        return () => {
-            console.log('Scanner has unmounted!!!!');
-        }
-    }, [])
-
-    /**Submit scanned Metrc Tag data
-     *  phone vibrates on scan
-     * */
+    /**Submit scanned Metrc Tag data (phone vibrates on scan) */
     const handleScanSubmit = (scanData) => {
         Vibration.vibrate();
 
-        console.log('scanData in handleScanSubmit:', scanData);
-
-        const {type, data} = scanData;
-
-        console.log('Result from barcode scanner:', scanData);
-        console.log('Barcode Type:', BarCodeScanner.Constants.BarCodeType[type]);
+        const { data } = scanData;
 
         scanSubmit(data);
     };
 
     if (hasPermission === 'requesting-permission') {
-        return <Text>Requesting for camera permission</Text>;
+        return (
+            <SafeAreaView style={styles.cameraPermissiosContainer}>
+                <Text style={{fontSize: 20}}>Requesting permission to use camera...</Text>
+            </SafeAreaView>
+        )
     }
     if (!hasPermission) {
-        return <Text>No access to camera</Text>;
+        return (
+            <SafeAreaView style={styles.cameraPermissiosContainer}>
+                <Text style={{fontSize: 20}}>Camera access has not been granted</Text>
+            </SafeAreaView>
+        )
     }
 
     /**Message to display when a scan is successful*/
@@ -103,7 +92,8 @@ const BarcodeScanner = ({
                 <Text style={styles.title} numberOfLines={2}>{productName}</Text>
                 <Text style={styles.subtitle}>Scans: {scanCountForOrderDetail}/{orderDetail?.quantity}</Text>
             </View>
-            {/*Expo's implementation*/}
+
+            {/*Based on Expo's Implementation*/}
             <View style={styles.scannerContainer}>
                 <BarCodeScanner
                     onBarCodeScanned={scannerDisabled ? undefined : handleScanSubmit}
@@ -116,10 +106,9 @@ const BarcodeScanner = ({
                         <View style={styles.layerRight}/>
                     </View>
                     <View style={styles.layerBottom}/>
-
-                    {/*{scanned && <Button onPress={() => setScanned(false)}> Tap to Scan Again </ Button>}*/}
                 </BarCodeScanner>
             </View>
+
             <View style={styles.buttonsContainer}>
                 <View style={styles.buttonContainer}>
                     <IconButton
@@ -164,7 +153,6 @@ const BarcodeScanner = ({
                                      : undefined}
             />
 
-            {/*TODO - Test for different errors. Change error message to be whatever is returned from the backend*/}
             {/*Error Alert*/}
             <AlertSuccessOrError
                 isVisible={errorAlertVisible}
@@ -194,10 +182,14 @@ export const successAlertMessageStyle = StyleSheet.create({
     }
 })
 
-//TODO: Remove commented out stylings
-//Expo Implementation Styles
+//Based on Expo Implementation Styles
 const opacity = 'rgba(0, 0, 0, .6)';
 const styles = StyleSheet.create({
+    cameraPermissiosContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     componentContainer: {
         flex: 1,
         marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
@@ -207,13 +199,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 2,
         justifyContent: 'center',
-        //backgroundColor: 'violet',
         backgroundColor: opacity
     },
     title: {
         fontSize: 16,
         color: 'white',
-        //paddingTop: 8,
         paddingRight: 8,
         paddingLeft: 8
     },
@@ -225,48 +215,39 @@ const styles = StyleSheet.create({
     scannerContainer: {
         flex: 9,
         flexDirection: 'column',
-        //borderWidth: 2,
-        //borderColor: 'white',
     },
     layerTop: {
         flex: 2,
         backgroundColor: opacity,
-        //backgroundColor: 'lightgreen',
     },
     layerCenter: {
         //having flex: 2 produced a visual artifact, setting flex: 2.1 cleans this up
         flex: 2.1,
         flexDirection: 'row',
-        //backgroundColor: 'blue',
     },
     layerLeft: {
         flex: 1,
         backgroundColor: opacity,
-        //backgroundColor: 'silver',
     },
     focused: {
         flex: 10,
         borderColor: 'white',
         borderWidth: 4,
-        //backgroundColor: 'teal',
     },
     layerRight: {
         flex: 1,
         backgroundColor: opacity,
-        //backgroundColor: 'brown'
     },
     layerBottom: {
         //having flex: 2 produced a visual artifact, setting flex: 2.1 cleans this up
         flex: 2.1,
         backgroundColor: opacity,
-        //backgroundColor: 'green',
 
     },
     buttonsContainer: {
         flex: 2,
         flexDirection: 'row',
         backgroundColor: opacity,
-        //backgroundColor: 'tomato',
     },
     buttonContainer: {
         flex: 1, justifyContent: 'center', alignItems: 'center'
