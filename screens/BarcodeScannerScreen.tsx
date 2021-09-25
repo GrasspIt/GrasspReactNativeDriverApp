@@ -11,7 +11,6 @@ import {
 } from "../actions/scanActions";
 import { getOrderScanCountForOrderDetailFromProps } from "../selectors/scanSelectors";
 import { isMetrcLicenseHeldByDSPRFromProps, isNonMetrcScanningDSPRFromProps } from "../selectors/dsprSelectors";
-import { shallow } from "@testing-library/react-native";
 
 
 const BarcodeScannerScreen = ({
@@ -61,16 +60,11 @@ const BarcodeScannerScreen = ({
         //Scanner is disabled until whatever alert is shown from the dispatch response is closed
         setScannerDisabled(true);
 
-        let scannedProductId;
+        //TODO: Delete check for dsprId === 11 after dsprObject is updated
+        //barcode is productId-dsprId -> split on -
+        const splitTag = isNonMetrcScanningDSPR || dsprId === 11 ? barcode.split('-') : [];
 
-        if (isNonMetrcScanningDSPR) {
-            //barcode is productId-dsprId -> split on -
-            const splitTag = barcode.split('-');
-            console.log('!!!!!splitTag in scanSubmit:', splitTag);
-            scannedProductId = parseInt(splitTag[0]);
-        }
-
-        const productIdForBarcodeSubmit = isMetrcDSPR ? parseInt(productId) : scannedProductId;
+        const productIdForBarcodeSubmit = isMetrcDSPR ? parseInt(productId) : parseInt(splitTag[0]);
 
         //Prepare props for either metrcDSPR or nonMetrcScanningDSPR
         const props: SubmitBarcodeScanProps = isMetrcDSPR
