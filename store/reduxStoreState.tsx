@@ -557,15 +557,16 @@ export interface OrderScan {
     id: number;
     isOrderComplete: number;
     order: number;
+    product?: number;
     orderDetail: number;
     isActive: boolean;
     createdTime: string;
     updatedTime: string;
-    metrcTag: string;
-    metrcItemName: string;
-    productId: number;
-    dsprId: number;
-    quantityOfEighths: number;
-    convertToShake: boolean;
-    product: number;
+    metrcTag?: string;
+    metrcItemName?: string;
+    productId?: number;
+    dsprId?: number;
+    quantityOfEighths?: number;
+    convertToShake?: boolean;
+    metrcTagProductAssociation?: null;
 }
