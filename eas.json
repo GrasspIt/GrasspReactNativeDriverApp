@@ -7,7 +7,6 @@
     },
     "staging": {
       "releaseChannel": "staging",
-      "image": "latest",
       "distribution": "internal"
     }
   },
