@@ -103,7 +103,7 @@ const RoutingScreen = ({
   const createOrdersInRoute = () => {
     // create an object with the ids of the orders in route
     const orderIdsInRoute = {};
-    if (driver.queuedOrders && driver.currentRoute.legs) {
+    if (driver.queuedOrders && driver?.currentRoute?.legs) {
       driver.currentRoute.legs.forEach((leg: any) => {
         if (leg.order) orderIdsInRoute[leg.order.id] = leg.legOrder;
       });
@@ -123,7 +123,7 @@ const RoutingScreen = ({
       if (Object.keys(ordersInRoute).includes(driver.currentInProcessOrder.id.toString())) {
         setCurrentInProcessOrderInActiveRoute(true);
         setCurrentlyActiveRouteLegIndex(
-          driver.currentRoute.legs.findIndex(
+          driver.currentRoute?.legs.findIndex(
             (leg: any) => driver.currentInProcessOrder && leg.legOrder === ordersInRoute[driver.currentInProcessOrder.id]
           )
         );
@@ -159,7 +159,7 @@ const RoutingScreen = ({
 
   const createOrderPolyline = () => {
     const legPolyline = [];
-    const legDirectionPolylines = driver.currentRoute.legs[
+    const legDirectionPolylines = driver.currentRoute?.legs[
       currentlyActiveRouteLegIndex
     ].routeLegDirections.map((routeLegDirection: any) => routeLegDirection.overviewPolyline);
     const finishedArray = legPolyline.concat(...legDirectionPolylines);

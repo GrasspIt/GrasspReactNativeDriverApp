@@ -153,7 +153,7 @@ export const getOnCallDriversForDSPR = createSelector(
                 return {
                   ...driver,
                   user: users[driver.user],
-                  location: locations[driver.currentLocation],
+                  location: driver.currentLocation ? locations[driver.currentLocation] : null,
                 };
               })
           : []
@@ -196,7 +196,7 @@ export const getCurrentDriverInventoryPeriodForDriverFromProps = createSelector(
   (inventoryPeriods, driver, inventoryItems, products) => {
     const inventoryPeriod = driver
       ? inventoryPeriods
-        ? inventoryPeriods[driver.currentInventoryPeriod]
+        ? driver.currentInventoryPeriod && inventoryPeriods[driver.currentInventoryPeriod]
         : undefined
       : undefined;
     const items = inventoryPeriod

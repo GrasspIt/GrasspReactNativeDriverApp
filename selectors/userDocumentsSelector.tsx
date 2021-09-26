@@ -23,9 +23,10 @@ export const getUserIdDocumentFromPropsWithOrder = (state: State, props) => {
 };
 
 export const getUserMedicalRecommendationFromProps = (state: State, props) => {
-  return state.api.entities.users &&
-    state.api.entities.usersMedicalRecommendations &&
-    state.api.entities.users[props.userId]
+  return state.api.entities.users && props.userId &&
+    state.api.entities.users[props.userId] &&
+    state.api.entities.users[props.userId].medicalRecommendation &&
+    state.api.entities.usersMedicalRecommendations
     ? state.api.entities.usersMedicalRecommendations[
         state.api.entities.users[props.userId].medicalRecommendation
       ]

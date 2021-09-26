@@ -93,7 +93,7 @@ const DashboardScreen = ({
     });
     // listen for when a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
-      async (response) => {
+      async () => {
         await getDriverData();
         RootNavigation.navigate('Main', {
           screen: 'OrdersNav',
@@ -135,7 +135,7 @@ const DashboardScreen = ({
     if (dsprDriver) {
       //request foreground location permissions. If denied, show alert
       let { status:foregroundStatus } = await Location.requestForegroundPermissionsAsync();
-      console.log('FOREGROUND LOCATION STATUS:', foregroundStatus)
+
       if (foregroundStatus !== 'granted' && dsprDriver.onCall === true) {
         setShowLocationPermissionAlert(true);
         setLocationPermissionAlertTitle('Location updates are disabled.');
@@ -144,7 +144,7 @@ const DashboardScreen = ({
 
       //request background permissions. If denied, show alert
       let { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
-      console.log('BACKGROUND LOCATION STATUS:', backgroundStatus)
+
       if (foregroundStatus === 'granted' && backgroundStatus !== 'granted' && dsprDriver.onCall === true) {
         setShowLocationPermissionAlert(true);
         setLocationPermissionAlertTitle('Background location updates are disabled.');
@@ -214,7 +214,6 @@ TaskManager.defineTask('location-tracking', ({ data, error }) => {
   const movingDriverId = store.getState().api.dsprDriverId;
   const movingDsprDriver = store.getState().api.entities.dsprDrivers[movingDriverId];
   if (error) {
-    console.log('ERROR in TaskManager (DashboardScreen:', error);
     Alert.alert('Error: ', error.message);
     return;
   }

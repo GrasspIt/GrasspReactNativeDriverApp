@@ -14,7 +14,6 @@ export interface SubmitBarcodeScanProps {
 }
 
 const barcodeScanSubmitter = (props: SubmitBarcodeScanProps) => {
-    console.log('!!! Props in BarcodeScan Submitter:', props);
     return {
         [CALL_API]: {
             httpAction: 'POST',
