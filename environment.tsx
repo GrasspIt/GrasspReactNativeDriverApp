@@ -1,5 +1,4 @@
 import Constants from 'expo-constants';
-import * as Updates from 'expo-updates';
 
 const ENV = {
   dev: {
@@ -19,8 +18,7 @@ const ENV = {
   },
 };
 
-//export const getEnvVars = (env = Constants.manifest.releaseChannel) => {
-export const getEnvVars = (env = Updates.releaseChannel) => {
+export const getEnvVars = (env = Constants.manifest.releaseChannel) => {
   // __DEV__ is true when run locally, but false when published.
   if (env === 'staging') {
     return ENV.staging;
