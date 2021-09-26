@@ -4,6 +4,11 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal"
+    },
+    "staging": {
+      "releaseChannel": "staging",
+      "image": "latest",
+      "distribution": "internal"
     }
   },
   "submit": {
