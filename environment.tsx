@@ -9,7 +9,7 @@ const ENV = {
   },
   staging: {
     apiUrl: 'https://api.staging.grasspit.com/',
-    debugSentry: false,
+    debugSentry: true,
     enableNative: true,
   },
   prod: {
