@@ -46,7 +46,6 @@
       "favicon": "./assets/favicon.png"
     },
     "description": "A mobile app for Grassp Health dispensary drivers.",
-    "plugins": ["sentry-expo"],
     "hooks": {
       "postPublish": [
         {
