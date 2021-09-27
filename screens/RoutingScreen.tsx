@@ -47,7 +47,7 @@ type Props = {
     };
     serviceAreas?: DSPRDriverServiceArea[];
   };
-  dspr: DSPR;
+  dspr?: DSPR;
   createDSPRDriverRoute: any;
   isLoading: boolean;
   orderIdsInRoute;
@@ -96,7 +96,7 @@ const RoutingScreen = ({
     ) {
       setMaxOrdersPerRoute(driver.serviceAreas[0].numberOrdersPerRoute);
     } else {
-      setMaxOrdersPerRoute(dspr.numberOrdersPerRoute);
+      setMaxOrdersPerRoute(dspr?.numberOrdersPerRoute);
     }
   };
 
@@ -158,12 +158,15 @@ const RoutingScreen = ({
   }, [dspr, driver]);
 
   const createOrderPolyline = () => {
-    const legPolyline = [];
-    const legDirectionPolylines = driver.currentRoute?.legs[
-      currentlyActiveRouteLegIndex
-    ].routeLegDirections.map((routeLegDirection: any) => routeLegDirection.overviewPolyline);
-    const finishedArray = legPolyline.concat(...legDirectionPolylines);
-    setOrderPolyline(finishedArray);
+    if (driver.currentRoute && driver.currentRoute.legs) {
+      const legPolyline = [];
+      const legDirectionPolylines = driver.currentRoute.legs[
+        currentlyActiveRouteLegIndex
+      ].routeLegDirections.map((routeLegDirection: any) => routeLegDirection.overviewPolyline);
+      const finishedArray = legPolyline.concat(...legDirectionPolylines);
+      setOrderPolyline(finishedArray);
+      setOrderPolyline(finishedArray);
+    }
   };
 
   useEffect(() => {
