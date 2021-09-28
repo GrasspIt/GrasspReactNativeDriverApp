@@ -19,7 +19,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.GrasspDriver.app",
-      "buildNumber": "1.1.0",
+      "buildNumber": "1.1.1",
       "supportsTablet": true,
       "infoPlist": {
         "UIBackgroundModes": ["location", "fetch"],
