@@ -144,42 +144,42 @@ const RouteMapView: React.FC<RouteMapViewProps> = ({
               }
         }
       >
-        {/*{driver && driver.currentLocation && (*/}
-        {/*  <Marker*/}
-        {/*    pinColor='green'*/}
-        {/*    coordinate={{*/}
-        {/*      latitude: driver.currentLocation.latitude,*/}
-        {/*      longitude: driver.currentLocation.longitude,*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    <Callout>*/}
-        {/*      <Text>{name}</Text>*/}
-        {/*      <Text>*/}
-        {/*        Outstanding Orders:{' '}*/}
-        {/*        {driver && driver.currentInProcessOrder*/}
-        {/*          ? driver.queuedOrders.length + 1*/}
-        {/*          : driver.queuedOrders.length}*/}
-        {/*      </Text>*/}
-        {/*    </Callout>*/}
-        {/*  </Marker>*/}
-        {/*)}*/}
-        {/*{!onOverview ? (*/}
-        {/*  <Polyline*/}
-        {/*    coordinates={orderPolylineCoordinates}*/}
-        {/*    geodesic={true}*/}
-        {/*    strokeColor='#03adfc'*/}
-        {/*    strokeWidth={5}*/}
-        {/*    lineDashPattern={[0]}*/}
-        {/*  />*/}
-        {/*) : (*/}
-        {/*  <Polyline*/}
-        {/*    coordinates={overviewPolylineCoordinates}*/}
-        {/*    geodesic={true}*/}
-        {/*    strokeColor='#03adfc'*/}
-        {/*    strokeWidth={5}*/}
-        {/*    lineDashPattern={[0]}*/}
-        {/*  />*/}
-        {/*)}*/}
+        {driver && driver.currentLocation && (
+          <Marker
+            pinColor='green'
+            coordinate={{
+              latitude: driver.currentLocation.latitude,
+              longitude: driver.currentLocation.longitude,
+            }}
+          >
+            <Callout>
+              <Text>{name}</Text>
+              <Text>
+                Outstanding Orders:{' '}
+                {driver && driver.currentInProcessOrder
+                  ? driver.queuedOrders.length + 1
+                  : driver.queuedOrders.length}
+              </Text>
+            </Callout>
+          </Marker>
+        )}
+        {!onOverview ? (
+          <Polyline
+            coordinates={orderPolylineCoordinates}
+            geodesic={true}
+            strokeColor='#03adfc'
+            strokeWidth={5}
+            lineDashPattern={[0]}
+          />
+        ) : (
+          <Polyline
+            coordinates={overviewPolylineCoordinates}
+            geodesic={true}
+            strokeColor='#03adfc'
+            strokeWidth={5}
+            lineDashPattern={[0]}
+          />
+        )}
         {orderMarkers && orderMarkers.length > 0 && orderMarkers}
       </MapView>
     </SafeAreaView>
