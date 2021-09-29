@@ -30,6 +30,8 @@ type Props = {
   cancelOrder;
   completeOrder;
   progressDSPRDriverRoute;
+  isScanningDSPR: boolean;
+  isScanningComplete: boolean;
 };
 
 const RoutingMainDisplay = ({
@@ -54,6 +56,8 @@ const RoutingMainDisplay = ({
   cancelOrder,
   completeOrder,
   progressDSPRDriverRoute,
+  isScanningDSPR,
+  isScanningComplete,
 }: Props) => {
   const { colors } = useTheme();
 
@@ -113,6 +117,8 @@ const RoutingMainDisplay = ({
             completeOrder={completeOrder}
             progressDSPRDriverRoute={progressDSPRDriverRoute}
             isLoading={isLoading}
+            isScanningDSPR={isScanningDSPR}
+            isScanningComplete={isScanningComplete}
           />
         </View>
       ) : (

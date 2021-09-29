@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RoutingStackParamsList } from '../navigation/RoutingNavigator';
-import { connect } from 'react-redux';
+import { connect, shallowEqual, useSelector } from 'react-redux';
 import {
   DsprDriver,
   User,
@@ -12,9 +12,9 @@ import {
   DSPR,
   RouteLeg,
   RouteMetrics,
-  RouteLegDirection,
+  RouteLegDirection, State,
 } from '../store/reduxStoreState';
-import { getDSPRFromProps } from '../selectors/dsprSelectors';
+import { getDSPRFromProps, isScanningRequiredForDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
 import {
   createDSPRDriverRoute,
@@ -25,6 +25,7 @@ import { progressDSPRDriverRoute } from '../actions/driverActions';
 import { markOrderInProcess, cancelOrder, completeOrder } from '../actions/orderActions';
 import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 import RoutingMainDisplay from '../components/RoutingMainDisplay';
+import { isScanningCompleteForOrderFromProps } from "../selectors/scanSelectors";
 
 type RoutingScreenNavigationProp = StackNavigationProp<RoutingStackParamsList, 'Routing'>;
 type Props = {
@@ -86,6 +87,9 @@ const RoutingScreen = ({
   const [overviewPolyline, setOverviewPolyline] = useState<any>();
   const [maxOrdersPerRoute, setMaxOrdersPerRoute] = useState<any>();
   const [ordersInRoute, setOrdersInRoute] = useState<any>();
+
+  const isScanningDSPR = useSelector<State, boolean | undefined>(state => dspr && isScanningRequiredForDSPRFromProps(state, {dsprId: dspr.id}), shallowEqual);
+  const isScanningComplete = useSelector<State, boolean | undefined>(state => driver && driver.currentInProcessOrder && isScanningDSPR && isScanningCompleteForOrderFromProps(state, {orderId: driver.currentInProcessOrder.id}), shallowEqual);
 
   const setNumberOrdersPerRoute = () => {
     if (
@@ -208,6 +212,8 @@ const RoutingScreen = ({
       cancelOrder={cancelOrder}
       completeOrder={completeOrder}
       progressDSPRDriverRoute={progressDSPRDriverRoute}
+      isScanningDSPR={!!isScanningDSPR}
+      isScanningComplete={!!isScanningComplete}
     />
   );
 };
