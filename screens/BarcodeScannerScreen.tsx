@@ -38,7 +38,10 @@ const BarcodeScannerScreen = ({
     const [scannerDisabled, setScannerDisabled] = useState<boolean>(false);
 
 
-    const showSuccessAlert = () => setSuccessAlertVisible(true);
+    const showSuccessAlert = () => {
+        setScannerDisabled(true);
+        setSuccessAlertVisible(true);
+    }
     const closeSuccessAlert = () => {
         if (orderDetail && scanCountForOrderDetail >= orderDetail.quantity) {
             setSuccessAlertVisible(false);
@@ -49,7 +52,10 @@ const BarcodeScannerScreen = ({
         setScannerDisabled(false);
     }
 
-    const showErrorAlert = () => setErrorAlertVisible(true);
+    const showErrorAlert = () => {
+        setScannerDisabled(true)
+        setErrorAlertVisible(true);
+    }
     const closeErrorAlert = () => {
         setErrorAlertVisible(false);
         setScannerDisabled(false);
