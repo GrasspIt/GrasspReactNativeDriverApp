@@ -133,13 +133,13 @@ const DashboardScreen = ({
     let tracking = await Location.hasStartedLocationUpdatesAsync('location-tracking');
     console.log('tracking', tracking);
     if (dsprDriver) {
-      //request foreground location permissions. If denied, show alert
-      let { status:foregroundStatus } = await Location.requestForegroundPermissionsAsync();
+        //request foreground location permissions. If denied, show alert
+        let { status:foregroundStatus } = await Location.requestForegroundPermissionsAsync();
 
-      if (foregroundStatus !== 'granted' && dsprDriver.onCall === true) {
-        setShowLocationPermissionAlert(true);
-        setLocationPermissionAlertTitle('Location updates are disabled.');
-        setLocationPermissionAlertText('Please go to device Settings and give Grassp Driver App permission to track your location. \n\nAfterwards, quit and reopen the app.');
+        if (foregroundStatus !== 'granted' && dsprDriver.onCall === true) {
+          setShowLocationPermissionAlert(true);
+          setLocationPermissionAlertTitle('Location updates are disabled.');
+          setLocationPermissionAlertText('Please go to device Settings and give Grassp Driver App permission to track your location. \n\nAfterwards, quit and reopen the app.');
       }
 
       //request background permissions. If denied, show alert
@@ -159,6 +159,7 @@ const DashboardScreen = ({
   };
 
   let oncallState = dsprDriver && dsprDriver.onCall;
+
   useEffect(() => {
     toggleLocationUpdates();
   }, [oncallState]);
