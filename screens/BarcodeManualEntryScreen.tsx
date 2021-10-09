@@ -8,11 +8,10 @@ import {
     SubmitBarcodeScanProps
 } from "../actions/scanActions";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { Order, OrderDetail, State } from "../store/reduxStoreState";
-import { getOrderDetailFromProps, getOrderFromProps } from "../selectors/orderSelectors";
+import { OrderDetail, State } from "../store/reduxStoreState";
+import { getOrderDetailFromProps } from "../selectors/orderSelectors";
 import { getOrderScanCountForOrderDetailFromProps } from "../selectors/scanSelectors";
 import { isMetrcDSPRFromProps, isNonMetrcScanningDSPRFromProps } from "../selectors/dsprSelectors";
-import { split } from "lodash";
 
 
 const BarcodeManualEntryScreen = ({navigation, route}) => {

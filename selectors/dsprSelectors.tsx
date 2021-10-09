@@ -11,10 +11,10 @@ export const isMetrcDSPRFromProps = createSelector(
 
 /**Returns true if dspr requires scanning but does not have a metrc license. Otherwise returns false*/
 export const isNonMetrcScanningDSPRFromProps = createSelector(
-    [getDSPRFromProps], (dspr) => !!(dspr && dspr.isScanOrderDetail)
+    [getDSPRFromProps], (dspr) => !!(dspr && dspr.isScanOrderDetail && !dspr.metrcLicense)
 )
 
-/**Returns true either if dspr has a metrc license or does not have a metrc license but requires scanning. Otherwise returns false*/
+/**Returns true either if dspr requires scanning. Otherwise returns false*/
 export const isScanningRequiredForDSPRFromProps = createSelector(
-    [getDSPRFromProps], (dspr) => !!(dspr && (dspr.isScanOrderDetail || dspr.metrcLicense))
+    [getDSPRFromProps], (dspr) => !!(dspr && dspr.isScanOrderDetail)
 )
