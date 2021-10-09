@@ -108,7 +108,6 @@ const DashboardScreen = ({
   }, [notification, notificationListener, responseListener]);
 
   const startLocationUpdates = async () => {
-    console.log('start location updates');
     await Location.startLocationUpdatesAsync('location-tracking', {
       distanceInterval: 120, //meters between updates, about .25 miles
       //distanceInterval: 1, //meters between updates, about .25 miles
@@ -124,14 +123,13 @@ const DashboardScreen = ({
   };
 
   const stopLocationUpdates = async () => {
-    console.log('stop location updates');
     await Location.stopLocationUpdatesAsync('location-tracking');
   };
 
   const toggleLocationUpdates = async () => {
     //see if location is already being tracked
     let tracking = await Location.hasStartedLocationUpdatesAsync('location-tracking');
-    console.log('tracking', tracking);
+
     if (dsprDriver) {
         //request foreground location permissions. If denied, show alert
         let { status:foregroundStatus } = await Location.requestForegroundPermissionsAsync();
@@ -211,7 +209,6 @@ const registerForPushNotificationsAsync = async () => {
 
 // define the task that will be called with startLocationTrackingUpdates
 TaskManager.defineTask('location-tracking', ({ data, error }) => {
-  console.log('call location update');
   const movingDriverId = store.getState().api.dsprDriverId;
   const movingDsprDriver = store.getState().api.entities.dsprDrivers[movingDriverId];
   if (error) {
