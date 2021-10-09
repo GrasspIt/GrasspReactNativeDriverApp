@@ -696,7 +696,7 @@ export default (store) => (next) => (action) => {
         callApi: callAPI,
         state: store.getState(),
       });
-      if (error.status === 401 || error.error === 'invalid_token') {
+      if (error.status === 401 || error.error === 'invalid_token' || error.message.includes('Unexpected token < in JSON at position 0')) {
         store.dispatch(logout());
       } else {
         return next(
