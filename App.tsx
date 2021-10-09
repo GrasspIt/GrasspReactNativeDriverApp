@@ -34,7 +34,7 @@ const CombinedDefaultTheme = {
     surface: PaperDefaultTheme.colors.surface,
     error: PaperDefaultTheme.colors.error,
     text: PaperDefaultTheme.colors.text,
-    onBackground: PaperDefaultTheme.colors.onBackground,
+    onBackground: PaperDefaultTheme.colors.background,
     onSurface: PaperDefaultTheme.colors.onSurface,
     notification: PaperDefaultTheme.colors.notification,
     disabled: PaperDefaultTheme.colors.disabled,
@@ -46,6 +46,9 @@ const CombinedDefaultTheme = {
     regular: PaperDefaultTheme.fonts.regular,
   },
 };
+
+//workaround - unable to add 'info' property to ThemeColors in types.tsx and have it be accepted as a propert on the interface
+export const infoColor = '#2196f3';
 
 //create a ref to the main navigator to access from anywhere in the app
 const navigationRef: React.RefObject<any> = React.createRef();

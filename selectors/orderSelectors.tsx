@@ -10,6 +10,11 @@ export const getOrders = (state: State) =>
 export const getOrderFromProps = (state: State, props) =>
   state.api && state.api.entities ? state.api.entities.orders[props.orderId] : undefined;
 
+export const getOrderDetailFromProps = (state: State, {orderId, orderDetailId}) => {
+    const order = getOrderFromProps(state, {orderId});
+    return order?.orderDetails.find(orderDetail => orderDetail.id === orderDetailId);
+}
+
 export const getOrdersForUser = (state: State, props) => {
   const orders = state.api.entities.orders;
   const addresses = getAddresses(state);
@@ -81,3 +86,28 @@ export const getOrdersWithAddressesAndUsers = createSelector(
     return ordersWithAddressesAndUsers;
   }
 );
+
+export const getProductsInOrderFromProps = (state: State, props: { orderId: number }): ProductInOrder[] => {
+    //const orders = state.api && state.api.entities && state.api.entities.orders ? state.api.entities.orders[orderId] : undefined;
+    const order = state.api?.entities?.orders[props.orderId];
+    const dsprId = order?.dspr;
+
+    return order.orderDetails?.map(orderDetail => {
+        const { id: productId, name } = orderDetail.product;
+        return {
+            orderDetailId: orderDetail.id,
+            productId,
+            name,
+            quantity: orderDetail.quantity,
+            dsprId
+        }
+    })
+}
+
+export interface ProductInOrder {
+    orderDetailId: number,
+    productId: number;
+    name: string;
+    quantity: number;
+    dsprId: number;
+}

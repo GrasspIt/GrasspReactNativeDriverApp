@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import * as Updates from 'expo-updates';
 
 const ENV = {
   dev: {
@@ -8,8 +9,8 @@ const ENV = {
   },
   staging: {
     apiUrl: 'https://api.staging.grasspit.com/',
-    debugSentry: false,
-    enableNative: true,
+    debugSentry: true,
+    enableNative: false,
   },
   prod: {
     apiUrl: 'https://api.grassp.it/',
@@ -18,7 +19,8 @@ const ENV = {
   },
 };
 
-export const getEnvVars = (env = Constants.manifest.releaseChannel) => {
+//export const getEnvVars = (env = Constants.manifest?.releaseChannel) => {
+export const getEnvVars = (env = Updates.releaseChannel) => {
   // __DEV__ is true when run locally, but false when published.
   if (env === 'staging') {
     return ENV.staging;

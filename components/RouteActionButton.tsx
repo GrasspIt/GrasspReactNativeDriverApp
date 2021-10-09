@@ -2,6 +2,18 @@ import React from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import { useTheme, FAB } from 'react-native-paper';
 
+interface RouteActionButtonProps {
+  isLoading: boolean;
+  driver;
+  currentInProcessOrderInActiveRoute;
+  ordersForRoute;
+  orderIdsInRoute;
+  progressDSPRDriverRoute;
+  completeOrder;
+  isScanningDSPR: boolean;
+  isScanningComplete: boolean;
+}
+
 const RouteActionButton = ({
   isLoading,
   driver,
@@ -10,7 +22,9 @@ const RouteActionButton = ({
   orderIdsInRoute,
   progressDSPRDriverRoute,
   completeOrder,
-}) => {
+  isScanningDSPR,
+  isScanningComplete,
+}: RouteActionButtonProps) => {
   const { colors } = useTheme();
 
   const handleProgressRoute = (routeId) => {
@@ -73,9 +87,31 @@ const RouteActionButton = ({
     }
   };
 
+  /**Disable FAB if component is loading
+   * -> if there is a current in process order, and the dspr requires order to be scanned,
+   *      disable the FAB if scanning is incomplete
+   *
+   * -> if this FAB was not disabled, the driver could tap 'Next Leg' (and complete order) or 'Complete Order'. The backend
+   *      would not completed this order, however, as all the order details have not been scanned. Disabling the button allows the
+   *      driver to avoid this error message
+   * */
+  const determineIfFABIsDisabled = (): boolean => {
+    if (isLoading) {
+      return true;
+    }
+
+    if (isScanningDSPR) {
+      return !isScanningComplete;
+    }
+
+    return false;
+  }
+
+  const isFABDisabled: boolean = determineIfFABIsDisabled();
+
   return (
     <FAB
-      disabled={isLoading ? true : false}
+      disabled={isFABDisabled}
       style={styles.fab}
       color={colors.surface}
       label={!currentInProcessOrderInActiveRoute ? 'Begin Next Leg' : 'Complete Order'}

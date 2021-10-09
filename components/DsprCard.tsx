@@ -3,13 +3,17 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { getEnvVars } from '../environment';
+import { DSPR } from "../store/reduxStoreState";
 const { apiUrl } = getEnvVars();
 
 type CardProps = {
-  dspr: any;
+  dspr: DSPR;
   handleSelect: (dsprId: number) => void;
 };
 
+/**Render a card that shows the dspr name a user may driver for
+ * Tapping a card selects this dspr as the one the user will currently drive for
+ * */
 const DsprCard = ({ dspr, handleSelect }: CardProps) => {
   const { colors } = useTheme();
   const image = dspr.imageLocation

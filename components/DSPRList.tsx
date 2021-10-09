@@ -3,9 +3,14 @@ import { View, FlatList, Text, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import DsprCard from './DsprCard';
+import { DSPR } from "../store/reduxStoreState";
 
-type Props = { handleSelectDspr; dsprDataList };
+type Props = {
+    handleSelectDspr: (id: number) => any;
+    dsprDataList: DSPR[];
+};
 
+/**Display list of DSPRs a user drives for*/
 const DSPRList = ({ handleSelectDspr, dsprDataList }: Props) => {
   return (
     <View style={styles.screen}>

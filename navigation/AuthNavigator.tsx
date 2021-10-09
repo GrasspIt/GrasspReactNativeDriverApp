@@ -11,7 +11,7 @@ import { Alert } from 'react-native';
 
 export type RootStackParamsList = {
   Login: undefined;
-  Main: any;
+  Main: undefined;
 };
 
 const RootStack = createStackNavigator<RootStackParamsList>();

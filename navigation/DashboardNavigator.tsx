@@ -1,18 +1,24 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { DrawerStackParamsList } from '../navigation/DrawerNavigator';
+import { CompositeNavigationProp } from '@react-navigation/native';
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
+import { DrawerStackParamsList } from './DrawerNavigator';
 import DashboardScreen from '../screens/DashboardScreen';
 import { IconButton } from 'react-native-paper';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { OrderListStackParamsList } from "./OrderListNavigator";
 
-type DashboardNavigationProp = DrawerNavigationProp<DrawerStackParamsList, 'Dashboard'>;
+type DashboardNavigationProp = CompositeNavigationProp<
+    DrawerNavigationProp<DrawerStackParamsList, 'DashboardNav'>,
+    StackNavigationProp<OrderListStackParamsList>
+    >;
+
 type Props = {
   navigation: DashboardNavigationProp;
   route;
 };
 
 export type DashboardStackParamsList = {
-  Dashboard: any;
+  Dashboard: undefined;
 };
 
 const DashboardStack = createStackNavigator<DashboardStackParamsList>();

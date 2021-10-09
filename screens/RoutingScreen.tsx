@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RoutingStackParamsList } from '../navigation/RoutingNavigator';
-import { connect } from 'react-redux';
+import { connect, shallowEqual, useSelector } from 'react-redux';
 import {
   DsprDriver,
   User,
@@ -12,9 +12,9 @@ import {
   DSPR,
   RouteLeg,
   RouteMetrics,
-  RouteLegDirection,
+  RouteLegDirection, State,
 } from '../store/reduxStoreState';
-import { getDSPRFromProps } from '../selectors/dsprSelectors';
+import { getDSPRFromProps, isScanningRequiredForDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
 import {
   createDSPRDriverRoute,
@@ -25,6 +25,7 @@ import { progressDSPRDriverRoute } from '../actions/driverActions';
 import { markOrderInProcess, cancelOrder, completeOrder } from '../actions/orderActions';
 import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 import RoutingMainDisplay from '../components/RoutingMainDisplay';
+import { isScanningCompleteForOrderFromProps } from "../selectors/scanSelectors";
 
 type RoutingScreenNavigationProp = StackNavigationProp<RoutingStackParamsList, 'Routing'>;
 type Props = {
@@ -47,7 +48,7 @@ type Props = {
     };
     serviceAreas?: DSPRDriverServiceArea[];
   };
-  dspr: DSPR;
+  dspr?: DSPR;
   createDSPRDriverRoute: any;
   isLoading: boolean;
   orderIdsInRoute;
@@ -87,6 +88,9 @@ const RoutingScreen = ({
   const [maxOrdersPerRoute, setMaxOrdersPerRoute] = useState<any>();
   const [ordersInRoute, setOrdersInRoute] = useState<any>();
 
+  const isScanningDSPR = useSelector<State, boolean | undefined>(state => dspr && isScanningRequiredForDSPRFromProps(state, {dsprId: dspr.id}), shallowEqual);
+  const isScanningComplete = useSelector<State, boolean | undefined>(state => driver && driver.currentInProcessOrder && isScanningDSPR && isScanningCompleteForOrderFromProps(state, {orderId: driver.currentInProcessOrder.id}), shallowEqual);
+
   const setNumberOrdersPerRoute = () => {
     if (
       driver &&
@@ -96,14 +100,14 @@ const RoutingScreen = ({
     ) {
       setMaxOrdersPerRoute(driver.serviceAreas[0].numberOrdersPerRoute);
     } else {
-      setMaxOrdersPerRoute(dspr.numberOrdersPerRoute);
+      setMaxOrdersPerRoute(dspr?.numberOrdersPerRoute);
     }
   };
 
   const createOrdersInRoute = () => {
     // create an object with the ids of the orders in route
     const orderIdsInRoute = {};
-    if (driver.queuedOrders && driver.currentRoute.legs) {
+    if (driver.queuedOrders && driver?.currentRoute?.legs) {
       driver.currentRoute.legs.forEach((leg: any) => {
         if (leg.order) orderIdsInRoute[leg.order.id] = leg.legOrder;
       });
@@ -123,8 +127,8 @@ const RoutingScreen = ({
       if (Object.keys(ordersInRoute).includes(driver.currentInProcessOrder.id.toString())) {
         setCurrentInProcessOrderInActiveRoute(true);
         setCurrentlyActiveRouteLegIndex(
-          driver.currentRoute.legs.findIndex(
-            (leg: any) => leg.legOrder === ordersInRoute[driver.currentInProcessOrder.id]
+          driver.currentRoute?.legs.findIndex(
+            (leg: any) => driver.currentInProcessOrder && leg.legOrder === ordersInRoute[driver.currentInProcessOrder.id]
           )
         );
       } else {
@@ -158,12 +162,15 @@ const RoutingScreen = ({
   }, [dspr, driver]);
 
   const createOrderPolyline = () => {
-    const legPolyline = [];
-    const legDirectionPolylines = driver.currentRoute.legs[
-      currentlyActiveRouteLegIndex
-    ].routeLegDirections.map((routeLegDirection: any) => routeLegDirection.overviewPolyline);
-    const finishedArray = legPolyline.concat(...legDirectionPolylines);
-    setOrderPolyline(finishedArray);
+    if (driver.currentRoute && driver.currentRoute.legs) {
+      const legPolyline = [];
+      const legDirectionPolylines = driver.currentRoute.legs[
+        currentlyActiveRouteLegIndex
+      ].routeLegDirections.map((routeLegDirection: any) => routeLegDirection.overviewPolyline);
+      const finishedArray = legPolyline.concat(...legDirectionPolylines);
+      setOrderPolyline(finishedArray);
+      setOrderPolyline(finishedArray);
+    }
   };
 
   useEffect(() => {
@@ -205,6 +212,8 @@ const RoutingScreen = ({
       cancelOrder={cancelOrder}
       completeOrder={completeOrder}
       progressDSPRDriverRoute={progressDSPRDriverRoute}
+      isScanningDSPR={!!isScanningDSPR}
+      isScanningComplete={!!isScanningComplete}
     />
   );
 };

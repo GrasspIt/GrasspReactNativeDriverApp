@@ -3,7 +3,7 @@
     "name": "Grassp Driver App",
     "owner": "grassphealth",
     "slug": "GrasspDriverApp",
-    "version": "1.0.0",
+    "version": "1.1.2",
     "platforms": ["ios", "android"],
     "orientation": "portrait",
     "icon": "./assets/grasspLogo1024.png",
@@ -19,11 +19,12 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.GrasspDriver.app",
-      "buildNumber": "1.0.0",
+      "buildNumber": "1.1.2",
       "supportsTablet": true,
       "infoPlist": {
         "UIBackgroundModes": ["location", "fetch"],
-        "NSLocationWhenInUseUsageDescription": "This app automatically updates the driver's current location."
+        "NSLocationWhenInUseUsageDescription": "This app automatically updates the driver's current location.",
+        "NSCameraUsageDescription": "The barcode scanner requires use of the phone's camera."
       }
     },
     "android": {
@@ -32,14 +33,16 @@
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
-        "ACCESS_BACKGROUND_LOCATION"
+        "ACCESS_BACKGROUND_LOCATION",
+        "VIBRATE",
+        "CAMERA"
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyD9DqhXUVHI6Z9RlFK8EBW1kRFmzqlyW5c"
+          "apiKey": "AIzaSyAhweisTbmdd8Bs_tv3wWYiO-l67MoXWWc"
         }
       },
-      "versionCode": 1
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -12,7 +12,7 @@ type Props = {
   navigation;
   driver;
   createDSPRDriverRoute: any;
-  isLoading;
+  isLoading: boolean;
   orderIdsInRoute;
   activeRoute;
   routeView;
@@ -30,6 +30,8 @@ type Props = {
   cancelOrder;
   completeOrder;
   progressDSPRDriverRoute;
+  isScanningDSPR: boolean;
+  isScanningComplete: boolean;
 };
 
 const RoutingMainDisplay = ({
@@ -54,6 +56,8 @@ const RoutingMainDisplay = ({
   cancelOrder,
   completeOrder,
   progressDSPRDriverRoute,
+  isScanningDSPR,
+  isScanningComplete,
 }: Props) => {
   const { colors } = useTheme();
 
@@ -66,7 +70,7 @@ const RoutingMainDisplay = ({
               mode='text'
               labelStyle={{ color: colors.primary, fontSize: 14 }}
               onPress={() => setOrderSelectionModalOpen(true)}
-              disabled={isLoading ? true : false}
+              disabled={isLoading}
             >
               New Route
             </Button>
@@ -113,6 +117,8 @@ const RoutingMainDisplay = ({
             completeOrder={completeOrder}
             progressDSPRDriverRoute={progressDSPRDriverRoute}
             isLoading={isLoading}
+            isScanningDSPR={isScanningDSPR}
+            isScanningComplete={isScanningComplete}
           />
         </View>
       ) : (

@@ -37,7 +37,6 @@ export const setAccessToken = (type, accessToken, accessTokenType) => {
     SecureStore.setItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_KEY, accessToken);
     SecureStore.setItemAsync(LOCAL_STORAGE_ACCESS_TOKEN_TYPE, accessTokenType);
   } catch (err) {
-    console.log('Failed to set access token:', err);
     logException(err, { type, accessToken, accessTokenType });
   }
   return {

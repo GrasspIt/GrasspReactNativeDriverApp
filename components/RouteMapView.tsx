@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, Dimensions } from 'react-native';
 import MapView, { Callout, Marker, Polyline } from 'react-native-maps';
 import { OrderWithAddressAndUser, RouteLeg } from '../store/reduxStoreState';
 
@@ -124,9 +124,10 @@ const RouteMapView: React.FC<RouteMapViewProps> = ({
     });
 
   return (
-    <>
+    <SafeAreaView style={styles.container}>
       <MapView
-        style={{ flex: 1 }}
+        //style={{ flex: 1 }}
+        style={styles.map}
         initialRegion={
           routeCenter && onOverview
             ? {
@@ -168,6 +169,7 @@ const RouteMapView: React.FC<RouteMapViewProps> = ({
             geodesic={true}
             strokeColor='#03adfc'
             strokeWidth={5}
+            lineDashPattern={[0]}
           />
         ) : (
           <Polyline
@@ -175,12 +177,26 @@ const RouteMapView: React.FC<RouteMapViewProps> = ({
             geodesic={true}
             strokeColor='#03adfc'
             strokeWidth={5}
+            lineDashPattern={[0]}
           />
         )}
         {orderMarkers && orderMarkers.length > 0 && orderMarkers}
       </MapView>
-    </>
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    map: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+    },
+});
 
 export default RouteMapView;

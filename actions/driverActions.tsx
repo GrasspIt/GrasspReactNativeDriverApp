@@ -15,7 +15,7 @@ export const setDriverId = (driverId) => {
 export const setDsprDriverId = (dsprDriverId) => (dispatch) => {
   dispatch(setDriverId(dsprDriverId));
   RootNavigation.navigate('Main', {
-    screen: 'Dashboard',
+    screen: 'DashboardNav',
   });
 };
 

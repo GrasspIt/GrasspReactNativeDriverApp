@@ -361,6 +361,25 @@ const routeMetricSchema = new schema.Entity(
   }
 );
 
+//Process strategy used to avoid a nested objects within the orderScans object
+// -> orderDetailId is normalized
+// -> if metrcTagProductAssociation: all properties in metrcTagProductAssociation is merged with the top level of the object.
+const orderScansSchema = new schema.Entity('orderScans', {}, {
+  idAttribute: orderScan => orderScan.id,
+  processStrategy: (entity) => {
+    if (entity.metrcTagProductAssociation) {
+      const modifiedEntity = {...entity, ...entity.metrcTagProductAssociation};
+      modifiedEntity.orderDetail = modifiedEntity.orderDetail.id;
+      delete modifiedEntity.metrcTagProductAssociation;
+      return modifiedEntity;
+    } else {
+      const modifiedEntity = { ...entity};
+      modifiedEntity.orderDetail = modifiedEntity.orderDetail.id;
+      return modifiedEntity;
+    }
+  }
+})
+
 dsprDriverRouteSchema.define({
   dsprDriver: dsprDriverSchema,
   startLocation: routeLocationSchema,
@@ -427,6 +446,7 @@ orderSchema.define({
   userMedicalRecommendation: userMedicalRecommendationSchema,
   userIdentificationDocument: userIdDocumentSchema,
   dspr: dsprSchema,
+  scannedProductOrderDetailAssociationsScans: [orderScansSchema],
 });
 
 couponSchema.define({
@@ -537,6 +557,11 @@ userSchema.define({
   userNotes: [userNoteSchema],
 });
 
+orderScansSchema.define({
+  order: orderSchema,
+  product: dspProductSchema,
+});
+
 // Schemas for Grassp API responses.
 export const Schemas = {
   PUSH_TOKEN: pushTokenSchema,
@@ -601,6 +626,8 @@ export const Schemas = {
   DSPR_DRIVER_ROUTE_LEG_ARRAY: [dsprDriverRouteLegSchema],
   DSPR_DRIVER_ROUTE_LEG_DIRECTION: dsprDriverRouteLegDirectionSchema,
   DSPR_DRIVER_ROUTE_LEG_DIRECTION_ARRAY: [dsprDriverRouteLegDirectionSchema],
+  ORDER_SCAN: orderScansSchema,
+  ORDER_SCAN_ARRAY: [orderScansSchema],
   EMPTY: [], // <-- newly added to satisfy TypeScript. Might cause errors, need to investigate
 };
 
@@ -669,7 +696,7 @@ export default (store) => (next) => (action) => {
         callApi: callAPI,
         state: store.getState(),
       });
-      if (error.status === 401 || error.error === 'invalid_token') {
+      if (error.status === 401 || error.error === 'invalid_token' || error.message.includes('Unexpected token < in JSON at position 0')) {
         store.dispatch(logout());
       } else {
         return next(
