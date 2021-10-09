@@ -2,12 +2,10 @@ import { createSelector } from 'reselect';
 
 import { State } from '../store/reduxStoreState';
 
-export const getDSPRs = (state: State) => state.api.entities.DSPRs;
-
 export const getDSPRFromProps = (state: State, {dsprId}) => state.api.entities.DSPRs[dsprId];
 
 /**Returns true if dspr has a metrc license. Otherwise returns false*/
-export const isMetrcLicenseHeldByDSPRFromProps = createSelector(
+export const isMetrcDSPRFromProps = createSelector(
     [getDSPRFromProps], (dspr) => !!(dspr && dspr.metrcLicense)
 )
 
@@ -18,5 +16,5 @@ export const isNonMetrcScanningDSPRFromProps = createSelector(
 
 /**Returns true either if dspr has a metrc license or does not have a metrc license but requires scanning. Otherwise returns false*/
 export const isScanningRequiredForDSPRFromProps = createSelector(
-    [getDSPRFromProps], (dspr) => !!(dspr && (dspr.metrcLicense || dspr.isScanOrderDetail))
+    [getDSPRFromProps], (dspr) => !!(dspr && (dspr.isScanOrderDetail || dspr.metrcLicense))
 )

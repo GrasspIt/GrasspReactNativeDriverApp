@@ -10,7 +10,7 @@ import {
     ORDER_SCAN_SUBMIT_FAILURE, SubmitBarcodeScanProps,
 } from "../actions/scanActions";
 import { getOrderScanCountForOrderDetailFromProps } from "../selectors/scanSelectors";
-import { isMetrcLicenseHeldByDSPRFromProps, isNonMetrcScanningDSPRFromProps } from "../selectors/dsprSelectors";
+import { isMetrcDSPRFromProps, isNonMetrcScanningDSPRFromProps } from "../selectors/dsprSelectors";
 
 
 const BarcodeScannerScreen = ({
@@ -29,7 +29,7 @@ const BarcodeScannerScreen = ({
         orderId,
         orderDetailId
     }), shallowEqual)
-    const isMetrcDSPR = useSelector<State, boolean>(state => dsprId && isMetrcLicenseHeldByDSPRFromProps(state, {dsprId}), shallowEqual);
+    const isMetrcDSPR = useSelector<State, boolean>(state => dsprId && isMetrcDSPRFromProps(state, {dsprId}), shallowEqual);
     const isNonMetrcScanningDSPR = useSelector<State, boolean>(state => dsprId && isNonMetrcScanningDSPRFromProps(state, {dsprId}), shallowEqual);
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
@@ -66,9 +66,8 @@ const BarcodeScannerScreen = ({
         //Scanner is disabled until whatever alert is shown from the dispatch response is closed
         setScannerDisabled(true);
 
-        //TODO: Delete check for dsprId === 11 after dsprObject is updated
         //barcode is productId-dsprId -> split on -
-        const splitTag = isNonMetrcScanningDSPR || dsprId === 11 ? barcode.split('-') : [];
+        const splitTag = isNonMetrcScanningDSPR ? barcode.split('-') : [];
 
         const productIdForBarcodeSubmit = isMetrcDSPR ? parseInt(productId) : parseInt(splitTag[0]);
 
