@@ -8,6 +8,10 @@ import OrderDetailsScreen from '../screens/OrderDetailsScreen';
 import ManageNotesScreen from '../screens/ManageNotesScreen';
 import RoutingScreen from '../screens/RoutingScreen';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
+import OrderListNavigator from "./OrderListNavigator";
+import OrderToScanScreen from "../screens/OrderToScanScreen";
+import BarcodeScannerScreen from "../screens/BarcodeScannerScreen";
+import BarcodeManualEntryScreen from "../screens/BarcodeManualEntryScreen";
 
 type RoutingNavigationProp = CompositeNavigationProp<
     DrawerNavigationProp<DrawerStackParamsList, 'RoutingNav'>,
@@ -23,6 +27,9 @@ export type RoutingStackParamsList = {
   Details: { orderId: number };
   Notes: undefined;
   Routing: undefined;
+  OrderToScan: { orderId: number };
+  BarcodeScanner: {  productName: string, productId: number, orderDetailId: number, dsprId: number };
+  BarcodeManualEntry: {  productName: string, productId: number, orderDetailId: number, dsprId: number };
 };
 
 const RoutingStack = createStackNavigator<RoutingStackParamsList>();
@@ -59,6 +66,23 @@ const RoutingNavigator = ({ route, navigation }: Props) => {
           headerShown: true,
         }}
       />
+        <RoutingStack.Screen
+            name={'OrderToScan'}
+            component={OrderToScanScreen}
+            options={{title: 'Package Order'}}
+            initialParams={{ orderId: 42 }}
+        />
+        <RoutingStack.Screen
+            name={'BarcodeScanner'}
+            component={BarcodeScannerScreen}
+            //options={({ route }) => ({title: route.params.productName})}
+            options={{headerShown: false}}
+        />
+        <RoutingStack.Screen
+            name={'BarcodeManualEntry'}
+            component={BarcodeManualEntryScreen}
+            options={{ presentation: 'modal', headerShown: false}}
+        />
     </RoutingStack.Navigator>
   );
 };
