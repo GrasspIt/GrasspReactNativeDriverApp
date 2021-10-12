@@ -15,7 +15,7 @@ const ENV = {
   prod: {
     apiUrl: 'https://api.grassp.it/',
     debugSentry: false,
-    enableNative: true,
+    enableNative: false,
   },
 };
 
