@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import { connect, shallowEqual, useSelector } from 'react-redux';
 import { getOrderDetailsWithId } from '../actions/orderActions';
 import { completeOrder, cancelOrder, markOrderInProcess } from '../actions/orderActions';
@@ -102,8 +102,8 @@ const OrderDetailsScreen = ({
         navigation.navigate('Notes', {userId: user.id, dsprDriverId: order.dsprDriver, userNotes});
     };
 
-    const handleCopyToClipboard = async () => {
-        await Clipboard.setString(medicalRecommendation.idNumber);
+    const handleCopyToClipboard = () => {
+        Clipboard.setString(medicalRecommendation.idNumber);
         Alert.alert('Copied to clipboard.');
     };
 
