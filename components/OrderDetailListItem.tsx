@@ -31,16 +31,16 @@ const OrderDetailListItem: React.FC<OrderDetailListItemProps> = (props) => {
           <View>
             <Divider />
             <List.Item
-              title={<View><Text>{orderDetail.quantity} {unit} {product.name}</Text></View>}
+              title={<Text>{orderDetail.quantity} {unit} {product.name}</Text>}
               description={ () => (
                 orderDetail.appliedCoupon
-                  ? <Text>{product.flowerType
+                  ? <Text  style={{marginTop: 5}}>{product.flowerType
                     .replace('_', ' ')
                     .toUpperCase()} - {orderDetail?.appliedCoupon?.code?.toUpperCase() || undefined}</Text>
-                  : <Text>{product.flowerType.replace('_', ' ').toUpperCase()}</Text>)
+                  : <Text style={{marginTop: 5}}>{product.flowerType.replace('_', ' ').toUpperCase()}</Text>)
               }
-              descriptionStyle={{ color: productColor, fontWeight: 'bold' }}
-              titleNumberOfLines={2}
+              descriptionStyle={{ color: productColor, fontWeight: 'bold', }}
+              titleNumberOfLines={4}
               descriptionNumberOfLines={2}
               right={() => (
                 <View style={{ alignSelf: 'flex-end' }}>
