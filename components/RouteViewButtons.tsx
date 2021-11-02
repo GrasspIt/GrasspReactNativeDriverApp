@@ -20,7 +20,7 @@ const RouteViewButtons = ({ routeView, setRouteView }) => {
   };
 
   return (
-    <View style={{ display: 'flex', flexDirection: 'row' }}>
+    <View style={{ display: 'flex', flexDirection: 'row' , zIndex: 1}}>
       <Button
         icon='map'
         mode='contained'

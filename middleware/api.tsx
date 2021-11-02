@@ -696,7 +696,7 @@ export default (store) => (next) => (action) => {
         callApi: callAPI,
         state: store.getState(),
       });
-      if (error.status === 401 || error.error === 'invalid_token' || error.message.includes('Unexpected token < in JSON at position 0')) {
+      if (error.status === 401 || error.error === 'invalid_token' || errorMessage.includes('Unexpected token < in JSON at position 0') || errorMessage.includes("JSON Parse error: Unrecognized token '<'")) {
         store.dispatch(logout());
       } else {
         return next(
