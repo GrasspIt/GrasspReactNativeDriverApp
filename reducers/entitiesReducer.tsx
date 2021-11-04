@@ -222,9 +222,11 @@ export default (state = initialState, action) => {
                 const orderScanIdsToDelete = modifiedState.orders[orderId].scannedProductOrderDetailAssociationsScans;
 
                 //delete orderScan objects in orderScans
-                orderScanIdsToDelete.forEach(scanId => {
-                    delete modifiedState.orderScans[scanId];
-                })
+                if (orderScanIdsToDelete) {
+                    orderScanIdsToDelete.forEach(scanId => {
+                        delete modifiedState.orderScans[scanId];
+                    })
+                }
 
                 //replace scannedProductOrderDetailAssociationsScans for order with empty array
                 modifiedState.orders[orderId].scannedProductOrderDetailAssociationsScans = [];
