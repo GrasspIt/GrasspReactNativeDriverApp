@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, useTheme } from 'react-native-paper';
 import { View } from 'react-native';
 
-const RouteViewButtons = ({ routeView, setRouteView }) => {
+const RouteAndOrderViewButtons = ({ view, setView }) => {
   const { colors } = useTheme();
 
   const activeStyle = {
@@ -24,18 +24,18 @@ const RouteViewButtons = ({ routeView, setRouteView }) => {
       <Button
         icon='map'
         mode='contained'
-        style={routeView === 'map' ? activeStyle : inactiveStyle}
+        style={view === 'map' ? activeStyle : inactiveStyle}
         labelStyle={{ paddingVertical: 4, color: colors.background }}
-        onPress={() => setRouteView('map')}
+        onPress={() => setView('map')}
       >
         Map View
       </Button>
       <Button
         icon='format-list-bulleted'
         mode='contained'
-        style={routeView === 'list' ? activeStyle : inactiveStyle}
+        style={view === 'list' ? activeStyle : inactiveStyle}
         labelStyle={{ paddingVertical: 4, color: colors.background }}
-        onPress={() => setRouteView('list')}
+        onPress={() => setView('list')}
       >
         List View
       </Button>
@@ -43,4 +43,4 @@ const RouteViewButtons = ({ routeView, setRouteView }) => {
   );
 };
 
-export default RouteViewButtons;
+export default RouteAndOrderViewButtons;
