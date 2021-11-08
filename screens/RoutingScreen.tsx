@@ -26,6 +26,7 @@ import { markOrderInProcess, cancelOrder, completeOrder } from '../actions/order
 import { getRouteLegs, getRoutes } from '../selectors/dsprDriverRouteSelectors';
 import RoutingMainDisplay from '../components/RoutingMainDisplay';
 import { isScanningCompleteForOrderFromProps } from "../selectors/scanSelectors";
+import { SetViewOptions } from "../components/RouteAndOrderViewButtons";
 
 type RoutingScreenNavigationProp = StackNavigationProp<RoutingStackParamsList, 'Routing'>;
 type Props = {
@@ -82,7 +83,7 @@ const RoutingScreen = ({
   ] = useState<any>();
   const [currentlyActiveRouteLegIndex, setCurrentlyActiveRouteLegIndex] = useState<any>();
   const [orderSelectionModalOpen, setOrderSelectionModalOpen] = useState(false);
-  const [routeView, setRouteView] = useState('map');
+  const [routeView, setRouteView] = useState<SetViewOptions>('map');
   const [orderPolyline, setOrderPolyline] = useState<any>();
   const [overviewPolyline, setOverviewPolyline] = useState<any>();
   const [maxOrdersPerRoute, setMaxOrdersPerRoute] = useState<any>();

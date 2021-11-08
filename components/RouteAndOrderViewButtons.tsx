@@ -2,6 +2,8 @@ import React from 'react';
 import { Button, useTheme } from 'react-native-paper';
 import { View } from 'react-native';
 
+export type SetViewOptions = 'map' | 'list';
+
 const RouteAndOrderViewButtons = ({ view, setView }) => {
   const { colors } = useTheme();
 

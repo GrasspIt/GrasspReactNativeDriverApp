@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   refreshDSPRDriver,
   getDSPRDriver,
@@ -11,7 +11,8 @@ import { getLoggedInUser } from '../selectors/userSelectors';
 import { connect } from 'react-redux';
 import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
-import OrderList from '../components/OrderList';
+import OrderMainDisplay from "../components/OrderMainDisplay";
+import { SetViewOptions } from "../components/RouteAndOrderViewButtons";
 
 type OrderListScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Orders'>;
 type Props = {
@@ -40,12 +41,14 @@ const OrderListScreen = ({
   markOrderInProcess,
   cancelOrder,
 }: Props) => {
+  const [orderView, setOrderView] = useState<SetViewOptions>('map');
+
   const getDriverData = () => {
     if (loggedInUser) getDSPRDriver(driverId);
   };
 
   return loggedInUser && dsprDriver ? (
-    <OrderList
+    <OrderMainDisplay
       navigation={navigation}
       dsprDriver={dsprDriver}
       isLoading={isLoading}
@@ -54,6 +57,8 @@ const OrderListScreen = ({
       deactivateDriverRoute={deactivateDriverRoute}
       markOrderInProcess={markOrderInProcess}
       cancelOrder={cancelOrder}
+      orderView={orderView}
+      setOrderView={setOrderView}
     />
   ) : null;
 };
