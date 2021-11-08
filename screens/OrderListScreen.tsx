@@ -6,7 +6,10 @@ import {
   deactivateDriverRoute,
 } from '../actions/driverActions';
 import { markOrderInProcess, cancelOrder } from '../actions/orderActions';
-import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
+import {
+  DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute,
+  getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps
+} from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
 import { connect } from 'react-redux';
 import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
@@ -19,7 +22,7 @@ type Props = {
   navigation: OrderListScreenNavigationProp;
   driverId;
   loggedInUser;
-  dsprDriver;
+  dsprDriver: DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute;
   isLoading;
   refreshDSPRDriver;
   getDSPRDriver;
@@ -46,6 +49,8 @@ const OrderListScreen = ({
   const getDriverData = () => {
     if (loggedInUser) getDSPRDriver(driverId);
   };
+
+  console.log('dsprDriver (captured with interface):', dsprDriver);
 
   return loggedInUser && dsprDriver ? (
     <OrderMainDisplay

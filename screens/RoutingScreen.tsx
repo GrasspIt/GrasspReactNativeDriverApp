@@ -15,7 +15,10 @@ import {
   RouteLegDirection, State,
 } from '../store/reduxStoreState';
 import { getDSPRFromProps, isScanningRequiredForDSPRFromProps } from '../selectors/dsprSelectors';
-import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
+import {
+  DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute,
+  getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps
+} from '../selectors/dsprDriverSelector';
 import {
   createDSPRDriverRoute,
   removeOrderAndRefreshRoute,
@@ -31,24 +34,26 @@ import { SetViewOptions } from "../components/RouteAndOrderViewButtons";
 type RoutingScreenNavigationProp = StackNavigationProp<RoutingStackParamsList, 'Routing'>;
 type Props = {
   navigation: RoutingScreenNavigationProp;
-  driver: Omit<DsprDriver, 'user'> & {
-    user: User;
-    currentLocation?: DsprDriverLocation;
-    queuedOrders?: OrderWithAddressAndUser[];
-    currentInProcessOrder?: OrderWithAddressAndUser;
-    currentRoute?: Omit<Route, 'legs'> & {
-      legs: Omit<RouteLeg, 'order'> &
-        {
-          order: OrderWithAddressAndUser;
-          routeLegDirections: Omit<RouteLegDirection, 'metrics'> &
-            {
-              metrics: RouteMetrics;
-            }[];
-          overviewPolyline: any;
-        }[];
-    };
-    serviceAreas?: DSPRDriverServiceArea[];
-  };
+  driver: DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute;
+  //TODO: Delete after ensuring there are not any compilation errors
+  //driver: Omit<DsprDriver, 'user'> & {
+  //  user: User;
+  //  currentLocation?: DsprDriverLocation;
+  //  queuedOrders?: OrderWithAddressAndUser[];
+  //  currentInProcessOrder?: OrderWithAddressAndUser;
+  //  currentRoute?: Omit<Route, 'legs'> & {
+  //    legs: Omit<RouteLeg, 'order'> &
+  //      {
+  //        order: OrderWithAddressAndUser;
+  //        routeLegDirections: Omit<RouteLegDirection, 'metrics'> &
+  //          {
+  //            metrics: RouteMetrics;
+  //          }[];
+  //        overviewPolyline: any;
+  //      }[];
+  //  };
+  //  serviceAreas?: DSPRDriverServiceArea[];
+  //};
   dspr?: DSPR;
   createDSPRDriverRoute: any;
   isLoading: boolean;
