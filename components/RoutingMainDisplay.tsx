@@ -79,6 +79,9 @@ const RoutingMainDisplay = ({
       : null;
   }, [navigation, driver]);
 
+  console.log('driver in Routing Main Display:', driver);
+
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? (

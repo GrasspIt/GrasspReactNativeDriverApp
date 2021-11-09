@@ -3,10 +3,11 @@ import { ActivityIndicator, useTheme } from "react-native-paper";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import RouteAndOrderViewButtons from "./RouteAndOrderViewButtons";
 import OrderList from "./OrderList";
+import { DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute } from "../selectors/dsprDriverSelector";
 
 type OrderMainDisplayProps = {
     navigation;
-    dsprDriver;
+    dsprDriver: DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute;
     isLoading;
     getDriverData;
     removeOrderAndRefreshRoute;
@@ -14,6 +15,7 @@ type OrderMainDisplayProps = {
     markOrderInProcess;
     cancelOrder;
     orderView: 'list' | 'map';
+    setOrderView: () => void;
 };
 
 const OrderMainDisplay = ({
@@ -26,6 +28,7 @@ const OrderMainDisplay = ({
                               markOrderInProcess,
                               cancelOrder,
                               orderView,
+                              setOrderView
                           }: OrderMainDisplayProps) => {
     const {colors} = useTheme();
 
@@ -52,7 +55,16 @@ const OrderMainDisplay = ({
                     ) : (
                         <>
                         {/*OrderMapView*/}
-                        null
+                            <OrderList
+                                navigation={navigation}
+                                dsprDriver={dsprDriver}
+                                isLoading={isLoading}
+                                getDriverData={getDriverData}
+                                removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
+                                deactivateDriverRoute={deactivateDriverRoute}
+                                markOrderInProcess={markOrderInProcess}
+                                cancelOrder={cancelOrder}
+                            />
                         </>
                     )
                     }
@@ -73,3 +85,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 });
+
+export default OrderMainDisplay;
