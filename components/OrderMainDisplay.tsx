@@ -4,6 +4,7 @@ import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import RouteAndOrderViewButtons from "./RouteAndOrderViewButtons";
 import OrderList from "./OrderList";
 import { DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute } from "../selectors/dsprDriverSelector";
+import OrderMapView from './OrderMapView';
 
 type OrderMainDisplayProps = {
     navigation;
@@ -55,15 +56,10 @@ const OrderMainDisplay = ({
                     ) : (
                         <>
                         {/*OrderMapView*/}
-                            <OrderList
+                            <OrderMapView
                                 navigation={navigation}
                                 dsprDriver={dsprDriver}
                                 isLoading={isLoading}
-                                getDriverData={getDriverData}
-                                removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
-                                deactivateDriverRoute={deactivateDriverRoute}
-                                markOrderInProcess={markOrderInProcess}
-                                cancelOrder={cancelOrder}
                             />
                         </>
                     )

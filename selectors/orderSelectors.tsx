@@ -114,7 +114,7 @@ export const getQueuedAndInProcessOrdersWithAddressesForDriverFromProps = create
 
     return ordersWithAddressesForDriver;
   }
-)
+);
 
 export const getProductsInOrderFromProps = (state: State, props: { orderId: number }): ProductInOrder[] => {
     //const orders = state.api && state.api.entities && state.api.entities.orders ? state.api.entities.orders[orderId] : undefined;

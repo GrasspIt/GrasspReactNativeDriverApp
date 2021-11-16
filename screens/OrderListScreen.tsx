@@ -44,14 +44,17 @@ const OrderListScreen = ({
   markOrderInProcess,
   cancelOrder,
 }: Props) => {
-  
+
   const [orderView, setOrderView] = useState<SetViewOptions>('map');
+  const [orderLocations, setOrderLocations] = useState(null);
 
   const getDriverData = () => {
     if (loggedInUser) getDSPRDriver(driverId);
   };
 
   console.log('dsprDriver (captured with interface):', dsprDriver);
+
+
 
   return loggedInUser && dsprDriver ? (
     <OrderMainDisplay
