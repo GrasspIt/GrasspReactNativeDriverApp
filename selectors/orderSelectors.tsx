@@ -1,7 +1,8 @@
 import { getAddresses } from './addressSelectors';
-import { State } from '../store/reduxStoreState';
+import { Address, State, Order } from '../store/reduxStoreState';
 import { createSelector } from 'reselect';
 import { getUserMedicalRecommendations, getUserIdDocuments } from './userDocumentsSelector';
+import { getDSPRDriverFromProps } from './dsprDriverSelector';
 import { getUsers } from './userSelectors';
 
 export const getOrders = (state: State) =>
@@ -86,6 +87,34 @@ export const getOrdersWithAddressesAndUsers = createSelector(
     return ordersWithAddressesAndUsers;
   }
 );
+
+export type getQueuedAndInProcessOrdersWithAddressesForDriver = {
+  [orderId: number]: Omit<Order, 'address'> & {
+    adress: Address;
+  }
+}
+
+export const getQueuedAndInProcessOrdersWithAddressesForDriverFromProps = createSelector(
+  [getDSPRDriverFromProps, getOrdersWithAddresses], (driver, ordersWithAddresses) => {
+    const ordersWithAddressesForDriver = {};
+
+    if (driver && ordersWithAddresses) {
+
+      if(driver.currentInProcessOrder) {
+        const inProcessOrderId = driver.currentInProcessOrder;
+        ordersWithAddressesForDriver[inProcessOrderId] = ordersWithAddresses[inProcessOrderId];
+      }
+
+      if(driver.queuedOrders && driver.queuedOrders.length > 0) {
+        driver.queuedOrders.forEach(orderId => {
+          ordersWithAddressesForDriver[orderId] = ordersWithAddresses[orderId];
+        })
+      }
+    }
+
+    return ordersWithAddressesForDriver;
+  }
+)
 
 export const getProductsInOrderFromProps = (state: State, props: { orderId: number }): ProductInOrder[] => {
     //const orders = state.api && state.api.entities && state.api.entities.orders ? state.api.entities.orders[orderId] : undefined;
