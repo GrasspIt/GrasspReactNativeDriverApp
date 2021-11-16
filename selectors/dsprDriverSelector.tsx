@@ -54,7 +54,7 @@ export type DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute =
         serviceAreas?: DSPRDriverServiceArea[];
     };
 
-export const getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps: DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute = createSelector(
+export const getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps = createSelector(
   [
     getDSPRDriverFromProps,
     getUsers,

@@ -15,7 +15,7 @@ type OrderMainDisplayProps = {
     markOrderInProcess;
     cancelOrder;
     orderView: 'list' | 'map';
-    setOrderView: () => void;
+    setOrderView;
 };
 
 const OrderMainDisplay = ({
