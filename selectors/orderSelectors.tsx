@@ -2,7 +2,7 @@ import { getAddresses } from './addressSelectors';
 import { Address, State, Order } from '../store/reduxStoreState';
 import { createSelector } from 'reselect';
 import { getUserMedicalRecommendations, getUserIdDocuments } from './userDocumentsSelector';
-import { getDSPRDriverFromProps } from './dsprDriverSelector';
+// import { getDSPRDriverFromProps } from './dsprDriverSelector';
 import { getUsers } from './userSelectors';
 
 export const getOrders = (state: State) =>
@@ -90,9 +90,11 @@ export const getOrdersWithAddressesAndUsers = createSelector(
 
 export type getQueuedAndInProcessOrdersWithAddressesForDriver = {
   [orderId: number]: Omit<Order, 'address'> & {
-    adress: Address;
+    address: Address;
   }
 }
+
+const getDSPRDriverFromProps = (state: State, props) => state.api.entities.dsprDrivers[props.dsprDriverId];
 
 export const getQueuedAndInProcessOrdersWithAddressesForDriverFromProps = createSelector(
   [getDSPRDriverFromProps, getOrdersWithAddresses], (driver, ordersWithAddresses) => {
