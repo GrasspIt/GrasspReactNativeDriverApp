@@ -49,7 +49,7 @@
     "expo-splash-screen": "~0.13.5",
     "expo-status-bar": "~1.1.0",
     "expo-task-manager": "~10.0.3",
-    "expo-updates": "~0.10.12",
+    "expo-updates": "~0.10.15",
     "global": "^4.4.0",
     "humps": "^2.0.1",
     "lodash": "^4.17.19",
