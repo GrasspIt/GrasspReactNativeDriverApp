@@ -21,7 +21,7 @@ const OrderMapView = ({
     dsprDriver,
 }: OrderMapViewProps) => {
 
-    const orderAddresses = useSelector<State, getQueuedAndInProcessOrdersWithAddressesForDriver>(state => getQueuedAndInProcessOrdersWithAddressesForDriverFromProps(state, {driverId: dsprDriver.id}))
+    const orderAddresses = useSelector<State, getQueuedAndInProcessOrdersWithAddressesForDriver>(state => getQueuedAndInProcessOrdersWithAddressesForDriverFromProps(state, {dsprDriverId: dsprDriver.id}))
 
     console.log('orderAddresses in OrderMapView:', orderAddresses);
 
