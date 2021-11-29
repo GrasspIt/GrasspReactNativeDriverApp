@@ -88,11 +88,19 @@ export const getOrdersWithAddressesAndUsers = createSelector(
   }
 );
 
-export type getQueuedAndInProcessOrdersWithAddressesForDriver = {
+export type QueuedAndInProcessOrdersWithAddressesForDriver = {
   [orderId: number]: Omit<Order, 'address'> & {
     address: Address;
   }
 }
+
+export type OrderWithAddress = Omit<Order, 'address'> & {
+  address: Address;
+};
+
+export type QueuedAndInProcessOrdersWithAddressesForDriverAsArray = Omit<Order, 'address'> & {
+  address: Address;
+}[]
 
 const getDSPRDriverFromProps = (state: State, props) => state.api.entities.dsprDrivers[props.dsprDriverId];
 
@@ -117,6 +125,12 @@ export const getQueuedAndInProcessOrdersWithAddressesForDriverFromProps = create
     return ordersWithAddressesForDriver;
   }
 );
+
+export const getQueuedAndInProcessOrdersWithAddressesForDriverAsArrayFromProps = createSelector(
+  [getQueuedAndInProcessOrdersWithAddressesForDriverFromProps], (orderAddresses) => {
+    return Object.values(orderAddresses);
+  }
+)
 
 export const getProductsInOrderFromProps = (state: State, props: { orderId: number }): ProductInOrder[] => {
     //const orders = state.api && state.api.entities && state.api.entities.orders ? state.api.entities.orders[orderId] : undefined;
