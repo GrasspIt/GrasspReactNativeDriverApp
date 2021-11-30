@@ -56,12 +56,12 @@ const OrderMainDisplay = ({
                     ) : (
                         <>
                         {/*OrderMapView*/}
-                            {/* <OrderMapView
+                            <OrderMapView
                                 navigation={navigation}
                                 dsprDriver={dsprDriver}
                                 isLoading={isLoading}
-                            /> */}
-                            <OrderList
+                            />
+                            {/* <OrderList
                             navigation={navigation}
                             dsprDriver={dsprDriver}
                             isLoading={isLoading}
@@ -70,7 +70,7 @@ const OrderMainDisplay = ({
                             deactivateDriverRoute={deactivateDriverRoute}
                             markOrderInProcess={markOrderInProcess}
                             cancelOrder={cancelOrder}
-                        />
+                        /> */}
                         </>
                     )
                     }
