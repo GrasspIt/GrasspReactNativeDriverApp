@@ -29,7 +29,7 @@ const OrderMapView = ({
 
     const mapRef = useRef<MapView>(null);
 
-    //const [orderMarkers, setOrderMarkers] = useState<any[]>([]);
+    const [orderMarkers, setOrderMarkers] = useState<any[]>([]);
     const [mapIdentifiers, setMapIdentifiers] = useState<string[]>([]);
 
     const driverName = dsprDriver && dsprDriver.user && dsprDriver.user.firstName + ' ' + dsprDriver.user.lastName;
@@ -51,7 +51,7 @@ const OrderMapView = ({
     console.log('dsprDriver in OrderMapView:', dsprDriver);
 
 
-    const orderMarkers = useMemo(() => {
+    useLayoutEffect(() => {
         const identifiers: string[] = [];
         if( orderAddresses &&
         orderAddresses.length > 0 &&
@@ -86,7 +86,9 @@ const OrderMapView = ({
 
             identifiers.push(dsprDriver.id.toString());
             setMapIdentifiers(identifiers);
-            return markers;
+
+            setOrderMarkers(markers);
+            //return markers;
         }
     }, [orderAddresses]);
 
@@ -104,14 +106,6 @@ const OrderMapView = ({
             })
         }
     }, [mapRef, mapIdentifiers]);
-
-    // Call fitToSuppliedMarkers() method on the MapView after markers get updated
-    //useLayoutEffect(() => {
-    //    if (mapRef.current) {
-    //        // list of _id's must same that has been provided to the identifier props of the Marker
-    //        mapRef.current.fitToSuppliedMarkers(orderMarkers.map(({ _id }) => _id));
-    //    }
-    //}, [markers]);
 
 
     /*
@@ -149,21 +143,6 @@ const OrderMapView = ({
             <MapView
                 ref={mapRef}
                 style={styles.map}
-                //initialRegion={
-                //    routeCenter && onOverview
-                //        ? {
-                //            latitude: routeCenter.lat,
-                //            longitude: routeCenter.lng,
-                //            latitudeDelta: 0.1,
-                //            longitudeDelta: 0.1,
-                //        }
-                //        : polylineCenter && {
-                //        latitude: polylineCenter.lat,
-                //        longitude: polylineCenter.lng,
-                //        latitudeDelta: 0.1,
-                //        longitudeDelta: 0.1,
-                //    }
-                //}
                 onMapReady={onMapReadyHandler}
             >
                 {dsprDriver && dsprDriver.currentLocation && (
