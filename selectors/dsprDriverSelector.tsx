@@ -194,9 +194,10 @@ export const getDrivers = (state: State) => {
   return state.api.entities.dsprDrivers;
 };
 
-export const getOnCallDrivers = createSelector([getDriversForDSPR], (drivers) => {
-  return drivers ? drivers.filter((driver) => driver.onCall) : [];
-});
+//TODO fix TypeScript error
+//export const getOnCallDrivers = createSelector([getDriversForDSPR], (drivers) => {
+//  return drivers ? drivers.filter((driver) => driver.onCall) : undefined;
+//});
 
 export const getDriverForLoggedInUserGivenDSPR = createSelector(
   [getDSPRFromProps, getDrivers, getLoggedInUser],
