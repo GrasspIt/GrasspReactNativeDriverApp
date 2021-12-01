@@ -42,7 +42,7 @@ export const getDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
 };
 
 export const refreshDSPRDriver = (dsprDriverId) => (dispatch, getState) => {
-  dispatch(dsprDriverGetter(dsprDriverId)).catch((error) => {
+  return dispatch(dsprDriverGetter(dsprDriverId)).catch((error) => {
     Alert.alert('Network error:', error);
   });
 };
