@@ -17,6 +17,7 @@ type OrderMainDisplayProps = {
     cancelOrder;
     orderView: 'list' | 'map';
     setOrderView;
+    isFetchingDriver: boolean;
 };
 
 const OrderMainDisplay = ({
@@ -29,7 +30,8 @@ const OrderMainDisplay = ({
                               markOrderInProcess,
                               cancelOrder,
                               orderView,
-                              setOrderView
+                              setOrderView,
+                              isFetchingDriver,
                           }: OrderMainDisplayProps) => {
     const {colors} = useTheme();
 
@@ -52,27 +54,14 @@ const OrderMainDisplay = ({
                             deactivateDriverRoute={deactivateDriverRoute}
                             markOrderInProcess={markOrderInProcess}
                             cancelOrder={cancelOrder}
+                            isFetchingDriver={isFetchingDriver}
                         />
-                    ) : (
-                        <>
-                        {/*OrderMapView*/}
-                            <OrderMapView
-                                navigation={navigation}
-                                dsprDriver={dsprDriver}
-                                isLoading={isLoading}
-                            />
-                            {/* <OrderList
+                    ) :
+                        <OrderMapView
                             navigation={navigation}
                             dsprDriver={dsprDriver}
                             isLoading={isLoading}
-                            getDriverData={getDriverData}
-                            removeOrderAndRefreshRoute={removeOrderAndRefreshRoute}
-                            deactivateDriverRoute={deactivateDriverRoute}
-                            markOrderInProcess={markOrderInProcess}
-                            cancelOrder={cancelOrder}
-                        /> */}
-                        </>
-                    )
+                        />
                     }
                 </View>
             ) : (
