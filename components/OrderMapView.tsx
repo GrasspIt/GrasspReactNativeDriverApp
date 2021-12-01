@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useRef, useMemo, useCallback } from 'react';
 import { SafeAreaView, Text, StyleSheet, Dimensions } from 'react-native';
 import MapView, { Callout, Marker, Polyline } from 'react-native-maps';
-import { OrderWithAddressAndUser, RouteLeg, State } from '../store/reduxStoreState';
+import { DSPR, OrderWithAddressAndUser, RouteLeg, State } from '../store/reduxStoreState';
 import { DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute } from "../selectors/dsprDriverSelector";
 import {
     getQueuedAndInProcessOrdersWithAddressesForDriverFromProps,
@@ -11,6 +11,7 @@ import {
     OrderWithAddress, getQueuedAndInProcessOrdersWithAddressesAndUsersForDriverAsArrayFromProps,
 } from '../selectors/orderSelectors';
 import { useSelector, shallowEqual } from 'react-redux';
+import { getDSPRFromProps } from "../selectors/dsprSelectors";
 
 
 interface OrderMapViewProps {
@@ -34,22 +35,12 @@ const OrderMapView = ({
 
     const driverName = dsprDriver && dsprDriver.user && dsprDriver.user.firstName + ' ' + dsprDriver.user.lastName;
 
-    // const orderAddresses = useSelector<State, QueuedAndInProcessOrdersWithAddressesForDriver>(
-    //     state => getQueuedAndInProcessOrdersWithAddressesForDriverFromProps(state, {dsprDriverId: dsprDriver.id}), shallowEqual)
-
-    // console.log('orderAddresses in OrderMapView:', orderAddresses);
-
-    const orderAddresses1 = useSelector<State, any>(
-        state => getQueuedAndInProcessOrdersWithAddressesForDriverAsArrayFromProps(state, {dsprDriverId: dsprDriver.id}), shallowEqual);
-
     const orderAddresses = useSelector<State, OrderWithAddressAndUser[]>(
         state => getQueuedAndInProcessOrdersWithAddressesAndUsersForDriverAsArrayFromProps(
             state, {dsprDriverId: dsprDriver.id}),
         shallowEqual);
-    console.log('orderAddresses1 as array:', orderAddresses1);
 
-    console.log('dsprDriver in OrderMapView:', dsprDriver);
-
+    const dspr = useSelector<State, DSPR>(state => getDSPRFromProps(state, {dsprId: dsprDriver.dspr}), shallowEqual);
 
     useLayoutEffect(() => {
         const identifiers: string[] = [];
@@ -88,7 +79,6 @@ const OrderMapView = ({
             setMapIdentifiers(identifiers);
 
             setOrderMarkers(markers);
-            //return markers;
         }
     }, [orderAddresses]);
 
@@ -107,36 +97,12 @@ const OrderMapView = ({
         }
     }, [mapRef, mapIdentifiers]);
 
-
-    /*
-    * orderAddresses &&
-        orderAddresses.length > 0 &&
-        orderAddresses
-            .map(
-                (
-                    order: OrderWithAddressAndUser
-                ) => {
-                    if (!order || !order.address) return null;
-                    return (
-                        <Marker
-                            coordinate={{
-                                latitude: order.address.latitude,
-                                longitude: order.address.longitude,
-                            }}
-                            {...order}
-                            pinColor='red'
-                            key={order.address.id}
-                        >
-                            <Callout onPress={() => navigation.navigate('Details', {orderId: order.id})}>
-                                 <Text>{order.user.firstName + ' ' + order.user.lastName}</Text>
-                                <Text style={{color: '#2089dc'}}>Order Details</Text>
-                            </Callout>
-                        </Marker>
-                    );
-                }
-            )
-            .filter((marker) => marker != null);
-    * */
+    const initialRegion = dspr && dspr.centralLatitude && dspr.centralLongitude ? {
+        latitude: dspr.centralLatitude,
+        longitude: dspr.centralLongitude,
+        latitudeDelta: 1,
+        longitudeDelta: 1
+    } : undefined;
 
     return (
         <SafeAreaView style={styles.container}>
@@ -144,6 +110,7 @@ const OrderMapView = ({
                 ref={mapRef}
                 style={styles.map}
                 onMapReady={onMapReadyHandler}
+                initialRegion={initialRegion}
             >
                 {dsprDriver && dsprDriver.currentLocation && (
                     <Marker
@@ -163,23 +130,6 @@ const OrderMapView = ({
                         </Callout>
                     </Marker>
                 )}
-                {/*{!onOverview ? (*/}
-                {/*    <Polyline*/}
-                {/*        coordinates={orderPolylineCoordinates}*/}
-                {/*        geodesic={true}*/}
-                {/*        strokeColor='#03adfc'*/}
-                {/*        strokeWidth={5}*/}
-                {/*        lineDashPattern={[0]}*/}
-                {/*    />*/}
-                {/*) : (*/}
-                {/*    <Polyline*/}
-                {/*        coordinates={overviewPolylineCoordinates}*/}
-                {/*        geodesic={true}*/}
-                {/*        strokeColor='#03adfc'*/}
-                {/*        strokeWidth={5}*/}
-                {/*        lineDashPattern={[0]}*/}
-                {/*    />*/}
-                {/*)}*/}
                 {orderMarkers && orderMarkers.length > 0 && orderMarkers}
             </MapView>
         </SafeAreaView>

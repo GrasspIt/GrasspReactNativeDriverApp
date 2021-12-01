@@ -52,10 +52,6 @@ const OrderListScreen = ({
     if (loggedInUser) getDSPRDriver(driverId);
   };
 
-  console.log('dsprDriver (captured with interface):', dsprDriver);
-
-
-
   return loggedInUser && dsprDriver ? (
     <OrderMainDisplay
       navigation={navigation}
