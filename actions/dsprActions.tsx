@@ -87,7 +87,7 @@ const dsprActiveMetrcTagsGetter = (dsprId: number) => {
                 GET_DSPR_ACTIVE_METRC_TAGS_FAILURE,
             ],
             endPoint: `metrc/association/active`,
-            schema: Schemas.DSPR_DRIVER_SERVICE_AREA_ARRAY,
+            schema: Schemas.DSPR_METRC_TAG_ARRAY,
             queryParamsMap: { dsprId }
         },
     };
