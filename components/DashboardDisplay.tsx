@@ -1,10 +1,14 @@
-import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Button, useTheme, ActivityIndicator } from 'react-native-paper';
+import React, { useRef, useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Button, useTheme } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 
 import OnCallSwitch from './OnCallSwitch';
 import AlertSuccessOrError from "./AlertSuccessOrError";
+
+//tests
+import AutocompleteTest from "./AutoComplete";
+import { AutocompleteDropdown } from "react-native-autocomplete-dropdown"
 
 type Props = {
   dspr;
@@ -31,6 +35,22 @@ const DashboardDisplay = ({
 }: Props) => {
   const { colors } = useTheme();
 
+  //AutoComplete Dropdown Library Test
+  const [selectedItem, setSelectedItem] = useState(null)
+
+  const dropdownController = useRef(null)
+
+  const handleUpdate = (evt) => {
+    console.log('evt in handleUpdate:', evt);
+    setSelectedItem(evt);
+  }
+
+  const handleOnBlur = () => {
+    if (!selectedItem && dropdownController && dropdownController?.current) {
+        dropdownController.current.clear()
+    }
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? (
@@ -47,6 +67,45 @@ const DashboardDisplay = ({
               dsprDriver={dsprDriver}
             />
           )}
+
+        {/*  AutoComplete Test */}
+          <AutocompleteTest
+              value={''}
+              style={{borderColor: 'green', borderWidth: 2, borderStyle: 'solid'}}
+              containerStyle={{borderColor: 'blue', borderWidth: 2, borderStyle: 'solid'}}
+              label="Model"
+              data={['Honda', 'Yamaha', 'Suzuki', 'TVS']}
+              menuStyle={{backgroundColor: 'white'}}
+              onChange={() => {}}
+          />
+
+          {/* AutocompleteDropdown library test*/}
+
+          <View>
+            <AutocompleteDropdown
+                controller={(controller) => {
+                  dropdownController.current = controller
+                }}
+                clearOnFocus={false}
+                closeOnBlur={true}
+                onBlur={handleOnBlur}
+                //initialValue={{ id: "2" }} // or just '2'
+                onSelectItem={handleUpdate}
+                //onChangeText={setAutoCompleteText}
+                //textInputProps={{
+                //  value: autoCompleteText,
+                //}}
+                dataSet={[
+                  { id: "1", title: "Alpha" },
+                  { id: "2", title: "Beta" },
+                  { id: "3", title: "Gamma" }
+                ]}
+            />
+            <Text style={{ color: "#668", fontSize: 13 }}>
+              Selected item: {JSON.stringify(selectedItem)}
+            </Text>
+          </View>
+
         </View>
       ) : (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
