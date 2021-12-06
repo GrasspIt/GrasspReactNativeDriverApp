@@ -80,7 +80,7 @@ const OrderMainDisplay = ({
                     refreshControl={<RefreshControl refreshing={isFetchingDriver} onRefresh={getDriverData} />}
                 >
                     <Text style={{ padding: 10 }}>{refreshMessage}</Text>
-                    <Button onPress={() => navigation.navigate('Routing')}>Go to Routing</Button>
+                    <Button onPress={() => navigation.navigate('RoutingNav', { screen: 'Routing'})}>Go to Routing</Button>
                 </ScrollView>
             )}
             </SafeAreaView>
