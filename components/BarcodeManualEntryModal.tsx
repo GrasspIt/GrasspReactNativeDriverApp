@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Platform, SafeAreaView, StatusBar, StyleSheet, View } from "react-native";
+import { Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
 import {
     Button,
     Caption,
@@ -12,6 +12,8 @@ import {
 import AlertSuccessOrError from "./AlertSuccessOrError";
 import { successAlertMessageStyle } from "./BarcodeScanner";
 import AlertSuccessButtonsForRemainingScans from "./buttons/AlertSuccessButtonsForRemainingScans";
+import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
+import { ActiveMetrcTagForAutoComplete } from "../selectors/dsprSelectors";
 
 interface BarcodeManualEntryModalProps {
     submitTagEntry: (data) => any;
@@ -28,6 +30,7 @@ interface BarcodeManualEntryModalProps {
     orderDetailQuantity: number | undefined;
     errorText: string;
     isMetrcDSPR: boolean;
+    activeMetrcTagsForAutoComplete: ActiveMetrcTagForAutoComplete[];
 }
 
 const BarcodeManualEntryModal = ({
@@ -43,17 +46,34 @@ const BarcodeManualEntryModal = ({
                                      errorText,
                                      orderId,
                                      isMetrcDSPR,
+                                     activeMetrcTagsForAutoComplete,
                                  }: BarcodeManualEntryModalProps) => {
     const {colors} = useTheme();
 
     const [text, setText] = useState<string>('');
+    const [selectedItem, setSelectedItem] = useState(null)
+
+    const dropdownController = useRef(null)
     const textInputRef = useRef<any>(null);
+
+    const handleUpdate = (evt) => {
+        console.log('evt in handleUpdate:', evt);
+        setSelectedItem(evt);
+    }
+
+    const handleOnBlur = () => {
+        if (!selectedItem && dropdownController && dropdownController?.current) {
+            dropdownController.current.clear()
+        }
+    }
 
     /**On Mount, focus the TextInput to show keyboard*/
     useEffect(() => {
-        Platform.OS === 'ios'
-            ? textInputRef.current.focus()
-            : setTimeout(() => textInputRef.current.focus(), 40)
+        if (!isMetrcDSPR) {
+            Platform.OS === 'ios'
+                ? textInputRef.current.focus()
+                : setTimeout(() => textInputRef.current.focus(), 40)
+        }
     }, [])
 
     /**Submit metrc tag entry
@@ -85,24 +105,50 @@ const BarcodeManualEntryModal = ({
 
                     <Paragraph style={{fontSize: 16}}>{`Please enter the ${isMetrcDSPR ? 'Metrc Tag' : 'Barcode'} below:`}</Paragraph>
 
-                    <View style={{marginTop: 20}}>
-                        <TextInput
-                            value={text}
-                            onChangeText={text => setText(text)}
-                            placeholder={isMetrcDSPR ? '1A40A03000005DD000003479' : '4352-11'}
-                            ref={textInputRef}
-                            autoCorrect={false}
-                            autoFocus={true}
-                            onSubmitEditing={handleSubmit}
-                            returnKeyType={'done'}
-                            textContentType={'none'}
-                            right={<TextInput.Icon
-                                name={'close-circle'}
-                                onPress={() => setText('')}
-                                style={{opacity: .7}}
-                            />}
+                    {!isMetrcDSPR &&
+                        <View style={{marginTop: 20}}>
+                            <TextInput
+                                value={text}
+                                onChangeText={text => setText(text)}
+                                placeholder={isMetrcDSPR ? '1A40A03000005DD000003479' : '4352-11'}
+                                ref={textInputRef}
+                                autoCorrect={false}
+                                autoFocus={true}
+                                onSubmitEditing={handleSubmit}
+                                returnKeyType={'done'}
+                                textContentType={'none'}
+                                right={<TextInput.Icon
+                                    name={'close-circle'}
+                                    onPress={() => setText('')}
+                                    style={{opacity: .7}}
+                                />}
+                            />
+                        </View>
+                    }
+
+                    {isMetrcDSPR &&
+                        <View>
+                        <AutocompleteDropdown
+                        controller={(controller) => {
+                        dropdownController.current = controller
+                    }}
+                        clearOnFocus={false}
+                        closeOnBlur={true}
+                        onBlur={handleOnBlur}
+                        //initialValue={{ id: "2" }} // or just '2'
+                        onSelectItem={handleUpdate}
+                        //onChangeText={setAutoCompleteText}
+                        //textInputProps={{
+                        //  ref: textInputRef,
+                        //}}
+                        dataSet={activeMetrcTagsForAutoComplete}
                         />
-                    </View>
+                        <Text style={{ color: "#668", fontSize: 13 }}>
+                        Selected item: {JSON.stringify(selectedItem)}
+                        </Text>
+                        </View>
+                    }
+
                     {isMetrcDSPR &&
                     <View style={{marginTop: 16}}>
                         <Caption style={{marginTop: 10}}>The tag will be long - about 24 characters</Caption>
