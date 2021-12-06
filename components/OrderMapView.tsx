@@ -18,9 +18,6 @@ interface OrderMapViewProps {
     navigation;
     dsprDriver: DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute;
     isLoading: boolean;
-    orderPolyline?: any; //FixMe
-    overviewPolyline?: any; //FixMe
-    currentlyActiveRouteLegIndex?: number; //FixMe
 }
 
 const OrderMapView = ({
@@ -44,9 +41,9 @@ const OrderMapView = ({
 
     useLayoutEffect(() => {
         const identifiers: string[] = [];
-        if( orderAddresses &&
-        orderAddresses.length > 0 &&
-        orderAddresses) {
+        if (orderAddresses &&
+            orderAddresses.length > 0 &&
+            orderAddresses) {
             const markers = orderAddresses.map(
                 (
                     order: OrderWithAddressAndUser
@@ -66,14 +63,14 @@ const OrderMapView = ({
                             identifier={orderId}
                         >
                             <Callout onPress={() => navigation.navigate('Details', {orderId: order.id})}>
-                                 <Text>{order.user.firstName + ' ' + order.user.lastName}</Text>
+                                <Text>{order.user.firstName + ' ' + order.user.lastName}</Text>
                                 <Text style={{color: '#2089dc'}}>Order Details</Text>
                             </Callout>
                         </Marker>
                     );
                 }
             )
-            .filter((marker) => marker != null);
+                .filter((marker) => marker != null);
 
             identifiers.push(dsprDriver.id.toString());
             setMapIdentifiers(identifiers);

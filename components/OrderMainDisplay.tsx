@@ -1,6 +1,6 @@
-import React from 'react';
-import { ActivityIndicator, useTheme } from "react-native-paper";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import React, { useState } from 'react';
+import { ActivityIndicator, Button, useTheme } from "react-native-paper";
+import { RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import RouteAndOrderViewButtons from "./RouteAndOrderViewButtons";
 import OrderList from "./OrderList";
 import { DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute } from "../selectors/dsprDriverSelector";
@@ -35,6 +35,16 @@ const OrderMainDisplay = ({
                           }: OrderMainDisplayProps) => {
     const {colors} = useTheme();
 
+    const [refreshing, setRefreshing] = useState<boolean>(false);
+
+    const onRefresh = () => {
+        return;
+    }
+
+    const refreshMessage = dsprDriver && dsprDriver.queuedOrders && dsprDriver.queuedOrders.length > 0
+        ? 'Orders Present. Create a route to view orders'
+        : 'No current orders. Pull down to refresh'
+
     return (
         <SafeAreaView style={{flex: 1}}>
             {isLoading ? (
@@ -65,9 +75,13 @@ const OrderMainDisplay = ({
                     }
                 </View>
             ) : (
-                <View style={styles.container}>
-                    <Text style={{ padding: 10 }}>No current orders.</Text>
-                </View>
+                <ScrollView
+                    contentContainerStyle={styles.container}
+                    refreshControl={<RefreshControl refreshing={isFetchingDriver} onRefresh={getDriverData} />}
+                >
+                    <Text style={{ padding: 10 }}>{refreshMessage}</Text>
+                    <Button onPress={() => navigation.navigate('Routing')}>Go to Routing</Button>
+                </ScrollView>
             )}
             </SafeAreaView>
     )
