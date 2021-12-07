@@ -5,6 +5,7 @@ import RouteAndOrderViewButtons from "./RouteAndOrderViewButtons";
 import OrderList from "./OrderList";
 import { DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute } from "../selectors/dsprDriverSelector";
 import OrderMapView from './OrderMapView';
+import { OrderWithAddressAndUser } from "../store/reduxStoreState";
 
 type OrderMainDisplayProps = {
     navigation;
@@ -18,6 +19,7 @@ type OrderMainDisplayProps = {
     orderView: 'list' | 'map';
     setOrderView;
     isFetchingDriver: boolean;
+    ordersWithAddressAndUser: OrderWithAddressAndUser[];
 };
 
 const OrderMainDisplay = ({
@@ -32,14 +34,9 @@ const OrderMainDisplay = ({
                               orderView,
                               setOrderView,
                               isFetchingDriver,
+                              ordersWithAddressAndUser
                           }: OrderMainDisplayProps) => {
     const {colors} = useTheme();
-
-    const [refreshing, setRefreshing] = useState<boolean>(false);
-
-    const onRefresh = () => {
-        return;
-    }
 
     const refreshMessage = dsprDriver && dsprDriver.queuedOrders && dsprDriver.queuedOrders.length > 0
         ? 'Orders Present. Create a route to view orders'
@@ -51,7 +48,7 @@ const OrderMainDisplay = ({
                 <View style={styles.container}>
                     <ActivityIndicator size='large' color={colors.primary}/>
                 </View>
-            ) : dsprDriver && dsprDriver.currentRoute && dsprDriver.currentRoute.active ? (
+            ) : dsprDriver && ordersWithAddressAndUser && ordersWithAddressAndUser.length > 0 ? (
                 <View style={{flex: 1}}>
                     <RouteAndOrderViewButtons view={orderView} setView={setOrderView}/>
                     {orderView === 'list' ? (
@@ -71,6 +68,7 @@ const OrderMainDisplay = ({
                             navigation={navigation}
                             dsprDriver={dsprDriver}
                             isLoading={isLoading}
+                            ordersWithAddressAndUser={ordersWithAddressAndUser}
                         />
                     }
                 </View>

@@ -3,13 +3,7 @@ import { SafeAreaView, Text, StyleSheet, Dimensions } from 'react-native';
 import MapView, { Callout, Marker, Polyline } from 'react-native-maps';
 import { DSPR, OrderWithAddressAndUser, RouteLeg, State } from '../store/reduxStoreState';
 import { DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute } from "../selectors/dsprDriverSelector";
-import {
-    getQueuedAndInProcessOrdersWithAddressesForDriverFromProps,
-    QueuedAndInProcessOrdersWithAddressesForDriver,
-    getQueuedAndInProcessOrdersWithAddressesForDriverAsArrayFromProps,
-    QueuedAndInProcessOrdersWithAddressesForDriverAsArray,
-    OrderWithAddress, getQueuedAndInProcessOrdersWithAddressesAndUsersForDriverAsArrayFromProps,
-} from '../selectors/orderSelectors';
+import { getQueuedAndInProcessOrdersWithAddressesAndUsersForDriverAsArrayFromProps, } from '../selectors/orderSelectors';
 import { useSelector, shallowEqual } from 'react-redux';
 import { getDSPRFromProps } from "../selectors/dsprSelectors";
 
@@ -18,11 +12,13 @@ interface OrderMapViewProps {
     navigation;
     dsprDriver: DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute;
     isLoading: boolean;
+    ordersWithAddressAndUser: OrderWithAddressAndUser[]
 }
 
 const OrderMapView = ({
                           navigation,
                           dsprDriver,
+                          ordersWithAddressAndUser,
                       }: OrderMapViewProps) => {
 
     const mapRef = useRef<MapView>(null);
@@ -32,19 +28,14 @@ const OrderMapView = ({
 
     const driverName = dsprDriver && dsprDriver.user && dsprDriver.user.firstName + ' ' + dsprDriver.user.lastName;
 
-    const orderAddresses = useSelector<State, OrderWithAddressAndUser[]>(
-        state => getQueuedAndInProcessOrdersWithAddressesAndUsersForDriverAsArrayFromProps(
-            state, {dsprDriverId: dsprDriver.id}),
-        shallowEqual);
-
     const dspr = useSelector<State, DSPR>(state => getDSPRFromProps(state, {dsprId: dsprDriver.dspr}), shallowEqual);
 
     useLayoutEffect(() => {
         const identifiers: string[] = [];
-        if (orderAddresses &&
-            orderAddresses.length > 0 &&
-            orderAddresses) {
-            const markers = orderAddresses.map(
+        if (ordersWithAddressAndUser &&
+            ordersWithAddressAndUser.length > 0 &&
+            ordersWithAddressAndUser) {
+            const markers = ordersWithAddressAndUser.map(
                 (
                     order: OrderWithAddressAndUser
                 ) => {
@@ -77,7 +68,7 @@ const OrderMapView = ({
 
             setOrderMarkers(markers);
         }
-    }, [orderAddresses]);
+    }, [ordersWithAddressAndUser]);
 
     const onMapReadyHandler = useCallback(() => {
         console.log('onMapReadyHandler Running!');
@@ -125,7 +116,7 @@ const OrderMapView = ({
                             <Text>{driverName}</Text>
                             <Text>
                                 Outstanding Orders:{' '}
-                                {orderAddresses.length}
+                                {ordersWithAddressAndUser.length}
                             </Text>
                         </Callout>
                     </Marker>
