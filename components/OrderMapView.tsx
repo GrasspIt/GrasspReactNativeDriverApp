@@ -80,7 +80,9 @@ const OrderMapView = ({
     }, [orderAddresses]);
 
     const onMapReadyHandler = useCallback(() => {
+        console.log('onMapReadyHandler Running!');
         if (mapRef.current) {
+            console.log('in mapRef.current');
             mapRef.current.fitToSuppliedMarkers(mapIdentifiers, {
                 edgePadding:
                     {
@@ -106,7 +108,8 @@ const OrderMapView = ({
             <MapView
                 ref={mapRef}
                 style={styles.map}
-                onMapReady={onMapReadyHandler}
+                //onMapReady={onMapReadyHandler}
+                onLayout={onMapReadyHandler}
                 initialRegion={initialRegion}
             >
                 {dsprDriver && dsprDriver.currentLocation && (
