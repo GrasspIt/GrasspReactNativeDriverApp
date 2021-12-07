@@ -128,6 +128,7 @@ const BarcodeManualEntryScreen = ({navigation, route}) => {
         errorText={errorText}
         isMetrcDSPR={!!isMetrcDSPR}
         activeMetrcTagsForAutoComplete={activeMetrcTagsForAutoComplete}
+        isFetchingActiveMetrcTags={isFetchingActiveMetrcTags}
     />
 }
 

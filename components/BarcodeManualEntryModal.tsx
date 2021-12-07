@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
+import { Platform, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
 import {
     Button,
     Caption,
@@ -31,6 +31,7 @@ interface BarcodeManualEntryModalProps {
     errorText: string;
     isMetrcDSPR: boolean;
     activeMetrcTagsForAutoComplete: ActiveMetrcTagForAutoComplete[];
+    isFetchingActiveMetrcTags: boolean;
 }
 
 const BarcodeManualEntryModal = ({
@@ -47,6 +48,7 @@ const BarcodeManualEntryModal = ({
                                      orderId,
                                      isMetrcDSPR,
                                      activeMetrcTagsForAutoComplete,
+                                     isFetchingActiveMetrcTags,
                                  }: BarcodeManualEntryModalProps) => {
     const {colors} = useTheme();
 
@@ -58,12 +60,19 @@ const BarcodeManualEntryModal = ({
 
     const handleUpdate = (evt) => {
         console.log('evt in handleUpdate:', evt);
-        setSelectedItem(evt);
+        if (evt) {
+            setText(evt.title);
+        } else {
+            setText('');
+        }
     }
 
     const handleOnBlur = () => {
-        if (!selectedItem && dropdownController && dropdownController?.current) {
-            dropdownController.current.clear()
+        console.log('in AutoComplete handleOnBlur');
+        if (!text && dropdownController && dropdownController?.current) {
+            //dropdownController.current.clear()
+            dropdownController.current.setInputText('');
+            //dropdownController.current.close()
         }
     }
 
@@ -76,18 +85,22 @@ const BarcodeManualEntryModal = ({
         }
     }, [])
 
-    /**Submit metrc tag entry
+    /**Submit barcode entry
      *  if there is no text inputed, an alert is shown and nothing is submitted
      *  on submit, the textInput is blurred
      * */
     const handleSubmit = () => {
+        console.log('in AutoComplete handleSubmit');
         if (text.trim() === '') {
             alert('A tag must be inputted!')
         } else {
-            textInputRef.current.blur();
+            if (textInputRef && textInputRef.current) {
+                textInputRef.current.blur();
+            }
             submitTagEntry(text);
         }
     }
+
 
     /**Message to display when a tag submission is successful*/
     const successAlertMessage = (
@@ -127,33 +140,35 @@ const BarcodeManualEntryModal = ({
                     }
 
                     {isMetrcDSPR &&
-                        <View>
-                        <AutocompleteDropdown
-                        controller={(controller) => {
-                        dropdownController.current = controller
-                    }}
-                        clearOnFocus={false}
-                        closeOnBlur={true}
-                        onBlur={handleOnBlur}
-                        //initialValue={{ id: "2" }} // or just '2'
-                        onSelectItem={handleUpdate}
-                        //onChangeText={setAutoCompleteText}
-                        //textInputProps={{
-                        //  ref: textInputRef,
-                        //}}
-                        dataSet={activeMetrcTagsForAutoComplete}
-                        />
-                        <Text style={{ color: "#668", fontSize: 13 }}>
-                        Selected item: {JSON.stringify(selectedItem)}
-                        </Text>
+                        <View style={Platform.select({ ios: { zIndex: 100 }})}>
+                            <AutocompleteDropdown
+                            controller={(controller) => {
+                            dropdownController.current = controller
+                        }}
+                            clearOnFocus={false}
+                            //closeOnBlur={true}
+                            onBlur={handleOnBlur}
+                            onSelectItem={handleUpdate}
+                            //textInputProps={{
+                            //  ref: textInputRef,
+                            //}}
+                            dataSet={activeMetrcTagsForAutoComplete}
+                            loading={isFetchingActiveMetrcTags}
+                            />
+                            {/*<Text style={{ color: "#668", fontSize: 13 }}>*/}
+                            {/*Selected item: {text}*/}
+                            {/*</Text>*/}
+                            <View style={{marginTop: 16}}>
+                                <Caption style={{marginTop: 10}}>Enter last 4 digits of tag</Caption>
+                            </View>
                         </View>
                     }
 
-                    {isMetrcDSPR &&
-                    <View style={{marginTop: 16}}>
-                        <Caption style={{marginTop: 10}}>The tag will be long - about 24 characters</Caption>
-                    </View>
-                    }
+                    {/*{isMetrcDSPR &&*/}
+                    {/*<View style={{marginTop: 16}}>*/}
+                    {/*    <Caption style={{marginTop: 10}}>The tag will be long - about 24 characters</Caption>*/}
+                    {/*</View>*/}
+                    {/*}*/}
 
                     <Card.Actions style={styles.cardActions}>
                         <Button
