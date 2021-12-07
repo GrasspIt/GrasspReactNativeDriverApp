@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ActivityIndicator, Button, useTheme } from "react-native-paper";
 import { RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import RouteAndOrderViewButtons from "./RouteAndOrderViewButtons";
@@ -10,7 +10,7 @@ import { OrderWithAddressAndUser } from "../store/reduxStoreState";
 type OrderMainDisplayProps = {
     navigation;
     dsprDriver: DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute;
-    isLoading;
+    isLoading: boolean;
     getDriverData;
     removeOrderAndRefreshRoute;
     deactivateDriverRoute;

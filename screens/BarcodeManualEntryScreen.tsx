@@ -46,7 +46,6 @@ const BarcodeManualEntryScreen = ({navigation, route}) => {
         setIsFetchingActiveMetrcTags(true);
         dispatch<any>(getActiveMetrcTagsForDSPR(parseInt(dsprId)))
             .then(response => {
-                console.log('response from getActiveMetrcTagsForDSPR:', response);
                 setIsFetchingActiveMetrcTags(false);
             })
     }, []);

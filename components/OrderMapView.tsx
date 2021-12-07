@@ -1,9 +1,8 @@
-import React, { useState, useLayoutEffect, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useLayoutEffect, useRef, useCallback } from 'react';
 import { SafeAreaView, Text, StyleSheet, Dimensions } from 'react-native';
-import MapView, { Callout, Marker, Polyline } from 'react-native-maps';
-import { DSPR, OrderWithAddressAndUser, RouteLeg, State } from '../store/reduxStoreState';
+import MapView, { Callout, Marker } from 'react-native-maps';
+import { DSPR, OrderWithAddressAndUser, State } from '../store/reduxStoreState';
 import { DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute } from "../selectors/dsprDriverSelector";
-import { getQueuedAndInProcessOrdersWithAddressesAndUsersForDriverAsArrayFromProps, } from '../selectors/orderSelectors';
 import { useSelector, shallowEqual } from 'react-redux';
 import { getDSPRFromProps } from "../selectors/dsprSelectors";
 
@@ -71,9 +70,7 @@ const OrderMapView = ({
     }, [ordersWithAddressAndUser]);
 
     const onMapReadyHandler = useCallback(() => {
-        console.log('onMapReadyHandler Running!');
         if (mapRef.current) {
-            console.log('in mapRef.current');
             mapRef.current.fitToSuppliedMarkers(mapIdentifiers, {
                 edgePadding:
                     {
