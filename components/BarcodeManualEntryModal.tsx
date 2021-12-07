@@ -55,7 +55,7 @@ const BarcodeManualEntryModal = ({
     const [text, setText] = useState<string>('');
     const [selectedItem, setSelectedItem] = useState(null)
 
-    const dropdownController = useRef(null)
+    let dropdownController;
     const textInputRef = useRef<any>(null);
 
     const handleUpdate = (evt) => {
@@ -69,9 +69,9 @@ const BarcodeManualEntryModal = ({
 
     const handleOnBlur = () => {
         console.log('in AutoComplete handleOnBlur');
-        if (!text && dropdownController && dropdownController?.current) {
+        if (!text && dropdownController && dropdownController) {
             //dropdownController.current.clear()
-            dropdownController.current.setInputText('');
+            dropdownController.setInputText('');
             //dropdownController.current.close()
         }
     }
@@ -143,7 +143,7 @@ const BarcodeManualEntryModal = ({
                         <View style={Platform.select({ ios: { zIndex: 100 }})}>
                             <AutocompleteDropdown
                             controller={(controller) => {
-                            dropdownController.current = controller
+                            dropdownController = controller;
                         }}
                             clearOnFocus={false}
                             //closeOnBlur={true}
