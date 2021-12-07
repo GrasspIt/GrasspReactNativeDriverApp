@@ -7,7 +7,6 @@ import OnCallSwitch from './OnCallSwitch';
 import AlertSuccessOrError from "./AlertSuccessOrError";
 
 //tests
-import AutocompleteTest from "./AutoComplete";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown"
 
 type Props = {
