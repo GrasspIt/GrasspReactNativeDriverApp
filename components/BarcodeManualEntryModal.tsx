@@ -154,6 +154,8 @@ const BarcodeManualEntryModal = ({
                             //}}
                             dataSet={activeMetrcTagsForAutoComplete}
                             loading={isFetchingActiveMetrcTags}
+                            //rightButtonsContainerStyle={{width: '30%', borderColor: 'blue', borderWidth: 2, borderStyle: 'solid'}}
+                            //    ClearIconComponent={<TextInput.Icon name={'close'} style={{marginRight: 20}} />}
                             />
                             {/*<Text style={{ color: "#668", fontSize: 13 }}>*/}
                             {/*Selected item: {text}*/}
