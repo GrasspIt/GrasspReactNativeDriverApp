@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, StyleSheet, View, Platform, StatusBar, Vibration } from "react-native";
 import { useTheme, IconButton, Paragraph, Subheading } from "react-native-paper";
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import { Camera } from "expo-camera"
 import { OrderDetail } from "../store/reduxStoreState";
 import AlertSuccessOrError from "./AlertSuccessOrError";
 import AlertSuccessButtonsForRemainingScans from "./buttons/AlertSuccessButtonsForRemainingScans";
@@ -47,7 +47,8 @@ const BarcodeScanner = ({
 
     useEffect(() => {
         (async () => {
-            const {status} = await BarCodeScanner.requestPermissionsAsync();
+            const {status} = await Camera.getCameraPermissionsAsync();
+            //const {status} = await Camera.requestPermissionsAsync();
             setHasPermission(status === 'granted');
         })();
     }, []);
@@ -95,7 +96,7 @@ const BarcodeScanner = ({
 
             {/*Based on Expo's Implementation*/}
             <View style={styles.scannerContainer}>
-                <BarCodeScanner
+                <Camera
                     onBarCodeScanned={scannerDisabled ? undefined : handleScanSubmit}
                     style={[StyleSheet.absoluteFill]}
                 >
@@ -106,7 +107,7 @@ const BarcodeScanner = ({
                         <View style={styles.layerRight}/>
                     </View>
                     <View style={styles.layerBottom}/>
-                </BarCodeScanner>
+                </Camera>
             </View>
 
             <View style={styles.buttonsContainer}>
