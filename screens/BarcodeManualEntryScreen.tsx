@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import BarcodeManualEntryModal from "../components/BarcodeManualEntryModal";
 import {
@@ -11,7 +11,13 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { OrderDetail, State } from "../store/reduxStoreState";
 import { getOrderDetailFromProps } from "../selectors/orderSelectors";
 import { getOrderScanCountForOrderDetailFromProps } from "../selectors/scanSelectors";
-import { isMetrcDSPRFromProps, isNonMetrcScanningDSPRFromProps } from "../selectors/dsprSelectors";
+import {
+    ActiveMetrcTagForAutoComplete,
+    getDSPRActiveMetrcTagsForAutoComplete,
+    isMetrcDSPRFromProps,
+    isNonMetrcScanningDSPRFromProps
+} from "../selectors/dsprSelectors";
+import { getActiveMetrcTagsForDSPR } from "../actions/dsprActions";
 
 
 const BarcodeManualEntryScreen = ({navigation, route}) => {
@@ -29,10 +35,21 @@ const BarcodeManualEntryScreen = ({navigation, route}) => {
 
     const isMetrcDSPR = useSelector<State, boolean | undefined>(state => dsprId && isMetrcDSPRFromProps(state, {dsprId}), shallowEqual);
     const isNonMetrcScanningDSPR = useSelector<State, boolean>(state => dsprId && isNonMetrcScanningDSPRFromProps(state, {dsprId}), shallowEqual);
+    const activeMetrcTagsForAutoComplete = useSelector<State, ActiveMetrcTagForAutoComplete[]>(state => dsprId && getDSPRActiveMetrcTagsForAutoComplete(state, {dsprId}), shallowEqual);
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
     const [errorAlertVisible, setErrorAlertVisible] = useState<boolean>(false);
     const [errorText, setErrorText] = useState<string>('');
+    const [isFetchingActiveMetrcTags, setIsFetchingActiveMetrcTags] = useState<boolean>(false);
+
+    useEffect(() => {
+        setIsFetchingActiveMetrcTags(true);
+        dispatch<any>(getActiveMetrcTagsForDSPR(parseInt(dsprId)))
+            .then(response => {
+                console.log('response from getActiveMetrcTagsForDSPR:', response);
+                setIsFetchingActiveMetrcTags(false);
+            })
+    }, []);
 
     const showSuccessAlert = () => setSuccessAlertVisible(true);
 
@@ -110,6 +127,8 @@ const BarcodeManualEntryScreen = ({navigation, route}) => {
         orderDetailQuantity={orderDetail?.quantity}
         errorText={errorText}
         isMetrcDSPR={!!isMetrcDSPR}
+        activeMetrcTagsForAutoComplete={activeMetrcTagsForAutoComplete}
+        isFetchingActiveMetrcTags={isFetchingActiveMetrcTags}
     />
 }
 

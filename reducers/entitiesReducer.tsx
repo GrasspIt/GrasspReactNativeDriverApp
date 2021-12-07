@@ -13,7 +13,7 @@ import {
 } from '../actions/userActions';
 import {
     GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS,
-    CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS,
+    CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS, GET_DSPR_ACTIVE_METRC_TAGS_SUCCESS,
 } from '../actions/dsprActions';
 import {
     TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS,
@@ -75,6 +75,7 @@ export const initialState = {
     dsprDriverRouteMetrics: {},
     dspProducts: {},
     orderScans: {},
+    dsprMetrcTags: {}
 };
 
 export const overwriteArray = (objValue, srcValue) => {
@@ -233,7 +234,22 @@ export default (state = initialState, action) => {
                 return modifiedState;
             }
             return state;
+        case GET_DSPR_ACTIVE_METRC_TAGS_SUCCESS:
+            if (responseEntities && responseEntities.dsprMetrcTags && action) {
+                console.log('responseEntities for getActiveDSPRMetrcTags:', responseEntities, 'action:', action);
+                const modifiedState = {...state};
 
+                //The response entities should only be returning tags belonging to one DSPR
+                //Therefore, we take the dsprId from the first object, and use that to create a property on dsprMetrcTags, with the metrcTag objects serving as the value
+                const firstTagId = action.response.result[0];
+                if(!responseEntities.dsprMetrcTags || !firstTagId) {
+                    return modifiedState;
+                }
+                const dsprId = responseEntities.dsprMetrcTags[firstTagId].dsprId;
+                modifiedState.dsprMetrcTags[dsprId] = {...modifiedState.dsprMetrcTags[dsprId], ...responseEntities.dsprMetrcTags};
+                return modifiedState;
+            }
+            return state;
         default:
             return state;
     }

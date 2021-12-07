@@ -6,7 +6,7 @@ import OrderSelectionModal from '../components/OrderSelectionModal';
 import RouteActionButton from '../components/RouteActionButton';
 import RouteMapView from '../components/RouteMapView';
 import RouteListView from '../components/RouteListView';
-import RouteViewButtons from '../components/RouteViewButtons';
+import RouteAndOrderViewButtons from './RouteAndOrderViewButtons';
 
 type Props = {
   navigation;
@@ -79,6 +79,9 @@ const RoutingMainDisplay = ({
       : null;
   }, [navigation, driver]);
 
+  console.log('driver in Routing Main Display:', driver);
+
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? (
@@ -87,7 +90,7 @@ const RoutingMainDisplay = ({
         </View>
       ) : driver && driver.currentRoute && driver.currentRoute.active ? (
         <View style={{ flex: 1 }}>
-          <RouteViewButtons routeView={routeView} setRouteView={setRouteView} />
+          <RouteAndOrderViewButtons view={routeView} setView={setRouteView} />
           {routeView === 'list' ? (
             <RouteListView
               isLoading={isLoading}

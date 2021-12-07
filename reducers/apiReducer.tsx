@@ -23,7 +23,7 @@ import {
 } from '../actions/userActions';
 import {
   GET_DSPR_DRIVER_SERVICE_AREAS_SUCCESS,
-  CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS,
+  CREATE_OR_UPDATE_DSPR_DRIVER_SERVICE_AREA_SUCCESS, GET_DSPR_ACTIVE_METRC_TAGS_SUCCESS,
 } from '../actions/dsprActions';
 import {
   TOGGLE_DSPR_DRIVER_ACTIVE_STATUS_SUCCESS,
@@ -160,6 +160,7 @@ export default (state = initialState, action) => {
     case RESET_ORDER_SCANS_SUCCESS:
     case RESET_ORDER_DETAIL_SCANS_SUCCESS:
     case GET_CURRENT_ORDER_SCANS_FOR_ORDER_SUCCESS:
+    case GET_DSPR_ACTIVE_METRC_TAGS_SUCCESS:
       const newState = { ...state, isLoading: false, entities: { ...entitiesInitialState } };
       return _.merge({}, newState, {
         entities: entitiesReducer(state.entities, action),

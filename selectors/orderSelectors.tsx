@@ -1,5 +1,5 @@
 import { getAddresses } from './addressSelectors';
-import { State } from '../store/reduxStoreState';
+import { Address, State, Order, OrderWithAddressAndUser } from '../store/reduxStoreState';
 import { createSelector } from 'reselect';
 import { getUserMedicalRecommendations, getUserIdDocuments } from './userDocumentsSelector';
 import { getUsers } from './userSelectors';
@@ -86,6 +86,79 @@ export const getOrdersWithAddressesAndUsers = createSelector(
     return ordersWithAddressesAndUsers;
   }
 );
+
+// TODO: possibly delete
+export type QueuedAndInProcessOrdersWithAddressesForDriver = {
+  [orderId: number]: Omit<Order, 'address'> & {
+    address: Address;
+  }
+}
+
+export type OrderWithAddress = Omit<Order, 'address'> & {
+  address: Address;
+};
+
+// TODO: possibly delete
+export type QueuedAndInProcessOrdersWithAddressesForDriverAsArray = Omit<Order, 'address'> & {
+  address: Address;
+}[]
+
+const getDSPRDriverFromProps = (state: State, props) => state.api.entities.dsprDrivers[props.dsprDriverId];
+
+// TODO: possibly delete
+export const getQueuedAndInProcessOrdersWithAddressesForDriverFromProps = createSelector(
+  [getDSPRDriverFromProps, getOrdersWithAddresses], (driver, ordersWithAddresses) => {
+    const ordersWithAddressesForDriver = {};
+
+    if (driver && ordersWithAddresses) {
+
+      if(driver.currentInProcessOrder) {
+        const inProcessOrderId = driver.currentInProcessOrder;
+        ordersWithAddressesForDriver[inProcessOrderId] = ordersWithAddresses[inProcessOrderId];
+      }
+
+      if(driver.queuedOrders && driver.queuedOrders.length > 0) {
+        driver.queuedOrders.forEach(orderId => {
+          ordersWithAddressesForDriver[orderId] = ordersWithAddresses[orderId];
+        })
+      }
+    }
+
+    return ordersWithAddressesForDriver;
+  }
+);
+
+// TODO possibly delete
+export const getQueuedAndInProcessOrdersWithAddressesForDriverAsArrayFromProps = createSelector(
+  [getQueuedAndInProcessOrdersWithAddressesForDriverFromProps], (orderAddresses) => {
+    return Object.values(orderAddresses);
+  }
+)
+
+// Type: OrderWithAddressAndUser
+
+export const  getQueuedAndInProcessOrdersWithAddressesAndUsersForDriverAsArrayFromProps = createSelector(
+  [getDSPRDriverFromProps, getOrdersWithAddresses, getUsers], (driver, ordersWithAddresses, users) => {
+    let ordersWithAddressesAndUsers:OrderWithAddressAndUser[]  = [];
+
+    if (driver.queuedOrders && driver.queuedOrders.length > 0) {
+      const queuedOrders = driver.queuedOrders.map((orderId) => {
+        const queuedOrder = ordersWithAddresses[orderId];
+        queuedOrder.user = users[queuedOrder.user];
+        return queuedOrder;
+      }
+    )
+      ordersWithAddressesAndUsers = queuedOrders;
+    }
+
+    if (driver.currentInProcessOrder) {
+      const order = ordersWithAddresses[driver.currentInProcessOrder];
+      order.user = users[order.user];
+      ordersWithAddressesAndUsers.push(order);
+    }
+
+    return ordersWithAddressesAndUsers;
+  });
 
 export const getProductsInOrderFromProps = (state: State, props: { orderId: number }): ProductInOrder[] => {
     //const orders = state.api && state.api.entities && state.api.entities.orders ? state.api.entities.orders[orderId] : undefined;

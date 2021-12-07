@@ -94,6 +94,9 @@ export interface Entities {
     orderScans: {
         [tagId: number]: OrderScan;
     };
+    dsprMetrcTags: {
+        [dsprId: number]: MetrcTagProductAssociation[]
+    }
 }
 
 export interface User {
@@ -569,4 +572,20 @@ export interface OrderScan {
     quantityOfEighths?: number;
     convertToShake?: boolean;
     metrcTagProductAssociation?: null;
+}
+
+interface MetrcTagProductAssociation {
+    id: number;
+    metrcTag: string;
+    metrcItemName: string;
+    metrcTagUnitOfMeasure: string;
+    productId: number;
+    dsprId: number;
+    isActive: boolean;
+    quantityOfEighths?: number;
+    initialQuantityOfEighths?: number;
+    convertToShake: boolean;
+    metrcTagToTransfer: null | {metrcTag: string};
+    updatedTimeStamp: string;
+    createdTimeStamp: string;
 }

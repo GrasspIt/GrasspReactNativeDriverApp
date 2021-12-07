@@ -8,7 +8,15 @@ import { getAddresses } from './addressSelectors';
 import { getUserMedicalRecommendations, getUserIdDocuments } from './userDocumentsSelector';
 import { getDSPRDriverServiceAreasFromProps } from './dsprDriverServiceAreaSelectors';
 import { getRoutesWithMetricsAndLocationsAndRouteLegsAndRouteLegDirections } from './dsprDriverRouteSelectors';
-import { State } from '../store/reduxStoreState';
+import {
+    DsprDriver,
+    DsprDriverLocation, DSPRDriverServiceArea,
+    OrderWithAddressAndUser,
+    Route,
+    RouteLeg, RouteLegDirection, RouteMetrics,
+    State,
+    User
+} from '../store/reduxStoreState';
 
 export const getDSPRDrivers = (state: State, props) => state.api.entities.dsprDrivers;
 export const getDSPRDriverFromProps = (state: State, props) =>
@@ -25,6 +33,26 @@ const mapAddressIntoOrder = (orderId, orders, addresses, users, medRecs, idDocs)
     returnOrder['userIdentificationDocument'] = idDocs[order.userIdentificationDocument];
   return returnOrder;
 };
+
+export type DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute =
+    Omit<DsprDriver, 'user'> & {
+        user: User;
+        currentLocation?: DsprDriverLocation;
+        queuedOrders?: OrderWithAddressAndUser[];
+        currentInProcessOrder?: OrderWithAddressAndUser;
+        currentRoute?: Omit<Route, 'legs'> & {
+            legs: Omit<RouteLeg, 'order'> &
+                {
+                    order: OrderWithAddressAndUser;
+                    routeLegDirections: Omit<RouteLegDirection, 'metrics'> &
+                        {
+                            metrics: RouteMetrics;
+                        }[];
+                    overviewPolyline: any;
+                }[];
+        };
+        serviceAreas?: DSPRDriverServiceArea[];
+    };
 
 export const getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps = createSelector(
   [
@@ -166,9 +194,10 @@ export const getDrivers = (state: State) => {
   return state.api.entities.dsprDrivers;
 };
 
-export const getOnCallDrivers = createSelector([getDriversForDSPR], (drivers) => {
-  return drivers ? drivers.filter((driver) => driver.onCall) : [];
-});
+//TODO fix TypeScript error
+//export const getOnCallDrivers = createSelector([getDriversForDSPR], (drivers) => {
+//  return drivers ? drivers.filter((driver) => driver.onCall) : undefined;
+//});
 
 export const getDriverForLoggedInUserGivenDSPR = createSelector(
   [getDSPRFromProps, getDrivers, getLoggedInUser],

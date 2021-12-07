@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, SafeAreaView } from 'react-native';
 import {
     Button,
@@ -70,9 +70,19 @@ const OrderDetailsDisplay = ({
                              }: Props) => {
     const {colors} = useTheme();
 
+    const [isExpanded, setIsExpanded] = useState<number | null>(null);
+
     useEffect(() => {
         if (order.orderStatus === 'canceled' || order.orderStatus === 'completed') navigation.goBack();
     }, [order]);
+
+    const handleAccordionOnPress = (noteId: number) => {
+        if (!isExpanded) {
+            setIsExpanded(noteId);
+        } else {
+            setIsExpanded(null);
+        }
+    }
 
     return (
         <SafeAreaView style={{flex: 1}}>
@@ -90,15 +100,40 @@ const OrderDetailsDisplay = ({
                                     userNotes
                                         .filter((note) => note.isVisible)
                                         .map((userNote) => (
+                                            //Original
+                                            //<List.Item
+                                            //    key={userNote.id}
+                                            //    title={<Text>{userNote.note}</Text>}
+                                            //    description={`${Moment(userNote.createdTimestamp).format(
+                                            //        'MMMM Do YYYY, h:mm a'
+                                            //    )}`}
+                                            //    descriptionStyle={{alignSelf: 'flex-end'}}
+                                            //    titleNumberOfLines={3}
+                                            ///>
+                                            <List.Accordion
+                                                title={<Text>{isExpanded !== userNote.id ? userNote.note : 'Complete Note'}</Text>}
+                                                expanded={isExpanded === userNote.id}
+                                                onPress={() => handleAccordionOnPress(userNote.id)}
+                                                titleNumberOfLines={3}
+                                                description={!isExpanded ? `${Moment(userNote.createdTimestamp).format(
+                                                    'MMMM Do YYYY, h:mm a'
+                                                )}` : undefined}
+                                                descriptionStyle={{alignSelf: 'flex-end', marginTop: 8}}
+                                                accessibilityLabel={'Expand user note'}
+                                                key={userNote.id + orderId}
+                                            >
                                             <List.Item
                                                 key={userNote.id}
-                                                title={<Text>{userNote.note}</Text>}
+                                                title={
+                                                        <Text>{userNote.note}</Text>
+                                                }
                                                 description={`${Moment(userNote.createdTimestamp).format(
                                                     'MMMM Do YYYY, h:mm a'
                                                 )}`}
-                                                descriptionStyle={{alignSelf: 'flex-end'}}
-                                                titleNumberOfLines={3}
+                                                descriptionStyle={{alignSelf: 'flex-end', marginTop: 8}}
+                                                titleNumberOfLines={300}
                                             />
+                                            </List.Accordion>
                                         ))
                                 ) : (
                                     <List.Item title={<Text>No active notes.</Text>}/>

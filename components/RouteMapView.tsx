@@ -21,6 +21,8 @@ const RouteMapView: React.FC<RouteMapViewProps> = ({
   const [onOverview, setOnOverview] = useState(true);
   const [routeCenter, setRouteCenter] = useState<any>();
   const [polylineCenter, setPolylineCenter] = useState<any>();
+  console.log('driver in map view:', driver);
+  console.log('(in RouteMapView) onOverView:', onOverview, 'routeCenter:', routeCenter, 'polylineCenter:', polylineCenter, 'orderPolyLine (prop):', orderPolyline);
 
   const findOverviewPolylineCenter = () => {
     if (driver && driver.currentRoute.polylineContainingCoordinates) {
