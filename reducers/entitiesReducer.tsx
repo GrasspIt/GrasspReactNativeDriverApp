@@ -236,7 +236,6 @@ export default (state = initialState, action) => {
             return state;
         case GET_DSPR_ACTIVE_METRC_TAGS_SUCCESS:
             if (responseEntities && responseEntities.dsprMetrcTags && action) {
-                console.log('responseEntities for getActiveDSPRMetrcTags:', responseEntities, 'action:', action);
                 const modifiedState = {...state};
 
                 //The response entities should only be returning tags belonging to one DSPR

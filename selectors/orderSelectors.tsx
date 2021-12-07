@@ -87,22 +87,6 @@ export const getOrdersWithAddressesAndUsers = createSelector(
   }
 );
 
-// TODO: possibly delete
-export type QueuedAndInProcessOrdersWithAddressesForDriver = {
-  [orderId: number]: Omit<Order, 'address'> & {
-    address: Address;
-  }
-}
-
-export type OrderWithAddress = Omit<Order, 'address'> & {
-  address: Address;
-};
-
-// TODO: possibly delete
-export type QueuedAndInProcessOrdersWithAddressesForDriverAsArray = Omit<Order, 'address'> & {
-  address: Address;
-}[]
-
 const getDSPRDriverFromProps = (state: State, props) => state.api.entities.dsprDrivers[props.dsprDriverId];
 
 // TODO: possibly delete
@@ -127,15 +111,6 @@ export const getQueuedAndInProcessOrdersWithAddressesForDriverFromProps = create
     return ordersWithAddressesForDriver;
   }
 );
-
-// TODO possibly delete
-export const getQueuedAndInProcessOrdersWithAddressesForDriverAsArrayFromProps = createSelector(
-  [getQueuedAndInProcessOrdersWithAddressesForDriverFromProps], (orderAddresses) => {
-    return Object.values(orderAddresses);
-  }
-)
-
-// Type: OrderWithAddressAndUser
 
 export const  getQueuedAndInProcessOrdersWithAddressesAndUsersForDriverAsArrayFromProps = createSelector(
   [getDSPRDriverFromProps, getOrdersWithAddresses, getUsers], (driver, ordersWithAddresses, users) => {

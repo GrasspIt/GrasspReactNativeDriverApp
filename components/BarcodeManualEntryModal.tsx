@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Platform, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
+import { Platform, SafeAreaView, StatusBar, StyleSheet, View } from "react-native";
 import {
     Button,
     Caption,
@@ -53,13 +53,11 @@ const BarcodeManualEntryModal = ({
     const {colors} = useTheme();
 
     const [text, setText] = useState<string>('');
-    const [selectedItem, setSelectedItem] = useState(null)
 
     let dropdownController;
     const textInputRef = useRef<any>(null);
 
     const handleUpdate = (evt) => {
-        console.log('evt in handleUpdate:', evt);
         if (evt) {
             setText(evt.title);
         } else {
@@ -68,11 +66,8 @@ const BarcodeManualEntryModal = ({
     }
 
     const handleOnBlur = () => {
-        console.log('in AutoComplete handleOnBlur');
         if (!text && dropdownController && dropdownController) {
-            //dropdownController.current.clear()
             dropdownController.setInputText('');
-            //dropdownController.current.close()
         }
     }
 
@@ -90,7 +85,6 @@ const BarcodeManualEntryModal = ({
      *  on submit, the textInput is blurred
      * */
     const handleSubmit = () => {
-        console.log('in AutoComplete handleSubmit');
         if (text.trim() === '') {
             alert('A tag must be inputted!')
         } else {
@@ -146,7 +140,6 @@ const BarcodeManualEntryModal = ({
                             dropdownController = controller;
                         }}
                             clearOnFocus={false}
-                            //closeOnBlur={true}
                             onBlur={handleOnBlur}
                             onSelectItem={handleUpdate}
                             //textInputProps={{
@@ -154,23 +147,12 @@ const BarcodeManualEntryModal = ({
                             //}}
                             dataSet={activeMetrcTagsForAutoComplete}
                             loading={isFetchingActiveMetrcTags}
-                            //rightButtonsContainerStyle={{width: '30%', borderColor: 'blue', borderWidth: 2, borderStyle: 'solid'}}
-                            //    ClearIconComponent={<TextInput.Icon name={'close'} style={{marginRight: 20}} />}
                             />
-                            {/*<Text style={{ color: "#668", fontSize: 13 }}>*/}
-                            {/*Selected item: {text}*/}
-                            {/*</Text>*/}
                             <View style={{marginTop: 16}}>
                                 <Caption>Enter last 4 digits of tag</Caption>
                             </View>
                         </View>
                     }
-
-                    {/*{isMetrcDSPR &&*/}
-                    {/*<View style={{marginTop: 16}}>*/}
-                    {/*    <Caption style={{marginTop: 10}}>The tag will be long - about 24 characters</Caption>*/}
-                    {/*</View>*/}
-                    {/*}*/}
 
                     <Card.Actions style={styles.cardActions}>
                         <Button

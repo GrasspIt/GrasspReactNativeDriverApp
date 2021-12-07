@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
     refreshDSPRDriver,
-    getDSPRDriver,
     removeOrderAndRefreshRoute,
     deactivateDriverRoute,
 } from '../actions/driverActions';
@@ -11,11 +10,13 @@ import {
     getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps
 } from '../selectors/dsprDriverSelector';
 import { getLoggedInUser } from '../selectors/userSelectors';
-import { connect } from 'react-redux';
+import { connect, shallowEqual, useSelector } from 'react-redux';
 import { OrderListStackParamsList } from '../navigation/OrderListNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
 import OrderMainDisplay from "../components/OrderMainDisplay";
 import { SetViewOptions } from "../components/RouteAndOrderViewButtons";
+import { OrderWithAddressAndUser, State } from "../store/reduxStoreState";
+import { getQueuedAndInProcessOrdersWithAddressesAndUsersForDriverAsArrayFromProps } from "../selectors/orderSelectors";
 
 type OrderListScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Orders'>;
 type Props = {
@@ -25,7 +26,6 @@ type Props = {
     dsprDriver: DSPRDRiverWithUserAndOrdersAndServiceAreasAndCurrentRoute;
     isLoading;
     refreshDSPRDriver;
-    getDSPRDriver;
     removeOrderAndRefreshRoute;
     deactivateDriverRoute;
     markOrderInProcess;
@@ -38,7 +38,6 @@ const OrderListScreen = ({
                              loggedInUser,
                              dsprDriver,
                              isLoading,
-                             getDSPRDriver,
                              removeOrderAndRefreshRoute,
                              deactivateDriverRoute,
                              markOrderInProcess,
@@ -47,8 +46,12 @@ const OrderListScreen = ({
                          }: Props) => {
 
     const [orderView, setOrderView] = useState<SetViewOptions>('map');
-    const [orderLocations, setOrderLocations] = useState(null);
     const [isFetchingDriver, setIsFetchingDriver] = useState<boolean>(false);
+
+    const ordersWithAddressAndUser = useSelector<State, OrderWithAddressAndUser[]>(
+        state => getQueuedAndInProcessOrdersWithAddressesAndUsersForDriverAsArrayFromProps(
+            state, {dsprDriverId: dsprDriver.id}),
+        shallowEqual);
 
     const getDriverData = () => {
         setIsFetchingDriver(true);
@@ -68,6 +71,7 @@ const OrderListScreen = ({
             orderView={orderView}
             setOrderView={setOrderView}
             isFetchingDriver={isFetchingDriver}
+            ordersWithAddressAndUser={ordersWithAddressAndUser}
         />
     ) : null;
 };
@@ -88,7 +92,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
     refreshDSPRDriver,
-    getDSPRDriver,
     removeOrderAndRefreshRoute,
     deactivateDriverRoute,
     markOrderInProcess,
