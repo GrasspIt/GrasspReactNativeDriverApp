@@ -113,7 +113,7 @@ const BarcodeManualEntryModal = ({
     return (
         <SafeAreaView style={styles.componentContainer}>
             <Card style={styles.card}>
-                <Card.Title title={isMetrcDSPR ? 'Metrc Tag Manual Entry' : 'Barcode Manual Entry'} subtitle={productName}/>
+                <Card.Title title={isMetrcDSPR ? 'Metrc Tag Manual Entry' : 'Barcode Manual Entry'} subtitle={productName} subtitleStyle={{fontSize: 14, marginTop: 4}}/>
                 <Card.Content style={styles.cardContent}>
 
                     <Paragraph style={{fontSize: 16}}>{`Please enter the ${isMetrcDSPR ? 'Metrc Tag' : 'Barcode'} below:`}</Paragraph>
@@ -159,7 +159,7 @@ const BarcodeManualEntryModal = ({
                             {/*Selected item: {text}*/}
                             {/*</Text>*/}
                             <View style={{marginTop: 16}}>
-                                <Caption style={{marginTop: 10}}>Enter last 4 digits of tag</Caption>
+                                <Caption>Enter last 4 digits of tag</Caption>
                             </View>
                         </View>
                     }
