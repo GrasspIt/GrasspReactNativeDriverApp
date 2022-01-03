@@ -233,30 +233,29 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     layerTop: {
-        flex: 2,
-        backgroundColor: opacity,
-    },
-    layerCenter: {
-        //having flex: 2 produced a visual artifact, setting flex: 2.1 cleans this up
-        flex: 2.1,
-        flexDirection: 'row',
-    },
-    layerLeft: {
         flex: 1,
         backgroundColor: opacity,
     },
+    layerCenter: {
+        flex: 2,
+        flexDirection: 'row',
+    },
+    layerLeft: {
+        flex: 2,
+        backgroundColor: opacity,
+    },
     focused: {
-        flex: 10,
+        flex: 8,
         borderColor: 'white',
         borderWidth: 4,
     },
     layerRight: {
-        flex: 1,
+        flex: 2,
         backgroundColor: opacity,
     },
     layerBottom: {
-        //having flex: 2 produced a visual artifact, setting flex: 2.1 cleans this up
-        flex: 2.1,
+        //having flex: 1 produced a visual artifact, setting flex: 1.1 cleans this up
+        flex: 1.1,
         backgroundColor: opacity,
 
     },
