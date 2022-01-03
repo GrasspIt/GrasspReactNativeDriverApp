@@ -24,6 +24,7 @@ type BarcodeScannerProps = {
     scannerDisabled: boolean;
     errorText: string;
     dsprId: number;
+    unit?: string;
 }
 
 const BarcodeScanner = ({
@@ -41,7 +42,8 @@ const BarcodeScanner = ({
                             closeErrorAlert,
                             scannerDisabled,
                             errorText,
-                            dsprId
+                            dsprId,
+                            unit,
                         }: BarcodeScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
@@ -57,7 +59,7 @@ const BarcodeScanner = ({
     const handleScanSubmit = (scanData) => {
         Vibration.vibrate();
 
-        const { data } = scanData;
+        const {data} = scanData;
 
         scanSubmit(data);
     };
@@ -91,7 +93,10 @@ const BarcodeScanner = ({
 
             <View style={styles.headerContainer}>
                 <Text style={styles.title} numberOfLines={2}>{productName}</Text>
-                <Text style={styles.subtitle}>Scans: {scanCountForOrderDetail}/{orderDetail?.quantity}</Text>
+                <Text style={styles.subtitle}>
+                    {unit && <>Unit: {unit.charAt(0).toUpperCase() + unit.slice(1)}   </>}
+                    Scans: {scanCountForOrderDetail}/{orderDetail?.quantity}
+                </Text>
             </View>
 
             {/*Based on Expo's Implementation*/}

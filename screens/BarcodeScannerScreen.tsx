@@ -113,6 +113,7 @@ const BarcodeScannerScreen = ({
         scannerDisabled={scannerDisabled}
         errorText={errorText}
         dsprId={parseInt(dsprId)}
+        unit={orderDetail && orderDetail.unit ? orderDetail.unit : ''}
     />
 }
 

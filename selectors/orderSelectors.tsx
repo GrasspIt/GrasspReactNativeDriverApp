@@ -147,7 +147,8 @@ export const getProductsInOrderFromProps = (state: State, props: { orderId: numb
             productId,
             name,
             quantity: orderDetail.quantity,
-            dsprId
+            dsprId,
+            unit: orderDetail.unit,
         }
     })
 }
@@ -158,4 +159,5 @@ export interface ProductInOrder {
     name: string;
     quantity: number;
     dsprId: number;
+    unit: string;
 }
