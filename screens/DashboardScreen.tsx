@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef} from 'react';
 import { Alert, Platform } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
@@ -12,6 +12,7 @@ import {
   getDSPRDriver,
   setDriverLocation,
   setDriverOnCallState,
+  SET_ON_CALL_STATE_FOR_DRIVER_SUCCESS,
 } from '../actions/driverActions';
 import { connect } from 'react-redux';
 import { store } from '../store/store';
@@ -19,6 +20,9 @@ import { useInterval } from '../utils/useInterval';
 import { getDSPRFromProps } from '../selectors/dsprSelectors';
 import { getDSPRDriverWithUserAndOrdersAndServiceAreasAndCurrentRouteFromProps } from '../selectors/dsprDriverSelector';
 import DashboardDisplay from '../components/DashboardDisplay';
+
+import { appendLocationHistory, updateLastLocationUpdate } from '../actions/locationActions';
+import { getSessionLocations, getLastUpdateTime } from '../selectors/locationSelectors';
 
 // handler for push notifications
 Notifications.setNotificationHandler({
@@ -28,6 +32,27 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
+
+const handleLocationUpdate = (data, error) => {
+  const movingDriverId = store.getState().api.dsprDriverId;
+  const movingDsprDriver = store.getState().api.entities.dsprDrivers[movingDriverId];
+  const time = new Date();
+  
+  if (error) {
+    store.dispatch<any>(appendLocationHistory({ dspr: movingDsprDriver.dspr, error, time}))
+    Alert.alert('Error: ', error.message);
+    return;
+  }
+  if (data && movingDsprDriver) {
+    const { locations } = data as any;
+    let lat = locations[0].coords.latitude;
+    let long = locations[0].coords.longitude;
+    store.dispatch<any>(updateLastLocationUpdate())
+    store.dispatch<any>(appendLocationHistory({ dspr: movingDsprDriver.dspr, lat, long, time}))
+    //dispatch location to api
+    store.dispatch<any>(setDriverLocation(movingDsprDriver.dspr, lat, long));
+  }
+}
 
 type Props = {
   dspr;
@@ -39,6 +64,8 @@ type Props = {
   getDSPRDriver;
   sendPushToken;
   setDriverOnCallState;
+  sessionLocations;
+  lastLocationUpdateTime;
 };
 
 const DashboardScreen = ({
@@ -51,6 +78,8 @@ const DashboardScreen = ({
   getDSPRDriver,
   sendPushToken,
   setDriverOnCallState,
+  sessionLocations,
+  lastLocationUpdateTime
 }: Props) => {
   const notificationListener: any = useRef();
   const responseListener: any = useRef();
@@ -58,6 +87,11 @@ const DashboardScreen = ({
   const [showLocationPermissionAlert, setShowLocationPermissionAlert] = useState<boolean>(false);
   const [locationPermissionAlertTitle, setLocationPermissionAlertTitle] = useState<string>('');
   const [locationPermissionAlertText, setLocationPermissionAlertText] = useState<string>('');
+  const [foregroundLocationPermission, setForegroundLocationPermission] = useState<string | undefined>('');
+  const [backgroundLocationPermission, setBackgroundLocationPermission] = useState<string | undefined>('');
+  const [timeSinceLastUpdateString, setTimeSinceLastUpdateString] = useState<string>('');
+  const [timeSinceLastUpdateInterval, setTimeSinceLastUpdateInterval] = useState<NodeJS.Timeout | undefined>(undefined);
+  const [showSessionLocations, setShowSessionLocations] = useState<boolean>(false);
 
   const closeLocationPermissionAlert = () => {
     setShowLocationPermissionAlert(false);
@@ -69,8 +103,9 @@ const DashboardScreen = ({
   const refreshDriverData = () => {
     if (!isLoading && driverId) refreshDSPRDriver(driverId);
   };
-  useInterval(refreshDriverData, 60000);
 
+  useInterval(refreshDriverData, 60000);
+  
   const getDriverData = () => {
     if (driverId) getDSPRDriver(driverId);
   };
@@ -107,6 +142,31 @@ const DashboardScreen = ({
     };
   }, [notification, notificationListener, responseListener]);
 
+  const msToTime = () => {
+    if(!lastLocationUpdateTime) {
+      setTimeSinceLastUpdateString("");
+      return;
+    } else {
+      const currentTime = new Date();
+      const diffTime = Math.abs(currentTime.valueOf() - lastLocationUpdateTime.valueOf());
+      const diffDays = Math.floor(diffTime / (1000*60*60*24))
+      const diffHours = Math.floor(diffTime / (1000*60*60)) % 24;
+      const diffMinutes = Math.floor(diffTime / (1000 * 60)) % 60;
+      const diffSeconds = Math.floor(diffTime / (1000)) % 60;
+      let timeString = "";
+  
+      if(diffDays){
+        timeString += diffDays + " Days";
+        if(diffHours) timeString += (" " + diffHours + " Hours");
+      } else {
+        if(diffHours) timeString += (" " + diffHours + " " + "Hours");
+        if(diffMinutes) timeString += (" " + diffMinutes + " " + "Minutes");
+        if(diffSeconds) timeString += (" " + diffSeconds + " " + "Seconds");
+      }
+      setTimeSinceLastUpdateString(timeString);
+    }
+  }
+
   const startLocationUpdates = async () => {
     await Location.startLocationUpdatesAsync('location-tracking', {
       distanceInterval: 120, //meters between updates, about .25 miles
@@ -132,25 +192,42 @@ const DashboardScreen = ({
 
     if (dsprDriver) {
         //request foreground location permissions. If denied, show alert
-        let { status:foregroundStatus } = await Location.requestForegroundPermissionsAsync();
+        let { android: androidForeground, ios: iosForeground} = await Location.requestForegroundPermissionsAsync();
+        let foregroundPermission;
+        if(Platform.OS === "ios") {
+          foregroundPermission = iosForeground?.scope === "always"
+          setForegroundLocationPermission(iosForeground?.scope)
+        } else if (Platform.OS === "android") {
+          foregroundPermission = androidForeground?.accuracy === "fine"
+          setForegroundLocationPermission(androidForeground?.accuracy)
+        } else {
+          foregroundPermission = false;
+          setForegroundLocationPermission("Unknown")
+        }
 
-        if (foregroundStatus !== 'granted' && dsprDriver.onCall === true) {
+        if (!foregroundPermission && dsprDriver.onCall === true) {
           setShowLocationPermissionAlert(true);
           setLocationPermissionAlertTitle('Location updates are disabled.');
-          setLocationPermissionAlertText('Please go to device Settings and give Grassp Driver App permission to track your location. \n\nAfterwards, quit and reopen the app.');
+          setLocationPermissionAlertText('Please go to device Settings and give Grassp Driver App permission to Always track your location (With "Fine" accuracy if Android). \n\nAfterwards, quit and reopen the app.');
       }
 
       //request background permissions. If denied, show alert
-      let { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
-
-      if (foregroundStatus === 'granted' && backgroundStatus !== 'granted' && dsprDriver.onCall === true) {
+      let { status: backgroundStatus, expires, granted, canAskAgain } = await Location.requestBackgroundPermissionsAsync();
+      
+      setBackgroundLocationPermission(backgroundStatus)
+      if (foregroundPermission && backgroundStatus !== 'granted' && dsprDriver.onCall === true) {
         setShowLocationPermissionAlert(true);
         setLocationPermissionAlertTitle('Background location updates are disabled.');
         setLocationPermissionAlertText(`Background location updates are required for the app to work correctly. \n\nPlease go to device Settings and set the Grassp Driver App location permission to "${Platform.OS === 'ios' ? 'Always' : 'Allow all the time'}". \n\nAfterwards, quit and reopen the app.`);
       }
 
       //start updates if onCall and location tracking is enabled, stop updates if not
-      if (foregroundStatus === 'granted' && backgroundStatus === 'granted' && !tracking && dsprDriver.onCall === true) startLocationUpdates();
+      if (foregroundPermission && backgroundStatus === 'granted' && !tracking && dsprDriver.onCall === true) {
+        startLocationUpdates();
+        Location.getCurrentPositionAsync().then(locationResponse => {
+          handleLocationUpdate({ locations: [locationResponse]}, undefined)
+        })
+      }
       if (tracking && dsprDriver.onCall === false) stopLocationUpdates();
     }
     if (tracking && !dsprDriver) stopLocationUpdates();
@@ -162,17 +239,57 @@ const DashboardScreen = ({
     toggleLocationUpdates();
   }, [oncallState]);
 
+  useEffect(() => {
+    if(lastLocationUpdateTime && !timeSinceLastUpdateInterval) setTimeSinceLastUpdateInterval(setInterval(() => msToTime(), 5000))
+    return () => {
+      if(timeSinceLastUpdateInterval) clearInterval(timeSinceLastUpdateInterval);
+    }
+  }, [])
+
+  useEffect(()=> {
+    if(lastLocationUpdateTime && !timeSinceLastUpdateInterval){
+      setTimeSinceLastUpdateInterval(setInterval(() => msToTime(), 5000))
+    }
+
+    return function cleanup () {
+      if(timeSinceLastUpdateInterval){
+        clearInterval(timeSinceLastUpdateInterval);
+      }
+    }
+  }, [lastLocationUpdateTime])
+
+  const setOnCallStateHandler = (driverId, isOncall) => {
+    setDriverOnCallState(driverId, isOncall) 
+  }
+
+  const handleOrdersCardClick = () => {
+    RootNavigation.navigate('Main', {
+      screen: 'OrdersNav',
+    });
+  } 
+
+  const handleToggleShowSessionLocations = () => {
+    setShowSessionLocations(!showSessionLocations);
+  }
+
   return (
     <DashboardDisplay
       dspr={dspr}
       dsprDriver={dsprDriver}
       isLoading={isLoading}
       getDriverData={getDriverData}
-      setDriverOnCallState={setDriverOnCallState}
+      setDriverOnCallState={setOnCallStateHandler}
       showLocationPermissionAlert={showLocationPermissionAlert}
       closeLocationPermissionAlert={closeLocationPermissionAlert}
       locationPermissionAlertTitle={locationPermissionAlertTitle}
       locationPermissionAlertText={locationPermissionAlertText}
+      foregroundLocationPermission={foregroundLocationPermission}
+      backgroundLocationPermission={backgroundLocationPermission}
+      sessionLocations={sessionLocations}
+      showSessionLocations={showSessionLocations}
+      setShowSessionLocations={handleToggleShowSessionLocations}
+      lastLocationUpdateTime={timeSinceLastUpdateString}
+      handleOrdersClick={handleOrdersCardClick}
     />
   );
 };
@@ -209,19 +326,7 @@ const registerForPushNotificationsAsync = async () => {
 
 // define the task that will be called with startLocationTrackingUpdates
 TaskManager.defineTask('location-tracking', ({ data, error }) => {
-  const movingDriverId = store.getState().api.dsprDriverId;
-  const movingDsprDriver = store.getState().api.entities.dsprDrivers[movingDriverId];
-  if (error) {
-    Alert.alert('Error: ', error.message);
-    return;
-  }
-  if (data && movingDsprDriver) {
-    const { locations } = data as any;
-    let lat = locations[0].coords.latitude;
-    let long = locations[0].coords.longitude;
-    //dispatch location to api
-    store.dispatch<any>(setDriverLocation(movingDsprDriver.dspr, lat, long));
-  }
+  handleLocationUpdate(data, error)
 });
 
 const mapStateToProps = (state) => {
@@ -232,12 +337,16 @@ const mapStateToProps = (state) => {
   const dspr = dsprDriver ? getDSPRFromProps(state, { dsprId: dsprDriver.dspr }) : undefined;
   const isLoading = state.api.isLoading;
   const pushToken = state.api.entities.pushToken;
+  const locations = getSessionLocations(state);
+  const lastLocationUpdateTime = getLastUpdateTime(state);
   return {
     driverId,
     dspr,
     dsprDriver,
     isLoading,
     pushToken,
+    sessionLocations: locations,
+    lastLocationUpdateTime
   };
 };
 
@@ -246,6 +355,7 @@ const mapDispatchToProps = {
   getDSPRDriver,
   sendPushToken,
   setDriverOnCallState,
+  getLastUpdateTime
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardScreen);

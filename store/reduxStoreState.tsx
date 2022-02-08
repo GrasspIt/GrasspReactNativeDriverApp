@@ -3,6 +3,12 @@ export interface State {
     routing: Routing;
     componentState: ComponentState;
     api: Api;
+    locations: LocationState;
+}
+
+export interface LocationState {
+    lastLocationUpdateTime: undefined | Date;
+    locations: any[]
 }
 
 export interface Form {

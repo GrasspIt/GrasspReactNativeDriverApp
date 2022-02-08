@@ -26,14 +26,14 @@ const OnCallSwitch = ({ dsprDriver, setDriverOnCallState, isLoading }: SwitchPro
   }, [dsprDriver]);
 
   return (
-    <View style={{ alignItems: 'center', paddingVertical: 12 }}>
+    <View style={{ display: 'flex', flexDirection:'row', alignItems: 'center', paddingTop: 12 }}>
+      <Text style={{paddingRight: 8}}>{isOnCall ? 'On Call' : 'Not on Call'}</Text>
       <Switch
         disabled={isLoading ? true : false}
         color={colors.primary}
         onValueChange={toggleSwitch}
         value={isOnCall}
       />
-      <Text>{isOnCall ? 'On Call' : 'Not on Call'}</Text>
     </View>
   );
 };

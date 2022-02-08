@@ -107,11 +107,12 @@ export const driverOnCallStateSetter = (dsprDriverId, onCallString) => {
 
 export const setDriverOnCallState = (dsprDriverId, isOnCall) => (dispatch, getState) => {
   dispatch({ type: SET_ON_CALL_STATE_FOR_DRIVER_PENDING });
-  dispatch(driverOnCallStateSetter(dsprDriverId, isOnCall))
+  return dispatch(driverOnCallStateSetter(dsprDriverId, isOnCall))
     .then((response) => {
       if (response.type === SET_ON_CALL_STATE_FOR_DRIVER_FAILURE) {
         Alert.alert('Failed to set oncall state:', response.error);
       }
+      return response;
     })
     .catch((error) => Alert.alert('Network error:', error));
 };

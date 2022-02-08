@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import api from './apiReducer';
+import locations from './locationReducer';
 import { AUTOCOMPLETE_SELECTED, DRIVER_AUTOCOMPLETE_SELECTED } from '../actions/formHelperActions';
 
 const userAutoCompleteSelected = (state, action) => {
@@ -84,6 +85,7 @@ const rootReducer = combineReducers({
     },
   }),
   api,
+  locations
 });
 
 export default rootReducer;

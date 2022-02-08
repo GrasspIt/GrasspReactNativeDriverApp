@@ -3,7 +3,7 @@
     "name": "Grassp Driver App",
     "owner": "grassphealth",
     "slug": "GrasspDriverApp",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "platforms": ["ios", "android"],
     "orientation": "portrait",
     "icon": "./assets/grasspLogo1024.png",
@@ -19,7 +19,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.GrasspDriver.app",
-      "buildNumber": "1.1.6",
+      "buildNumber": "1.1.7",
       "supportsTablet": true,
       "infoPlist": {
         "UIBackgroundModes": ["location", "fetch"],

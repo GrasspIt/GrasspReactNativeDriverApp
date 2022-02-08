@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { ActivityIndicator, Button, useTheme } from 'react-native-paper';
+import { ActivityIndicator, Button, useTheme, Card, Title, List } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 
 import OnCallSwitch from './OnCallSwitch';
@@ -19,6 +19,13 @@ type Props = {
   closeLocationPermissionAlert: () => any;
   locationPermissionAlertTitle: string;
   locationPermissionAlertText: string;
+  foregroundLocationPermission: string | undefined;
+  backgroundLocationPermission: string | undefined;
+  sessionLocations: any[];
+  lastLocationUpdateTime;
+  showSessionLocations;
+  setShowSessionLocations: () => void;
+  handleOrdersClick: () => any;
 };
 
 const DashboardDisplay = ({
@@ -30,9 +37,17 @@ const DashboardDisplay = ({
   showLocationPermissionAlert,
   closeLocationPermissionAlert,
   locationPermissionAlertTitle,
-  locationPermissionAlertText
+  locationPermissionAlertText,
+  foregroundLocationPermission,
+  backgroundLocationPermission,
+  sessionLocations,
+  showSessionLocations,
+  setShowSessionLocations,
+  lastLocationUpdateTime,
+  handleOrdersClick
 }: Props) => {
   const { colors } = useTheme();
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -42,14 +57,75 @@ const DashboardDisplay = ({
         </View>
       ) : dsprDriver ? (
         <View style={{ flex: 1, backgroundColor: colors.background }}>
-          <Text style={styles.dsprTitle}>{dspr.name}</Text>
-          {dsprDriver && (
-            <OnCallSwitch
-              isLoading={isLoading}
-              setDriverOnCallState={setDriverOnCallState}
-              dsprDriver={dsprDriver}
-            />
-          )}
+          <View style={styles.cardContainer}>
+            <Card style={[styles.card, styles.firstCard]}>
+              <View style={styles.spacedRowFlex}>
+                <Text style={styles.dsprTitle}>{dspr.name}</Text>
+                <OnCallSwitch
+                    isLoading={isLoading}
+                    setDriverOnCallState={setDriverOnCallState}
+                    dsprDriver={dsprDriver}
+                  />
+              </View>
+            </Card>
+          </View>
+          
+          {dsprDriver.queuedOrders && <View style={{display: 'flex', flexDirection:'row'}}>
+            <View style={styles.ordersCardContainer}>
+              {dsprDriver?.queuedOrders?.length && dsprDriver.queuedOrders.length > 0 ? 
+              <Card style={[styles.ordersCard]} onPress={() => handleOrdersClick()}>
+                <Text style={styles.dsprTitle}>Orders</Text>
+                <Text style={styles.dsprTitle}>{Object.values(dsprDriver.queuedOrders).length}</Text>
+              </Card>:  
+              <Card style={styles.disabledCard}>
+                <Text style={styles.dsprTitle}>No Orders</Text>
+              </Card>}
+              
+            </View>
+            <View style={ styles.ordersCardContainer}>
+              {dsprDriver.currentRoute ? 
+                <Card style={styles.ordersCard}>
+                  <Text style={styles.dsprTitle}>Route</Text>
+                  <Text style={styles.dsprTitle}>{dsprDriver.currentRoute ? JSON.stringify(dsprDriver.currentRoute): "No Route"}</Text>
+                </Card> : 
+                <Card style={styles.disabledCard}>
+                  <Text style={styles.dsprTitle}>No Route</Text>
+                </Card>
+              }
+            </View>
+          </View>}
+          <View style={styles.cardContainer}>
+            <Card style={styles.card}>
+              <Title style={styles.cardTitle}>Location Permissions</Title>
+              <View style={styles.spacedRowFlex}>
+                <Text style={styles.cardContent}>Foreground Permissions:</Text>
+                <Text style={styles.cardContent}>{foregroundLocationPermission || "Unknown"}</Text>
+              </View>
+              <View style={styles.spacedRowFlex}>
+                <Text style={styles.cardContent}>Background Permissions:</Text>
+                <Text style={styles.cardContent}>{backgroundLocationPermission || "Unknown"}</Text>
+              </View>  
+            </Card>
+          </View>
+          <View style={styles.cardContainer}>
+            <Card style={styles.card}>
+              <View style={styles.locationCardContent}>
+                <Title>Session Locations</Title>
+                {sessionLocations && sessionLocations.length !== 0 ? 
+                <View style={styles.timeSinceLocation}>
+                  <Text>Time Since Last Location Update: </Text>
+                  <Text>{lastLocationUpdateTime}</Text>
+                </View> : 
+                null}
+                {showSessionLocations ? sessionLocations && sessionLocations.length !== 0 ? 
+                sessionLocations.map((location,index) => {
+                    return location.error ? <List.Item key={index} title={"Error"} description={location.error.message} /> : <List.Item key={location.time.valueOf()} title={location.time.toLocaleString()} description={"Lat: " + location.lat + ", Long: " +  location.long} />
+                  }) 
+                  : <Text>No Location Data Available</Text> : null}
+                <Button mode="text" onPress={()=>setShowSessionLocations()}>{showSessionLocations ? "Hide Locations" : "Show Locations"}</Button>
+              </View>            
+            </Card>
+          </View>
         </View>
       ) : (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -89,6 +165,53 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingTop: 20,
   },
+  card: {
+    paddingBottom: 8,
+  },
+  cardContent: {
+    fontSize: 16,
+  },
+  cardTitle: {
+    marginHorizontal: 16
+  },
+  locationCardContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginHorizontal: 16,
+  },
+  spacedRowFlex: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 16,
+  },
+  timeSinceLocation: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8
+  },
+  firstCard: {
+    marginTop: 16
+  },
+  ordersCardContainer: {
+    width: "50%",
+    padding: 16
+  },
+  ordersCard: {
+    width: "100%",
+    paddingBottom: 16
+  },
+  disabledCard: {
+    backgroundColor: "#d8d8d8",
+    width: "100%",
+    paddingBottom: 16
+  },
+  cardContainer: {
+    width: "100%",
+    paddingHorizontal: 16,
+    paddingVertical: 8
+  }
 });
 
 export default DashboardDisplay;
