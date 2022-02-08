@@ -9,7 +9,18 @@ import {
     Image
 } from "react-native";
 import { ProductInOrder } from "../selectors/orderSelectors";
-import { Card, Divider, useTheme, List, IconButton, Menu, Dialog, Portal, Paragraph, Button, } from "react-native-paper";
+import {
+    Card,
+    Divider,
+    useTheme,
+    List,
+    IconButton,
+    Menu,
+    Dialog,
+    Portal,
+    Paragraph,
+    Button,
+} from "react-native-paper";
 import { OrderScan } from "../store/reduxStoreState";
 import { infoColor } from "../App";
 
@@ -185,7 +196,7 @@ const OrderToScan = ({
                         )}
                         description={() => (
                             <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10}}>
-                                <Text style={{color: colors.backdrop}}>Quantity: {item.quantity}</Text>
+                                <Text style={{color: colors.backdrop}}>Qty: {item.quantity} {item.unit ? item.unit : ''}</Text>
                                 <Text style={{
                                     color: colors.backdrop,
                                     marginRight: 16
@@ -240,7 +251,8 @@ const OrderToScan = ({
                 <Dialog visible={productResetDialogVisible} onDismiss={hideProductResetDialog}>
                     <Dialog.Title style={styles.dialogTitle}>Reset all scans for this product?</Dialog.Title>
                     <Dialog.Content style={styles.dialogContentContainer}>
-                        <Paragraph style={styles.dialogParagraph}>This action will reset {productToReset && productToReset.name} scans to 0</Paragraph>
+                        <Paragraph style={styles.dialogParagraph}>This action will
+                            reset {productToReset && productToReset.name} scans to 0</Paragraph>
                     </Dialog.Content>
                     <Dialog.Actions style={{flexDirection: 'row', justifyContent: 'space-around'}}>
                         <Button onPress={hideProductResetDialog} color={colors.backdrop}>Cancel</Button>

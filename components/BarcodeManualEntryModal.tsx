@@ -117,7 +117,7 @@ const BarcodeManualEntryModal = ({
                             <TextInput
                                 value={text}
                                 onChangeText={text => setText(text)}
-                                placeholder={isMetrcDSPR ? '1A40A03000005DD000003479' : '4352-11'}
+                                placeholder={'4352-11'}
                                 ref={textInputRef}
                                 autoCorrect={false}
                                 autoFocus={true}

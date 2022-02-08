@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, StyleSheet, View, Platform, StatusBar, Vibration } from "react-native";
 import { useTheme, IconButton, Paragraph, Subheading } from "react-native-paper";
 import { Camera } from "expo-camera"
+import { BarCodeScanner } from 'expo-barcode-scanner';
 import { OrderDetail } from "../store/reduxStoreState";
 import AlertSuccessOrError from "./AlertSuccessOrError";
 import AlertSuccessButtonsForRemainingScans from "./buttons/AlertSuccessButtonsForRemainingScans";
@@ -23,6 +24,7 @@ type BarcodeScannerProps = {
     scannerDisabled: boolean;
     errorText: string;
     dsprId: number;
+    unit?: string;
 }
 
 const BarcodeScanner = ({
@@ -40,7 +42,8 @@ const BarcodeScanner = ({
                             closeErrorAlert,
                             scannerDisabled,
                             errorText,
-                            dsprId
+                            dsprId,
+                            unit,
                         }: BarcodeScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
@@ -48,7 +51,6 @@ const BarcodeScanner = ({
     useEffect(() => {
         (async () => {
             const {status} = await Camera.getCameraPermissionsAsync();
-            //const {status} = await Camera.requestPermissionsAsync();
             setHasPermission(status === 'granted');
         })();
     }, []);
@@ -57,7 +59,7 @@ const BarcodeScanner = ({
     const handleScanSubmit = (scanData) => {
         Vibration.vibrate();
 
-        const { data } = scanData;
+        const {data} = scanData;
 
         scanSubmit(data);
     };
@@ -91,7 +93,10 @@ const BarcodeScanner = ({
 
             <View style={styles.headerContainer}>
                 <Text style={styles.title} numberOfLines={2}>{productName}</Text>
-                <Text style={styles.subtitle}>Scans: {scanCountForOrderDetail}/{orderDetail?.quantity}</Text>
+                <Text style={styles.subtitle}>
+                    {unit && <>Unit: {unit.charAt(0).toUpperCase() + unit.slice(1)}   </>}
+                    Scans: {scanCountForOrderDetail}/{orderDetail?.quantity}
+                </Text>
             </View>
 
             {/*Based on Expo's Implementation*/}
@@ -99,6 +104,12 @@ const BarcodeScanner = ({
                 <Camera
                     onBarCodeScanned={scannerDisabled ? undefined : handleScanSubmit}
                     style={[StyleSheet.absoluteFill]}
+                    barCodeScannerSettings={{
+                        barCodeTypes: [
+                            BarCodeScanner.Constants.BarCodeType.qr,
+                            BarCodeScanner.Constants.BarCodeType.code128
+                        ],
+                    }}
                 >
                     <View style={styles.layerTop}/>
                     <View style={styles.layerCenter}>
@@ -222,30 +233,29 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     layerTop: {
-        flex: 2,
-        backgroundColor: opacity,
-    },
-    layerCenter: {
-        //having flex: 2 produced a visual artifact, setting flex: 2.1 cleans this up
-        flex: 2.1,
-        flexDirection: 'row',
-    },
-    layerLeft: {
         flex: 1,
         backgroundColor: opacity,
     },
+    layerCenter: {
+        flex: 2,
+        flexDirection: 'row',
+    },
+    layerLeft: {
+        flex: 2,
+        backgroundColor: opacity,
+    },
     focused: {
-        flex: 10,
+        flex: 8,
         borderColor: 'white',
         borderWidth: 4,
     },
     layerRight: {
-        flex: 1,
+        flex: 2,
         backgroundColor: opacity,
     },
     layerBottom: {
-        //having flex: 2 produced a visual artifact, setting flex: 2.1 cleans this up
-        flex: 2.1,
+        //having flex: 1 produced a visual artifact, setting flex: 1.1 cleans this up
+        flex: 1.1,
         backgroundColor: opacity,
 
     },
