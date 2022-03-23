@@ -26,6 +26,7 @@ type Props = {
   showSessionLocations;
   setShowSessionLocations: () => void;
   handleOrdersClick: () => any;
+  handleRoutesClick: () => any;
 };
 
 const DashboardDisplay = ({
@@ -44,10 +45,10 @@ const DashboardDisplay = ({
   showSessionLocations,
   setShowSessionLocations,
   lastLocationUpdateTime,
-  handleOrdersClick
+  handleOrdersClick,
+  handleRoutesClick
 }: Props) => {
   const { colors } = useTheme();
-
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -72,10 +73,10 @@ const DashboardDisplay = ({
           
           {dsprDriver.queuedOrders && <View style={{display: 'flex', flexDirection:'row'}}>
             <View style={styles.ordersCardContainer}>
-              {dsprDriver?.queuedOrders?.length && dsprDriver.queuedOrders.length > 0 ? 
+              {(dsprDriver?.currentInProcessOrder || dsprDriver?.queuedOrders?.length) && (dsprDriver.queuedOrders.length > 0 || !!dsprDriver.currentInProcessOrder) ? 
               <Card style={[styles.ordersCard]} onPress={() => handleOrdersClick()}>
                 <Text style={styles.dsprTitle}>Orders</Text>
-                <Text style={styles.dsprTitle}>{Object.values(dsprDriver.queuedOrders).length}</Text>
+                <Text style={styles.dsprTitle}>{Object.values(dsprDriver.queuedOrders).length + (dsprDriver.currentInProcessOrder ? 1: 0)}</Text>
               </Card>:  
               <Card style={styles.disabledCard}>
                 <Text style={styles.dsprTitle}>No Orders</Text>
@@ -83,10 +84,10 @@ const DashboardDisplay = ({
               
             </View>
             <View style={ styles.ordersCardContainer}>
-              {dsprDriver.currentRoute ? 
-                <Card style={styles.ordersCard}>
+              {dsprDriver.currentRoute && dsprDriver?.currentRoute?.active ? 
+                <Card style={styles.ordersCard} onPress={()=> handleRoutesClick()}>
                   <Text style={styles.dsprTitle}>Route</Text>
-                  <Text style={styles.dsprTitle}>{dsprDriver.currentRoute ? JSON.stringify(dsprDriver.currentRoute): "No Route"}</Text>
+                  <Text style={styles.dsprTitle}>{dsprDriver.currentRoute ? dsprDriver.currentRoute.legs.length : "No Route"}</Text>
                 </Card> : 
                 <Card style={styles.disabledCard}>
                   <Text style={styles.dsprTitle}>No Route</Text>
@@ -110,7 +111,12 @@ const DashboardDisplay = ({
           <View style={styles.cardContainer}>
             <Card style={styles.card}>
               <View style={styles.locationCardContent}>
-                <Title>Session Locations</Title>
+                <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                  <Title style={styles.timeSinceLocation}>
+                    <Text>Session Locations</Text>
+                  </Title>
+                  <Button mode="text" onPress={()=>setShowSessionLocations()}>{showSessionLocations ? "Hide Locations" : "Show Locations"}</Button>
+                </View>
                 {sessionLocations && sessionLocations.length !== 0 ? 
                 <View style={styles.timeSinceLocation}>
                   <Text>Time Since Last Location Update: </Text>
@@ -122,11 +128,11 @@ const DashboardDisplay = ({
                     return location.error ? <List.Item key={index} title={"Error"} description={location.error.message} /> : <List.Item key={location.time.valueOf()} title={location.time.toLocaleString()} description={"Lat: " + location.lat + ", Long: " +  location.long} />
                   }) 
                   : <Text>No Location Data Available</Text> : null}
-                <Button mode="text" onPress={()=>setShowSessionLocations()}>{showSessionLocations ? "Hide Locations" : "Show Locations"}</Button>
               </View>            
             </Card>
           </View>
         </View>
+        
       ) : (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
           <Text>Unable to fetch driver data.</Text>

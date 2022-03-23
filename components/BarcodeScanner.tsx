@@ -6,6 +6,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { OrderDetail } from "../store/reduxStoreState";
 import AlertSuccessOrError from "./AlertSuccessOrError";
 import AlertSuccessButtonsForRemainingScans from "./buttons/AlertSuccessButtonsForRemainingScans";
+import { stat } from 'fs';
 
 
 type BarcodeScannerProps = {
@@ -47,10 +48,17 @@ const BarcodeScanner = ({
                         }: BarcodeScannerProps) => {
 
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
+    const [permissionsHere, setPermissionsHere] = useState<any>(undefined);
 
     useEffect(() => {
         (async () => {
             const {status} = await Camera.getCameraPermissionsAsync();
+            if(!(status == "granted")) Camera.requestCameraPermissionsAsync().then((permissionResponse) => {
+                if(permissionResponse.status === "granted") {
+                    
+                }
+            });
+            setPermissionsHere("Looking for permissions: " + status)
             setHasPermission(status === 'granted');
         })();
     }, []);
@@ -64,21 +72,6 @@ const BarcodeScanner = ({
         scanSubmit(data);
     };
 
-    if (hasPermission === 'requesting-permission') {
-        return (
-            <SafeAreaView style={styles.cameraPermissiosContainer}>
-                <Text style={{fontSize: 20}}>Requesting permission to use camera...</Text>
-            </SafeAreaView>
-        )
-    }
-    if (!hasPermission) {
-        return (
-            <SafeAreaView style={styles.cameraPermissiosContainer}>
-                <Text style={{fontSize: 20}}>Camera access has not been granted</Text>
-            </SafeAreaView>
-        )
-    }
-
     /**Message to display when a scan is successful*/
     const successAlertMessage = (
         <View style={successAlertMessageStyle.view}>
@@ -88,7 +81,7 @@ const BarcodeScanner = ({
     )
 
 
-    return (
+    return hasPermission === true ? (
         <SafeAreaView style={styles.componentContainer}>
 
             <View style={styles.headerContainer}>
@@ -180,8 +173,13 @@ const BarcodeScanner = ({
                 isError={true}
             />
         </SafeAreaView>
-    );
-}
+    ) : hasPermission === 'requesting-permission' ?  <SafeAreaView style={styles.cameraPermissiosContainer}>
+            <Text style={{fontSize: 20}}>Requesting permission to use camera...</Text>
+            <Text style={{fontSize: 20}}>{permissionsHere}</Text>
+        </SafeAreaView>
+        : <SafeAreaView style={styles.cameraPermissiosContainer}>
+            <Text style={{fontSize: 20}}>Camera access has not been granted {hasPermission}</Text>
+        </SafeAreaView>;}
 
 export const successAlertMessageStyle = StyleSheet.create({
     view: {

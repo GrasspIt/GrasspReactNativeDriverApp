@@ -87,17 +87,18 @@ const DashboardScreen = ({
   const [showLocationPermissionAlert, setShowLocationPermissionAlert] = useState<boolean>(false);
   const [locationPermissionAlertTitle, setLocationPermissionAlertTitle] = useState<string>('');
   const [locationPermissionAlertText, setLocationPermissionAlertText] = useState<string>('');
-  const [foregroundLocationPermission, setForegroundLocationPermission] = useState<string | undefined>('');
-  const [backgroundLocationPermission, setBackgroundLocationPermission] = useState<string | undefined>('');
   const [timeSinceLastUpdateString, setTimeSinceLastUpdateString] = useState<string>('');
   const [timeSinceLastUpdateInterval, setTimeSinceLastUpdateInterval] = useState<NodeJS.Timeout | undefined>(undefined);
   const [showSessionLocations, setShowSessionLocations] = useState<boolean>(false);
+  const [foregroundLocationStatus, requestForegroundLocationPermission, getForegroundLocationPermission] = Location.useForegroundPermissions();
+  const [backgroundLocationStatus, requestBackgroundLocationPermission, getBackgroundLocationPermission] = Location.useBackgroundPermissions();
 
   const closeLocationPermissionAlert = () => {
     setShowLocationPermissionAlert(false);
     setLocationPermissionAlertTitle('');
     setLocationPermissionAlertText('');
   }
+
 
   // polling data from API while logged in
   const refreshDriverData = () => {
@@ -165,7 +166,7 @@ const DashboardScreen = ({
       }
       setTimeSinceLastUpdateString(timeString);
     }
-  }
+  }   
 
   const startLocationUpdates = async () => {
     await Location.startLocationUpdatesAsync('location-tracking', {
@@ -192,43 +193,32 @@ const DashboardScreen = ({
 
     if (dsprDriver) {
         //request foreground location permissions. If denied, show alert
-        let { android: androidForeground, ios: iosForeground} = await Location.requestForegroundPermissionsAsync();
-        let foregroundPermission;
-        if(Platform.OS === "ios") {
-          foregroundPermission = iosForeground?.scope === "always"
-          setForegroundLocationPermission(iosForeground?.scope)
-        } else if (Platform.OS === "android") {
-          foregroundPermission = androidForeground?.accuracy === "fine"
-          setForegroundLocationPermission(androidForeground?.accuracy)
-        } else {
-          foregroundPermission = false;
-          setForegroundLocationPermission("Unknown")
-        }
+      if(!foregroundLocationStatus) await getForegroundLocationPermission();
+      if(!foregroundLocationStatus?.granted) await requestForegroundLocationPermission();
 
-        if (!foregroundPermission && dsprDriver.onCall === true) {
-          setShowLocationPermissionAlert(true);
-          setLocationPermissionAlertTitle('Location updates are disabled.');
-          setLocationPermissionAlertText('Please go to device Settings and give Grassp Driver App permission to Always track your location (With "Fine" accuracy if Android). \n\nAfterwards, quit and reopen the app.');
+      if (foregroundLocationStatus && !foregroundLocationStatus?.granted && dsprDriver.onCall === true) {
+        setShowLocationPermissionAlert(true);
+        setLocationPermissionAlertTitle('Location updates are disabled.');
+        setLocationPermissionAlertText('Please go to device Settings and give Grassp Driver App permission to Always track your location (With "Fine" accuracy if Android). \n\nAfterwards, quit and reopen the app.');   
       }
 
       //request background permissions. If denied, show alert
-      let { status: backgroundStatus, expires, granted, canAskAgain } = await Location.requestBackgroundPermissionsAsync();
-      
-      setBackgroundLocationPermission(backgroundStatus)
-      if (foregroundPermission && backgroundStatus !== 'granted' && dsprDriver.onCall === true) {
+      if(!backgroundLocationStatus) await getBackgroundLocationPermission();
+      if(!backgroundLocationStatus?.granted) await requestBackgroundLocationPermission();
+      if(backgroundLocationStatus && !backgroundLocationStatus.granted && dsprDriver.onCall === true) {
         setShowLocationPermissionAlert(true);
         setLocationPermissionAlertTitle('Background location updates are disabled.');
         setLocationPermissionAlertText(`Background location updates are required for the app to work correctly. \n\nPlease go to device Settings and set the Grassp Driver App location permission to "${Platform.OS === 'ios' ? 'Always' : 'Allow all the time'}". \n\nAfterwards, quit and reopen the app.`);
       }
-
+      
       //start updates if onCall and location tracking is enabled, stop updates if not
-      if (foregroundPermission && backgroundStatus === 'granted' && !tracking && dsprDriver.onCall === true) {
+      if(backgroundLocationStatus?.granted && foregroundLocationStatus?.granted && !tracking && dsprDriver.onCall === true) {
         startLocationUpdates();
         Location.getCurrentPositionAsync().then(locationResponse => {
           handleLocationUpdate({ locations: [locationResponse]}, undefined)
         })
       }
-      if (tracking && dsprDriver.onCall === false) stopLocationUpdates();
+      tracking && dsprDriver.onCall === false
     }
     if (tracking && !dsprDriver) stopLocationUpdates();
   };
@@ -268,6 +258,12 @@ const DashboardScreen = ({
     });
   } 
 
+  const handleRoutesClick = () => {
+    RootNavigation.navigate('Main', {
+      screen: 'RoutingNav'
+    })
+  }
+
   const handleToggleShowSessionLocations = () => {
     setShowSessionLocations(!showSessionLocations);
   }
@@ -283,14 +279,16 @@ const DashboardScreen = ({
       closeLocationPermissionAlert={closeLocationPermissionAlert}
       locationPermissionAlertTitle={locationPermissionAlertTitle}
       locationPermissionAlertText={locationPermissionAlertText}
-      foregroundLocationPermission={foregroundLocationPermission}
-      backgroundLocationPermission={backgroundLocationPermission}
+      foregroundLocationPermission={foregroundLocationStatus ? foregroundLocationStatus.granted ? "Granted" : "Not Granted" : undefined}
+      backgroundLocationPermission={backgroundLocationStatus ? backgroundLocationStatus.granted ? "Granted" : "Not Granted" : undefined}
       sessionLocations={sessionLocations}
       showSessionLocations={showSessionLocations}
       setShowSessionLocations={handleToggleShowSessionLocations}
       lastLocationUpdateTime={timeSinceLastUpdateString}
       handleOrdersClick={handleOrdersCardClick}
+      handleRoutesClick={handleRoutesClick}
     />
+
   );
 };
 
