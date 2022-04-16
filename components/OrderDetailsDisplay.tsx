@@ -89,35 +89,23 @@ const OrderDetailsDisplay = ({
             {isLoading || isLoadingOnInitialMount ? (
                 <View style={[styles.fillScreen, {backgroundColor: colors.background}]}>
                     <ActivityIndicator size='large' color={colors.primary}/>
-                </View>
-            ) : order ? (
-                <>
+                </View>) : order ? <>
                     <ScrollView style={[styles.scroll, {backgroundColor: colors.background}]}>
                         <Card style={{margin: 10}}>
-                            <Card.Title title='Notes'/>
-                            <Card.Content>
-                                {userNotes && userNotes.some((note) => note.isVisible) ? (
+                    <Card.Title title='Notes'/>
+                        <Card.Content>
+                        {userNotes && userNotes.some((note) => note.isVisible) ? (
                                     userNotes
                                         .filter((note) => note.isVisible)
                                         .map((userNote) => (
-                                            //Original
-                                            //<List.Item
-                                            //    key={userNote.id}
-                                            //    title={<Text>{userNote.note}</Text>}
-                                            //    description={`${Moment(userNote.createdTimestamp).format(
-                                            //        'MMMM Do YYYY, h:mm a'
-                                            //    )}`}
-                                            //    descriptionStyle={{alignSelf: 'flex-end'}}
-                                            //    titleNumberOfLines={3}
-                                            ///>
                                             <List.Accordion
                                                 title={<Text>{isExpanded !== userNote.id ? userNote.note : 'Complete Note'}</Text>}
                                                 expanded={isExpanded === userNote.id}
                                                 onPress={() => handleAccordionOnPress(userNote.id)}
                                                 titleNumberOfLines={3}
-                                                description={!isExpanded ? `${Moment(userNote.createdTimestamp).format(
+                                                description={!isExpanded ? <Text>`${Moment(userNote.createdTimestamp).format(
                                                     'MMMM Do YYYY, h:mm a'
-                                                )}` : undefined}
+                                                )}`</Text> : undefined}
                                                 descriptionStyle={{alignSelf: 'flex-end', marginTop: 8}}
                                                 accessibilityLabel={'Expand user note'}
                                                 key={userNote.id + orderId}
@@ -138,32 +126,31 @@ const OrderDetailsDisplay = ({
                                 ) : (
                                     <List.Item title={<Text>No active notes.</Text>}/>
                                 )}
-                            </Card.Content>
-                            <Card.Actions style={{alignSelf: 'flex-end'}}>
+                        </Card.Content>
+                        <Card.Actions style={{alignSelf: 'flex-end'}}>
                                 <Button
-                                    mode='text'
-                                    onPress={handleManageNotes}
-                                    color={colors.primary}
-                                    labelStyle={{paddingVertical: 4, color: colors.primary}}
-                                >
-                                    Manage Notes
-                                </Button>
-                            </Card.Actions>
-                        </Card>
+                                     mode='text'
+                                     onPress={handleManageNotes}
+                                     color={colors.primary}
+                                     labelStyle={{paddingVertical: 4, color: colors.primary}}
+                                 >
+                                     Manage Notes
+                                 </Button>
+                             </Card.Actions>
+                         </Card>
 
-                        {order.specialInstructions && (
+                         {order.specialInstructions ? (
                             <Card style={{marginHorizontal: 10, marginBottom: 10}}>
-                                <Card.Title title='Special Instructions:'/>
+                                <Card.Title title={<Text>Special Instructions:</Text>}/>
                                 <Card.Content>
                                     <Text>{order.specialInstructions}</Text>
                                 </Card.Content>
-                            </Card>
-                        )}
+                            </Card> ): null}
 
-                        <Card style={{marginHorizontal: 10, marginBottom: 10}}>
-                            {order.userFirstTimeOrderWithDSPR && <Card.Title title='FIRST TIME ORDER'/>}
-                            <Card.Content>
-                                {medicalRecommendation ? (
+                            <Card style={{marginHorizontal: 10, marginBottom: 10}}>
+                             {order.userFirstTimeOrderWithDSPR && <Card.Title title='FIRST TIME ORDER'/>}
+                             <Card.Content>
+                                 {medicalRecommendation ? (
                                     <List.Item title={<Text>Medical User</Text>} titleStyle={{fontWeight: 'bold'}}/>
                                 ) : (
                                     <List.Item title={<Text>Adult User</Text>} titleStyle={{fontWeight: 'bold'}}/>
@@ -294,7 +281,7 @@ const OrderDetailsDisplay = ({
                                 <List.Item title={<Text>Total: ${order.cashTotal.toFixed(2)}</Text>}/>
                             </Card.Content>
                         </Card>
-                        {order.orderStatus && (
+                        {order.orderStatus ? (
                             <OrderButtons
                                 isLoading={isLoading}
                                 orderId={orderId}
@@ -309,18 +296,9 @@ const OrderDetailsDisplay = ({
                                 navigation={navigation}
                                 isScanningDSPR={isScanningDSPR}
                                 isScanningComplete={isScanningComplete}
-                            />
-                        )}
+                            />) : null}
                     </ScrollView>
-                </>
-            ) : (
-                <View style={[styles.fillScreen, {backgroundColor: colors.background}]}>
-                    <Text>Failed to fetch order details.</Text>
-                    <Button mode='text' onPress={getOrderDetails}>
-                        Try Again
-                    </Button>
-                </View>
-            )}
+                </>: <Text>NO ORDER</Text>}
         </SafeAreaView>
     );
 };
