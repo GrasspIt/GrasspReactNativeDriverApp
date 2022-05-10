@@ -7,6 +7,8 @@ export const ORDER_SCAN_SUBMIT_SUCCESS = 'ORDER_SCAN_SUBMIT_SUCCESS';
 export const ORDER_SCAN_SUBMIT_FAILURE = 'ORDER_SCAN_SUBMIT_FAILURE';
 
 export interface SubmitBarcodeScanProps {
+    batchNumber?:string;
+    dsprProductInventoryTransaction?: { id:number}
     metrcTag?: string;
     orderId: number;
     productId: number;

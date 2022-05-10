@@ -61,8 +61,8 @@ const OrderList = ({
                         }
                         onRefresh={() => getDriverData()}
                         refreshing={isFetchingDriver}
-                        data={dsprDriver.queuedOrders}
-                        renderItem={(item) => (
+                        data={dsprDriver ? dsprDriver.queuedOrders : undefined}
+                        renderItem={(item) => item ? (
                             <OrderItem
                                 isLoading={false}
                                 orderInfo={item.item}
@@ -73,8 +73,8 @@ const OrderList = ({
                                 markOrderInProcess={markOrderInProcess}
                                 cancelOrder={cancelOrder}
                             />
-                        )}
-                        keyExtractor={(item: any) => item.id.toString()}
+                        ):null}
+                        keyExtractor={(item: any) => item && item.id ? item.id.toString() : undefined}
                         style={{paddingHorizontal: 10}}
                     />
                 </View>

@@ -10,7 +10,7 @@ import {
     ORDER_SCAN_SUBMIT_FAILURE, SubmitBarcodeScanProps,
 } from "../actions/scanActions";
 import { getOrderScanCountForOrderDetailFromProps } from "../selectors/scanSelectors";
-import { isMetrcDSPRFromProps, isNonMetrcScanningDSPRFromProps } from "../selectors/dsprSelectors";
+import { isBatchDSPRFromProps, isMetrcDSPRFromProps, isNonComplianceScanningDSPRFromProps } from "../selectors/dsprSelectors";
 
 
 const BarcodeScannerScreen = ({
@@ -30,7 +30,8 @@ const BarcodeScannerScreen = ({
         orderDetailId
     }), shallowEqual)
     const isMetrcDSPR = useSelector<State, boolean>(state => dsprId && isMetrcDSPRFromProps(state, {dsprId}), shallowEqual);
-    const isNonMetrcScanningDSPR = useSelector<State, boolean>(state => dsprId && isNonMetrcScanningDSPRFromProps(state, {dsprId}), shallowEqual);
+    const isBatchBasedDSPR = useSelector<State, boolean>(state => dsprId && isBatchDSPRFromProps(state, {dsprId}), shallowEqual);
+    const isNonComplianceScanningDSPR = useSelector<State, boolean>(state => dsprId && isNonComplianceScanningDSPRFromProps(state, {dsprId}), shallowEqual);
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
     const [errorAlertVisible, setErrorAlertVisible] = useState<boolean>(false);
@@ -67,18 +68,29 @@ const BarcodeScannerScreen = ({
         setScannerDisabled(true);
 
         //barcode is productId-dsprId -> split on -
-        const splitTag = isNonMetrcScanningDSPR ? barcode.split('-') : [];
+        const splitTag = isNonComplianceScanningDSPR ? barcode.split('-') : [];
 
-        const productIdForBarcodeSubmit = isMetrcDSPR ? parseInt(productId) : parseInt(splitTag[0]);
+        const productIdForBarcodeSubmit = (isMetrcDSPR || isBatchBasedDSPR) ? parseInt(productId) : parseInt(splitTag[0]);
 
         //Prepare props for either metrcDSPR or nonMetrcScanningDSPR
         const props: SubmitBarcodeScanProps = isMetrcDSPR
-            ? {
+            ? barcode.length > 10 ? {
                 metrcTag: barcode,
                 orderId: parseInt(orderId),
                 productId: productIdForBarcodeSubmit,
                 orderDetailId: parseInt(orderDetailId)
+            } : {
+                dsprProductInventoryTransaction: { id: barcode},
+                orderId: parseInt(orderId),
+                productId: productIdForBarcodeSubmit,
+                orderDetailId: parseInt(orderDetailId)
             }
+            : isBatchBasedDSPR ? {
+                dsprProductInventoryTransaction: { id: barcode},
+                orderId: parseInt(orderId),
+                productId: productIdForBarcodeSubmit,
+                orderDetailId: parseInt(orderDetailId)
+            } 
             : {
                 orderId: parseInt(orderId),
                 productId: productIdForBarcodeSubmit,
@@ -92,7 +104,8 @@ const BarcodeScannerScreen = ({
                 }
                 if (response.type === ORDER_SCAN_SUBMIT_FAILURE) {
                     showErrorAlert()
-                    setErrorText(response.error)
+                    setErrorText(JSON.stringify(isBatchBasedDSPR))
+                    //setErrorText(response.error)
                 }
             })
     }

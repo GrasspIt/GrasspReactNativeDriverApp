@@ -30,7 +30,7 @@ const RouteListView = ({
   const { colors } = useTheme();
 
   let queuedOrders =
-    ordersForRoute && ordersForRoute.filter((leg) => leg.order.orderStatus === 'queued');
+    ordersForRoute && ordersForRoute.filter((leg) => leg.order.orderStatus === 'queued' || leg.order.orderStatus === 'in_route');
   let inProcessOrder =
     ordersForRoute && ordersForRoute.find((leg) => leg.order.orderStatus === 'in_process');
   return ordersForRoute ? (

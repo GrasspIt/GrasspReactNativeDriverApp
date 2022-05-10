@@ -9,9 +9,13 @@ export const isMetrcDSPRFromProps = createSelector(
     [getDSPRFromProps], (dspr) => !!(dspr && dspr.metrcLicense)
 )
 
+export const isBatchDSPRFromProps = createSelector(
+    [getDSPRFromProps], (dspr)=> dspr && dspr.isBatchBased
+)
+
 /**Returns true if dspr requires scanning but does not have a metrc license. Otherwise returns false*/
-export const isNonMetrcScanningDSPRFromProps = createSelector(
-    [getDSPRFromProps], (dspr) => !!(dspr && dspr.isScanOrderDetail && !dspr.metrcLicense)
+export const isNonComplianceScanningDSPRFromProps = createSelector(
+    [getDSPRFromProps], (dspr) => !!(dspr && dspr.isScanOrderDetail && !dspr.metrcLicense && !dspr.isBatchBased)
 )
 
 /**Returns true either if dspr requires scanning. Otherwise returns false*/

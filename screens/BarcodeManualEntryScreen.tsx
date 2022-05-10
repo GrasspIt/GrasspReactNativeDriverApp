@@ -14,8 +14,9 @@ import { getOrderScanCountForOrderDetailFromProps } from "../selectors/scanSelec
 import {
     ActiveMetrcTagForAutoComplete,
     getDSPRActiveMetrcTagsForAutoComplete,
+    isBatchDSPRFromProps,
     isMetrcDSPRFromProps,
-    isNonMetrcScanningDSPRFromProps
+    isNonComplianceScanningDSPRFromProps
 } from "../selectors/dsprSelectors";
 import { getActiveMetrcTagsForDSPR } from "../actions/dsprActions";
 
@@ -34,7 +35,8 @@ const BarcodeManualEntryScreen = ({navigation, route}) => {
     }), shallowEqual)
 
     const isMetrcDSPR = useSelector<State, boolean | undefined>(state => dsprId && isMetrcDSPRFromProps(state, {dsprId}), shallowEqual);
-    const isNonMetrcScanningDSPR = useSelector<State, boolean>(state => dsprId && isNonMetrcScanningDSPRFromProps(state, {dsprId}), shallowEqual);
+    const isBatchBasedDSPR = useSelector<State, boolean | undefined>(state => dsprId && isBatchDSPRFromProps(state, {dsprId}), shallowEqual);
+    const isNonComplianceScanningDSPR = useSelector<State, boolean>(state => dsprId && isNonComplianceScanningDSPRFromProps(state, {dsprId}), shallowEqual);
     const activeMetrcTagsForAutoComplete = useSelector<State, ActiveMetrcTagForAutoComplete[]>(state => dsprId && getDSPRActiveMetrcTagsForAutoComplete(state, {dsprId}), shallowEqual);
 
     const [successAlertVisible, setSuccessAlertVisible] = useState<boolean>(false);
@@ -77,19 +79,24 @@ const BarcodeManualEntryScreen = ({navigation, route}) => {
      * -> if there is an error, show an error message
      * */
     const submitTagEntry = (barcodeText: string) => {
-        const metrcTag = isMetrcDSPR ? barcodeText.toUpperCase() : '';
+        const complianceNumber = (isMetrcDSPR || isBatchBasedDSPR) ? barcodeText.toUpperCase() : '';
         //tag for non-metrc dspri is productId-dsprId -> split on -
-        const splitTag = isNonMetrcScanningDSPR ? barcodeText.split('-') : [];
-        const productIdForBarcodeSubmit = isMetrcDSPR ? parseInt(productId) : parseInt(splitTag[0]);
+        const splitTag = isNonComplianceScanningDSPR ? barcodeText.split('-') : [];
+        const productIdForBarcodeSubmit = (isMetrcDSPR || isBatchBasedDSPR)? parseInt(productId) : parseInt(splitTag[0]);
 
         const props: SubmitBarcodeScanProps = isMetrcDSPR
             ? {
-                metrcTag: metrcTag,
+                metrcTag: complianceNumber,
                 orderId: parseInt(orderId),
                 productId: productIdForBarcodeSubmit,
                 orderDetailId: parseInt(orderDetailId)
             }
-            : {
+            : isBatchBasedDSPR ? {
+                batchNumber: complianceNumber,
+                orderId: parseInt(orderId),
+                productId: productIdForBarcodeSubmit,
+                orderDetailId: parseInt(orderDetailId)
+            } : {
                 orderId: parseInt(orderId),
                 productId: productIdForBarcodeSubmit,
                 orderDetailId: parseInt(orderDetailId)

@@ -187,6 +187,9 @@ export interface DSPR {
     };
     metrcLicense?: string;
     isScanOrderDetail?: boolean;
+    notifyRegistry?: boolean;
+    allowDriverKits?: boolean;
+    isBatchBased?: boolean;
 }
 
 export interface Analytic {

@@ -101,7 +101,9 @@ const RouteActionButton = ({
     }
 
     if (isScanningDSPR) {
-      return !isScanningComplete;
+      if(currentInProcessOrderInActiveRoute) {
+        return !isScanningComplete
+      }
     }
 
     return false;

@@ -250,6 +250,11 @@ const DashboardScreen = ({
 
   const setOnCallStateHandler = (driverId, isOncall) => {
     setDriverOnCallState(driverId, isOncall) 
+    if(backgroundLocationStatus?.granted && foregroundLocationStatus?.granted) {
+      Location.getCurrentPositionAsync().then(locationResponse => {
+        handleLocationUpdate({ locations: [locationResponse]}, undefined)
+      })
+    }
   }
 
   const handleOrdersCardClick = () => {

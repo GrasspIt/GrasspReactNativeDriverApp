@@ -95,21 +95,28 @@ const OrderItem = ({
       >
         <Card.Content style={styles.cardContent}>
           <View style={{ flexDirection: 'row', maxWidth: '85%', flexWrap: 'wrap', marginRight: 8 }}>
-            {index !== undefined && (
-              <View style={{ alignSelf: 'flex-start', marginRight: 4 }}>
-                <Text style={{ fontSize: 16, padding: 2 }}>{index + 1}.</Text>
+            
+              <View style={{ flexDirection: 'column', alignItems: 'baseline' }}>
+              
+                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                  {index !== undefined && (
+                    <View style={{ alignSelf: 'flex-start', marginRight: 4 }}>
+                      <Text style={{ fontSize: 16, padding: 2 }}>{index + 1}.</Text>
+                    </View>
+                  )}
+                  <Text style={{ fontSize: 18, paddingBottom: 4 }}>
+                    {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}
+                  </Text>
+                  <Text style={{ fontSize: 16, paddingBottom: 4 }}>${orderInfo.cashTotal}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                  <Text style={{ fontSize: 16, paddingBottom: 8 }}>
+                    {orderInfo.address.street} {orderInfo.address.zipCode}{' '}
+                    {orderInfo.address.aptNumber && `, Unit ${orderInfo.address.aptNumber}`}
+                  </Text>
+                </View>
               </View>
-            )}
-              <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-                <Text style={{ fontSize: 18, paddingBottom: 4 }}>
-                  {orderInfo.user.firstName} {orderInfo.user.lastName},{' '}
-                </Text>
-                <Text style={{ fontSize: 16, paddingBottom: 4 }}>${orderInfo.cashTotal}</Text>
-              </View>
-              <Text style={{ fontSize: 16, paddingBottom: 8 }}>
-                {orderInfo.address.street} {orderInfo.address.zipCode}{' '}
-                {orderInfo.address.aptNumber && `, Unit ${orderInfo.address.aptNumber}`}
-              </Text>
+              
           </View>
           <IconButton
             icon='chevron-right'
