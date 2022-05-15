@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { SafeAreaView, Text, StyleSheet, View, Platform, StatusBar, Vibration } from "react-native";
 import { useTheme, IconButton, Paragraph, Subheading } from "react-native-paper";
 import { Camera } from "expo-camera"
@@ -50,6 +50,28 @@ const BarcodeScanner = ({
     const [hasPermission, setHasPermission] = useState<boolean | 'requesting-permission'>('requesting-permission');
     const [permissionsHere, setPermissionsHere] = useState<any>(undefined);
 
+    const requiredScans = useMemo(() => {
+        if(orderDetail){
+            let detailQuantity = orderDetail.quantity
+            switch (orderDetail.unit) {
+                case "oz":
+                    detailQuantity *= 8;
+                    break;
+                case "half":
+                    detailQuantity *= 4;
+                    break;
+                case "quarter":
+                    detailQuantity *= 2;
+                    break;
+                case "eighth":
+                default:
+                    break; 
+            }
+            return detailQuantity
+        }
+        return undefined;
+    }, [orderDetail])
+
     useEffect(() => {
         (async () => {
             const {status} = await Camera.getCameraPermissionsAsync();
@@ -76,7 +98,7 @@ const BarcodeScanner = ({
     const successAlertMessage = (
         <View style={successAlertMessageStyle.view}>
             <Subheading style={successAlertMessageStyle.subheading}>{productName}</Subheading>
-            <Paragraph>-- {scanCountForOrderDetail} of {orderDetail?.quantity} Scanned --</Paragraph>
+            <Paragraph>-- {scanCountForOrderDetail} of {requiredScans || "Loading..."} Scanned --</Paragraph>
         </View>
     )
 
@@ -88,7 +110,7 @@ const BarcodeScanner = ({
                 <Text style={styles.title} numberOfLines={2}>{productName}</Text>
                 <Text style={styles.subtitle}>
                     {unit && <>Unit: {unit.charAt(0).toUpperCase() + unit.slice(1)}   </>}
-                    Scans: {scanCountForOrderDetail}/{orderDetail?.quantity}
+                    Scans: {scanCountForOrderDetail}/{requiredScans || "Loading..."}
                 </Text>
             </View>
 
@@ -150,7 +172,7 @@ const BarcodeScanner = ({
                                  title={'Scan Successful!'}
                                  message={successAlertMessage}
                                  buttonOnPressSubmit={closeSuccessAlert}
-                                 buttonsContainer={(orderDetail && scanCountForOrderDetail < orderDetail?.quantity)
+                                 buttonsContainer={(orderDetail && scanCountForOrderDetail < (requiredScans || 10000))
                                      ? <AlertSuccessButtonsForRemainingScans
                                          navigation={navigation}
                                          closeSuccessAlert={closeSuccessAlert}
@@ -166,8 +188,8 @@ const BarcodeScanner = ({
             <AlertSuccessOrError
                 isVisible={errorAlertVisible}
                 onDismiss={closeErrorAlert}
-                title={'Metrc Tag Submission Failed!'}
-                message={errorText || `The Metrc tag submission for "${productName}" was not successful`}
+                title={'Scan Submission Failed!'}
+                message={errorText || `The Scan submission for "${productName}" was not successful`}
                 buttonText={'Retry'}
                 buttonOnPressSubmit={closeErrorAlert}
                 isError={true}

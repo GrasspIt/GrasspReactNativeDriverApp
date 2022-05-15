@@ -13,6 +13,7 @@ export const getOrderScans = (state: State): { [orderScanId: number]: OrderScan 
 
 /**Returns an array of Order Scan Ids*/
 const getOrderScanIdsForOrderFromProps = createSelector([getOrderFromProps], (order): number[] => {
+    console.log(order?.scannedProductOrderDetailAssociationsScans)
     return order && order.scannedProductOrderDetailAssociationsScans ? order.scannedProductOrderDetailAssociationsScans : [];
 })
 
@@ -49,7 +50,23 @@ export const isScanningCompleteForOrderFromProps = createSelector([getOrderScans
     if (order && order.orderDetails) {
         for (let orderDetail of order.orderDetails) {
             //if orderDetailId does not exist as a key on orderScans, or the value of orderScans[orderDetailId] and orderDetailQuantity are not equal, return false
-            if (!orderScans[orderDetail.id] || orderScans[orderDetail.id] && orderScans[orderDetail.id].length !== orderDetail.quantity){
+            let detailQuantity = orderDetail.quantity
+            switch (orderDetail.unit) {
+                case "oz":
+                    detailQuantity *= 8;
+                    break;
+                case "half":
+                    detailQuantity *= 4;
+                    break;
+                case "quarter":
+                    detailQuantity *= 2;
+                    break;
+                case "eighth":
+                default:
+                    break; 
+            }
+
+            if (!orderScans[orderDetail.id] || orderScans[orderDetail.id] && orderScans[orderDetail.id].length !== detailQuantity){
                 return false;
             }
         }

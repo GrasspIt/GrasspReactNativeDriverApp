@@ -155,7 +155,6 @@ const OrderDetailsDisplay = ({
                                 ) : (
                                     <List.Item title={<Text>Adult User</Text>} titleStyle={{fontWeight: 'bold'}}/>
                                 )}
-
                                 {orderDate && <List.Item title={<Text>{orderDate}</Text>}/>}
 
                                 {user && (

@@ -116,13 +116,31 @@ const OrderToScan = ({
      * */
     const renderProductRow = ({item}) => {
         const scanCountForItem = orderScans[item.orderDetailId] ? orderScans[item.orderDetailId].length : 0;
-
+        var requiredScans = 0;
+        if(item){
+            let detailQuantity = item.quantity
+            switch (item.unit) {
+                case "oz":
+                    detailQuantity *= 8;
+                    break;
+                case "half":
+                    detailQuantity *= 4;
+                    break;
+                case "quarter":
+                    detailQuantity *= 2;
+                    break;
+                case "eighth":
+                default:
+                    break; 
+            }
+            requiredScans = detailQuantity
+        }
         /**Determines which icon to render for an item, depending upon its scan progress (complete, in-progress, not-started, error)*/
         const determineListIcon = () => {
-            if (scanCountForItem > item.quantity) return {icon: 'alert-circle', color: colors.error};
-            if (scanCountForItem === item.quantity) return {icon: 'check-circle-outline', color: colors.primary};
+            if (scanCountForItem > requiredScans) return {icon: 'alert-circle', color: colors.error};
+            if (scanCountForItem === requiredScans) return {icon: 'check-circle-outline', color: colors.primary};
             //alternative color for dots-horizontal: #FFB800
-            if (scanCountForItem > 0 && scanCountForItem < item.quantity) return {
+            if (scanCountForItem > 0 && scanCountForItem < requiredScans) return {
                 icon: 'dots-horizontal-circle-outline',
                 color: '#f8b302'
             };
@@ -143,7 +161,7 @@ const OrderToScan = ({
                         orderId,
                         dsprId: item.dsprId
                     })}
-                    disabled={scanCountForItem >= item.quantity}
+                    disabled={scanCountForItem >= requiredScans}
                     style={({pressed}) => [
                         {
                             opacity: pressed
@@ -200,7 +218,7 @@ const OrderToScan = ({
                                 <Text style={{
                                     color: colors.backdrop,
                                     marginRight: 16
-                                }}>Scanned: {scanCountForItem}</Text>
+                                }}>Scanned: {scanCountForItem}{item.unit ? " Eighths" : ' Units'}</Text>
                             </View>
                         )}
                     >

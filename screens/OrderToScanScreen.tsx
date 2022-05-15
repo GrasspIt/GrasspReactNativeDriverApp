@@ -27,7 +27,25 @@ const OrderToScanScreen = ({
     const currentNumberOfScansForOrder = useSelector<State, number>(state => getOrderScanCountForOrderFromProps(state, {orderId}), shallowEqual);
     const orderScans = useSelector<State, { [orderDetailId: number]: OrderScan[] }>(state => getOrderScansForOrderFromProps(state, {orderId}), shallowEqual);
 
-    const totalRequiredScansForOrder = useMemo(() => productsInOrder.reduce(((acc, currVal) => acc + currVal.quantity), 0), []);
+    const totalRequiredScansForOrder = useMemo(() => productsInOrder.reduce(((acc, currVal) => {
+        let detailQuantity = currVal.quantity
+        if(currVal.unit) {
+            switch (currVal.unit) {
+                case "oz":
+                    detailQuantity *= 8;
+                    break;
+                case "half":
+                    detailQuantity *= 4;
+                    break;
+                case "quarter":
+                    detailQuantity *= 2;
+                    break;
+                case "eighth":
+                default:
+                    break; 
+            }
+        }
+        return acc + detailQuantity}), 0), []);
 
     /**Deactivate all scans for an order*/
     const resetOrderScans = () => {

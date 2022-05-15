@@ -23,7 +23,7 @@ import {
     isScanningRequiredForDSPRFromProps
 } from "../selectors/dsprSelectors";
 import { DSPR, State } from "../store/reduxStoreState";
-import { isScanningCompleteForOrderFromProps } from "../selectors/scanSelectors";
+import { getOrderScanCountForOrderFromProps, isScanningCompleteForOrderFromProps } from "../selectors/scanSelectors";
 
 type DetailsScreenNavigationProp = StackNavigationProp<OrderListStackParamsList, 'Details'>;
 
@@ -65,7 +65,7 @@ const OrderDetailsScreen = ({
                                 markOrderInProcess,
                                 removeOrderAndRefreshRoute,
                                 deactivateDriverRoute,
-                                dspr,
+                                dspr
                             }: Props) => {
     const orderDate = order && Moment(order.createdTime).format('MMMM Do YYYY, h:mm a');
     const birthDate = idDocument && Moment(idDocument.birthDate).format('MMMM Do YYYY');
@@ -161,6 +161,7 @@ const mapStateToProps = (state, route) => {
         activeRoute && routeLegs && routeLegs.filter((leg) => activeRoute.legs.includes(leg.id));
     const orderIdsInRoute = activeRouteLegs && activeRouteLegs.map((leg) => leg.order);
     const dspr = order && getDSPRFromProps(state, {dsprId: order.dspr})
+    // const orderScans = order && getOrderScanCountForOrderFromProps(state, {orderId: order.id})
     return {
         order,
         orderId,
@@ -172,7 +173,8 @@ const mapStateToProps = (state, route) => {
         isLoading,
         orderIdsInRoute,
         activeRoute,
-        dspr
+        dspr,
+        // orderScans
     };
 };
 
