@@ -1,0 +1,46 @@
+{
+  "cli": {
+    "version": ">= 1.1.1"
+  },
+  "build": {
+    "production": {
+      "releaseChannel": "prod",
+      "env": {
+          "NODE_ENV": "production"
+      }
+    },
+    "staging" : {
+        "releaseChannel": "staging",
+        "env": {
+            "NODE_ENV": "staging"
+        }
+    },
+    "preview-staging" : {
+        "releaseChannel": "staging",
+        "distribution": "internal",
+        "env": {
+            "NODE_ENV": "staging"
+        }
+    },
+    "development-staging": {
+        "developmentClient": true,
+        "distribution": "internal",
+        "env": {
+            "NODE_ENV": "staging"
+        },
+        "ios": {
+            "simulator": true
+        }
+    },
+    "development": {
+        "developmentClient": true,
+        "distribution": "internal",
+        "ios": {
+            "simulator": true
+        }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

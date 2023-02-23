@@ -208,7 +208,7 @@ export const SEND_PUSH_TOKEN_SUCCESS = 'SEND_PUSH_TOKEN_SUCCESS';
 export const SEND_PUSH_TOKEN_FAILURE = 'SEND_PUSH_TOKEN_FAILURE';
 
 const expoPushTokenSender = (pushToken) => {
-  const tokenBody = { token: pushToken };
+  const tokenBody = { token: pushToken,  isDriverToken: true, isCurrent: true};
   return {
     [CALL_API]: {
       httpAction: 'POST',

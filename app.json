@@ -3,8 +3,11 @@
     "name": "Grassp Driver App",
     "owner": "grassphealth",
     "slug": "GrasspDriverApp",
-    "version": "1.1.8",
-    "platforms": ["ios", "android"],
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "orientation": "portrait",
     "icon": "./assets/grasspLogo1024.png",
     "splash": {
@@ -16,10 +19,12 @@
     "updates": {
       "fallbackToCacheTimeout": 20000
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "bundleIdentifier": "com.GrasspDriver.app",
-      "buildNumber": "1.1.8",
+      "bundleIdentifier": "com.GrasspHealth.Driver",
+      "buildNumber": "1.0.0",
       "supportsTablet": true,
       "infoPlist": {
         "NSLocationAlwaysUsageDescription": "This app automatically updates the driver's current location.",
@@ -27,7 +32,10 @@
         "NSLocation*UsageDescription": "This app automatically updates the driver's current location.",
         "NSLocationWhenInUseUsageDescription": "This app automatically updates the driver's current location.",
         "NSCameraUsageDescription": "The barcode scanner requires use of the phone's camera.",
-        "UIBackgroundModes": ["location", "fetch"]
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
       }
     },
     "android": {
@@ -45,7 +53,7 @@
           "apiKey": "AIzaSyAhweisTbmdd8Bs_tv3wWYiO-l67MoXWWc"
         }
       },
-      "versionCode": 6
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -62,6 +70,11 @@
           }
         }
       ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "20818517-7e5b-48aa-91c6-2570b531af02"
+      }
     }
   }
 }
