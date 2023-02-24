@@ -1,5 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import * as Expo from "expo"
 import { store } from './store/store';
 import AuthNavigator from './navigation/AuthNavigator';
 import {
@@ -68,4 +69,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Expo.registerRootComponent(App);
