@@ -13,6 +13,7 @@ type Props = {
   dspr;
   dsprDriver;
   isLoading: boolean;
+  isDemo: boolean;
   getDriverData;
   setDriverOnCallState;
   showLocationPermissionAlert: boolean;
@@ -33,6 +34,7 @@ const DashboardDisplay = ({
   dspr,
   dsprDriver,
   isLoading,
+  isDemo,
   getDriverData,
   setDriverOnCallState,
   showLocationPermissionAlert,
@@ -56,12 +58,12 @@ const DashboardDisplay = ({
         <View style={[styles.container, { backgroundColor: colors.background }]}>
           <ActivityIndicator size='large' color={colors.primary} />
         </View>
-      ) : dsprDriver ? (
+      ) : dsprDriver || isDemo ? (
         <View style={{ flex: 1, backgroundColor: colors.background }}>
           <View style={styles.cardContainer}>
             <Card style={[styles.card, styles.firstCard]}>
               <View style={styles.spacedRowFlex}>
-                <Text style={styles.dsprTitle}>{dspr.name}</Text>
+                <Text style={styles.dsprTitle}>{isDemo ? "DEMO" : dspr.name}</Text>
                 <OnCallSwitch
                     isLoading={isLoading}
                     setDriverOnCallState={setDriverOnCallState}
@@ -71,7 +73,7 @@ const DashboardDisplay = ({
             </Card>
           </View>
           
-          {dsprDriver.queuedOrders && <View style={{display: 'flex', flexDirection:'row'}}>
+          {(dsprDriver?.queuedOrders || isDemo) && <View style={{display: 'flex', flexDirection:'row'}}>
             <View style={styles.ordersCardContainer}>
               {(dsprDriver?.currentInProcessOrder || dsprDriver?.queuedOrders?.length) && (dsprDriver.queuedOrders.length > 0 || !!dsprDriver.currentInProcessOrder) ? 
               <Card style={[styles.ordersCard]} onPress={() => handleOrdersClick()}>
@@ -84,7 +86,7 @@ const DashboardDisplay = ({
               
             </View>
             <View style={ styles.ordersCardContainer}>
-              {dsprDriver.currentRoute && dsprDriver?.currentRoute?.active ? 
+              {dsprDriver?.currentRoute && dsprDriver?.currentRoute?.active ? 
                 <Card style={styles.ordersCard} onPress={()=> handleRoutesClick()}>
                   <Text style={styles.dsprTitle}>Route</Text>
                   <Text style={styles.dsprTitle}>{dsprDriver.currentRoute ? dsprDriver.currentRoute.legs.length : "No Route"}</Text>

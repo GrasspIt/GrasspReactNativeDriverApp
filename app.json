@@ -3,7 +3,7 @@
     "name": "Grassp Driver App",
     "owner": "grassphealth",
     "slug": "GrasspDriverApp",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "platforms": [
       "ios",
       "android"
@@ -24,7 +24,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.GrasspHealth.Driver",
-      "buildNumber": "1.0.0",
+      "buildNumber": "1.0.1",
       "supportsTablet": true,
       "infoPlist": {
         "NSLocationAlwaysUsageDescription": "This app automatically updates the driver's current location.",
@@ -53,7 +53,7 @@
           "apiKey": "AIzaSyAhweisTbmdd8Bs_tv3wWYiO-l67MoXWWc"
         }
       },
-      "versionCode": 1
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"

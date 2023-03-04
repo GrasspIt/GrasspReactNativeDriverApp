@@ -55,6 +55,7 @@ export interface Api {
     dsprDriverId: string;
     isLoading: boolean;
     entities: Entities;
+    isDemo: boolean;
 }
 
 export interface Entities {

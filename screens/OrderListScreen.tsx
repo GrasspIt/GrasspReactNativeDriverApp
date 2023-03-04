@@ -50,7 +50,7 @@ const OrderListScreen = ({
 
     const ordersWithAddressAndUser = useSelector<State, OrderWithAddressAndUser[]>(
         state => getQueuedAndInProcessOrdersWithAddressesAndUsersForDriverAsArrayFromProps(
-            state, {dsprDriverId: dsprDriver.id}),
+            state, {dsprDriverId: dsprDriver ? dsprDriver.id: null}),
         shallowEqual);
 
     const getDriverData = () => {

@@ -59,6 +59,7 @@ type Props = {
   driverId;
   dsprDriver;
   isLoading;
+  isDemo;
   pushToken;
   refreshDSPRDriver;
   getDSPRDriver;
@@ -73,6 +74,7 @@ const DashboardScreen = ({
   dspr,
   dsprDriver,
   isLoading,
+  isDemo,
   pushToken,
   refreshDSPRDriver,
   getDSPRDriver,
@@ -120,7 +122,7 @@ const DashboardScreen = ({
     // get push token if none is stored
     if (!pushToken || !pushToken.isCurrent) {
       registerForPushNotificationsAsync().then((token) => {
-        sendPushToken(token);
+        if(!isDemo) sendPushToken(token);
       });
     }
     // listen for when a notification is received while the app is foregrounded
@@ -191,7 +193,7 @@ const DashboardScreen = ({
     //see if location is already being tracked
     let tracking = await Location.hasStartedLocationUpdatesAsync('location-tracking');
 
-    if (dsprDriver) {
+    if (dsprDriver || isDemo) {
         //request foreground location permissions. If denied, show alert
       if(!foregroundLocationStatus) await getForegroundLocationPermission();
       if(!foregroundLocationStatus?.granted) await requestForegroundLocationPermission();
@@ -227,7 +229,7 @@ const DashboardScreen = ({
 
   useEffect(() => {
     toggleLocationUpdates();
-  }, [oncallState]);
+  }, [oncallState, isDemo]);
 
   useEffect(() => {
     if(lastLocationUpdateTime && !timeSinceLastUpdateInterval) setTimeSinceLastUpdateInterval(setInterval(() => msToTime(), 5000))
@@ -278,6 +280,7 @@ const DashboardScreen = ({
       dspr={dspr}
       dsprDriver={dsprDriver}
       isLoading={isLoading}
+      isDemo={isDemo}
       getDriverData={getDriverData}
       setDriverOnCallState={setOnCallStateHandler}
       showLocationPermissionAlert={showLocationPermissionAlert}
@@ -342,11 +345,13 @@ const mapStateToProps = (state) => {
   const pushToken = state.api.entities.pushToken;
   const locations = getSessionLocations(state);
   const lastLocationUpdateTime = getLastUpdateTime(state);
+  const isDemo = state.api.isDemo
   return {
     driverId,
     dspr,
     dsprDriver,
     isLoading,
+    isDemo,
     pushToken,
     sessionLocations: locations,
     lastLocationUpdateTime

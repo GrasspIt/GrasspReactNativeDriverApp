@@ -5,6 +5,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "build:staging": "NODE_ENV=staging eas build --profile=preview-staging",
+    "build": "NODE_ENV=production eas build --profile=production",
     "eject": "expo eject",
     "test": "jest"
   },

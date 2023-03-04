@@ -74,6 +74,7 @@ import {
 } from "../actions/scanActions";
 
 import entitiesReducer, { initialState as entitiesInitialState } from './entitiesReducer';
+import { SET_DEMO_MODE } from '../actions/demoActions';
 
 export const initialState = {
   accessToken: '',
@@ -81,6 +82,7 @@ export const initialState = {
   dsprDriverId: '',
   isLoading: false,
   entities: entitiesInitialState,
+  isDemo: false,
 };
 
 export default (state = initialState, action) => {
@@ -170,6 +172,8 @@ export default (state = initialState, action) => {
         ...initialState,
         entities: { ...entitiesInitialState },
       };
+    case SET_DEMO_MODE:
+      return {...state, isDemo: action.value}
     default:
       return state;
   }

@@ -116,6 +116,8 @@ export const  getQueuedAndInProcessOrdersWithAddressesAndUsersForDriverAsArrayFr
   [getDSPRDriverFromProps, getOrdersWithAddresses, getUsers], (driver, ordersWithAddresses, users) => {
     let ordersWithAddressesAndUsers:OrderWithAddressAndUser[]  = [];
 
+    if(!driver) return [];
+
     if (driver.queuedOrders && driver.queuedOrders.length > 0) {
       const queuedOrders = driver.queuedOrders.map((orderId) => {
         const queuedOrder = ordersWithAddresses[orderId];

@@ -12,6 +12,8 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { HelperText, useTheme, ActivityIndicator } from 'react-native-paper';
 import { Card, Button, TextInput } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
+import { setDemoMode } from '../actions/demoActions';
 
 type Props = {
   isLoading;
@@ -36,6 +38,12 @@ const LoginForm = ({
 }: Props) => {
   const { colors } = useTheme();
 
+  const dispatch = useDispatch();
+
+  const demo = (val: boolean) => {
+    dispatch(setDemoMode(true));
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -49,6 +57,16 @@ const LoginForm = ({
             </View>
           ) : (
             <View style={styles.screen}>
+              <Button
+                    disabled={isLoading ? true : false}
+                    mode="text"
+                    loading={isLoading}
+                    onPress={() => demo(true)}
+                    labelStyle={{ color: colors.disabled, fontSize: 8 }}
+                    style={{ width: '80%', marginTop: 40, height: 30 }}
+                  >
+                  Click here for Demo Mode
+              </Button>
               <Card style={styles.card}>
                 <Card.Content>
                   <View style={{ alignItems: 'center', paddingLeft: 14, paddingBottom: 10 }}>
@@ -96,7 +114,11 @@ const LoginForm = ({
                     Login
                   </Button>
                 </Card.Actions>
-              </Card>
+              </Card> 
+              <View
+                    style={{ width: '80%', marginBottom: 40, height: 30 }}
+                  >
+              </View>
             </View>
           )}
         </TouchableWithoutFeedback>
@@ -108,7 +130,7 @@ const LoginForm = ({
 
 const styles = StyleSheet.create({
   screen: {
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     flex: 1,
   },

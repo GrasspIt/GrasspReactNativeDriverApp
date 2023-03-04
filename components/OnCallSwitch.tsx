@@ -10,7 +10,7 @@ const OnCallSwitch = ({ dsprDriver, setDriverOnCallState, isLoading }: SwitchPro
   const [isOnCall, setIsOnCall] = useState<boolean | undefined>(false);
 
   const toggleSwitch = () => {
-    if (!dsprDriver.currentInventoryPeriod) {
+    if (!dsprDriver?.currentInventoryPeriod) {
       Alert.alert('You must have a current inventory period to go on call.');
       return;
     }

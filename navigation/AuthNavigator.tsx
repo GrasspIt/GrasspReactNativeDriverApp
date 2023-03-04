@@ -21,6 +21,7 @@ const AuthNavigator = ({
   loggedInUser,
   logout,
   setDsprDriverId,
+  isDemo,
   preloadAccessTokenFromLocalStorage,
 }) => {
   useEffect(() => {
@@ -41,14 +42,20 @@ const AuthNavigator = ({
 
   return (
     <RootStack.Navigator screenOptions={{ gestureEnabled: false }}>
-      {!loggedInUser ? (
+      {!loggedInUser ? (!isDemo ? 
         <RootStack.Screen
           name='Login'
           component={LoginScreen}
           options={{
             headerShown: false,
           }}
-        />
+        /> : <RootStack.Screen
+        name='Main'
+        component={DrawerNavigator}
+        options={{
+          headerShown: false,
+        }}
+      />
       ) : (
         <RootStack.Screen
           name='Main'
@@ -66,11 +73,13 @@ const mapStateToProps = (state) => {
   const isLoading = state.api.isLoading;
   const dsprDrivers = state.api.entities.dsprDrivers;
   const driverId = state.api.dsprDriverId;
+  const isDemo = state.api.isDemo;
   return {
     loggedInUser: getLoggedInUser(state),
     driverId,
     dsprDrivers,
     isLoading,
+    isDemo
   };
 };
 
